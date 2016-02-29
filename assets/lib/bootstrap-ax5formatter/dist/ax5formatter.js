@@ -1,3 +1,5 @@
+'use strict';
+
 // ax5.ui.formatter
 (function (root, _SUPER_) {
 
@@ -13,22 +15,20 @@
      */
     var U = ax5.util;
 
-    var setSelectionRange = function (input, pos) {
+    var setSelectionRange = function setSelectionRange(input, pos) {
         if (typeof pos == "undefined") {
             pos = input.value.length;
         }
         if (input.setSelectionRange) {
             input.focus();
             input.setSelectionRange(pos, pos);
-        }
-        else if (input.createTextRange) {
+        } else if (input.createTextRange) {
             var range = input.createTextRange();
             range.collapse(true);
             range.moveEnd('character', pos);
             range.moveStart('character', pos);
             range.select();
-        }
-        else if (input.selectionStart) {
+        } else if (input.selectionStart) {
             input.focus();
             input.selectionStart = pos;
             input.selectionEnd = pos;
@@ -36,9 +36,8 @@
     };
 
     //== UI Class
-    var axClass = function () {
-        var
-            self = this,
+    var axClass = function axClass() {
+        var self = this,
             cfg;
 
         if (_SUPER_) _SUPER_.call(this); // 부모호출
@@ -62,9 +61,7 @@
          * ```
          * ```
          */
-        this.init = function () {
-
-        };
+        this.init = function () {};
 
         this.bind = function (opts) {
             var formatterConfig = {};
@@ -81,11 +78,10 @@
             if (!opts.id) {
                 opts.id = 'ax5-formatter-' + ax5.getGuid();
             }
-            
+
             if (U.search(this.queue, function () {
-                    return this.id == opts.id;
-                }) === -1)
-            {
+                return this.id == opts.id;
+            }) === -1) {
                 this.queue.push(opts);
                 this.__bindFormatterTarget(opts, this.queue.length - 1);
             }
@@ -93,7 +89,7 @@
             return this;
         };
 
-        this.__bindFormatterTarget = (function () {
+        this.__bindFormatterTarget = function () {
 
             var ctrlKeys = {
                 "18": "KEY_ALT",
@@ -133,73 +129,77 @@
             };
 
             var setEnterableKeyCodes = {
-                "money": function (opts, optIdx) {
+                "money": function money(opts, optIdx) {
                     var enterableKeyCodes = {
                         '188': ','
                     };
 
                     if (opts.patternArgument == "int") {
                         // 소수점 입력 안됨
-                    }
-                    else {
-                        enterableKeyCodes['190'] = "."; // 소수점 입력 허용
-                    }
+                    } else {
+                            enterableKeyCodes['190'] = "."; // 소수점 입력 허용
+                        }
 
                     enterableKeyCodes = $.extend(enterableKeyCodes, ctrlKeys);
                     opts.enterableKeyCodes = $.extend(enterableKeyCodes, numKeys);
                 },
-                "number": function (opts, optIdx) {
+                "number": function number(opts, optIdx) {
                     var enterableKeyCodes = {
                         '190': '.'
                     };
                     enterableKeyCodes = $.extend(enterableKeyCodes, ctrlKeys);
                     opts.enterableKeyCodes = $.extend(enterableKeyCodes, numKeys);
                 },
-                "date": function (opts, optIdx) {
+                "date": function date(opts, optIdx) {
                     var enterableKeyCodes = {
                         '189': '-', '191': '/'
                     };
                     enterableKeyCodes = $.extend(enterableKeyCodes, ctrlKeys);
                     opts.enterableKeyCodes = $.extend(enterableKeyCodes, numKeys);
                 },
-                "time": function (opts, optIdx) {
+                "time": function time(opts, optIdx) {
                     var enterableKeyCodes = {
                         '186': ':'
                     };
                     enterableKeyCodes = $.extend(enterableKeyCodes, ctrlKeys);
                     opts.enterableKeyCodes = $.extend(enterableKeyCodes, numKeys);
                 },
-                "bizno": function (opts, optIdx) {
+                "bizno": function bizno(opts, optIdx) {
                     var enterableKeyCodes = {
                         '189': '-'
                     };
                     enterableKeyCodes = $.extend(enterableKeyCodes, ctrlKeys);
                     opts.enterableKeyCodes = $.extend(enterableKeyCodes, numKeys);
                 },
-                "phone": function (opts, optIdx) {
+                "phone": function phone(opts, optIdx) {
                     var enterableKeyCodes = {
                         '189': '-', '188': ','
                     };
                     enterableKeyCodes = $.extend(enterableKeyCodes, ctrlKeys);
                     opts.enterableKeyCodes = $.extend(enterableKeyCodes, numKeys);
                 },
-                "custom": function (opts, optIdx) {
+                "custom": function custom(opts, optIdx) {
                     var enterableKeyCodes = {};
                     enterableKeyCodes = $.extend(enterableKeyCodes, ctrlKeys);
                     opts.enterableKeyCodes = $.extend(enterableKeyCodes, numKeys);
                 }
             };
 
-
+            var eventStop = function eventStop(e) {
+                // 이벤트 중지 구문
+                if (e.preventDefault) e.preventDefault();
+                if (e.stopPropagation) e.stopPropagation();
+                e.cancelBubble = true;
+                return false;
+                // 이벤트 중지 구문 끝
+            };
 
             var getPatternValue = {
-                "money": function (opts, optIdx, e, val) {
-                    var
-                        val = val.replace(/[^0-9^\.^\-]/g, ""),
+                "money": function money(opts, optIdx, e, val) {
+                    var val = val.replace(/[^0-9^\.^\-]/g, ""),
                         regExpPattern = new RegExp('([0-9])([0-9][0-9][0-9][,.])'),
                         arrNumber = val.split('.'),
-                        returnValue
-                        ;
+                        returnValue;
 
                     arrNumber[0] += '.';
 
@@ -210,82 +210,62 @@
                     if (arrNumber.length > 1) {
                         if (U.isNumber(opts.maxRound)) {
                             returnValue = arrNumber[0] + U.left(arrNumber[1], opts.maxRound);
-                        }
-                        else {
+                        } else {
                             returnValue = arrNumber.join('');
                         }
-                    }
-                    else {
+                    } else {
                         returnValue = arrNumber[0].split('.')[0];
                     }
 
                     return returnValue;
                 },
-                "number": function (opts, optIdx) {
-                    var
-                        val = val.replace(/[^0-9^\.^\-]/g, ""),
+                "number": function number(opts, optIdx) {
+                    var val = val.replace(/[^0-9^\.^\-]/g, ""),
                         arrNumber = val.split('.'),
-                        returnValue
-                        ;
+                        returnValue;
 
                     if (arrNumber.length > 1) {
                         if (U.isNumber(opts.maxRound)) {
                             returnValue = arrNumber[0] + U.left(arrNumber[1], opts.maxRound);
-                        }
-                        else {
+                        } else {
                             returnValue = arrNumber.join('');
                         }
-                    }
-                    else {
+                    } else {
                         returnValue = arrNumber[0].split('.')[0];
                     }
 
                     return returnValue;
                 },
-                "date": function (opts, optIdx) {
-
-                },
-                "time": function (opts, optIdx) {
-
-                },
-                "bizno": function (opts, optIdx) {
-
-                },
-                "phone": function (opts, optIdx) {
-
-                },
-                "custom": function (opts, optIdx) {
-
-                }
+                "date": function date(opts, optIdx) {},
+                "time": function time(opts, optIdx) {},
+                "bizno": function bizno(opts, optIdx) {},
+                "phone": function phone(opts, optIdx) {},
+                "custom": function custom(opts, optIdx) {}
             };
 
             var formatterEvent = {
                 /* 키 다운 이벤트에서 입력할 수 없는 키 입력을 방어 */
-                'keydown': function (opts, optIdx, e) {
+                'keydown': function keydown(opts, optIdx, e) {
                     var isStop = false;
                     //console.log(e.which, opts.enterableKeyCodes[e.which]);
-                    if (e.which && opts.enterableKeyCodes[e.which]) {
-
-                    }
-                    else {
+                    if (e.which && opts.enterableKeyCodes[e.which]) {} else {
                         //console.log(e.which, opts.enterableKeyCodes);
                         isStop = true;
                     }
                     if (isStop) eventStop(e);
                 },
                 /* 키 업 이벤트에서 패턴을 적용 */
-                'keyup': function (opts, optIdx, e) {
+                'keyup': function keyup(opts, optIdx, e) {
                     var elem = opts.$input.get(0),
                         elemFocusPosition,
                         beforeValue,
-                        selection, selectionLength
-                        ;
+                        selection,
+                        selectionLength;
 
                     if ('selectionStart' in elem) {
                         // Standard-compliant browsers
                         elemFocusPosition = elem.selectionStart;
-                    }
-                    else if (document.selection) {
+                    } else if (document.selection) {
                         // IE
                         //elem.focus();
                         selection = document.selection.createRange();
@@ -295,7 +275,7 @@
                     }
 
                     beforeValue = elem.value;
-                    
+
                     if (getPatternValue[opts.pattern]) {
                         elem.value = getPatternValue[opts.pattern].call(this, opts, optIdx, e, elem.value);
                         setSelectionRange(elem, elemFocusPosition + elem.value.length - beforeValue.length);
@@ -305,15 +285,11 @@
 
             return function (opts, optIdx) {
                 if (!opts.pattern) {
-                    
+
                     if (opts.$target.get(0).tagName == "INPUT") {
-                        opts.pattern = opts.$target
-                            .attr('data-ax5formatter');
-                    }
-                    else {
-                        opts.pattern = opts.$target
-                            .find('input[type="text"]')
-                            .attr('data-ax5formatter');
+                        opts.pattern = opts.$target.attr('data-ax5formatter');
+                    } else {
+                        opts.pattern = opts.$target.find('input[type="text"]').attr('data-ax5formatter');
                     }
                     if (!opts.pattern) {
                         console.log(ax5.info.getError("ax5formatter", "501", "bind"));
@@ -324,7 +300,7 @@
 
                 var re = /[^\(^\))]+/gi,
                     matched = opts.pattern.match(re);
-                
+
                 opts.pattern = matched[0];
                 opts.patternArgument = matched[1] || "";
 
@@ -336,40 +312,33 @@
                     }
                 }
 
-                opts.$input = (opts.$target.get(0).tagName == "INPUT") ? opts.$target : opts.$target.find('input[type="text"]');
-                opts.$input
-                    .unbind('keydown.ax5formatter')
-                    .bind('keydown.ax5formatter', formatterEvent.keydown.bind(this, this.queue[optIdx], optIdx));
+                opts.$input = opts.$target.get(0).tagName == "INPUT" ? opts.$target : opts.$target.find('input[type="text"]');
+                opts.$input.unbind('keydown.ax5formatter').bind('keydown.ax5formatter', formatterEvent.keydown.bind(this, this.queue[optIdx], optIdx));
 
-                opts.$input
-                    .unbind('keyup.ax5formatter')
-                    .bind('keyup.ax5formatter', formatterEvent.keyup.bind(this, this.queue[optIdx], optIdx));
+                opts.$input.unbind('keyup.ax5formatter').bind('keyup.ax5formatter', formatterEvent.keyup.bind(this, this.queue[optIdx], optIdx));
 
                 return this;
-
-            }
-
-        })();
+            };
+        }();
 
         // 클래스 생성자
-        this.main = (function () {
+        this.main = function () {
             if (arguments && U.isObject(arguments[0])) {
                 this.setConfig(arguments[0]);
             }
-        }).apply(this, arguments);
+        }.apply(this, arguments);
     };
     //== UI Class
 
-    root.formatter = (function () {
+    root.formatter = function () {
         if (U.isFunction(_SUPER_)) axClass.prototype = new _SUPER_(); // 상속
         return axClass;
-    })(); // ax5.ui에 연결
-
+    }(); // ax5.ui에 연결
 })(ax5.ui, ax5.ui.root);
 
 ax5.ui.formatter_instance = new ax5.ui.formatter();
 
-$.fn.ax5formatter = (function () {
+$.fn.ax5formatter = function () {
     return function (config) {
         if (typeof config == "undefined") config = {};
         $.each(this, function () {
@@ -377,9 +346,9 @@ $.fn.ax5formatter = (function () {
                 target: this
             };
             config = $.extend(true, defaultConfig, config);
-            
+
             ax5.ui.formatter_instance.bind(config);
         });
         return this;
-    }
-})();
+    };
+}();
