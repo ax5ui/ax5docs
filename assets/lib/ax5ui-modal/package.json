@@ -1,0 +1,39 @@
+{
+  "name": "ax5ui-modal",
+  "version": "0.5.0",
+  "description": "A modal plugin that works with Bootstrap & jQuery",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ax5ui/ax5ui-modal.git"
+  },
+  "author": {
+    "name": "Thomas Jang",
+    "email": "tom@axisj.com",
+    "url": "ax5.io"
+  },
+  "keywords": [
+    "bootstrap",
+    "jquery",
+    "ax5ui",
+    "plugin",
+    "bootstrap jQuery plugins",
+    "dialog",
+    "ax5ui-dialog",
+    "javascript ui"
+  ],
+  "dependencies": {
+    "ax5core": ">=0.4.0"
+  },
+  "readme": "[![axisj-contributed](https://img.shields.io/badge/AXISJ.com-Contributed-green.svg)](https://github.com/axisj) ![](https://img.shields.io/badge/Seowoo-Mondo&Thomas-red.svg)\n\n# ax5ui-modal\n\n> *Dependencies*\n> * _[jQuery 1.X+](http://jquery.com/)_\n> * _[ax5core](http://ax5.io/ax5core)_\n> * _[bootstrap](http://getbootstrap.com/)_\n\n\n### Install by bower\n```sh\nbower install ax5ui-modal\n```\n[bower](http://bower.io/#install-bower) is web front-end package manager.\nusing the `bower`, when you install the plug-in is installed to resolve the plug-in dependencies under the `bower_components` folder.\n(You can change the folder location. [.bowerrc](http://bower.io/docs/config/#bowerrc-specification) )\n\nIt is recommended that you install by using the `bower`. \nIf you've never used a bower is, you will be able to be used for [http://bower.io/#install-bower](http://bower.io/#install-bower).\n\n### Download code\n- [ax5core Github releases](https://github.com/ax5ui/ax5core/releases)\n- [ax5ui-modal Github releases](https://github.com/ax5ui/ax5ui-modal/releases)\n\n\n### Insert the \"ax5modal\" in the HTML HEAD.\n\nLocation of the folder can be determined freely in your project. But be careful not to accidentally caused\nexactly the path.\n```html\n<html>\n    <head>\n        <link rel=\"stylesheet\" type=\"text/css\" href=\"bower_components/ax5ui-modal/dist/ax5modal.css\" />\n        <script type=\"text/javascript\" src=\"bower_components/jquery/dist/jquery.min.js\"></script>\n        <script type=\"text/javascript\" src=\"bower_components/ax5core/dist/ax5core.min.js\"></script>\n        <script type=\"text/javascript\" src=\"bower_components/ax5ui-modal/dist/ax5modal.min.js\"></script>\n    </head>\n<body>\n....\n</body>\n</html>\n```\n\n### Basic Usages\n```js\nvar modal = new ax5.ui.modal();\nmodal.setConfig({\n    onStateChanged: function(){\n        console.log(this);\n    }\n});\nmodal.open();\n```\n\n- - -\n\n### Install by npm\nIf you do not use the bower, it can be downloaded by using the npm as second best.\nIn npm, so pile on the package manager for the front end, you need to solve the problem of plug-in dependencies.\n\n```sh\nnpm install jquery\nnpm install ax5core\nnpm install ax5ui-modal\n```\n\nAfter you download the file in npm install, you will need to copy to the location where you want to use as a resource for the project.\nIf the inconvenience in the process that you want to copy the file and can be easily copied by using a `gulp` or `grunt`.\n\n- - -\n\n\n### Preview\n- [See Demostration](http://ax5.io/ax5ui-modal/demo/index.html)\n\nIf you have any questions, please refer to the following [gitHub](https://github.com/ax5ui/ax5ui-kernel)",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/ax5ui/ax5ui-modal/issues"
+  },
+  "homepage": "https://github.com/ax5ui/ax5ui-modal#readme",
+  "_id": "ax5ui-modal@0.5.0",
+  "scripts": {},
+  "_shasum": "a5561128b243b5e2aa6360c1123d954500be2ca4",
+  "_from": "ax5ui-modal@*",
+  "_resolved": "file:src/ax5ui-modal"
+}

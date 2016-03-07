@@ -1,0 +1,39 @@
+{
+  "name": "ax5ui-calendar",
+  "version": "0.7.3",
+  "description": "A calendar plugin that works with Bootstrap & jQuery",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ax5ui/ax5ui-calendar.git"
+  },
+  "author": {
+    "name": "Thomas Jang",
+    "email": "tom@axisj.com",
+    "url": "ax5.io"
+  },
+  "keywords": [
+    "bootstrap",
+    "jquery",
+    "ax5ui",
+    "plugin",
+    "bootstrap jQuery plugins",
+    "calendar",
+    "ax5ui-calendar",
+    "javascript ui"
+  ],
+  "dependencies": {
+    "ax5core": ">=0.4.0"
+  },
+  "readme": "[![axisj-contributed](https://img.shields.io/badge/AXISJ.com-Contributed-green.svg)](https://github.com/axisj) ![](https://img.shields.io/badge/Seowoo-Mondo&Thomas-red.svg)\n\n# ax5ui-calendar\n\n> *Dependencies*\n> * _[jQuery 1.X+](http://jquery.com/)_\n> * _[ax5core](http://ax5.io/ax5core)_\n> * _[bootstrap](http://getbootstrap.com/)_\n\n\n### Install by bower\n```sh\nbower install ax5ui-calendar\n```\n[bower](http://bower.io/#install-bower) is web front-end package manager.\nusing the `bower`, when you install the plug-in is installed to resolve the plug-in dependencies under the `bower_components` folder.\n(You can change the folder location. [.bowerrc](http://bower.io/docs/config/#bowerrc-specification) )\n\nIt is recommended that you install by using the `bower`. \nIf you've never used a bower is, you will be able to be used for [http://bower.io/#install-bower](http://bower.io/#install-bower).\n\n### Download code\n\n- [ax5core Github releases](https://github.com/ax5ui/ax5core/releases)\n- [ax5ui-calendar Github releases](https://github.com/ax5ui/ax5ui-calendar/releases)\n\n\n### Insert the \"ax5calendar\" in the HTML HEAD.\n\nLocation of the folder can be determined freely in your project. But be careful not to accidentally caused\nexactly the path.\n```html\n<html>\n    <head>\n        <link rel=\"stylesheet\" type=\"text/css\" \n        href=\"bower_components/ax5ui-calendar/dist/ax5calendar.css\" />\n        <script type=\"text/javascript\" src=\"bower_components/jquery/dist/jquery.min.js\"></script>\n        <script type=\"text/javascript\" src=\"bower_components/ax5core/dist/ax5core.min.js\"></script>\n        <script type=\"text/javascript\" \n        src=\"bower_components/ax5ui-calendar/dist/ax5calendar.min.js\"></script>\n    </head>\n<body>\n....\n</body>\n</html>\n```\n\n### Basic Usages\n```js\nvar myCalendar = new ax5.ui.calendar({\n    target: document.getElementById(\"calendar-target\"),\n    displayDate: (new Date()),\n    onClick: function () {\n        console.log(this);\n        console.log(myCalendar.getSelection());\n    },\n    onStateChanged: function () {\n        console.log(this);\n    }\n});\n```\n\n- - -\n\n### Install by npm\nIf you do not use the bower, it can be downloaded by using the npm as second best.\nIn npm, so pile on the package manager for the front end, you need to solve the problem of plug-in dependencies.\n\n```sh\nnpm install jquery\nnpm install ax5core\nnpm install ax5ui-calendar\n```\n\nAfter you download the file in npm install, you will need to copy to the location where you want to use as a resource for the project.\nIf the inconvenience in the process that you want to copy the file and can be easily copied by using a `gulp` or `grunt`.\n\n- - -\n\n\n### Preview\n- [See Demostration](http://ax5.io/ax5ui-calendar/demo/index.html)\n\nIf you have any questions, please refer to the following [gitHub](https://github.com/ax5ui/ax5ui-kernel)",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/ax5ui/ax5ui-calendar/issues"
+  },
+  "homepage": "https://github.com/ax5ui/ax5ui-calendar#readme",
+  "_id": "ax5ui-calendar@0.7.3",
+  "scripts": {},
+  "_shasum": "9663ba4acac01c131d6bdcc2362cc762d2a9e37a",
+  "_from": "ax5ui-calendar@*",
+  "_resolved": "file:src/ax5ui-calendar"
+}

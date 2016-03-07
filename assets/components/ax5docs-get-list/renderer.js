@@ -10,7 +10,7 @@ exports.render = function (input, out) {
 
     }
     else {
-        loadFilePath = "src/ax5docs/_src_" + projectName, hrefRoot = "src/ax5docs/_src_";
+        loadFilePath = "_src_/" + projectName, hrefRoot = "_src_/";
     }
 
     if (loadFilePath) {
