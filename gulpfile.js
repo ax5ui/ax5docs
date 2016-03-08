@@ -69,6 +69,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-formatter",
         doc_src: "_src_/ax5ui-formatter",
         doc_dest: "ax5ui-formatter"
+    },
+    "ax5ui-menu": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-menu",
+        doc_src: "_src_/ax5ui-menu",
+        doc_dest: "ax5ui-menu"
     }
 };
 
