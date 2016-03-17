@@ -133,24 +133,32 @@ mask.setConfig({
     content: 'Loading content',
     onStateChanged: function(){
         console.log(this);
+    },
+    onClick: function(){
+        console.log(this);
     }
 });
 </code></pre>
 <p><strong>Easy Way - without setConfig</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var mask = new ax5.ui.mask({
-   zIndex: 1000, 
-   content: 'Loading content',
-   onStateChanged: function(){
+    zIndex: 1000, 
+    content: 'Loading content',
+    onStateChanged: function(){
        console.log(this);
-   }
+    },
+    onClick: function(){
+        console.log(this);
+    }
 });
 </code></pre>
 <pre class="prettyprint linenums lang-json"><code>{
+    [position: {String} - absolute|fixed, ]
     [target: {Element} - target of mask,]
-    [theme: {String} -addClass mask,]
+    [theme: {String} - addClass mask,]
     [zIndex: {Number},]
-    [content: 'content of mask',]
-    [onStateChanged: {Function}]
+    [content: &quot;content of mask&quot;,]
+    [onStateChanged: {Function}, ]
+    [onClick: {Function}]
 }
 </code></pre>
 <hr>

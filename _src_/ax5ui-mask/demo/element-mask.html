@@ -52,9 +52,13 @@
 
                         $('#mask-open').click(function () {
                             mask.open({
+                                // position: "fixed", // Maybe options that may be required to you
                                 zIndex: 99,
                                 target: $("#user-content").get(0),
-                                content: 'MASK'
+                                content: 'MASK',
+                                onClick: function(){
+                                    console.log(this);
+                                }
                             });
                         });
 
