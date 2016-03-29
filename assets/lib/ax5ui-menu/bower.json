@@ -1,23 +1,25 @@
 {
-	"name": "ax5ui-mask",
-	"version": "0.5.0",
+	"name": "ax5ui-menu",
+	"version": "0.3.0",
+	"description": "A menu plugin that works with Bootstrap & jQuery",
 	"authors": [
 		"ThomasJ <tom@axisj.com>"
 	],
-	"description": "A mask jQuery plugin that works with Bootstrap",
-	"main": "dist/ax5mask.js",
+	"main": "dist/ax5menu.js",
 	"keywords": [
 		"bootstrap",
 		"jquery",
 		"ax5ui",
 		"plugin",
 		"bootstrap jQuery plugins",
-		"mask",
-		"ax5ui-mask"
+		"formatter",
+		"ax5ui-menu",
+		"javascript ui"
 	],
 	"dependencies": {
 		"jquery": "^1.11.0",
-		"ax5core": ""
+		"ax5core": "",
+		"bootstrap": "^3.3.6"
 	},
 	"license": "MIT",
 	"homepage": "ax5.io"
