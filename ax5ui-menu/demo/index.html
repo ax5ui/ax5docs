@@ -2,6 +2,7 @@
 
 
 
+
     
     
     
@@ -14,7 +15,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-	<title>ax5ui / ax5ui-menu : menu Money</title>
+	<title>ax5ui / ax5ui-menu : Context Menu</title>
 
 	
 	<script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -40,6 +41,7 @@
 	
 	
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-menu/dist/ax5menu.css">
         <script type="text/javascript" src="../../assets/lib/ax5ui-menu/dist/ax5menu.js"></script>
     
 </head>
@@ -126,7 +128,7 @@
 				<div class="col-md-3">
 					<div class="docs-menu" id="docs-menu">
 						
-        <ul><li  class='active'><a href="/ax5ui-menu/demo/index.html">menu Money</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li></ul>
     
 					</div>
 				</div>
@@ -136,55 +138,184 @@
 
         
         <section class="ax5docs-section">
-            <h1>menu Money</h1>
+            <h1>Context Menu</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site's HTML.</strong></p>
-<pre class="prettyprint linenums lang-html"><code>&lt;script type=&quot;text/javascript&quot; src=&quot;src/ax5ui-menu/dist/ax5menu.js&quot;&gt;&lt;/script&gt;
+<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/ax5ui-menu/dist/ax5menu.css&quot;&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;src/ax5ui-menu/dist/ax5menu.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 
 
-
             HTML
-            <pre class="prettyprint linenums lang-html">&lt;div class="form-group" id="ax5menu-01">
-    &lt;div class="input-group">
-        &lt;span class="input-group-addon">Money&lt;/span>
-        &lt;input name="1" type="text" class="form-control" placeholder data-ax5menu="money" value="9999.99">
-    &lt;/div>
-&lt;/div>
-&lt;div class="form-group">
-    &lt;div class="input-group" id="ax5menu-01-1">
-        &lt;span class="input-group-addon">Money(int)&lt;/span>
-        &lt;input name="2" type="text" class="form-control" placeholder data-ax5menu="money(int)">
-    &lt;/div>
-&lt;/div>
-&lt;div class="form-group">
-    &lt;div class="input-group">
-        &lt;span class="input-group-addon">Money&lt;/span>
-        &lt;input name="2" type="text" class="form-control" placeholder="1,000,000" data-ax5menu="money" data-ax5="menu">
-    &lt;/div>
-&lt;/div></pre><div class="form-group" id="ax5menu-01">
-    <div class="input-group">
-        <span class="input-group-addon">Money</span>
-        <input name="1" type="text" class="form-control" placeholder data-ax5menu="money" value="9999.99">
-    </div>
-</div>
-<div class="form-group">
-    <div class="input-group" id="ax5menu-01-1">
-        <span class="input-group-addon">Money(int)</span>
-        <input name="2" type="text" class="form-control" placeholder data-ax5menu="money(int)">
-    </div>
-</div>
-<div class="form-group">
-    <div class="input-group">
-        <span class="input-group-addon">Money</span>
-        <input name="2" type="text" class="form-control" placeholder="1,000,000" data-ax5menu="money" data-ax5="menu">
-    </div>
+            <pre class="prettyprint linenums lang-html">&lt;div style="width:400px;height:400px;background: #ccc;" id="context-menu-target">
+    Right click of mouse
+&lt;/div></pre><div style="width:400px;height:400px;background: #ccc;" id="context-menu-target">
+    Right click of mouse
 </div>
 
+            <div class="DH20"></div>
 
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-    $('[data-ax5menu]').ax5menu();
-&lt;/script></pre><script type="text/javascript">$('[data-ax5menu]').ax5menu();
+    var menu;
+    $(document.body).ready(function () {
+        menu = new ax5.ui.menu({
+            theme: 'primary',
+            //width: 200,
+            iconWidth: 20,
+            acceleratorWidth: 100,
+            // position: {left: 10, top: 10},
+            icons: {
+                'arrow': '&lt;i class="fa fa-caret-right">&lt;/i>'
+            },
+            onStateChanged: function () {
+                console.log(this);
+                if (this.state == 'close') {
+                    console.log(this.self.getCheckValue());
+                }
+            },
+            onClick: function () {
+                // console.log(this);
+                toast.push(JSON.stringify(this));
+            },
+            items: [
+                {
+                    icon: '&lt;i class="fa fa-archive">&lt;/i>', label: "Menu Parent 0",
+                    items: [
+                        {
+                            check: {type: 'checkbox', name: 'A', value: '0', checked: false},
+                            label: "Menu Z", data: {}, role: "", accelerator: "CmdOrCtrl+Z"
+                        },
+                        {
+                            check: {type: 'checkbox', name: 'A', value: '1', checked: true},
+                            label: "Menu A", data: {}, role: ""
+                        }
+                    ]
+                },
+                {divide: true},
+                {
+                    icon: '&lt;i class="fa fa-mixcloud">&lt;/i>', label: "Menu Parent 1",
+                    items: [
+                        {
+                            label: "Menu Z", data: {}, role: "",
+                            items: [
+                                {label: "Menu Z", data: {}, role: ""},
+                                {label: "Menu A", data: {}, role: ""}
+                            ]
+                        },
+                        {label: "Menu A", data: {}, role: ""}
+                    ]
+                },
+                {
+                    check: {type: 'radio', name: 'radioName', value: '1', checked: false},
+                    icon: '&lt;i class="fa fa-bluetooth">&lt;/i>',
+                    label: "Menu Parent 2"
+                },
+                {
+                    check: {type: 'radio', name: 'radioName', value: '2', checked: false},
+                    label: "Menu Parent 3"
+                },
+                {
+                    check: {type: 'radio', name: 'radioName', value: '3', checked: false},
+                    label: "Menu Parent 4"
+                },
+                {divide: true},
+                {
+                    html: function () {
+                        return '&lt;div style="text-align: center;">' +
+                                '&lt;button class="btn btn-primary" onclick="menuCallBack(\'ok\');">OK&lt;/button> ' +
+                                '&lt;button class="btn btn-danger" onclick="menuCallBack(\'cancel\');">CANCEL&lt;/button>' +
+                                '&lt;/div>';
+                    }
+                }
+            ]
+        });
+
+        $("#context-menu-target").bind("contextmenu", function (e) {
+            menu.popup(e);
+            ax5.util.stopEvent(e);
+            // e || {left: 'Number', top: 'Number', direction: '', width: 'Number'}
+        });
+    });
+&lt;/script></pre><script type="text/javascript">var menu;
+    $(document.body).ready(function () {
+        menu = new ax5.ui.menu({
+            theme: 'primary',
+            //width: 200,
+            iconWidth: 20,
+            acceleratorWidth: 100,
+            // position: {left: 10, top: 10},
+            icons: {
+                'arrow': '<i class="fa fa-caret-right"></i>'
+            },
+            onStateChanged: function () {
+                console.log(this);
+                if (this.state == 'close') {
+                    console.log(this.self.getCheckValue());
+                }
+            },
+            onClick: function () {
+                // console.log(this);
+                toast.push(JSON.stringify(this));
+            },
+            items: [
+                {
+                    icon: '<i class="fa fa-archive"></i>', label: "Menu Parent 0",
+                    items: [
+                        {
+                            check: {type: 'checkbox', name: 'A', value: '0', checked: false},
+                            label: "Menu Z", data: {}, role: "", accelerator: "CmdOrCtrl+Z"
+                        },
+                        {
+                            check: {type: 'checkbox', name: 'A', value: '1', checked: true},
+                            label: "Menu A", data: {}, role: ""
+                        }
+                    ]
+                },
+                {divide: true},
+                {
+                    icon: '<i class="fa fa-mixcloud"></i>', label: "Menu Parent 1",
+                    items: [
+                        {
+                            label: "Menu Z", data: {}, role: "",
+                            items: [
+                                {label: "Menu Z", data: {}, role: ""},
+                                {label: "Menu A", data: {}, role: ""}
+                            ]
+                        },
+                        {label: "Menu A", data: {}, role: ""}
+                    ]
+                },
+                {
+                    check: {type: 'radio', name: 'radioName', value: '1', checked: false},
+                    icon: '<i class="fa fa-bluetooth"></i>',
+                    label: "Menu Parent 2"
+                },
+                {
+                    check: {type: 'radio', name: 'radioName', value: '2', checked: false},
+                    label: "Menu Parent 3"
+                },
+                {
+                    check: {type: 'radio', name: 'radioName', value: '3', checked: false},
+                    label: "Menu Parent 4"
+                },
+                {divide: true},
+                {
+                    html: function () {
+                        return '<div style="text-align: center;">' +
+                                '<button class="btn btn-primary" onclick="menuCallBack(\'ok\');">OK</button> ' +
+                                '<button class="btn btn-danger" onclick="menuCallBack(\'cancel\');">CANCEL</button>' +
+                                '</div>';
+                    }
+                }
+            ]
+        });
+
+        $("#context-menu-target").bind("contextmenu", function (e) {
+            menu.popup(e);
+            ax5.util.stopEvent(e);
+            // e || {left: 'Number', top: 'Number', direction: '', width: 'Number'}
+        });
+    });
 </script></script>
 
             

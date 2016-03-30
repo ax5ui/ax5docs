@@ -1,8 +1,7 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="menu Money" desc=""/>
+<!--suppress HtmlUnknownTarget -->
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="context-menu" title="Context Menu" desc=""></tmpl-metadata>
 
-<layout-use template="${data.layoutPath}"
-            project-name="${data.projectName}"
-            parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
+<layout-use template="${data.layoutPath}" project-name="${data.projectName}" parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
             body-style="sub-page" with-menu="true">
 
     <layout-put into="docs-menu">
@@ -13,6 +12,7 @@
     </layout-put>
     <layout-put into="head-js">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-menu/dist/ax5menu.css"/>
         <script type="text/javascript" src="../../assets/lib/ax5ui-menu/dist/ax5menu.js"></script>
     </layout-put>
     <layout-put into="body">
@@ -21,44 +21,107 @@
         <!-- doc-js Basic Alert -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # menu Money
+                # Context Menu
 
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
+                <link rel="stylesheet" type="text/css" href="src/ax5ui-menu/dist/ax5menu.css"/>
                 <script type="text/javascript" src="src/ax5ui-menu/dist/ax5menu.js"></script>
                 ```
             </ax5docs-md>
 
-
             HTML
             <ax5docs-html run="true">
-
-                <div class="form-group" id="ax5menu-01">
-                    <div class="input-group">
-                        <span class="input-group-addon">Money</span>
-                        <input name="1" type="text" class="form-control" placeholder="" data-ax5menu="money" value="9999.99"/>
-                    </div>
+                <div style="width:400px;height:400px;background: #ccc;" id="context-menu-target">
+                    Right click of mouse
                 </div>
-                <div class="form-group">
-                    <div class="input-group" id="ax5menu-01-1">
-                        <span class="input-group-addon">Money(int)</span>
-                        <input name="2" type="text" class="form-control" placeholder="" data-ax5menu="money(int)"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">Money</span>
-                        <input name="2" type="text" class="form-control" placeholder="1,000,000" data-ax5menu="money" data-ax5="menu"/>
-                    </div>
-                </div>
-
             </ax5docs-html>
 
+            <div class="DH20"></div>
 
             JS
             <ax5docs-js run="true">
                 <script type="text/javascript">
-                    $('[data-ax5menu]').ax5menu();
+                    var menu;
+                    $(document.body).ready(function () {
+                        menu = new ax5.ui.menu({
+                            theme: 'primary',
+                            //width: 200,
+                            iconWidth: 20,
+                            acceleratorWidth: 100,
+                            // position: {left: 10, top: 10},
+                            icons: {
+                                'arrow': '<i class="fa fa-caret-right"></i>'
+                            },
+                            onStateChanged: function () {
+                                console.log(this);
+                                if (this.state == 'close') {
+                                    console.log(this.self.getCheckValue());
+                                }
+                            },
+                            onClick: function () {
+                                // console.log(this);
+                                toast.push(JSON.stringify(this));
+                            },
+                            items: [
+                                {
+                                    icon: '<i class="fa fa-archive"></i>', label: "Menu Parent 0",
+                                    items: [
+                                        {
+                                            check: {type: 'checkbox', name: 'A', value: '0', checked: false},
+                                            label: "Menu Z", data: {}, role: "", accelerator: "CmdOrCtrl+Z"
+                                        },
+                                        {
+                                            check: {type: 'checkbox', name: 'A', value: '1', checked: true},
+                                            label: "Menu A", data: {}, role: ""
+                                        }
+                                    ]
+                                },
+                                {divide: true},
+                                {
+                                    icon: '<i class="fa fa-mixcloud"></i>', label: "Menu Parent 1",
+                                    items: [
+                                        {
+                                            label: "Menu Z", data: {}, role: "",
+                                            items: [
+                                                {label: "Menu Z", data: {}, role: ""},
+                                                {label: "Menu A", data: {}, role: ""}
+                                            ]
+                                        },
+                                        {label: "Menu A", data: {}, role: ""}
+                                    ]
+                                },
+                                {
+                                    check: {type: 'radio', name: 'radioName', value: '1', checked: false},
+                                    icon: '<i class="fa fa-bluetooth"></i>',
+                                    label: "Menu Parent 2"
+                                },
+                                {
+                                    check: {type: 'radio', name: 'radioName', value: '2', checked: false},
+                                    label: "Menu Parent 3"
+                                },
+                                {
+                                    check: {type: 'radio', name: 'radioName', value: '3', checked: false},
+                                    label: "Menu Parent 4"
+                                },
+                                {divide: true},
+                                {
+                                    html: function () {
+                                        return '<div style="text-align: center;">' +
+                                                '<button class="btn btn-primary" onclick="menuCallBack(\'ok\');">OK</button> ' +
+                                                '<button class="btn btn-danger" onclick="menuCallBack(\'cancel\');">CANCEL</button>' +
+                                                '</div>';
+                                    }
+                                }
+                            ]
+                        });
+
+                        $("#context-menu-target").bind("contextmenu", function (e) {
+                            menu.popup(e);
+                            ax5.util.stopEvent(e);
+                            // e || {left: 'Number', top: 'Number', direction: '', width: 'Number'}
+                        });
+                    });
                 </script>
             </ax5docs-js>
 

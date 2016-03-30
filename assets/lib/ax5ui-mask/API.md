@@ -10,34 +10,26 @@ mask.setConfig({
     content: 'Loading content',
     onStateChanged: function(){
         console.log(this);
-    },
-    onClick: function(){
-        console.log(this);
     }
 });
 ```
 **Easy Way - without setConfig**
 ```js
 var mask = new ax5.ui.mask({
-    zIndex: 1000, 
-    content: 'Loading content',
-    onStateChanged: function(){
+   zIndex: 1000, 
+   content: 'Loading content',
+   onStateChanged: function(){
        console.log(this);
-    },
-    onClick: function(){
-        console.log(this);
-    }
+   }
 });
 ```
 ```json
 {
-    [position: {String} - absolute|fixed, ]
     [target: {Element} - target of mask,]
-    [theme: {String} - addClass mask,]
+    [theme: {String} -addClass mask,]
     [zIndex: {Number},]
-    [content: "content of mask",]
-    [onStateChanged: {Function}, ]
-    [onClick: {Function}]
+    [content: 'content of mask',]
+    [onStateChanged: {Function}]
 }
 ```
 ---
@@ -103,4 +95,3 @@ mask.open({
     theme:'danger'
 });
 ```
-
