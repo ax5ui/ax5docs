@@ -1,0 +1,56 @@
+{
+  "name": "ax5ui-menu",
+  "version": "0.3.0",
+  "description": "A menu plugin that works with Bootstrap & jQuery",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ax5ui/ax5ui-menu.git"
+  },
+  "author": {
+    "name": "Thomas Jang",
+    "email": "tom@axisj.com",
+    "url": "ax5.io"
+  },
+  "keywords": [
+    "bootstrap",
+    "jquery",
+    "ax5ui",
+    "plugin",
+    "bootstrap jQuery plugins",
+    "menu",
+    "ax5ui-menu",
+    "javascript ui"
+  ],
+  "dependencies": {},
+  "bugs": {
+    "url": "https://github.com/ax5ui/ax5ui-menu/issues"
+  },
+  "homepage": "https://github.com/ax5ui/ax5ui-menu#readme",
+  "_id": "ax5ui-menu@0.3.0",
+  "scripts": {},
+  "_shasum": "828c34d677de223634f98b63f9746d5977fb5fca",
+  "_from": "ax5ui-menu@latest",
+  "_resolved": "https://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.3.0.tgz",
+  "_npmVersion": "2.14.4",
+  "_nodeVersion": "4.1.1",
+  "_npmUser": {
+    "name": "thomasjang",
+    "email": "tom@axisj.com"
+  },
+  "dist": {
+    "shasum": "828c34d677de223634f98b63f9746d5977fb5fca",
+    "tarball": "http://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.3.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "thomasjang",
+      "email": "tom@axisj.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/ax5ui-menu-0.3.0.tgz_1459266206809_0.6291444795206189"
+  },
+  "directories": {}
+}
