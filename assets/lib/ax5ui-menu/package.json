@@ -1,6 +1,6 @@
 {
   "name": "ax5ui-menu",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A menu plugin that works with Bootstrap & jQuery",
   "license": "MIT",
   "repository": {
@@ -23,26 +23,24 @@
     "javascript ui"
   ],
   "dependencies": {},
-  "readme": "[![axisj-contributed](https://img.shields.io/badge/AXISJ.com-Contributed-green.svg)](https://github.com/axisj)\n![](https://img.shields.io/badge/Seowoo-Mondo&Thomas-red.svg)\n\n# ax5ui-menu\n\n> *Dependencies*\n> * _[jQuery 1.X+](http://jquery.com/)_\n> * _[ax5core](http://ax5.io/ax5core)_\n> * _[bootstrap](http://getbootstrap.com/)_\n\n\n### Install by bower\n```sh\nbower install ax5ui-menu\n```\n[bower](http://bower.io/#install-bower) is web front-end package manager.\nusing the `bower`, when you install the plug-in is installed to resolve the plug-in dependencies under the `bower_components` folder.  \n(You can change the folder location. [.bowerrc](http://bower.io/docs/config/#bowerrc-specification) )\n\nIt is recommended that you install by using the `bower`. \nIf you've never used a bower is, you will be able to be used for [http://bower.io/#install-bower](http://bower.io/#install-bower).\n\n### Download code\n- [ax5core Github releases](https://github.com/ax5ui/ax5core/releases)\n- [ax5ui-menu Github releases](https://github.com/ax5ui/ax5ui-menu/releases)\n\n\n### Insert the \"ax5menu\" in the HTML HEAD.\n\nLocation of the folder can be determined freely in your project. But be careful not to accidentally caused\nexactly the path.\n```html\n<html>\n    <head>\n        <link rel=\"stylesheet\" type=\"text/css\" \n        href=\"bower_components/ax5ui-menu/dist/ax5menu.css\" />\n        <script type=\"text/javascript\" src=\"bower_components/jquery/dist/jquery.min.js\"></script>\n        <script type=\"text/javascript\" src=\"bower_components/ax5core/dist/ax5core.min.js\"></script>\n        <script type=\"text/javascript\" \n        src=\"bower_components/ax5ui-menu/dist/ax5menu.min.js\"></script>\n    </head>\n<body>\n\n</body>\n</html>\n```\n\n### Basic Usages\n```js\n\n```\n\n***\n\n### Install by npm\nIf you do not use the bower, it can be downloaded by using the npm as second best.\nIn npm, so pile on the package manager for the front end, you need to solve the problem of plug-in dependencies.\n\n```sh\nnpm install jquery\nnpm install ax5core\nnpm install ax5ui-menu\n```\n\nAfter you download the file in npm install, you will need to copy to the location where you want to use as a resource for the project.\nIf the inconvenience in the process that you want to copy the file and can be easily copied by using a `gulp` or `grunt`.\n***\n\n### Preview\n- [See Demostration](http://ax5.io/ax5ui-menu/demo/index.html)\n\nIf you have any questions, please refer to the following [gitHub](https://github.com/ax5ui/ax5ui-kernel)",
-  "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/ax5ui/ax5ui-menu/issues"
   },
   "homepage": "https://github.com/ax5ui/ax5ui-menu#readme",
-  "_id": "ax5ui-menu@0.3.0",
+  "_id": "ax5ui-menu@0.4.0",
   "scripts": {},
-  "_shasum": "828c34d677de223634f98b63f9746d5977fb5fca",
-  "_from": "ax5ui-menu@latest",
-  "_resolved": "https://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.3.0.tgz",
-  "_npmVersion": "2.14.4",
-  "_nodeVersion": "4.1.1",
+  "_shasum": "a5538f68dd9e2e4a339196b6fc27200281f1a4d8",
+  "_from": "ax5ui-menu@0.4.0",
+  "_resolved": "https://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.4.0.tgz",
+  "_npmVersion": "2.14.20",
+  "_nodeVersion": "4.4.1",
   "_npmUser": {
     "name": "thomasjang",
     "email": "tom@axisj.com"
   },
   "dist": {
-    "shasum": "828c34d677de223634f98b63f9746d5977fb5fca",
-    "tarball": "http://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.3.0.tgz"
+    "shasum": "a5538f68dd9e2e4a339196b6fc27200281f1a4d8",
+    "tarball": "http://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.4.0.tgz"
   },
   "maintainers": [
     {
@@ -52,7 +50,7 @@
   ],
   "_npmOperationalInternal": {
     "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/ax5ui-menu-0.3.0.tgz_1459266206809_0.6291444795206189"
+    "tmp": "tmp/ax5ui-menu-0.4.0.tgz_1459352098455_0.8034937991760671"
   },
   "directories": {}
 }
