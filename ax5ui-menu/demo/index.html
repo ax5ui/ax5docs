@@ -128,7 +128,7 @@
 				<div class="col-md-3">
 					<div class="docs-menu" id="docs-menu">
 						
-        <ul><li  class='active'><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li ><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li></ul>
     
 					</div>
 				</div>
@@ -159,73 +159,25 @@
     var menu;
     $(document.body).ready(function () {
         menu = new ax5.ui.menu({
-            theme: 'primary',
-            //width: 200,
-            iconWidth: 20,
-            acceleratorWidth: 100,
-            // position: {left: 10, top: 10},
             icons: {
                 'arrow': '&lt;i class="fa fa-caret-right">&lt;/i>'
             },
-            onStateChanged: function () {
-                console.log(this);
-                if (this.state == 'close') {
-                    console.log(this.self.getCheckValue());
-                }
-            },
-            onClick: function () {
-                // console.log(this);
-                toast.push(JSON.stringify(this));
-            },
             items: [
                 {
-                    icon: '&lt;i class="fa fa-archive">&lt;/i>', label: "Menu Parent 0",
+                    icon: '&lt;i class="fa fa-archive">&lt;/i>', label: "Menu A",
                     items: [
-                        {
-                            check: {type: 'checkbox', name: 'A', value: '0', checked: false},
-                            label: "Menu Z", data: {}, role: "", accelerator: "CmdOrCtrl+Z"
-                        },
-                        {
-                            check: {type: 'checkbox', name: 'A', value: '1', checked: true},
-                            label: "Menu A", data: {}, role: ""
-                        }
-                    ]
-                },
-                {divide: true},
-                {
-                    icon: '&lt;i class="fa fa-mixcloud">&lt;/i>', label: "Menu Parent 1",
-                    items: [
-                        {
-                            label: "Menu Z", data: {}, role: "",
-                            items: [
-                                {label: "Menu Z", data: {}, role: ""},
-                                {label: "Menu A", data: {}, role: ""}
-                            ]
-                        },
-                        {label: "Menu A", data: {}, role: ""}
+                        {label: "Menu A-0"},
+                        {label: "Menu A-1"},
+                        {label: "Menu A-2"}
                     ]
                 },
                 {
-                    check: {type: 'radio', name: 'radioName', value: '1', checked: false},
-                    icon: '&lt;i class="fa fa-bluetooth">&lt;/i>',
-                    label: "Menu Parent 2"
-                },
-                {
-                    check: {type: 'radio', name: 'radioName', value: '2', checked: false},
-                    label: "Menu Parent 3"
-                },
-                {
-                    check: {type: 'radio', name: 'radioName', value: '3', checked: false},
-                    label: "Menu Parent 4"
-                },
-                {divide: true},
-                {
-                    html: function () {
-                        return '&lt;div style="text-align: center;">' +
-                                '&lt;button class="btn btn-primary" onclick="menuCallBack(\'ok\');">OK&lt;/button> ' +
-                                '&lt;button class="btn btn-danger" onclick="menuCallBack(\'cancel\');">CANCEL&lt;/button>' +
-                                '&lt;/div>';
-                    }
+                    icon: '&lt;i class="fa fa-mixcloud">&lt;/i>', label: "Menu B",
+                    items: [
+                        {label: "Menu B-0"},
+                        {label: "Menu B-1"},
+                        {label: "Menu B-2"}
+                    ]
                 }
             ]
         });
@@ -239,73 +191,25 @@
 &lt;/script></pre><script type="text/javascript">var menu;
     $(document.body).ready(function () {
         menu = new ax5.ui.menu({
-            theme: 'primary',
-            //width: 200,
-            iconWidth: 20,
-            acceleratorWidth: 100,
-            // position: {left: 10, top: 10},
             icons: {
                 'arrow': '<i class="fa fa-caret-right"></i>'
             },
-            onStateChanged: function () {
-                console.log(this);
-                if (this.state == 'close') {
-                    console.log(this.self.getCheckValue());
-                }
-            },
-            onClick: function () {
-                // console.log(this);
-                toast.push(JSON.stringify(this));
-            },
             items: [
                 {
-                    icon: '<i class="fa fa-archive"></i>', label: "Menu Parent 0",
+                    icon: '<i class="fa fa-archive"></i>', label: "Menu A",
                     items: [
-                        {
-                            check: {type: 'checkbox', name: 'A', value: '0', checked: false},
-                            label: "Menu Z", data: {}, role: "", accelerator: "CmdOrCtrl+Z"
-                        },
-                        {
-                            check: {type: 'checkbox', name: 'A', value: '1', checked: true},
-                            label: "Menu A", data: {}, role: ""
-                        }
-                    ]
-                },
-                {divide: true},
-                {
-                    icon: '<i class="fa fa-mixcloud"></i>', label: "Menu Parent 1",
-                    items: [
-                        {
-                            label: "Menu Z", data: {}, role: "",
-                            items: [
-                                {label: "Menu Z", data: {}, role: ""},
-                                {label: "Menu A", data: {}, role: ""}
-                            ]
-                        },
-                        {label: "Menu A", data: {}, role: ""}
+                        {label: "Menu A-0"},
+                        {label: "Menu A-1"},
+                        {label: "Menu A-2"}
                     ]
                 },
                 {
-                    check: {type: 'radio', name: 'radioName', value: '1', checked: false},
-                    icon: '<i class="fa fa-bluetooth"></i>',
-                    label: "Menu Parent 2"
-                },
-                {
-                    check: {type: 'radio', name: 'radioName', value: '2', checked: false},
-                    label: "Menu Parent 3"
-                },
-                {
-                    check: {type: 'radio', name: 'radioName', value: '3', checked: false},
-                    label: "Menu Parent 4"
-                },
-                {divide: true},
-                {
-                    html: function () {
-                        return '<div style="text-align: center;">' +
-                                '<button class="btn btn-primary" onclick="menuCallBack(\'ok\');">OK</button> ' +
-                                '<button class="btn btn-danger" onclick="menuCallBack(\'cancel\');">CANCEL</button>' +
-                                '</div>';
-                    }
+                    icon: '<i class="fa fa-mixcloud"></i>', label: "Menu B",
+                    items: [
+                        {label: "Menu B-0"},
+                        {label: "Menu B-1"},
+                        {label: "Menu B-2"}
+                    ]
                 }
             ]
         });

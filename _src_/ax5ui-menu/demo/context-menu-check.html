@@ -1,5 +1,5 @@
 <!--suppress HtmlUnknownTarget -->
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="context-menu" title="Context Menu" desc=""></tmpl-metadata>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="context-menu-check" title="with checkbox" desc=""></tmpl-metadata>
 
 <layout-use template="${data.layoutPath}" project-name="${data.projectName}" parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
             body-style="sub-page" with-menu="true">
@@ -21,7 +21,7 @@
         <!-- doc-js Basic Alert -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Context Menu
+                # Context Menu with checkbox
 
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
@@ -48,22 +48,35 @@
                             icons: {
                                 'arrow': '<i class="fa fa-caret-right"></i>'
                             },
+                            onClick: function () {
+                                // console.log(this);
+                            },
                             items: [
                                 {
                                     icon: '<i class="fa fa-archive"></i>', label: "Menu A",
                                     items: [
-                                        {label: "Menu A-0"},
-                                        {label: "Menu A-1"},
-                                        {label: "Menu A-2"}
+                                        {
+                                            check: {type: 'checkbox', name: 'A', value: '0', checked: false},
+                                            label: "Menu A-0"
+                                        },
+                                        {
+                                            check: {type: 'checkbox', name: 'A', value: '1', checked: true},
+                                            label: "Menu A-1"
+                                        }
                                     ]
                                 },
+                                {divide: true},
                                 {
-                                    icon: '<i class="fa fa-mixcloud"></i>', label: "Menu B",
-                                    items: [
-                                        {label: "Menu B-0"},
-                                        {label: "Menu B-1"},
-                                        {label: "Menu B-2"}
-                                    ]
+                                    check: {type: 'radio', name: 'radioName', value: '1', checked: false},
+                                    label: "Menu Parent 2"
+                                },
+                                {
+                                    check: {type: 'radio', name: 'radioName', value: '2', checked: false},
+                                    label: "Menu Parent 3"
+                                },
+                                {
+                                    check: {type: 'radio', name: 'radioName', value: '3', checked: false},
+                                    label: "Menu Parent 4"
                                 }
                             ]
                         });
