@@ -128,7 +128,7 @@
 				<div class="col-md-3">
 					<div class="docs-menu" id="docs-menu">
 						
-        <ul><li ><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li  class='active'><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li></ul>
+        <ul><li ><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li  class='active'><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li><li ><a href="/ax5ui-menu/demo/context-menu-icon.html">with Icon</a></li></ul>
     
 					</div>
 				</div>
@@ -159,15 +159,12 @@
     var menu;
     $(document.body).ready(function () {
         menu = new ax5.ui.menu({
-            icons: {
-                'arrow': '&lt;i class="fa fa-caret-right">&lt;/i>'
-            },
             onClick: function () {
                 // console.log(this);
             },
             items: [
                 {
-                    icon: '&lt;i class="fa fa-archive">&lt;/i>', label: "Menu A",
+                    label: "Menu A",
                     items: [
                         {
                             check: {type: 'checkbox', name: 'A', value: '0', checked: false},
@@ -204,15 +201,12 @@
 &lt;/script></pre><script type="text/javascript">var menu;
     $(document.body).ready(function () {
         menu = new ax5.ui.menu({
-            icons: {
-                'arrow': '<i class="fa fa-caret-right"></i>'
-            },
             onClick: function () {
                 // console.log(this);
             },
             items: [
                 {
-                    icon: '<i class="fa fa-archive"></i>', label: "Menu A",
+                    label: "Menu A",
                     items: [
                         {
                             check: {type: 'checkbox', name: 'A', value: '0', checked: false},

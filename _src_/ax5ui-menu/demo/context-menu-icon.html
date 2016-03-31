@@ -1,5 +1,5 @@
 <!--suppress HtmlUnknownTarget -->
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="context-menu-check" title="with checkbox" desc=""></tmpl-metadata>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="3" id="context-menu-icon" title="with Icon" desc=""></tmpl-metadata>
 
 <layout-use template="${data.layoutPath}" project-name="${data.projectName}" parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
             body-style="sub-page" with-menu="true">
@@ -21,16 +21,19 @@
         <!-- doc-js Basic Alert -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Context Menu with checkbox
+                # Context Menu with Icon
 
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
+                <link rel="stylesheet" type="text/css" href="src/lib/font-awesome/css/font-awesome.css"/>
                 <link rel="stylesheet" type="text/css" href="src/ax5ui-menu/dist/ax5menu.css"/>
                 <script type="text/javascript" src="src/ax5ui-menu/dist/ax5menu.js"></script>
                 ```
+                Recommand use font-icon, These days, you can download the font-icon in many service.
+
             </ax5docs-md>
 
-            HTML
+            <h4>HTML</h4>
             <ax5docs-html run="true">
                 <div style="width:400px;height:400px;background: #ccc;" id="context-menu-target">
                     Right click of mouse
@@ -39,41 +42,33 @@
 
             <div class="DH20"></div>
 
-            JS
+            <h4>JS</h4>
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     var menu;
                     $(document.body).ready(function () {
                         menu = new ax5.ui.menu({
-                            onClick: function () {
-                                // console.log(this);
+                            icons: {
+                                'arrow': '<i class="fa fa-caret-right"></i>'
                             },
                             items: [
                                 {
+                                    icon: '<i class="fa fa-comment"></i>',
                                     label: "Menu A",
                                     items: [
-                                        {
-                                            check: {type: 'checkbox', name: 'A', value: '0', checked: false},
-                                            label: "Menu A-0"
-                                        },
-                                        {
-                                            check: {type: 'checkbox', name: 'A', value: '1', checked: true},
-                                            label: "Menu A-1"
-                                        }
+                                        {icon: '<i class="fa fa-hand-peace-o"></i>', label: "Menu A-0"},
+                                        {icon: '<i class="fa fa-hand-rock-o"></i>',label: "Menu A-1"},
+                                        {icon: '<i class="fa fa-hand-stop-o"></i>',label: "Menu A-2"}
                                     ]
                                 },
-                                {divide: true},
                                 {
-                                    check: {type: 'radio', name: 'radioName', value: '1', checked: false},
-                                    label: "Menu Parent 2"
-                                },
-                                {
-                                    check: {type: 'radio', name: 'radioName', value: '2', checked: false},
-                                    label: "Menu Parent 3"
-                                },
-                                {
-                                    check: {type: 'radio', name: 'radioName', value: '3', checked: false},
-                                    label: "Menu Parent 4"
+                                    icon: '<i class="fa fa-comments"></i>',
+                                    label: "Menu B",
+                                    items: [
+                                        {icon: '<i class="fa fa-pencil-square"></i>', label: "Menu B-0"},
+                                        {icon: '<i class="fa fa-phone-square"></i>', label: "Menu B-1"},
+                                        {icon: '<i class="fa fa-plus-square"></i>', label: "Menu B-2"}
+                                    ]
                                 }
                             ]
                         });
