@@ -79,16 +79,28 @@
                                     html: function () {
                                         // console.log(this);
                                         return '<div style="text-align: center;">' +
-                                                '<button class="btn btn-primary btn-xs">OK</button> ' +
-                                                '<button class="btn btn-danger btn-xs">CANCEL</button>' +
+                                                '<button class="btn btn-primary btn-xs" data-menu-btn="OK">OK</button> ' +
+                                                '<button class="btn btn-danger btn-xs" data-menu-btn="CANCEL">CANCEL</button>' +
                                                 '</div>';
                                     }
                                 }
-                            ],
-                            onStateChanged: function () {
-                                console.log(this);
-                            }
+                            ]
                         });
+
+                        menu.onStateChanged = function () {
+                            console.log(this);
+                        };
+                        menu.onLoad = function(){
+                            var self = this.self;
+                            if (!this.element) return this;
+                            $(this.element).find('[data-menu-btn]').click(function () {
+                                var act = this.getAttribute("data-menu-btn");
+                                if (act == 'OK') {
+                                    console.log(self.getCheckValue());
+                                }
+                                self.close();
+                            });
+                        };
 
                         $("#context-menu-target").bind("contextmenu", function (e) {
                             menu.popup(e);
