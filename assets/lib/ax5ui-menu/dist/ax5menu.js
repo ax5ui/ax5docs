@@ -6,7 +6,7 @@
     /**
      * @class ax5.ui.menu
      * @classdesc
-     * @version v0.0.1
+     * @version 0.4.5
      * @author tom@axisj.com
      * @example
      * ```
@@ -16,8 +16,7 @@
     var U = ax5.util;
 
     //== UI Class
-    var axClass;
-    axClass = function axClass() {
+    var axClass = function axClass() {
         var self = this,
             cfg;
 
@@ -25,7 +24,6 @@
 
         this.config = {
             theme: "default",
-            //width: 200,
             iconWidth: 22,
             acceleratorWidth: 100,
             menuBodyPadding: 5,
@@ -33,7 +31,8 @@
             offset: { left: 0, top: 0 },
             position: "fixed",
             animateTime: 250,
-            items: []
+            items: [],
+            itemClickAndClose: true
         };
 
         this.openTimer = null;
@@ -45,19 +44,19 @@
 
         var appEventAttach = function appEventAttach(active) {
             if (active) {
-                jQuery(document).unbind("click.ax5menu").bind("click.ax5menu", self.__clickItem.bind(this));
-                jQuery(window).unbind("keydown.ax5menu").bind("keydown.ax5menu", function (e) {
+                jQuery(document).unbind("click.ax5menu-" + self.menuId).bind("click.ax5menu-" + self.menuId, self.__clickItem.bind(this));
+                jQuery(window).unbind("keydown.ax5menu-" + self.menuId).bind("keydown.ax5menu-" + self.menuId, function (e) {
                     if (e.which == ax5.info.eventKeys.ESC) {
                         self.close();
                     }
                 });
-                jQuery(window).unbind("resize.ax5menu").bind("resize.ax5menu", function (e) {
+                jQuery(window).unbind("resize.ax5menu-" + self.menuId).bind("resize.ax5menu-" + self.menuId, function (e) {
                     self.close();
                 });
             } else {
-                jQuery(document).unbind("click.ax5menu");
-                jQuery(window).unbind("keydown.ax5menu");
-                jQuery(window).unbind("resize.ax5menu");
+                jQuery(document).unbind("click.ax5menu-" + self.menuId);
+                jQuery(window).unbind("keydown.ax5menu-" + self.menuId);
+                jQuery(window).unbind("resize.ax5menu-" + self.menuId);
             }
         };
 
@@ -66,12 +65,19 @@
             // after set_config();
             self.menuId = ax5.getGuid();
 
-            if (cfg.onStateChanged) {
+            /**
+             * config에 선언된 이벤트 함수들을 this로 이동시켜 주어 나중에 인스턴스.on... 으로 처리 가능 하도록 변경
+             */
+            this.onStateChanged = cfg.onStateChanged;
+            this.onClick = cfg.onClick;
+            this.onLoad = cfg.onLoad;
+
+            if (this.onStateChanged) {
                 that = {
                     self: this,
                     state: "init"
                 };
-                cfg.onStateChanged.call(that, that);
+                this.onStateChanged.call(that, that);
             }
         };
 
@@ -128,8 +134,10 @@
             removed.forEach(function (n) {
                 n.$target.remove();
             });
+
             this.queue.push({
-                '$target': activeMenu
+                '$target': activeMenu,
+                'data': jQuery.extend({}, data)
             });
 
             activeMenu.find('[data-menu-item-index]').bind("mouseover", function () {
@@ -171,13 +179,13 @@
             // is Root
             if (depth == 0) {
                 if (data.direction) activeMenu.addClass("direction-" + data.direction);
-                if (cfg.onStateChanged) {
+                if (this.onStateChanged) {
                     that = {
                         self: this,
                         items: items,
                         parent: function (path) {
                             if (!path) return false;
-                            var item;
+                            var item = null;
                             try {
                                 item = Function("", "return this.config.items[" + path.substring(5).replace(/\./g, '].items[') + "];").call(self);
                             } catch (e) {}
@@ -186,11 +194,20 @@
                         state: "popup"
                     };
 
-                    cfg.onStateChanged.call(that, that);
+                    this.onStateChanged.call(that, that);
                 }
             }
 
             this.__align(activeMenu, data);
+
+            if (this.onLoad) {
+                that = {
+                    self: this,
+                    items: items,
+                    element: activeMenu.get(0)
+                };
+                this.onLoad.call(that, that);
+            }
             return this;
         };
 
@@ -202,7 +219,6 @@
                 }
             });
             if (target) {
-                // click item
                 var item = function (path) {
                     if (!path) return false;
                     var item;
@@ -234,17 +250,23 @@
                         };
                         if (setValue[this.type]) setValue[this.type].call(this, this.checked);
                     }).call(item.check, cfg.items);
+
+                    if (!cfg.itemClickAndClose) {
+                        self.queue.forEach(function (n) {
+                            n.$target.find('[data-menu-item-index]').each(function () {
+                                var item = n.data.items[this.getAttribute("data-menu-item-index")];
+                                if (item.check) {
+                                    jQuery(this).find(".item-checkbox-wrap").attr("data-item-checked", item.check.checked);
+                                }
+                            });
+                        });
+                    }
                 }
 
                 if (self.onClick) {
                     self.onClick.call(item, item);
-                    if (!item.items || item.items.length == 0) self.close();
-                } else if (cfg.onClick) {
-                    cfg.onClick.call(item, item);
-                    if (!item.items || item.items.length == 0) self.close();
-                } else {
-                    if (!item.items || item.items.length == 0) self.close();
                 }
+                if ((!item.items || item.items.length == 0) && cfg.itemClickAndClose) self.close();
             } else {
                 self.close();
             }
@@ -255,7 +277,8 @@
         this.__align = function (activeMenu, data) {
             //console.log(data['@parent']);
             var $window = $(window),
-                wh = $window.height(),
+                $document = $(document),
+                wh = cfg.position == "fixed" ? $window.height() : $document.height(),
                 ww = $window.width(),
                 h = activeMenu.outerHeight(),
                 w = activeMenu.outerWidth(),
@@ -270,6 +293,7 @@
                     l = ww - w;
                 }
             }
+
             if (t + h > wh) {
                 t = wh - h;
             }
@@ -291,9 +315,11 @@
                 'event': function event(e, opt) {
                     //var xOffset = Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
                     //var yOffset = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+                    //console.log(e.pageY);
+
                     e = {
                         left: e.clientX,
-                        top: e.clientY,
+                        top: cfg.position == "fixed" ? e.clientY : e.pageY,
                         width: cfg.width,
                         theme: cfg.theme
                     };
@@ -302,7 +328,6 @@
                         if (cfg.offset.left) e.left += cfg.offset.left;
                         if (cfg.offset.top) e.top += cfg.offset.top;
                     }
-
                     opt = jQuery.extend(true, e, opt);
                     return opt;
                 },
@@ -465,12 +490,12 @@
             });
             this.queue = [];
 
-            if (cfg.onStateChanged) {
+            if (this.onStateChanged) {
                 that = {
                     self: this,
                     state: "close"
                 };
-                cfg.onStateChanged.call(that, that);
+                this.onStateChanged.call(that, that);
             }
 
             return this;

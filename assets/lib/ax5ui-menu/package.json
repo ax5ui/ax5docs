@@ -1,6 +1,6 @@
 {
   "name": "ax5ui-menu",
-  "version": "0.4.1",
+  "version": "0.4.5",
   "description": "A menu plugin that works with Bootstrap & jQuery",
   "license": "MIT",
   "repository": {
@@ -27,11 +27,11 @@
     "url": "https://github.com/ax5ui/ax5ui-menu/issues"
   },
   "homepage": "https://github.com/ax5ui/ax5ui-menu#readme",
-  "_id": "ax5ui-menu@0.4.1",
+  "_id": "ax5ui-menu@0.4.5",
   "scripts": {},
-  "_shasum": "b6bef230e19272376707e0753e5d4d68340fce31",
-  "_from": "ax5ui-menu@0.4.1",
-  "_resolved": "https://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.4.1.tgz",
+  "_shasum": "770013f99854f977ed057702d5561af63ce153d8",
+  "_from": "ax5ui-menu@0.4.5",
+  "_resolved": "https://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.4.5.tgz",
   "_npmVersion": "2.14.20",
   "_nodeVersion": "4.4.1",
   "_npmUser": {
@@ -39,8 +39,8 @@
     "email": "tom@axisj.com"
   },
   "dist": {
-    "shasum": "b6bef230e19272376707e0753e5d4d68340fce31",
-    "tarball": "https://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.4.1.tgz"
+    "shasum": "770013f99854f977ed057702d5561af63ce153d8",
+    "tarball": "https://registry.npmjs.org/ax5ui-menu/-/ax5ui-menu-0.4.5.tgz"
   },
   "maintainers": [
     {
@@ -50,7 +50,7 @@
   ],
   "_npmOperationalInternal": {
     "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/ax5ui-menu-0.4.1.tgz_1459433644189_0.7750568247865885"
+    "tmp": "tmp/ax5ui-menu-0.4.5.tgz_1459579092328_0.41755356965586543"
   },
   "directories": {}
 }
