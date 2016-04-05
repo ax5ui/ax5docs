@@ -128,7 +128,7 @@
 				<div class="col-md-3">
 					<div class="docs-menu" id="docs-menu">
 						
-        <ul><li  class='active'><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li ><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li><li ><a href="/ax5ui-menu/demo/context-menu-icon.html">with Icon</a></li><li ><a href="/ax5ui-menu/demo/context-menu-html.html">extend HTML</a></li><li ><a href="/ax5ui-menu/demo/context-menu-theme.html">Theme</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li ><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li><li ><a href="/ax5ui-menu/demo/context-menu-icon.html">with Icon</a></li><li ><a href="/ax5ui-menu/demo/context-menu-html.html">extend HTML</a></li><li ><a href="/ax5ui-menu/demo/context-menu-theme.html">Theme</a></li><li ><a href="/ax5ui-menu/demo/menu-bar.html">Menu bar</a></li></ul>
     
 					</div>
 				</div>
@@ -160,6 +160,9 @@
     $(document.body).ready(function () {
         menu = new ax5.ui.menu({
             position: "absolute", // default position is "fixed"
+            icons: {
+                'arrow': '&rtrif;'
+            },
             items: [
                 {
                     label: "Menu A",
@@ -190,6 +193,9 @@
     $(document.body).ready(function () {
         menu = new ax5.ui.menu({
             position: "absolute", // default position is "fixed"
+            icons: {
+                'arrow': '&rtrif;'
+            },
             items: [
                 {
                     label: "Menu A",
@@ -218,7 +224,9 @@
     });
 </script></script>
 
-            
+            <p>Position value of the context menu, if the user is not set, is <code>fixed</code>.
+If <code>fixed</code>, not dependent on the scrolling when the page is scrolled, the position is fixed.</p>
+
 
 
         </section>

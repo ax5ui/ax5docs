@@ -46,6 +46,9 @@
                     $(document.body).ready(function () {
                         menu = new ax5.ui.menu({
                             position: "absolute", // default position is "fixed"
+                            icons: {
+                                'arrow': '&rtrif;'
+                            },
                             items: [
                                 {
                                     label: "Menu A",
@@ -76,7 +79,8 @@
             </ax5docs-js>
 
             <ax5docs-md>
-                
+                Position value of the context menu, if the user is not set, is `fixed`.
+                If `fixed`, not dependent on the scrolling when the page is scrolled, the position is fixed.
             </ax5docs-md>
 
 

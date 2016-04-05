@@ -128,9 +128,11 @@
 <blockquote>
 <p>toast is a UI that can be used as an alternative means of window.alert, window.confirm and window.prompt</p>
 </blockquote>
+<p>How to initialize the properties of the UI, there are two.
+You can pass the property values of the UI to <code>setConfig</code>.
+Using the <code>new</code> you can pass when you initialize the UI.</p>
 <h2>setConfig()</h2>
-<p><code>setConfig([options])</code>
-You define the default settings for the toast. Create a ax5.ui.toast instance, using the setConfig method in that instance, you can define a default value.</p>
+<p><code>setConfig([options, callInit=true])</code></p>
 <pre class="prettyprint linenums lang-js"><code>var myToast = new ax5.ui.toast();
 myToast.set_config({
     msg: &quot;String&quot;,

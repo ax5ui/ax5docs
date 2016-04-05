@@ -128,7 +128,7 @@
 				<div class="col-md-3">
 					<div class="docs-menu" id="docs-menu">
 						
-        <ul><li ><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li ><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li><li ><a href="/ax5ui-menu/demo/context-menu-icon.html">with Icon</a></li><li  class='active'><a href="/ax5ui-menu/demo/context-menu-html.html">extend HTML</a></li><li ><a href="/ax5ui-menu/demo/context-menu-theme.html">Theme</a></li></ul>
+        <ul><li ><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li ><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li><li ><a href="/ax5ui-menu/demo/context-menu-icon.html">with Icon</a></li><li  class='active'><a href="/ax5ui-menu/demo/context-menu-html.html">extend HTML</a></li><li ><a href="/ax5ui-menu/demo/context-menu-theme.html">Theme</a></li><li ><a href="/ax5ui-menu/demo/menu-bar.html">Menu bar</a></li></ul>
     
 					</div>
 				</div>
@@ -148,9 +148,9 @@
 
 
             <h4>HTML</h4>
-            <pre class="prettyprint linenums lang-html">&lt;div style="width:400px;height:400px;background: #ccc;" id="context-menu-target">
+            <pre class="prettyprint linenums lang-html">&lt;div style="height:200px;background: #ccc;" id="context-menu-target">
     Right click of mouse
-&lt;/div></pre><div style="width:400px;height:400px;background: #ccc;" id="context-menu-target">
+&lt;/div></pre><div style="height:200px;background: #ccc;" id="context-menu-target">
     Right click of mouse
 </div>
 
@@ -161,6 +161,7 @@
     var menu;
     $(document.body).ready(function () {
         menu = new ax5.ui.menu({
+            position: "absolute", // default position is "fixed"
             icons: {
                 'arrow': '&lt;i class="fa fa-caret-right">&lt;/i>'
             },
@@ -224,6 +225,7 @@
 &lt;/script></pre><script type="text/javascript">var menu;
     $(document.body).ready(function () {
         menu = new ax5.ui.menu({
+            position: "absolute", // default position is "fixed"
             icons: {
                 'arrow': '<i class="fa fa-caret-right"></i>'
             },

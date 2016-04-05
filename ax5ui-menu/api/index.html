@@ -126,28 +126,151 @@
 					
         <h1>Menu</h1>
 <blockquote>
-<p>컨텍스트 메뉴와 메뉴바형태의 메뉴를 처리하는 UI 입니다</p>
+<p>It is a menu UI. You can use the kind of context menu and the menu bar.</p>
 </blockquote>
+<p>How to initialize the properties of the UI, there are two.
+You can pass the property values of the UI to <code>setConfig</code>.
+Using the <code>new</code> you can pass when you initialize the UI.</p>
 <h2>setConfig</h2>
-<p>You previously declared the default settings of the menu UI.</p>
+<p><code>setConfig([options, callInit=true])</code></p>
 <pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu();
 menu.setConfig({
-
+  theme: 'default',
+  offset: {left: 0, top: 0},
+  position: &quot;absolute&quot;,
+  icons: {
+      'arrow': '&lt;i class=&quot;fa fa-caret-right&quot;&gt;&lt;/i&gt;'
+  },
+  items: [
+    {label:&quot;label&quot;}
+    {divide: true},
+    {label:&quot;label&quot;, items: [
+      {label:&quot;label&quot;}
+    ]}
+  ]
 });
 </code></pre>
 <p><strong>Easy Way - without setConfig</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu({
-
+  theme: 'default',
+  position: &quot;absolute&quot;,
+  icons: {
+      'arrow': '&lt;i class=&quot;fa fa-caret-right&quot;&gt;&lt;/i&gt;'
+  },
+  items: [
+    {label:&quot;label&quot;}
+    {divide: true},
+    {label:&quot;label&quot;, items: [
+      {label:&quot;label&quot;}
+    ]}
+  ]
 });
 </code></pre>
-<pre class="prettyprint linenums lang-json"><code>{
-
-}
+<h3>theme</h3>
+<p>Type: <code>String</code>
+default, primary, info, warning, danger</p>
+<h3>position</h3>
+<p>Type: <code>String</code>
+abslute, fixed</p>
+<h3>width</h3>
+<p>Type: <code>Number</code></p>
+<h3>iconWidth</h3>
+<p>Type: <code>Number</code></p>
+<h3>acceleratorWidth</h3>
+<p>Type: <code>Number</code></p>
+<h3>offset</h3>
+<p>Type: <code>Object</code></p>
+<pre class="prettyprint linenums lang-js"><code>{left: 10, top: 10}
+</code></pre>
+<h3>itemClickAndClose</h3>
+<p>Type: <code>Boolean</code>
+When you click on an item on the menu, whether to close the menu</p>
+<h3>icons</h3>
+<p>Type: <code>Object</code></p>
+<pre class="prettyprint linenums lang-js"><code>{'arrow': '&lt;i class=&quot;fa fa-caret-right&quot;&gt;&lt;/i&gt;'}
+</code></pre>
+<h3>items</h3>
+<p>Type: <code>Array</code></p>
+<h3>onStateChanged</h3>
+<p>Type: <code>Function</code></p>
+<pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu({
+  items: [
+    {label:&quot;label&quot;}
+  ],
+  onStateChanged: function(){
+    console.log(this);
+  }
+});
+</code></pre>
+<p>or</p>
+<pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu({});
+menu.onStateChanged = function(){
+  console.log(this);
+};
+</code></pre>
+<h3>onClick</h3>
+<p>Type: <code>Function</code></p>
+<pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu({
+  items: [
+    {label:&quot;label&quot;}
+  ],
+  onClick: function(){
+    console.log(this);
+  }
+});
+</code></pre>
+<p>or</p>
+<pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu({});
+menu.onClick = function(){
+  console.log(this);
+};
+</code></pre>
+<h3>onLoad</h3>
+<p>Type: <code>Function</code></p>
+<pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu({
+  items: [
+    {label:&quot;label&quot;}
+  ],
+  onLoad: function(){
+    console.log(this);
+  }
+});
+</code></pre>
+<p>or</p>
+<pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu({});
+menu.onLoad = function(){
+  console.log(this);
+};
 </code></pre>
 <hr>
 <h2>popup</h2>
 <p><code>popup(event|position)</code></p>
-<pre class="prettyprint linenums lang-js"><code></code></pre>
+<pre class="prettyprint linenums lang-js"><code>$(document).bind(&quot;contextmenu&quot;, function (e) {
+    menu.popup(e);
+    ax5.util.stopEvent(e);
+});
+</code></pre>
+<p>or use custom position</p>
+<pre class="prettyprint linenums lang-js"><code>menu.popup({left:0, top:0, width:200});
+</code></pre>
+<hr>
+<h2>close</h2>
+<p><code>close()</code></p>
+<hr>
+<h2>getCheckValue</h2>
+<p><code>getCheckValue()</code></p>
+<pre class="prettyprint linenums lang-js"><code>menu.getCheckValue();
+// {}
+</code></pre>
+<hr>
+<h2>attach</h2>
+<p><code>attach(Element)</code></p>
+<pre class="prettyprint linenums lang-html"><code>&lt;div id=&quot;attachedMenu-target&quot;
+     style=&quot;width:100%;height:36px;background: #cccccc;border-bottom:1px solid #000;padding: 0px 20px;&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre class="prettyprint linenums lang-js"><code>var attachedMenu = new ax5.ui.menu({});
+attachedMenu.attach($(&quot;#attachedMenu-target&quot;));
+</code></pre>
 
     
 				</div>

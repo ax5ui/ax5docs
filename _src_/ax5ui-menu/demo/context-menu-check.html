@@ -32,7 +32,7 @@
 
             HTML
             <ax5docs-html run="true">
-                <div style="width:400px;height:400px;background: #ccc;" id="context-menu-target">
+                <div style="height:200px;background: #ccc;" id="context-menu-target">
                     Right click of mouse
                 </div>
             </ax5docs-html>
@@ -45,6 +45,7 @@
                     var menu;
                     $(document.body).ready(function () {
                         menu = new ax5.ui.menu({
+                            position: "absolute", // default position is "fixed"
                             onClick: function () {
                                 // console.log(this);
                             },

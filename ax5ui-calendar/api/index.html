@@ -126,6 +126,9 @@
 <blockquote>
 <p>calendar UI</p>
 </blockquote>
+<p>How to initialize the properties of the UI, there are two.
+You can pass the property values of the UI to <code>setConfig</code>.
+Using the <code>new</code> you can pass when you initialize the UI.</p>
 <h2>setConfig()</h2>
 <p><code>setConfig([options, callInit=true])</code></p>
 <pre class="prettyprint linenums lang-js"><code>var myCalendar = new ax5.ui.calendar();
@@ -305,6 +308,24 @@ myCalendar.setSelectable({ '2016-01-01': true, '2016-01-02': true });
     '2016-02-09': {theme: 'holiday', label: '설날'},
     '2016-02-10': {theme: 'holiday', label: '대체휴일'}
 });
+</code></pre>
+<hr>
+<h2>onStateChanged</h2>
+<p>Type: <code>Function</code></p>
+<p><code>onStateChanged</code> function can be defined in setConfig method or new ax5.ui.calendar initialization method.
+However, you can us to define an event function after initialization, if necessary</p>
+<pre class="prettyprint linenums lang-js"><code>myCalendar.onStateChanged = function(){
+    console.log(this);
+}
+</code></pre>
+<hr>
+<h2>onClick</h2>
+<p>Type: <code>Function</code></p>
+<p><code>onClick</code> function can be defined in setConfig method or new ax5.ui.calendar initialization method.
+However, you can us to define an event function after initialization, if necessary</p>
+<pre class="prettyprint linenums lang-js"><code>myCalendar.onClick = function(){
+    console.log(this);
+}
 </code></pre>
 
     

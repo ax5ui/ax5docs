@@ -126,8 +126,11 @@
 <blockquote>
 <p>&quot;mask&quot; is used for prevent user action during running the application.</p>
 </blockquote>
+<p>How to initialize the properties of the UI, there are two.
+You can pass the property values of the UI to <code>setConfig</code>.
+Using the <code>new</code> you can pass when you initialize the UI.</p>
 <h2>setConfig</h2>
-<p>You previously declared the default settings of the mask UI. The declared set value in this way, are inherited by every time you start it with by <code>open</code> method.</p>
+<p><code>setConfig([options, callInit=true])</code></p>
 <pre class="prettyprint linenums lang-js"><code>var mask = new ax5.ui.mask();
 mask.setConfig({
     zIndex: 1000, 

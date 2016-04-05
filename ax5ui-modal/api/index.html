@@ -128,9 +128,11 @@
 <blockquote>
 <p>Modal UI, hold does not exceed the current page, you can use in order to process a simple user input and information. In some cases, by the other page so as to output in the modal, it can also handle the task of more diverse forms.</p>
 </blockquote>
+<p>How to initialize the properties of the UI, there are two.
+You can pass the property values of the UI to <code>setConfig</code>.
+Using the <code>new</code> you can pass when you initialize the UI.</p>
 <h2>setConfig()</h2>
-<p><code>setConfig([options])</code>
-You define the default settings for the modal. Create a ax5.ui.modal instance, using the setConfig method in that instance, you can define a default value.</p>
+<p><code>setConfig([options, callInit=true])</code></p>
 <pre class="prettyprint linenums lang-js"><code>var myModal = new ax5.ui.modal();
 myModal.set_config({
     width: &quot;Number&quot;,
@@ -220,6 +222,15 @@ modal.align({left:&quot;left&quot;, top:&quot;top&quot;, margin: 20});
 <hr>
 <h2>close()</h2>
 <p><code>close()</code></p>
+<hr>
+<h2>onStateChanged</h2>
+<p>Type: <code>Function</code></p>
+<p><code>onStateChanged</code> function can be defined in setConfig method or new ax5.ui.modal initialization method.
+However, you can us to define an event function after initialization, if necessary</p>
+<pre class="prettyprint linenums lang-js"><code>modal.onStateChanged = function(){
+    console.log(this);
+}
+</code></pre>
 
     
 				</div>
