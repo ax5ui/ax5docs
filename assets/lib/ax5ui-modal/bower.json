@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-modal",
-	"version": "0.5.0",
+	"version": "0.5.4",
 	"authors": [
 		"ThomasJ <tom@axisj.com>"
 	],
@@ -18,7 +18,7 @@
 	],
 	"dependencies": {
 		"jquery": "^1.11.0",
-		"ax5core": ">=0.4.0",
+		"ax5core": "",
 		"bootstrap": "^3.3.6"
 	},
 	"license": "MIT",

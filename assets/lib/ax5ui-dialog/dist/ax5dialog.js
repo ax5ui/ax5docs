@@ -6,10 +6,8 @@
     /**
      * @class ax5.ui.dialog
      * @classdesc
-     * @version v0.0.1
+     * @version 0.6.5
      * @author tom@axisj.com
-     * @logs
-     * 2014-06-15 tom : 시작
      * @example
      * ```
      * var myDialog = new ax5.ui.dialog();
@@ -39,195 +37,32 @@
         cfg = this.config;
         cfg.id = 'ax5-dialog-' + ax5.getGuid();
 
-        /**
-         * Preferences of dialog UI
-         * @method ax5.ui.dialog.setConfig
-         * @param {Object} config - 클래스 속성값
-         * @returns {ax5.ui.dialog}
-         * @example
-         * ```
-         * ```
-         */
-        //== class body start
-        this.init = function () {};
-
-        /**
-         * open the dialog of alert type
-         * @method ax5.ui.dialog.alert
-         * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-         * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
-         * @returns {ax5.ui.dialog}
-         * @example
-         * ```
-         * myDialog.alert({
-        *  title: 'app title',
-        *  msg: 'alert'
-        * }, function(){});
-         * ```
-         */
-        this.alert = function (opts, callBack) {
-            if (U.isString(opts)) {
-                opts = {
-                    title: cfg.title,
-                    msg: opts
-                };
+        var onStateChanged = function onStateChanged(opts, that) {
+            if (opts && opts.onStateChanged) {
+                opts.onStateChanged.call(that, that);
+            } else if (this.onStateChanged) {
+                this.onStateChanged.call(that, that);
             }
-
-            if (this.activeDialog) {
-                console.log(ax5.info.getError("ax5dialog", "501", "alert"));
-                return this;
-            }
-
-            self.dialogConfig = {};
-            jQuery.extend(true, self.dialogConfig, cfg);
-            jQuery.extend(true, self.dialogConfig, opts);
-            opts = self.dialogConfig;
-
-            opts.dialogType = "alert";
-            if (typeof opts.btns === "undefined") {
-                opts.btns = {
-                    ok: { label: cfg.lang["ok"], theme: opts.theme }
-                };
-            }
-            this.open(opts, callBack);
-            return this;
-        };
-
-        /**
-         * open the dialog of confirm type
-         * @method ax5.ui.dialog.confirm
-         * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-         * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
-         * @returns {ax5.ui.dialog}
-         * @example
-         * ```
-         * myDialog.confirm({
-        *  title: 'app title',
-        *  msg: 'confirm'
-        * }, function(){});
-         * ```
-         */
-        this.confirm = function (opts, callBack) {
-            if (U.isString(opts)) {
-                opts = {
-                    title: cfg.title,
-                    msg: opts
-                };
-            }
-
-            if (this.activeDialog) {
-                console.log(ax5.info.getError("ax5dialog", "501", "confirm"));
-                return this;
-            }
-
-            self.dialogConfig = {};
-            jQuery.extend(true, self.dialogConfig, cfg);
-            jQuery.extend(true, self.dialogConfig, opts);
-            opts = self.dialogConfig;
-
-            opts.dialogType = "confirm";
-            opts.theme = opts.theme || cfg.theme || "";
-            if (typeof opts.btns === "undefined") {
-                opts.btns = {
-                    ok: { label: cfg.lang["ok"], theme: opts.theme },
-                    cancel: { label: cfg.lang["cancel"] }
-                };
-            }
-            this.open(opts, callBack);
-            return this;
-        };
-
-        /**
-         * open the dialog of prompt type
-         * @method ax5.ui.dialog.prompt
-         * @param {Object|String} [{theme, title, msg, btns, input}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-         * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
-         * @returns {ax5.ui.dialog}
-         * @example
-         * ```
-         * myDialog.prompt({
-        *  title: 'app title',
-        *  msg: 'alert'
-        * }, function(){});
-         * ```
-         */
-        this.prompt = function (opts, callBack) {
-            if (U.isString(opts)) {
-                opts = {
-                    title: cfg.title,
-                    msg: opts
-                };
-            }
-
-            if (this.activeDialog) {
-                console.log(ax5.info.getError("ax5dialog", "501", "prompt"));
-                return this;
-            }
-
-            self.dialogConfig = {};
-            jQuery.extend(true, self.dialogConfig, cfg);
-            jQuery.extend(true, self.dialogConfig, opts);
-            opts = self.dialogConfig;
-
-            opts.dialogType = "prompt";
-            opts.theme = opts.theme || cfg.theme || "";
-
-            if (typeof opts.input === "undefined") {
-                opts.input = {
-                    value: { label: "" }
-                };
-            }
-            if (typeof opts.btns === "undefined") {
-                opts.btns = {
-                    ok: { label: cfg.lang["ok"], theme: opts.theme },
-                    cancel: { label: cfg.lang["cancel"] }
-                };
-            }
-            this.open(opts, callBack);
-            return this;
-        };
-
-        this.getContent = function (dialogId, opts) {
-            var po = [];
-
-            po.push('<div id="' + dialogId + '" data-ax5-ui="dialog" class="ax5-ui-dialog ' + opts.theme + '">');
-            po.push('<div class="ax-dialog-heading">');
-            po.push(opts.title || cfg.title || "");
-            po.push('</div>');
-            po.push('<div class="ax-dialog-body">');
-            po.push('<div class="ax-dialog-msg">');
-            po.push((opts.msg || cfg.msg || "").replace(/\n/g, "<br/>"));
-            po.push('</div>');
-
-            if (opts.input) {
-                po.push('<div class="ax-dialog-prompt">');
-                U.each(opts.input, function (k, v) {
-                    po.push('<div class="form-group">');
-                    if (this.label) po.push('    <label>' + this.label.replace(/\n/g, "<br/>") + '</label>');
-                    po.push('    <input type="' + (this.type || 'text') + '" placeholder="' + (this.placeholder || "") + ' " class="form-control ' + (this.theme || "") + '" data-dialog-prompt="' + k + '" style="width:100%;" value="' + (this.value || "") + '" />');
-                    if (this.help) {
-                        po.push('    <p class="help-block">' + this.help.replace(/\n/g, "<br/>") + '</p>');
-                    }
-                    po.push('</div>');
-                });
-                po.push('</div>');
-            }
-
-            po.push('<div class="ax-dialog-buttons">');
-            po.push('<div class="ax-button-wrap">');
-            U.each(opts.btns, function (k, v) {
-                po.push('<button type="button" data-dialog-btn="' + k + '" class="btn btn-' + (this.theme || "default") + '">' + this.label + '</button>');
-            });
-            po.push('</div>');
-            po.push('</div>');
-            po.push('</div>');
-            po.push('</div>');
-            return po.join('');
-        };
-
-        this.open = function (opts, callBack) {
+            return true;
+        },
+            getContentTmpl = function getContentTmpl() {
+            return '\n                <div id="{{dialogId}}" data-ax5-ui="dialog" class="ax5-ui-dialog {{theme}}">\n                    <div class="ax-dialog-heading">\n                        {{{title}}}\n                    </div>\n                    <div class="ax-dialog-body">\n                        <div class="ax-dialog-msg">{{{msg}}}</div>\n                        \n                        {{#input}}\n                        <div class="ax-dialog-prompt">\n                            {{#@each}}\n                            <div class="form-group">\n                            {{#@value.label}}\n                            <label>{{#_crlf}}{{.}}{{/_crlf}}</label>\n                            {{/@value.label}}\n                            <input type="{{@value.type}}" placeholder="{{@value.placeholder}}" class="form-control {{@value.theme}}" data-dialog-prompt="{{@key}}" style="width:100%;" value="{{@value.value}}" />\n                            {{#@value.help}}\n                            <p class="help-block">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                            {{/@value.help}}\n                            </div>\n                            {{/@each}}\n                        </div>\n                        {{/input}}\n                        \n                        <div class="ax-dialog-buttons">\n                            <div class="ax-button-wrap">\n                            {{#btns}}\n                                {{#@each}}\n                                <button type="button" data-dialog-btn="{{@key}}" class="btn btn-{{@value.theme}}">{{@value.label}}</button>\n                                {{/@each}}\n                            {{/btns}}\n                            </div>\n                        </div>\n                    </div>\n                </div>  \n                ';
+        },
+            getContent = function getContent(dialogId, opts) {
+            var data = {
+                dialogId: dialogId,
+                title: opts.title || cfg.title || "",
+                msg: (opts.msg || cfg.msg || "").replace(/\n/g, "<br/>"),
+                input: opts.input,
+                btns: opts.btns,
+                '_crlf': function _crlf() {
+                    return this.replace(/\n/g, "<br/>");
+                }
+            };
+            return ax5.mustache.render(getContentTmpl(), data);
+        },
+            open = function open(opts, callBack) {
             var pos = {},
-                that,
                 box;
 
             opts.id = opts.id || cfg.id;
@@ -235,7 +70,7 @@
             box = {
                 width: opts.width
             };
-            jQuery(document.body).append(this.getContent(opts.id, opts));
+            jQuery(document.body).append(getContent.call(this, opts.id, opts));
 
             this.activeDialog = jQuery('#' + opts.id);
             this.activeDialog.css({ width: box.width });
@@ -245,11 +80,8 @@
 
             //- position 정렬
             if (typeof opts.position === "undefined" || opts.position === "center") {
-                var w = window.innerWidth;
-                var h = window.innerHeight;
-
-                pos.top = h / 2 - box.height / 2;
-                pos.left = w / 2 - box.width / 2;
+                pos.top = jQuery(window).height() / 2 - box.height / 2;
+                pos.left = jQuery(window).width() / 2 - box.width / 2;
             } else {
                 pos.left = opts.position.left || 0;
                 pos.top = opts.position.top || 0;
@@ -264,29 +96,24 @@
             }
 
             this.activeDialog.find("[data-dialog-btn]").on(cfg.clickEventName, function (e) {
-                this.btnOnClick(e || window.event, opts, callBack);
+                btnOnClick.call(this, e || window.event, opts, callBack);
             }.bind(this));
 
             // bind key event
             jQuery(window).bind("keydown.ax5dialog", function (e) {
-                this.onKeyup(e || window.event, opts, callBack);
+                onKeyup.call(this, e || window.event, opts, callBack);
             }.bind(this));
 
             jQuery(window).bind("resize.ax5dialog", function (e) {
-                this.align(e || window.event);
+                align.call(this, e || window.event);
             }.bind(this));
 
-            if (opts && opts.onStateChanged) {
-                that = {
-                    self: this,
-                    state: "open"
-                };
-                opts.onStateChanged.call(that, that);
-            }
-            return this;
-        };
-
-        this.align = function (e) {
+            onStateChanged.call(this, opts, {
+                self: this,
+                state: "open"
+            });
+        },
+            align = function align(e) {
             if (!this.activeDialog) return this;
             var opts = self.dialogConfig,
                 box = {
@@ -303,9 +130,8 @@
             }
             this.activeDialog.css(box);
             return this;
-        };
-
-        this.btnOnClick = function (e, opts, callBack, target, k) {
+        },
+            btnOnClick = function btnOnClick(e, opts, callBack, target, k) {
             if (e.srcElement) e.target = e.srcElement;
 
             target = U.findParentNode(e.target, function (target) {
@@ -352,9 +178,8 @@
                     this.close();
                 }
             }
-        };
-
-        this.onKeyup = function (e, opts, callBack, target, k) {
+        },
+            onKeyup = function onKeyup(e, opts, callBack, target, k) {
             if (e.keyCode == ax5.info.eventKeys.ESC) {
                 this.close();
             }
@@ -382,6 +207,155 @@
         };
 
         /**
+         * Preferences of dialog UI
+         * @method ax5.ui.dialog.setConfig
+         * @param {Object} config - 클래스 속성값
+         * @returns {ax5.ui.dialog}
+         * @example
+         * ```
+         * ```
+         */
+        //== class body start
+        this.init = function () {
+
+            this.onStateChanged = cfg.onStateChanged;
+            // this.onLoad = cfg.onLoad;
+        };
+
+        /**
+         * open the dialog of alert type
+         * @method ax5.ui.dialog.alert
+         * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+         * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+         * @returns {ax5.ui.dialog}
+         * @example
+         * ```
+         * myDialog.alert({
+        *  title: 'app title',
+        *  msg: 'alert'
+        * }, function(){});
+         * ```
+         */
+        this.alert = function (opts, callBack) {
+            if (U.isString(opts)) {
+                opts = {
+                    title: cfg.title,
+                    msg: opts
+                };
+            }
+
+            if (this.activeDialog) {
+                console.log(ax5.info.getError("ax5dialog", "501", "alert"));
+                return this;
+            }
+
+            self.dialogConfig = {};
+            jQuery.extend(true, self.dialogConfig, cfg, opts);
+            opts = self.dialogConfig;
+
+            opts.dialogType = "alert";
+            if (typeof opts.btns === "undefined") {
+                opts.btns = {
+                    ok: { label: cfg.lang["ok"], theme: opts.theme }
+                };
+            }
+            open.call(this, opts, callBack);
+            return this;
+        };
+
+        /**
+         * open the dialog of confirm type
+         * @method ax5.ui.dialog.confirm
+         * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+         * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+         * @returns {ax5.ui.dialog}
+         * @example
+         * ```
+         * myDialog.confirm({
+        *  title: 'app title',
+        *  msg: 'confirm'
+        * }, function(){});
+         * ```
+         */
+        this.confirm = function (opts, callBack) {
+            if (U.isString(opts)) {
+                opts = {
+                    title: cfg.title,
+                    msg: opts
+                };
+            }
+
+            if (this.activeDialog) {
+                console.log(ax5.info.getError("ax5dialog", "501", "confirm"));
+                return this;
+            }
+
+            self.dialogConfig = {};
+            jQuery.extend(true, self.dialogConfig, cfg, opts);
+            opts = self.dialogConfig;
+
+            opts.dialogType = "confirm";
+            opts.theme = opts.theme || cfg.theme || "";
+            if (typeof opts.btns === "undefined") {
+                opts.btns = {
+                    ok: { label: cfg.lang["ok"], theme: opts.theme },
+                    cancel: { label: cfg.lang["cancel"] }
+                };
+            }
+            open.call(this, opts, callBack);
+            return this;
+        };
+
+        /**
+         * open the dialog of prompt type
+         * @method ax5.ui.dialog.prompt
+         * @param {Object|String} [{theme, title, msg, btns, input}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+         * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+         * @returns {ax5.ui.dialog}
+         * @example
+         * ```
+         * myDialog.prompt({
+        *  title: 'app title',
+        *  msg: 'alert'
+        * }, function(){});
+         * ```
+         */
+        this.prompt = function (opts, callBack) {
+            if (U.isString(opts)) {
+                opts = {
+                    title: cfg.title,
+                    msg: opts
+                };
+            }
+
+            if (this.activeDialog) {
+                console.log(ax5.info.getError("ax5dialog", "501", "prompt"));
+                return this;
+            }
+
+            self.dialogConfig = {};
+            jQuery.extend(true, self.dialogConfig, cfg, opts);
+            opts = self.dialogConfig;
+
+            opts.dialogType = "prompt";
+            opts.theme = opts.theme || cfg.theme || "";
+
+            if (typeof opts.input === "undefined") {
+                opts.input = {
+                    value: { label: "" }
+                };
+            }
+            if (typeof opts.btns === "undefined") {
+                opts.btns = {
+                    ok: { label: cfg.lang["ok"], theme: opts.theme },
+                    cancel: { label: cfg.lang["cancel"] }
+                };
+            }
+            open.call(this, opts, callBack);
+            return this;
+        };
+
+        /**
          * close the dialog
          * @method ax5.ui.dialog.close
          * @returns {ax5.ui.dialog}
@@ -400,12 +374,14 @@
                 setTimeout(function () {
                     this.activeDialog.remove();
                     this.activeDialog = null;
+                    that = {
+                        self: this,
+                        state: "close"
+                    };
                     if (opts && opts.onStateChanged) {
-                        that = {
-                            self: this,
-                            state: "close"
-                        };
                         opts.onStateChanged.call(that, that);
+                    } else if (this.onStateChanged) {
+                        this.onStateChanged.call(that, that);
                     }
                 }.bind(this), cfg.animateTime);
             }

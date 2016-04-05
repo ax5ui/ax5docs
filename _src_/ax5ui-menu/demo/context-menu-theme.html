@@ -1,0 +1,119 @@
+<!--suppress HtmlUnknownTarget -->
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="5" id="context-menu-theme" title="Theme"
+               desc=""></tmpl-metadata>
+
+<layout-use template="${data.layoutPath}" project-name="${data.projectName}" parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}" page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}" parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-menu/dist/ax5menu.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-menu/dist/ax5menu.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+
+        <!-- doc-js Basic Alert -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Context Menu Theme
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="src/lib/font-awesome/css/font-awesome.css"/>
+                <link rel="stylesheet" type="text/css" href="src/ax5ui-menu/dist/ax5menu.css"/>
+                <script type="text/javascript" src="src/ax5ui-menu/dist/ax5menu.js"></script>
+                ```
+                Recommand use font-icon, These days, you can download the font-icon in many service.
+
+            </ax5docs-md>
+
+            <h4>HTML</h4>
+
+            <ax5docs-html run="true">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Theme Select</label>
+                            <select class="form-control" id="select-menu-theme">
+                                <option value="default">default</option>
+                                <option value="primary">Primary</option>
+                                <option value="info">info</option>
+                                <option value="warning">warning</option>
+                                <option value="danger">danger</option>
+                            </select>
+                        </div>
+                        <div style="height:200px;background: #ccc;" id="context-menu-target">
+                            Right click of mouse
+                        </div>
+                        <p>
+                            Select a theme in the selection box, then please try to right-click on the DIV.
+                        </p>
+                    </div>
+                </div>
+            </ax5docs-html>
+
+            <div class="DH20"></div>
+
+            <h4>JS</h4>
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    var menu;
+                    $(document.body).ready(function () {
+                        menu = new ax5.ui.menu({
+                            theme: "primary",
+                            icons: {
+                                'arrow': '<i class="fa fa-caret-right"></i>'
+                            },
+                            items: [
+                                {
+                                    icon: '<i class="fa fa-comment"></i>',
+                                    label: "Menu A",
+                                    items: [
+                                        {icon: '<i class="fa fa-hand-peace-o"></i>', label: "Menu A-0"},
+                                        {icon: '<i class="fa fa-hand-rock-o"></i>', label: "Menu A-1"},
+                                        {icon: '<i class="fa fa-hand-stop-o"></i>', label: "Menu A-2"}
+                                    ]
+                                },
+                                {
+                                    icon: '<i class="fa fa-comments"></i>',
+                                    label: "Menu B",
+                                    items: [
+                                        {icon: '<i class="fa fa-pencil-square"></i>', label: "Menu B-0"},
+                                        {icon: '<i class="fa fa-phone-square"></i>', label: "Menu B-1"},
+                                        {icon: '<i class="fa fa-plus-square"></i>', label: "Menu B-2"}
+                                    ]
+                                }
+                            ]
+                        });
+
+                        $("#context-menu-target").bind("contextmenu", function (e) {
+                            menu.popup(e, {theme:$("#select-menu-theme").val()});
+                            ax5.util.stopEvent(e);
+                            // e || {left: 'Number', top: 'Number', direction: '', width: 'Number'}
+                        });
+                    });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+
+</layout-use>

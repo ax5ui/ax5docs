@@ -1243,7 +1243,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 p = {};
                 each(O.split(reAmp), function () {
                     var item = this.split(reEq);
-                    p[item[0]] = item[1];
+                    if (!p[item[0]]) p[item[0]] = item[1];else {
+                        if (isString(p[item[0]])) p[item[0]] = [p[item[0]]];
+                        p[item[0]].push(item[1]);
+                    }
                 });
                 return p;
             } else {
@@ -1697,9 +1700,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function stopEvent(e) {
             // 이벤트 중지 구문
-            if (e.preventDefault) e.preventDefault();
-            if (e.stopPropagation) e.stopPropagation();
+            if (!e) var e = window.event;
+
+            //e.cancelBubble is supported by IE -
+            // this will kill the bubbling process.
             e.cancelBubble = true;
+            e.returnValue = false;
+
+            //e.stopPropagation works only in Firefox.
+            if (e.stopPropagation) e.stopPropagation();
+            if (e.preventDefault) e.preventDefault();
+
             return false;
             // 이벤트 중지 구문 끝
         }
@@ -1785,6 +1796,10 @@ ax5.info.errorMsg["ax5formatter"] = {
     "401": "Can not find target element",
     "402": "Can not find boundID",
     "501": "Can not find pattern"
+};
+
+ax5.info.errorMsg["ax5menu"] = {
+    "501": "Can not find menu item"
 };
 // 필수 Ployfill 확장 구문
 (function () {
@@ -1948,6 +1963,17 @@ ax5.info.errorMsg["ax5formatter"] = {
             }()
         };
     }
+
+    // splice ie8 <= polyfill
+    (function () {
+        if (!document.documentMode || document.documentMode >= 9) return false;
+        var _splice = Array.prototype.splice;
+        Array.prototype.splice = function () {
+            var args = Array.prototype.slice.call(arguments);
+            if (typeof args[1] === "undefined") args[1] = this.length - args[0];
+            return _splice.apply(this, args);
+        };
+    })();
 
     // Console-polyfill. MIT license. https://github.com/paulmillr/console-polyfill
     // Make it safe to do console.log() always.

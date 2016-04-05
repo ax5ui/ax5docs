@@ -129,7 +129,7 @@
 					
 
 		<section class="ax5docs-section">
-			<img src="https://img.shields.io/badge/Bower-0.4.5-blue.svg" alt="Bower-0.4.5" /> <img src="https://img.shields.io/badge/NPM-0.4.5-blue.svg" alt="NPM-0.4.5" /> <div class="DH5"></div>
+			<img src="https://img.shields.io/badge/Bower-0.4.6-blue.svg" alt="Bower-0.4.6" /> <img src="https://img.shields.io/badge/NPM-0.4.6-blue.svg" alt="NPM-0.4.6" /> <div class="DH5"></div>
 			<p><a href="https://github.com/axisj"><img src="https://img.shields.io/badge/AXISJ.com-Contributed-green.svg" alt="axisj-contributed"></a>
 <img src="https://img.shields.io/badge/Seowoo-Mondo&amp;Thomas-red.svg" alt=""></p>
 <h1>ax5ui-menu</h1>
@@ -172,7 +172,18 @@ exactly the path.</p>
 &lt;/html&gt;
 </code></pre>
 <h3>Basic Usages</h3>
-<pre class="prettyprint linenums lang-js"><code>
+<pre class="prettyprint linenums lang-js"><code>var menu = new ax5.ui.menu({
+    theme: 'primary',
+    items: [
+        {label: &quot;Menu 0&quot;},
+        {label: &quot;Menu 1&quot;}
+    ]
+});
+
+$(document).bind(&quot;contextmenu&quot;, function (e) {
+    menu.popup(e); // e || {left: 'Number', top: 'Number', direction: '', width: 'Number'}
+    ax5.util.stopEvent(e);
+});
 </code></pre>
 <hr>
 <h3>Install by npm</h3>

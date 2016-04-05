@@ -158,11 +158,22 @@ gulp.task('docs:all', function () {
     }
 });
 
-gulp.task('import-ax5ui', function () {
+gulp.task('import-ax5ui-npm', function () {
     for (var k in PATHS) {
         var __p = PATHS[k];
         if (__p.isPlugin) {
             gulp.src('node_modules/' + k + '/**/*', {base:"node_modules"})
+                .pipe(gulp.dest(PATHS.assets.src + '/lib'));
+        }
+    }
+});
+
+
+gulp.task('import-ax5ui-file', function () {
+    for (var k in PATHS) {
+        var __p = PATHS[k];
+        if (__p.isPlugin) {
+            gulp.src('../ax5ui-kernel/src/' + k + '/**/*', {base:"../ax5ui-kernel/src"})
                 .pipe(gulp.dest(PATHS.assets.src + '/lib'));
         }
     }

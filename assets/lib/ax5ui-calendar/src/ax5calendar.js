@@ -3,7 +3,7 @@
     /**
      * @class ax5.ui.calendar
      * @classdesc
-     * @version 0.7.5
+     * @version 0.7.6
      * @author tom@axisj.com
      * @logs
      * 2014-06-21 tom : 시작
@@ -651,7 +651,6 @@
                 }).bind(this));
             };
 
-
         /**
          * Preferences of calendar UI
          * @method ax5.ui.calendar.setConfig
@@ -802,6 +801,9 @@
             return this.selection;
         };
 
+        /**
+         * @method ax5.ui.calendar.setSelectable
+         */
         this.setSelectable = (function () {
             self.selectableMap = {};
             var processor = {
@@ -876,6 +878,9 @@
             };
         })();
 
+        /**
+         * @method ax5.ui.calendar.setMarker
+         */
         this.setMarker = (function () {
             self.markerMap = {};
             var processor = {

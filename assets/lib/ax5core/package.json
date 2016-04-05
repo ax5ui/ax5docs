@@ -1,34 +1,23 @@
 {
-  "name": "ax5core",
-  "version": "0.9.4",
-  "description": "`ax5core` is a collection of utility functions that have been designed for use in ax5ui",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ax5ui/ax5core.git"
-  },
-  "author": {
-    "name": "Thomas Jang",
-    "email": "tom@axisj.com",
-    "url": "ax5.io"
-  },
-  "keywords": [
-    "bootstrap",
-    "jquery",
-    "ax5ui",
-    "plugin",
-    "bootstrap jQuery plugins",
-    "javascript ui"
-  ],
-  "readme": "[![axisj-contributed](https://img.shields.io/badge/AXISJ.com-Contributed-green.svg)](https://github.com/axisj)\n![](https://img.shields.io/badge/Seowoo-Mondo&Thomas-red.svg)\n\n# ax5core\n\"AX5\" utility is very safe and useful.\n'ax5.info', 'ax5.util', and consists of 'ax5.ui', are among the \"ax5.ui\" At the same time, perform the parenting\nrole and the root of the UI library.\n\n\"ax5core\" is a collection of utility functions that have been designed for use in ax5ui. \nIt was designed to the utility to act as a minimum code. So it can be considered to be simple compared to other utilities.\n\n> *Dependencies*\n> * _[jQuery 1.X+](http://jquery.com/)_\n\n### Install by bower\n```sh\nbower install ax5core\n```\n[bower](http://bower.io/#install-bower) is web front-end package manager.\nusing the `bower`, when you install the plug-in is installed to resolve the plug-in dependencies under the `bower_components` folder.  \n(You can change the folder location. [.bowerrc](http://bower.io/docs/config/#bowerrc-specification) )\n\nIt is recommended that you install by using the `bower`. \nIf you've never used a bower is, you will be able to be used for [http://bower.io/#install-bower](http://bower.io/#install-bower).\n   \n### Insert the \"ax5\" in the HTML HEAD.\nLocation of the folder can be determined freely in your project. But be careful not to accidentally caused\nexactly the path.\n```html\n<html>\n    <head>\n        <script type=\"text/javascript\" src=\"bower_components/jquery/dist/jquery.min.js\"></script>\n        <script type=\"text/javascript\" src=\"bower_components/ax5core/dist/ax5core.min.js\"></script>\n    </head>\n<body>\n....\n</body>\n</html>\n```\n***\n\n### Install by npm\n\nIf you do not use the bower, it can be downloaded by using the npm as second best.\nIn npm, so pile on the package manager for the front end, you need to solve the problem of plug-in dependencies.\n\n```sh\nnpm install jquery\nnpm install ax5core\n```\n***\nAfter you download the file in npm install, you will need to copy to the location where you want to use as a resource for the project.\nIf the inconvenience in the process that you want to copy the file and can be easily copied by using a `gulp` or `grunt`.\n***\n\n\n### Basic Usage\n```js\nax5.util.date(\"20111111\");\n//Fri Nov 11 2011 23:59:00 GMT+0900 (KST)\nax5.util.date(\"20111111\", {'return':'yyyy/mm/dd'});\n//\"2011/11/11\"\n\n//set multi option\nax5.util.date(\"20111111\", {'return':'yyyy/mm/dd', add:{\"d\":1}} );\n\"2011/11/12\"\n```\n\n### API\n- [See API](http://ax5.io/ax5core/info/ax5-info.html)\n\nIf you have any questions, please refer to the following [gitHub](https://github.com/ax5ui/ax5ui-kernel)\n",
-  "readmeFilename": "README.md",
-  "bugs": {
-    "url": "https://github.com/ax5ui/ax5core/issues"
-  },
-  "homepage": "https://github.com/ax5ui/ax5core#readme",
-  "_id": "ax5core@0.9.4",
-  "scripts": {},
-  "_shasum": "9ecf7d716b4c64af1d25785f2746fbb5cda53cdd",
-  "_from": "ax5core@*",
-  "_resolved": "file:src/ax5core"
+	"name": "ax5core",
+	"version": "0.9.7",
+	"description": "`ax5core` is a collection of utility functions that have been designed for use in ax5ui",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ax5ui/ax5core"
+	},
+	"author": {
+		"name": "Thomas Jang",
+		"email": "tom@axisj.com",
+		"url": "ax5.io"
+	},
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"javascript ui"
+	]
 }
