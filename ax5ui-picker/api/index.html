@@ -176,7 +176,7 @@ picker.bind({
 <h3>content</h3>
 <p>Type: <code>Function|Object</code></p>
 <ul>
-<li>Function</li>
+<li><strong>Function</strong></li>
 </ul>
 <pre class="prettyprint linenums lang-js"><code>function (callBack) {
     var html = 'HTML CONTENT';
@@ -184,7 +184,7 @@ picker.bind({
 }
 </code></pre>
 <ul>
-<li>Object</li>
+<li><strong>Object</strong></li>
 </ul>
 <pre class="prettyprint linenums lang-js"><code>{
     width: 270,
@@ -192,9 +192,25 @@ picker.bind({
     type: 'date',
     config: {
         // calendar UI config
+    },
+    formatter: {
+        // formatter UI config
     }
 }
 </code></pre>
+<ul>
+<li><strong>width</strong> <code>Number</code></li>
+<li><strong>margin</strong> <code>Number</code></li>
+<li><strong>type</strong> <code>String</code>
+<ul>
+<li>date</li>
+<li>autocomplete</li>
+<li>...</li>
+</ul>
+</li>
+<li><strong>config</strong> <code>Object</code></li>
+<li><strong>formatter</strong> <code>Object</code></li>
+</ul>
 <h3>contentWidth</h3>
 <p>Type: <code>Number</code></p>
 <p>If the content type of the function, recommended to set this value.</p>
@@ -202,6 +218,21 @@ picker.bind({
 <p>Type: <code>Object</code></p>
 <pre class="prettyprint linenums lang-js"><code>{
     ok: {label: &quot;확인&quot;, theme: &quot;default&quot;}
+}
+</code></pre>
+<hr>
+<h2>onStateChanged</h2>
+<p>Type: <code>Function</code></p>
+<p><code>onStateChanged</code> function can be defined in setConfig method or new ax5.ui.picker initialization method.
+However, you can us to define an event function after initialization, if necessary</p>
+<pre class="prettyprint linenums lang-js"><code>var picker = new ax5.ui.picker({
+    onStateChanged: function(){
+        console.log(this);
+    }
+});
+
+picker.onStateChanged = function(){
+    console.log(this);
 }
 </code></pre>
 <hr>
@@ -221,6 +252,19 @@ picker.bind({
 <hr>
 <h2>close()</h2>
 <p><code>close()</code></p>
+<hr>
+<h1>jQuery extends</h1>
+<h2>ax5picker</h2>
+<p><code>$(query).ax5picker({bindConfigs})</code></p>
+<pre class="prettyprint linenums lang-js"><code>$('[data-ax5picker=&quot;date&quot;]').ax5picker({
+    direction: &quot;top&quot;,
+    content: {
+        width: 270,
+        margin: 10,
+        type: 'date'
+    }
+});
+</code></pre>
 
     
 				</div>
