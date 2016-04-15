@@ -10,6 +10,14 @@
 }
 
 pre.prettyprint{
-	font-size: 13px;
+	font-size: 12px;
 	margin: 1em 0;
+}
+pre{
+	background: #f8f8f8;
+	font-family: Menlo, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Consolas, monospace;
+	font-size: 12px;
+	line-height: 1.8;
+	border: 0px none;
+	white-space: pre-wrap;
 }
