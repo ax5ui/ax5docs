@@ -6,7 +6,7 @@
     /**
      * @class ax5.ui.picker
      * @classdesc
-     * @version 0.4.5
+     * @version 0.4.9
      * @author tom@axisj.com
      * @example
      * ```
@@ -113,6 +113,8 @@
             };
 
             return function (opts, optIdx) {
+                var _input;
+
                 if (!opts.content) {
                     console.log(ax5.info.getError("ax5picker", "501", "bind"));
                     return this;
@@ -130,14 +132,18 @@
                     }
                 }
 
-                opts.$target.find('input[type="text"]').unbind('focus.ax5picker').unbind('click.ax5picker').bind('focus.ax5picker', pickerEvent.focus.bind(this, this.queue[optIdx], optIdx)).bind('click.ax5picker', pickerEvent.click.bind(this, this.queue[optIdx], optIdx));
+                _input = opts.target.tagName.toUpperCase() == "INPUT" ? opts.$target : opts.$target.find('input[type="text"]');
+                _input.unbind('focus.ax5picker').unbind('click.ax5picker').bind('focus.ax5picker', pickerEvent.focus.bind(this, this.queue[optIdx], optIdx)).bind('click.ax5picker', pickerEvent.click.bind(this, this.queue[optIdx], optIdx));
 
                 opts.$target.find('.input-group-addon').unbind('click.ax5picker').bind('click.ax5picker', pickerEvent.click.bind(this, this.queue[optIdx], optIdx));
 
                 if (opts.content.formatter && ax5.ui.formatter) {
-                    opts.$target.find('input[type="text"]').ax5formatter(opts.content.formatter);
+                    _input.ax5formatter(opts.content.formatter);
                 }
 
+                _input = null;
+                opts = null;
+                optIdx = null;
                 return this;
             };
         }(),
@@ -264,9 +270,7 @@
             var pickerConfig = {},
                 optIdx;
 
-            jQuery.extend(true, pickerConfig, cfg);
-            if (opts) jQuery.extend(true, pickerConfig, opts);
-            opts = pickerConfig;
+            opts = jQuery.extend(true, pickerConfig, cfg, opts);
 
             if (!opts.target) {
                 console.log(ax5.info.getError("ax5picker", "401", "bind"));
@@ -287,7 +291,7 @@
                 this.queue.push(opts);
                 bindPickerTarget.call(this, opts, this.queue.length - 1);
             } else {
-                this.queue[optIdx] = opts;
+                jQuery.extend(true, this.queue[optIdx], opts);
                 bindPickerTarget.call(this, this.queue[optIdx], optIdx);
             }
 
@@ -393,7 +397,7 @@
 
                 /**
                  다른 피커가 있는 경우와 다른 피커를 닫고 다시 오픈 명령이 내려진 경우에 대한 예외 처리 구문
-                  */
+                 */
                 if (this.openTimer) clearTimeout(this.openTimer);
                 if (this.activePicker) {
                     if (this.activePickerQueueIndex == optIdx) {
