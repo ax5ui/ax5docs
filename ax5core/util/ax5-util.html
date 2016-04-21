@@ -201,6 +201,13 @@ result = ax5.util.filter(list, function () {
     return (this.isdel != 1);
 });
 console.log(JSON.stringify(result));
+
+var filObject = {a:1, s:&quot;string&quot;, oa:{pickup:true, name:&quot;AXISJ&quot;}, os:{pickup:true, name:&quot;AX5&quot;}};
+result = ax5.util.filter( filObject, function(){
+	return this.pickup;
+});
+console.log( ax5.util.toJson(result) );
+// [{&quot;pickup&quot;: , &quot;name&quot;: &quot;AXISJ&quot;}, {&quot;pickup&quot;: , &quot;name&quot;: &quot;AX5&quot;}]
 </code></pre>
 <hr>
 <h2>ax5.util.search</h2>
