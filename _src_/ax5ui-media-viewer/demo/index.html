@@ -1,0 +1,113 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="media-viewer" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-media-viewer/dist/ax5media-viewer.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-media-viewer/dist/ax5media-viewer.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- media-viewer -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # media-viewer
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="src/ax5ui-media-viewer/dist/ax5media-viewer.css"/>
+                <script type="text/javascript" src="src/ax5ui-media-viewer/dist/ax5media-viewer.js"></script>
+                ```
+            </ax5docs-md>
+
+
+            HTML
+            <ax5docs-html run="true">
+                <div id="media-viewer-target-0" style="width:360px;border:1px solid #eee;"></div>
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                var myViewer_0 = new ax5.ui.mediaViewer({
+                    target: $("#media-viewer-target-0"),
+                    loading: {
+                        icon: '<i class="fa fa-spinner fa-pulse fa-2x fa-fw margin-bottom" aria-hidden="true"></i>',
+                        text: '<div>Now Loading</div>'
+                    },
+                    media: {
+                        prevHandle: '<i class="fa fa-chevron-left"></i>',
+                        nextHandle: '<i class="fa fa-chevron-right"></i>',
+                        width: 50, height: 50,
+                        poster: '<i class="fa fa-youtube-play" style="line-height: 46px;font-size: 20px;"></i>',
+                        list: [
+                            {
+                                video: {
+                                    html: '<iframe src="https://player.vimeo.com/video/121840700?color=fcfcfc&badge=0" frameborder="0"></iframe>',
+                                    poster: ''
+                                }
+                            },
+                            {
+                                video: {
+                                    html: '<iframe width="560" height="315" src="https://www.youtube.com/embed/w9Uh2oP88JI" frameborder="0"></iframe>',
+                                    poster: ''
+                                }
+                            },
+                            {
+                                image: {
+                                    src: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg',
+                                    poster: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg'
+                                }
+                            },
+                            {
+                                image: {
+                                    src: 'https://www.twilio.com/blog/wp-content/uploads/2013/11/Screen-Shot-2013-11-06-at-12.05.36-PM.png',
+                                    poster: 'https://www.twilio.com/blog/wp-content/uploads/2013/11/Screen-Shot-2013-11-06-at-12.05.36-PM.png'
+                                }
+                            },
+                            {
+                                image: {
+                                    src: "http://blog.axisj.com/wp-content/uploads/2015/01/603962_624552737612025_1617687293_n.jpg",
+                                    poster: "http://blog.axisj.com/wp-content/uploads/2015/01/603962_624552737612025_1617687293_n.jpg"
+                                }
+                            },
+                            {
+                                image: {
+                                    src: "http://brantiffy.axisj.com/wp-content/uploads/2015/12/Screen-Shot-2015-12-11-at-2.01.53-AM.png",
+                                    poster: "http://brantiffy.axisj.com/wp-content/uploads/2015/12/Screen-Shot-2015-12-11-at-2.01.53-AM.png"
+                                }
+                            }
+                        ]
+                    },
+                    onClick: function () {
+                        console.log(this);
+                    }
+                });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>
