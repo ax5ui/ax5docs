@@ -4,7 +4,7 @@
     /**
      * @class ax5.ui.picker
      * @classdesc
-     * @version 0.4.9
+     * @version 0.5.3
      * @author tom@axisj.com
      * @example
      * ```
@@ -136,7 +136,7 @@
                         }
                     }
 
-                    _input = (opts.target.get(0).tagName.toUpperCase() == "INPUT") ? opts.$target : opts.$target.find('input[type="text"]');
+                    _input = (opts.$target.get(0).tagName.toUpperCase() == "INPUT") ? opts.$target : opts.$target.find('input[type="text"]');
                     _input
                         .unbind('focus.ax5picker')
                         .unbind('click.ax5picker')
@@ -151,7 +151,7 @@
                     if (opts.content.formatter && ax5.ui.formatter) {
                         _input.ax5formatter(opts.content.formatter);
                     }
- 
+
                     _input = null;
                     opts = null;
                     optIdx = null;
@@ -336,7 +336,7 @@
                 bindPickerTarget.call(this, opts, this.queue.length - 1);
             }
             else {
-                jQuery.extend(true, this.queue[optIdx], opts);
+                jQuery.extend({}, this.queue[optIdx], opts);
                 bindPickerTarget.call(this, this.queue[optIdx], optIdx);
             }
 

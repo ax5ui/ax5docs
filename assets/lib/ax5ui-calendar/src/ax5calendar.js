@@ -3,7 +3,7 @@
     /**
      * @class ax5.ui.calendar
      * @classdesc
-     * @version 0.7.7
+     * @version 0.7.9
      * @author tom@axisj.com
      * @logs
      * 2014-06-21 tom : 시작
@@ -617,7 +617,7 @@
 
                             if (self.onClick) {
                                 self.onClick.call({
-                                    date: value, target: this.target, dateElement: target
+                                    self: this, date: value, target: this.target, dateElement: target
                                 });
                             }
                         }
@@ -637,7 +637,7 @@
 
                                 if (self.onClick) {
                                     self.onClick.call({
-                                        date: value, target: this.target, dateElement: target
+                                        self: this, date: value, target: this.target, dateElement: target
                                     });
                                 }
                             }
@@ -661,7 +661,7 @@
 
                                 if (self.onClick) {
                                     self.onClick.call({
-                                        date: value, target: this.target, dateElement: target
+                                        self: this, date: value, target: this.target, dateElement: target
                                     });
                                 }
                             }
@@ -878,6 +878,8 @@
                 if (isPrint !== false) applySelectionMap.call(this);
 
                 result = null;
+
+                return this;
             };
         })();
 
@@ -962,6 +964,8 @@
                 this.selectableMap = result;
                 // 변경내용 적용하여 출력
                 if (isPrint !== false) this.changeMode();
+
+                return this;
             };
         })();
 
