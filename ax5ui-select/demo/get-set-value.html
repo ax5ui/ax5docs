@@ -186,7 +186,7 @@ $(document.body).ready(function(){
         switch (act) {
             case "setValue":
                 $('[data-ax5select="select1"]').ax5select("setValue", 2);
-                $('[data-ax5select="select2"]').ax5select("setValue", [5,6]);
+                $('[data-ax5select="select2"]').ax5select("setValue", [5,6], true);
                 break;
             case "getValue":
                 console.log($('[data-ax5select="select1"]').ax5select("getValue"));
@@ -209,7 +209,7 @@ $(document.body).ready(function(){
         switch (act) {
             case "setValue":
                 $('[data-ax5select="select1"]').ax5select("setValue", 2);
-                $('[data-ax5select="select2"]').ax5select("setValue", [5,6]);
+                $('[data-ax5select="select2"]').ax5select("setValue", [5,6], true);
                 break;
             case "getValue":
                 console.log($('[data-ax5select="select1"]').ax5select("getValue"));

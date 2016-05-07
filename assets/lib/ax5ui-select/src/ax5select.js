@@ -10,7 +10,7 @@
     /**
      * @class ax5.ui.select
      * @classdesc
-     * @version 0.1.2
+     * @version 0.1.3
      * @author tom@axisj.com
      * @example
      * ```
@@ -25,7 +25,7 @@
             self = this,
             cfg;
 
-        if (_SUPER_) _SUPER_.call(this); // 부모호출
+        if (_SUPER_) _SUPER_.call(this); // 부모호출 
 
         this.queue = [];
         this.config = {
@@ -796,8 +796,7 @@ ax5.ui.select_instance = new ax5.ui.select();
 jQuery.fn.ax5select = (function () {
     return function (config) {
         if (ax5.util.isString(arguments[0])) {
-            var methodName = arguments[0],
-                arg = arguments[1];
+            var methodName = arguments[0];
 
             switch (methodName) {
                 case "open":
@@ -807,7 +806,7 @@ jQuery.fn.ax5select = (function () {
                     return ax5.ui.select_instance.close(this);
                     break;
                 case "setValue":
-                    return ax5.ui.select_instance.val(this, arg);
+                    return ax5.ui.select_instance.val(this, arguments[1], arguments[2]);
                     break;
                 case "getValue":
                     return ax5.ui.select_instance.val(this);
