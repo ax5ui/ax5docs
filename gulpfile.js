@@ -81,6 +81,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-media-viewer",
         doc_src: "_src_/ax5ui-media-viewer",
         doc_dest: "ax5ui-media-viewer"
+    },
+    "ax5ui-select": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-select",
+        doc_src: "_src_/ax5ui-select",
+        doc_dest: "ax5ui-select"
     }
 };
 
