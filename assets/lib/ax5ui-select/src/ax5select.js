@@ -10,7 +10,7 @@
     /**
      * @class ax5.ui.select
      * @classdesc
-     * @version 0.1.3
+     * @version 0.1.4
      * @author tom@axisj.com
      * @example
      * ```
@@ -25,7 +25,7 @@
             self = this,
             cfg;
 
-        if (_SUPER_) _SUPER_.call(this); // 부모호출 
+        if (_SUPER_) _SUPER_.call(this); // 부모호출
 
         this.queue = [];
         this.config = {
@@ -93,7 +93,10 @@
                 data-ax5-select-display="{{id}}">
                     <div class="ax5-ui-select-display-table" data-select-els="display-table">
                         <div data-ax5-select-display="label">{{label}}</div>
-                        <div data-ax5-select-display="addon" data-ax5-select-opened="false">
+                        <div data-ax5-select-display="addon">
+                            {{#reset}}
+                            <span class="addon-icon-reset" data-selected-clear="true">{{{.}}}</span>
+                            {{/reset}}
                             {{#icons}}
                             <span class="addon-icon-closed">{{clesed}}</span>
                             <span class="addon-icon-opened">{{opened}}</span>
@@ -120,6 +123,11 @@
                         this.queue[i].$display.css({
                             "min-width": w
                         });
+                        if (this.queue[i].reset) {
+                            this.queue[i].$display.find(".addon-icon-reset").css({
+                                "line-height": this.queue[i].$display.height() + "px"
+                            });
+                        }
                     }
                 }
 
@@ -193,7 +201,7 @@
                 if (!target) {
                     this.close();
                     return this;
-                } else if (clickEl != "display") {
+                } else if (clickEl === "optionItem") {
                     this.val(item.id, {index: target.getAttribute("data-option-index")});
                     if (!item.multiple) this.close();
                 }
@@ -241,11 +249,26 @@
             bindSelectTarget = (function () {
                 var selectEvent = {
                     'click': function (queIdx, e) {
-                        if (self.activeSelectQueueIndex == queIdx) {
-                            self.close();
-                        } else {
-                            self.open(queIdx);
+
+                        var target = U.findParentNode(e.target, function (target) {
+                            if (target.getAttribute("data-selected-clear")) {
+                                //clickEl = "clear";
+                                return true;
+                            }
+                        });
+
+                        if(target){
+                            // selected clear
+                            this.val(queIdx, {clear:true});
                         }
+                        else{
+                            if (self.activeSelectQueueIndex == queIdx) {
+                                self.close();
+                            } else {
+                                self.open(queIdx);
+                            }
+                        }
+
                         U.stopEvent(e);
                     },
                     'keyUp': function (queIdx, e) {
@@ -271,6 +294,7 @@
                         data.theme = item.theme;
                         data.tabIndex = item.tabIndex;
                         data.multiple = item.multiple;
+                        data.reset = item.reset;
 
                         data.label = getLabel.call(this, queIdx);
                         data.formSize = (function () {
@@ -450,7 +474,7 @@
                 return this;
             }
             item.$target = jQuery(item.target);
-            
+
             if (!item.id) item.id = item.$target.data("data-ax5select-id");
             if (!item.id) {
                 item.id = 'ax5-select-' + ax5.getGuid();
@@ -671,12 +695,22 @@
 
                     syncSelectOptions.call(this, queIdx, this.queue[queIdx].options);
                     syncLabel.call(this, queIdx);
+                },
+                'clear': function(queIdx, value, selected){
+
+                    clearSelected.call(this, queIdx);
+                    syncSelectOptions.call(this, queIdx, this.queue[queIdx].options);
+                    syncLabel.call(this, queIdx);
+
+                    self.activeSelectOptionGroup
+                        .find('[data-option-index]')
+                        .attr("data-option-selected", "false");
                 }
             };
 
             return function (boundID, value, selected) {
                 var queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
-                if(queIdx === -1){
+                if (queIdx === -1) {
                     console.log(ax5.info.getError("ax5select", "402", "val"));
                     return;
                 }

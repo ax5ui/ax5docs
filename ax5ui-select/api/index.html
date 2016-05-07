@@ -198,7 +198,7 @@ select.bind({
     {value: &quot;optionValue1&quot;, text: &quot;optionText1&quot;},
     {value: &quot;optionValue2&quot;, text: &quot;optionText2&quot;}
   ]
-);
+});
 </code></pre>
 <h3>id</h3>
 <p>Type: <code>String</code></p>
@@ -225,6 +225,18 @@ However, you can us to define an event function after initialization, if necessa
 select.onStateChanged = function(){
     console.log(this);
 }
+</code></pre>
+<h3>reset</h3>
+<p>Type: <code>String</code></p>
+<p>multiple selected clear icon</p>
+<pre class="prettyprint linenums lang-js"><code>select.bind({
+  target: $('[data-ax5select=&quot;select1&quot;]'),
+  reset:&quot;&lt;i class=\&quot;fa fa-trash\&quot;&gt;&lt;/i&gt;&quot;,
+  options: [
+    {value: &quot;optionValue1&quot;, text: &quot;optionText1&quot;},
+    {value: &quot;optionValue2&quot;, text: &quot;optionText2&quot;}
+  ]
+});
 </code></pre>
 <h2>open()</h2>
 <p><code>open(boundID)</code></p>
@@ -363,9 +375,6 @@ ga('send', 'pageview');
             method: "GET",
             url: "https://api.github.com/repos/ax5ui/ax5ui-select",
             success: function (data) {
-
-                console.log(data);
-
                 $("#started-count").html(ax5.util.number(data.stargazers_count, {'money': true}));
                 ax5.util.setCookie('stargazers_count', data.stargazers_count);
             }

@@ -37,6 +37,7 @@
 
     
     
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css">
         <script type="text/javascript" src="../../assets/lib/ax5ui-select/dist/ax5select.js"></script>
     
@@ -152,7 +153,7 @@
     &lt;/div>
     &lt;div class="col-md-6">
         &lt;div class="form-group">
-            &lt;div data-ax5select="select2" data-ax5select-config="{size:&#39;lg&#39;, multiple: true}">&lt;/div>
+            &lt;div data-ax5select="select2" data-ax5select-config="{&#10;                             size:&#39;lg&#39;,&#10;                             multiple: true,&#10;                             reset:&#39;&lt;i class=\&#39;fa fa-trash\&#39;&gt;&lt;/i&gt;&#39;&#10;                             }">&lt;/div>
         &lt;/div>
     &lt;/div>
 &lt;/div></pre><div class="row">
@@ -163,7 +164,7 @@
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <div data-ax5select="select2" data-ax5select-config="{size:&#39;lg&#39;, multiple: true}"></div>
+            <div data-ax5select="select2" data-ax5select-config="{&#10;                             size:&#39;lg&#39;,&#10;                             multiple: true,&#10;                             reset:&#39;&lt;i class=\&#39;fa fa-trash\&#39;&gt;&lt;/i&gt;&#39;&#10;                             }"></div>
         </div>
     </div>
 </div>
@@ -268,9 +269,6 @@ ga('send', 'pageview');
             method: "GET",
             url: "https://api.github.com/repos/ax5ui/ax5ui-select",
             success: function (data) {
-
-                console.log(data);
-
                 $("#started-count").html(ax5.util.number(data.stargazers_count, {'money': true}));
                 ax5.util.setCookie('stargazers_count', data.stargazers_count);
             }
