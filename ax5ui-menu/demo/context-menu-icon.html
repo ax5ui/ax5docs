@@ -310,9 +310,6 @@ ga('send', 'pageview');
             method: "GET",
             url: "https://api.github.com/repos/ax5ui/ax5ui-menu",
             success: function (data) {
-
-                console.log(data);
-
                 $("#started-count").html(ax5.util.number(data.stargazers_count, {'money': true}));
                 ax5.util.setCookie('stargazers_count', data.stargazers_count);
             }
