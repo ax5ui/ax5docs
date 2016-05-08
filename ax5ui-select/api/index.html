@@ -153,7 +153,9 @@ select.setConfig({
   theme: 'default',
   animateTime: 250,
   lang: {
-      emptyOfSelected: '',
+      noSelected: '',
+      noOptions: 'no options',
+      loading: 'now loading..',
       multipleLabel: '&quot;{{label}}&quot;외 {{length}}건'
   },
   columnKeys: {
@@ -236,6 +238,27 @@ select.onStateChanged = function(){
     {value: &quot;optionValue1&quot;, text: &quot;optionText1&quot;},
     {value: &quot;optionValue2&quot;, text: &quot;optionText2&quot;}
   ]
+});
+</code></pre>
+<h3>onExpand</h3>
+<p>Type: <code>Function</code></p>
+<pre class="prettyprint linenums lang-js"><code>select.bind({
+  target: $('[data-ax5select=&quot;select1&quot;]'),
+  lang: {
+      loading: '&lt;i class=&quot;fa fa-spinner fa-pulse&quot;&gt;&lt;/i&gt;'
+  },
+  onExpand: function (callBack) {
+      setTimeout(function () {
+        callBack({
+            options: [
+                {value: &quot;V0&quot;, text: &quot;callBack Text 0&quot;},
+                {value: &quot;V1&quot;, text: &quot;callBack Text 1&quot;},
+                {value: &quot;V2&quot;, text: &quot;callBack Text 2&quot;},
+                {value: &quot;V3&quot;, text: &quot;callBack Text 3&quot;}
+            ]
+        });
+      }, 300);
+  }
 });
 </code></pre>
 <h2>open()</h2>

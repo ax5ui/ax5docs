@@ -1,0 +1,131 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="8" id="cascade-select" title="Casecade Select" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-select/dist/ax5select.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- select -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Casecade Select
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="src/font-awesome/css/font-awesome.css"/>
+                <link rel="stylesheet" type="text/css" href="src/ax5ui-select/dist/ax5select.css"/>
+                <script type="text/javascript" src="src/ax5ui-select/dist/ax5select.min.js"></script>
+                ```
+            </ax5docs-md>
+
+
+            HTML
+            <ax5docs-html run="true">
+                <form name="forms" class="form-inline">
+                    <div class="form-group">
+                        <div data-ax5select="select1"></div>
+                    </div>
+                    <div class="form-group">
+                        <div data-ax5select="select2"></div>
+                    </div>
+                    <button type="button" class="btn" data-btn="getValue">getValue</button>
+                </form>
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    var select = new ax5.ui.select({
+                        columnKeys: {
+                            optionValue: "no", optionText: "label"
+                        }
+                    });
+                    var fnObj = {
+                        list: [
+                            {pno: 0, no: 1, label: "String"},
+                            {pno: 0, no: 2, label: "Number"},
+                            {pno: 1, no: 3, label: "substr"},
+                            {pno: 1, no: 4, label: "substring"},
+                            {pno: 1, no: 5, label: "search"},
+                            {pno: 2, no: 6, label: "parseInt"},
+                            {pno: 2, no: 7, label: "toFixed"}
+                        ],
+                        pageStart: function () {
+                            this.cate1 = $('[data-ax5select="select1"]');
+                            this.cate2 = $('[data-ax5select="select2"]');
+                            this.updateCategory();
+                            
+                            $('[data-btn="getValue"]').click(function () {
+                                alert($(document.forms).serialize());
+                            })
+                        }
+                    };
+
+                    fnObj.updateCategory = function (v1, v2) {
+                        var options1 = [], options2 = [];
+
+                        this.list.forEach(function(n){
+                            if(n.pno == 0) options1.push(n)
+                        });
+                        if (typeof v1 === "undefined") v1 = options1[0].no;
+
+                        this.list.forEach(function(n){
+                            if(n.pno == v1) options2.push(n)
+                        });
+                        if (typeof v2 === "undefined") v2 = options2[0].no;
+
+                        select.bind({
+                            target: this.cate1,
+                            options: options1,
+                            onChange: function(){
+                                //console.log(this.value[0].no);
+                                fnObj.updateCategory(this.value[0].no);
+                            }
+                        });
+                        select.val(this.cate1, v1);
+
+                        select.bind({
+                            target: this.cate2,
+                            options: options2,
+                            onChange: function(){
+                                //console.log(this.value[0].no);
+                                // fnObj.updateCategory(v1, this.value[0].no);
+                            }
+                        });
+                        select.val(this.cate2, v2);
+                    };
+
+                    $(document.body).ready(function () {
+                        fnObj.pageStart();
+                    });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>

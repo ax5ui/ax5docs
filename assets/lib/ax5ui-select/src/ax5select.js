@@ -10,7 +10,7 @@
     /**
      * @class ax5.ui.select
      * @classdesc
-     * @version 0.1.5
+     * @version 0.2.0
      * @author tom@axisj.com
      * @example
      * ```
@@ -33,7 +33,9 @@
             theme: 'default',
             animateTime: 250,
             lang: {
-                emptyOfSelected: '',
+                noSelected: '',
+                noOptions: 'no options',
+                loading: 'now loading..',
                 multipleLabel: '"{{label}}"외 {{length}}건'
             },
             columnKeys: {
@@ -47,6 +49,7 @@
         this.activeSelectQueueIndex = -1;
         this.openTimer = null;
         this.closeTimer = null;
+        this.waitOptionsCallback = null;
 
         cfg = this.config;
 
@@ -58,6 +61,16 @@
                 else if (this.onStateChanged) {
                     this.onStateChanged.call(that, that);
                 }
+
+                if(that.state == "changeValue"){
+                    if (item && item.onChange) {
+                        item.onChange.call(that, that);
+                    }
+                    else if (this.onChange) {
+                        this.onChange.call(that, that);
+                    }
+                }
+
                 item = null;
                 that = null;
                 return true;
@@ -67,21 +80,38 @@
                 <div class="ax5-ui-select-option-group {{theme}} {{size}}" data-ax5-select-option-group="{{id}}">
                     <div class="ax-select-body">
                         <div class="ax-select-option-group-content" data-select-els="content">
-                        {{#options}}
-                            <div class="ax-select-option-item" data-option-index="{{@i}}" data-option-value="{{${columnKeys.optionValue}}}" {{#${columnKeys.optionSelected}}}data-option-selected="true"{{/${columnKeys.optionSelected}}}>
-                                <div class="ax-select-option-item-holder">
-                                    {{#multiple}}
-                                    <span class="ax-select-option-item-cell ax-select-option-item-checkbox">
-                                        <span class="item-checkbox-wrap useCheckBox" data-option-checkbox-index="{{@i}}"></span>
-                                    </span>
-                                    {{/multiple}}
-                                    {{^multiple}}
-                                    
-                                    {{/multiple}}
-                                    <span class="ax-select-option-item-cell ax-select-option-item-label">{{${columnKeys.optionText}}}</span>
+                        {{#waitOptions}}
+                            <div class="ax-select-option-item">
+                                    <div class="ax-select-option-item-holder">
+                                        <span class="ax-select-option-item-cell ax-select-option-item-label">
+                                            {{{lang.loading}}}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        {{/options}}
+                        {{/waitOptions}}
+                        {{^waitOptions}}
+                            {{#options}}
+                                <div class="ax-select-option-item" data-option-index="{{@i}}" data-option-value="{{${columnKeys.optionValue}}}" {{#${columnKeys.optionSelected}}}data-option-selected="true"{{/${columnKeys.optionSelected}}}>
+                                    <div class="ax-select-option-item-holder">
+                                        {{#multiple}}
+                                        <span class="ax-select-option-item-cell ax-select-option-item-checkbox">
+                                            <span class="item-checkbox-wrap useCheckBox" data-option-checkbox-index="{{@i}}"></span>
+                                        </span>
+                                        {{/multiple}}
+                                        <span class="ax-select-option-item-cell ax-select-option-item-label">{{${columnKeys.optionText}}}</span>
+                                    </div>
+                                </div>
+                            {{/options}}
+                            {{^options}}
+                                <div class="ax-select-option-item">
+                                    <div class="ax-select-option-item-holder">
+                                        <span class="ax-select-option-item-cell ax-select-option-item-label">
+                                            {{{lang.noOptions}}}
+                                        </span>
+                                    </div>
+                                </div>
+                            {{/options}}
+                        {{/waitOptions}}
                         </div>
                     </div>
                     <div class="ax-select-arrow"></div> 
@@ -114,6 +144,22 @@
             getSelectTmpl = function () {
                 return `
                 <select tabindex="-1" class="form-control {{formSize}}" name="{{name}}" {{#multiple}}multiple="multiple"{{/multiple}}></select>
+                `;
+            },
+            getOptionsTmpl = function (columnKeys) {
+                return `
+                {{#options}}
+                    <div class="ax-select-option-item" data-option-index="{{@i}}" data-option-value="{{${columnKeys.optionValue}}}" {{#${columnKeys.optionSelected}}}data-option-selected="true"{{/${columnKeys.optionSelected}}}>
+                        <div class="ax-select-option-item-holder">
+                            {{#multiple}}
+                            <span class="ax-select-option-item-cell ax-select-option-item-checkbox">
+                                <span class="item-checkbox-wrap useCheckBox" data-option-checkbox-index="{{@i}}"></span>
+                            </span>
+                            {{/multiple}}
+                            <span class="ax-select-option-item-cell ax-select-option-item-label">{{${columnKeys.optionText}}}</span>
+                        </div>
+                    </div>
+                {{/options}}
                 `;
             },
             alignSelectDisplay = function () {
@@ -202,11 +248,13 @@
                 if (!target) {
                     this.close();
                     return this;
-                } else if (clickEl === "optionItem") {
-                    this.val(item.id, {index: target.getAttribute("data-option-index")});
+                }
+                else if (clickEl === "optionItem") {
+                    this.val(item.id, {index: target.getAttribute("data-option-index")}, undefined, "internal");
+
                     if (!item.multiple) this.close();
                 }
-                else{
+                else {
                     //open and display click
                     //console.log(this.instanceId);
                 }
@@ -221,15 +269,15 @@
             getLabel = function (queIdx) {
                 var item = this.queue[queIdx];
                 var labels = [];
-                
+
                 if (U.isArray(item.selected) && item.selected.length > 0) {
                     item.selected.forEach(function (n) {
-                        if (n.selected) labels.push(n[cfg.columnKeys.optionText]);
+                        if (n.selected) labels.push(n[item.columnKeys.optionText]);
                     });
                 }
                 else {
-                    if (!item.multiple && item.options[0]) labels[0] = item.options[0][cfg.columnKeys.optionText];
-                    else labels[0] = "";
+                    if (!item.multiple && item.options && item.options[0]) labels[0] = item.options[0][item.columnKeys.optionText];
+                    else labels[0] = item.lang.noSelected;
                 }
 
                 return (function () {
@@ -238,7 +286,7 @@
                             label: labels[0],
                             length: labels.length - 1
                         };
-                        return ax5.mustache.render(cfg.lang.multipleLabel, data);
+                        return ax5.mustache.render(item.lang.multipleLabel, data);
                     }
                     else {
                         return labels[0];
@@ -262,11 +310,11 @@
                             }
                         });
 
-                        if(target){
+                        if (target) {
                             // selected clear
-                            this.val(queIdx, {clear:true});
+                            this.val(queIdx, {clear: true});
                         }
-                        else{
+                        else {
                             if (self.activeSelectQueueIndex == queIdx) {
                                 self.close();
                             } else {
@@ -394,8 +442,10 @@
                         po = [];
                         item.options.forEach(function (O, OIndex) {
                             O['@index'] = OIndex;
-                            po.push('<option value="' + O[cfg.columnKeys.optionValue] + '" ' + (O[cfg.columnKeys.optionSelected] ? ' selected="selected"' : '') + '>' + O[cfg.columnKeys.optionText] + '</option>');
-                            if (O[cfg.columnKeys.optionSelected]) {
+                            po.push('<option value="' + O[item.columnKeys.optionValue] + '" '
+                                + (O[item.columnKeys.optionSelected] ? ' selected="selected"' : '') + '>'
+                                + O[item.columnKeys.optionText] + '</option>');
+                            if (O[item.columnKeys.optionSelected]) {
                                 setSelected.call(self, queIdx, O);
                             }
                         });
@@ -407,9 +457,9 @@
                         newOptions = [];
                         elementOptions.forEach(function (O, OIndex) {
                             var option = {};
-                            option[cfg.columnKeys.optionValue] = O.value;
-                            option[cfg.columnKeys.optionText] = O.text;
-                            option[cfg.columnKeys.optionSelected] = O.selected;
+                            option[item.columnKeys.optionValue] = O.value;
+                            option[item.columnKeys.optionText] = O.text;
+                            option[item.columnKeys.optionSelected] = O.selected;
                             option['@index'] = OIndex;
                             if (O.selected) setSelected.call(self, queIdx, option);
                             newOptions.push(option);
@@ -418,13 +468,14 @@
                         item.options = newOptions;
                     }
 
-                    if (!item.multiple && item.selected.length == 0) {
-                        item.selected = jQuery.extend({}, item.options[0]);
+                    if (!item.multiple && item.selected.length == 0 && item.options && item.options[0]) {
+                        item.selected.push(jQuery.extend({}, item.options[0]));
                     }
 
                     po = null;
                     elementOptions = null;
                     newOptions = null;
+                    return item.options;
                     return item.options;
                 }
             })(),
@@ -453,6 +504,7 @@
          */
         this.init = function () {
             this.onStateChanged = cfg.onStateChanged;
+            this.onChange = cfg.onChange;
             jQuery(window).bind("resize.ax5select-display-" + this.instanceId, (function () {
                 alignSelectDisplay.call(this);
             }).bind(this));
@@ -474,11 +526,12 @@
                 selectConfig = {},
                 queIdx;
 
-            item = jQuery.extend(selectConfig, cfg, item);
+            item = jQuery.extend(true, selectConfig, cfg, item);
             if (!item.target) {
                 console.log(ax5.info.getError("ax5select", "401", "bind"));
                 return this;
             }
+
             item.$target = jQuery(item.target);
 
             if (!item.id) item.id = item.$target.data("data-ax5select-id");
@@ -507,7 +560,7 @@
                 bindSelectTarget.call(this, this.queue.length - 1);
             }
             else {
-                this.queue[queIdx] = jQuery.extend({}, this.queue[queIdx], item);
+                this.queue[queIdx] = jQuery.extend(true, {}, this.queue[queIdx], item);
                 bindSelectTarget.call(this, queIdx);
             }
 
@@ -525,7 +578,54 @@
          */
         this.open = (function () {
 
+            var onExpand = function (item) {
+                item.onExpand.call({
+                    self: this,
+                    item: item
+                }, (function (O) {
+                    if (this.waitOptionsCallback) {
+                        var data = {};
+                        var item = this.queue[this.activeSelectQueueIndex];
+
+                        /// 현재 selected 검증후 처리
+                        (function (item, O) {
+                            var optionsMap = {};
+                            O.options.forEach(function (_O, _OIndex) {
+                                _O["@index"] = _OIndex;
+                                optionsMap[_O[item.columnKeys.optionValue]] = _O;
+                            });
+                            if(U.isArray(item.selected)) {
+                                item.selected.forEach(function (_O) {
+                                    if (optionsMap[_O[item.columnKeys.optionValue]]) {
+                                        O.options[optionsMap[_O[item.columnKeys.optionValue]]["@index"]][item.columnKeys.optionSelected] = true;
+                                    }
+                                });
+                            }
+                        })(item, O);
+
+
+                        item.$display
+                            .find('[data-ax5-select-display="label"]')
+                            .html(getLabel.call(this, this.activeSelectQueueIndex));
+                        item.options = syncSelectOptions.call(this, this.activeSelectQueueIndex, O.options);
+
+                        alignSelectDisplay.call(this);
+
+                        /// 템플릿에 전달할 오브젝트 선언
+                        data.id = item.id;
+                        data.theme = item.theme;
+                        data.size = "ax5-ui-select-option-group-" + item.size;
+                        data.multiple = item.multiple;
+                        data.lang = item.lang;
+                        data.options = item.options;
+                        this.activeSelectOptionGroup.find('[data-select-els="content"]').html(jQuery(ax5.mustache.render(getOptionsTmpl.call(this, item.columnKeys), data)));
+                    }
+                }).bind(this));
+            };
+
             return function (boundID, tryCount) {
+                this.waitOptionsCallback = null;
+
                 /**
                  * open select from the outside
                  */
@@ -555,10 +655,18 @@
                 data.theme = item.theme;
                 data.size = "ax5-ui-select-option-group-" + item.size;
                 data.multiple = item.multiple;
-                data.options = item.options;
-                item.$display.attr("data-select-option-group-opened", "true");
 
-                this.activeSelectOptionGroup = jQuery(ax5.mustache.render(getOptionGroupTmpl.call(this, cfg.columnKeys), data));
+                data.lang = item.lang;
+                item.$display.attr("data-select-option-group-opened", "true");
+                //console.log(data.lang);
+
+                if (item.onExpand) {
+                    // onExpand 인 경우 UI 대기모드 추가
+                    data.waitOptions = true;
+                }
+
+                data.options = item.options;
+                this.activeSelectOptionGroup = jQuery(ax5.mustache.render(getOptionGroupTmpl.call(this, item.columnKeys), data));
                 this.activeSelectQueueIndex = queIdx;
 
                 alignSelectOptionGroup.call(this, "append"); // alignSelectOptionGroup 에서 body append
@@ -568,10 +676,11 @@
 
                 if (item.selected && item.selected.length > 0) {
                     selectedOptionEl = this.activeSelectOptionGroup.find('[data-option-index="' + item.selected[0]["@index"] + '"]');
+
                     if (selectedOptionEl.get(0)) {
                         focusTop = selectedOptionEl.position().top - this.activeSelectOptionGroup.height() / 3;
                         this.activeSelectOptionGroup.find('[data-select-els="content"]')
-                            .stop().animate({scrollTop: focusTop}, cfg.animateTime, 'swing', function () {
+                            .stop().animate({scrollTop: focusTop}, item.animateTime, 'swing', function () {
                         });
                     }
                 }
@@ -594,6 +703,12 @@
                     state: "open",
                     boundObject: item
                 });
+
+                // waitOption timer
+                if (item.onExpand) {
+                    this.waitOptionsCallback = true;
+                    onExpand.call(this, item);
+                }
 
                 data = null;
                 focusTop = null;
@@ -638,22 +753,23 @@
             var processor = {
                 'index': function (queIdx, value, selected) {
                     // 클래스 내부에서 호출된 형태, 그런 이유로 옵션그룹에 대한 상태를 변경 하고 있다.
+                    var item = this.queue[queIdx];
                     if (U.isArray(value.index)) {
                         value.index.forEach(function (n) {
-                            self.queue[queIdx].options[n][cfg.columnKeys.optionSelected] = getSelected(self.queue[queIdx], self.queue[queIdx].options[n][cfg.columnKeys.optionSelected], selected);
+                            item.options[n][item.columnKeys.optionSelected] = getSelected(item, item.options[n][item.columnKeys.optionSelected], selected);
                             self.activeSelectOptionGroup
                                 .find('[data-option-index="' + n + '"]')
-                                .attr("data-option-selected", self.queue[queIdx].options[n][cfg.columnKeys.optionSelected].toString());
+                                .attr("data-option-selected", item.options[n][item.columnKeys.optionSelected].toString());
                         });
                     }
                     else {
-                        self.queue[queIdx].options[value.index][cfg.columnKeys.optionSelected] = getSelected(self.queue[queIdx], self.queue[queIdx].options[value.index][cfg.columnKeys.optionSelected], selected);
+                        item.options[value.index][item.columnKeys.optionSelected] = getSelected(item, item.options[value.index][item.columnKeys.optionSelected], selected);
                         self.activeSelectOptionGroup
                             .find('[data-option-index="' + value.index + '"]')
-                            .attr("data-option-selected", self.queue[queIdx].options[value.index][cfg.columnKeys.optionSelected].toString());
+                            .attr("data-option-selected", item.options[value.index][item.columnKeys.optionSelected].toString());
                     }
 
-                    syncSelectOptions.call(this, queIdx, this.queue[queIdx].options);
+                    syncSelectOptions.call(this, queIdx, item.options);
                     syncLabel.call(this, queIdx);
                     alignSelectOptionGroup.call(this);
                 },
@@ -673,48 +789,51 @@
                     });
                 },
                 'value': function (queIdx, value, selected) {
-                    var optionIndex = U.search(this.queue[queIdx].options, function () {
-                        return this[cfg.columnKeys.optionValue] == value;
+                    var item = this.queue[queIdx];
+                    var optionIndex = U.search(item.options, function () {
+                        return this[item.columnKeys.optionValue] == value;
                     });
-                    if (optionIndex > 0) {
-                        this.queue[queIdx].options[optionIndex][cfg.columnKeys.optionSelected] = getSelected(self.queue[queIdx], this.queue[queIdx].options[optionIndex][cfg.columnKeys.optionSelected], selected);
+                    if (optionIndex > -1) {
+                        item.options[optionIndex][item.columnKeys.optionSelected] = getSelected(item, item.options[optionIndex][item.columnKeys.optionSelected], selected);
                     }
                     else {
                         console.log(ax5.info.getError("ax5select", "501", "val"));
                         return;
                     }
 
-                    syncSelectOptions.call(this, queIdx, this.queue[queIdx].options);
+                    syncSelectOptions.call(this, queIdx, item.options);
                     syncLabel.call(this, queIdx);
                 },
                 'text': function (queIdx, value, selected) {
-                    var optionIndex = U.search(this.queue[queIdx].options, function () {
-                        return this[cfg.columnKeys.optionText] == value;
+                    var item = this.queue[queIdx];
+                    var optionIndex = U.search(item.options, function () {
+                        return this[item.columnKeys.optionText] == value;
                     });
-                    if (optionIndex > 0) {
-                        this.queue[queIdx].options[optionIndex][cfg.columnKeys.optionSelected] = getSelected(self.queue[queIdx], this.queue[queIdx].options[optionIndex][cfg.columnKeys.optionSelected], selected);
+                    if (optionIndex > -1) {
+                        item.options[optionIndex][item.columnKeys.optionSelected] = getSelected(item, item.options[optionIndex][item.columnKeys.optionSelected], selected);
                     }
                     else {
                         console.log(ax5.info.getError("ax5select", "501", "val"));
                         return;
                     }
 
-                    syncSelectOptions.call(this, queIdx, this.queue[queIdx].options);
+                    syncSelectOptions.call(this, queIdx, item.options);
                     syncLabel.call(this, queIdx);
                 },
-                'clear': function(queIdx, value, selected){
-
+                'clear': function (queIdx) {
                     clearSelected.call(this, queIdx);
                     syncSelectOptions.call(this, queIdx, this.queue[queIdx].options);
                     syncLabel.call(this, queIdx);
 
-                    self.activeSelectOptionGroup
-                        .find('[data-option-index]')
-                        .attr("data-option-selected", "false");
+                    if (this.activeSelectOptionGroup) {
+                        this.activeSelectOptionGroup
+                            .find('[data-option-index]')
+                            .attr("data-option-selected", "false");
+                    }
                 }
             };
 
-            return function (boundID, value, selected) {
+            return function (boundID, value, selected, internal) {
                 var queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
                 if (queIdx === -1) {
                     console.log(ax5.info.getError("ax5select", "402", "val"));
@@ -736,10 +855,15 @@
                     processor.value.call(this, queIdx, value, selected);
                 }
                 else {
-                    for (var key in processor) {
-                        if (value[key]) {
-                            processor[key].call(this, queIdx, value, selected);
-                            break;
+                    if (value === null) {
+                        processor.clear.call(this, queIdx);
+                    }
+                    else {
+                        for (var key in processor) {
+                            if (value[key]) {
+                                processor[key].call(this, queIdx, value, selected);
+                                break;
+                            }
                         }
                     }
                 }
@@ -747,7 +871,10 @@
                 if (typeof value !== "undefined") {
                     onStateChanged.call(this, this.queue[queIdx], {
                         self: this,
-                        state: "setValue"
+                        item: this.queue[queIdx],
+                        state: (internal) ? "changeValue" : "setValue",
+                        value: this.queue[queIdx].selected,
+                        internal: internal
                     });
                 }
 
@@ -783,7 +910,7 @@
                 });
 
             }).bind(this), cfg.animateTime);
-
+            this.waitOptionsCallback = null;
             return this;
         };
 

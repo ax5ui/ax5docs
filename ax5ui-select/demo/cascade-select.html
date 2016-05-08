@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-select : get/set Value</title>
+    <title>ax5ui / ax5ui-select : Casecade Select</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -37,6 +37,7 @@
 
     
     
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css">
         <script type="text/javascript" src="../../assets/lib/ax5ui-select/dist/ax5select.js"></script>
     
@@ -126,7 +127,7 @@
                     <div class="col-md-3">
                         <div class="docs-menu" id="docs-menu">
                             
-        <ul><li ><a href="/ax5ui-select/demo/index.html">basic</a></li><li ><a href="/ax5ui-select/demo/size.html">size</a></li><li ><a href="/ax5ui-select/demo/theme.html">theme</a></li><li  class='active'><a href="/ax5ui-select/demo/get-set-value.html">get/set Value</a></li><li ><a href="/ax5ui-select/demo/onchange.html">onChange</a></li><li ><a href="/ax5ui-select/demo/user-instance.html">user Instance</a></li><li ><a href="/ax5ui-select/demo/onexpand.html">onExpand</a></li><li ><a href="/ax5ui-select/demo/cascade-select.html">Casecade Select</a></li></ul>
+        <ul><li ><a href="/ax5ui-select/demo/index.html">basic</a></li><li ><a href="/ax5ui-select/demo/size.html">size</a></li><li ><a href="/ax5ui-select/demo/theme.html">theme</a></li><li ><a href="/ax5ui-select/demo/get-set-value.html">get/set Value</a></li><li ><a href="/ax5ui-select/demo/onchange.html">onChange</a></li><li ><a href="/ax5ui-select/demo/user-instance.html">user Instance</a></li><li ><a href="/ax5ui-select/demo/onexpand.html">onExpand</a></li><li  class='active'><a href="/ax5ui-select/demo/cascade-select.html">Casecade Select</a></li></ul>
     
                         </div>
                     </div>
@@ -135,9 +136,10 @@
 
         
         <section class="ax5docs-section">
-            <h1>get/set Value</h1>
+            <h1>Casecade Select</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site's HTML.</strong></p>
-<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/ax5ui-select/dist/ax5select.css&quot;&gt;
+<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/font-awesome/css/font-awesome.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/ax5ui-select/dist/ax5select.css&quot;&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;src/ax5ui-select/dist/ax5select.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 
@@ -145,80 +147,152 @@
 
             HTML
             <pre class="prettyprint linenums lang-html">&lt;form name="forms" class="form-inline">
-&lt;div class="form-group">
-    &lt;div data-ax5select="select1" data-ax5select-config="{&#10;                     name: &#39;select1&#39;,&#10;                     minWidth: 150,&#10;                     options: [&#10;                        {value:&#39;1&#39;, text:&#39;select value 1&#39;},&#10;                        {value:&#39;2&#39;, text:&#39;select value 2&#39;}&#10;                        ]&#10;                     }">&lt;/div>
-&lt;/div>
-
-&lt;div class="form-group">
-    &lt;div data-ax5select="select2" data-ax5select-config="{&#10;                        name: &#39;select2&#39;,&#10;                        minWidth: 200,&#10;                        multiple: true,&#10;                        options: [&#10;                            {value:&#39;3&#39;, text:&#39;select value 3&#39;},&#10;                            {value:&#39;4&#39;, text:&#39;select value 4&#39;},&#10;                            {value:&#39;5&#39;, text:&#39;select value 5&#39;},&#10;                            {value:&#39;6&#39;, text:&#39;select value 6&#39;}&#10;                            ]&#10;                        }">&lt;/div>
-&lt;/div>
-
-&lt;button type="button" class="btn" data-btn="setValue">setValue&lt;/button>
-&lt;button type="button" class="btn" data-btn="getValue">getValue&lt;/button>
-
+    &lt;div class="form-group">
+        &lt;div data-ax5select="select1">&lt;/div>
+    &lt;/div>
+    &lt;div class="form-group">
+        &lt;div data-ax5select="select2">&lt;/div>
+    &lt;/div>
+    &lt;button type="button" class="btn" data-btn="getValue">getValue&lt;/button>
 &lt;/form></pre><form name="forms" class="form-inline">
-<div class="form-group">
-    <div data-ax5select="select1" data-ax5select-config="{&#10;                     name: &#39;select1&#39;,&#10;                     minWidth: 150,&#10;                     options: [&#10;                        {value:&#39;1&#39;, text:&#39;select value 1&#39;},&#10;                        {value:&#39;2&#39;, text:&#39;select value 2&#39;}&#10;                        ]&#10;                     }"></div>
-</div>
-
-<div class="form-group">
-    <div data-ax5select="select2" data-ax5select-config="{&#10;                        name: &#39;select2&#39;,&#10;                        minWidth: 200,&#10;                        multiple: true,&#10;                        options: [&#10;                            {value:&#39;3&#39;, text:&#39;select value 3&#39;},&#10;                            {value:&#39;4&#39;, text:&#39;select value 4&#39;},&#10;                            {value:&#39;5&#39;, text:&#39;select value 5&#39;},&#10;                            {value:&#39;6&#39;, text:&#39;select value 6&#39;}&#10;                            ]&#10;                        }"></div>
-</div>
-
-<button type="button" class="btn" data-btn="setValue">setValue</button>
-<button type="button" class="btn" data-btn="getValue">getValue</button>
-
+    <div class="form-group">
+        <div data-ax5select="select1"></div>
+    </div>
+    <div class="form-group">
+        <div data-ax5select="select2"></div>
+    </div>
+    <button type="button" class="btn" data-btn="getValue">getValue</button>
 </form>
 
             <div class="DH10"></div>
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-$(document.body).ready(function(){
-    $('[data-ax5select]').ax5select({
-        theme:'primary',
-        onStateChanged: function(){
-            console.log(this);
+    var select = new ax5.ui.select({
+        columnKeys: {
+            optionValue: "no", optionText: "label"
         }
     });
+    var fnObj = {
+        list: [
+            {pno: 0, no: 1, label: "String"},
+            {pno: 0, no: 2, label: "Number"},
+            {pno: 1, no: 3, label: "substr"},
+            {pno: 1, no: 4, label: "substring"},
+            {pno: 1, no: 5, label: "search"},
+            {pno: 2, no: 6, label: "parseInt"},
+            {pno: 2, no: 7, label: "toFixed"}
+        ],
+        pageStart: function () {
+            this.cate1 = $('[data-ax5select="select1"]');
+            this.cate2 = $('[data-ax5select="select2"]');
+            this.updateCategory();
+            
+            $('[data-btn="getValue"]').click(function () {
+                alert($(document.forms).serialize());
+            })
+        }
+    };
 
-    $('[data-btn]').click(function () {
-        var act = this.getAttribute("data-btn");
-        switch (act) {
-            case "setValue":
-                $('[data-ax5select="select1"]').ax5select("setValue", 2);
-                $('[data-ax5select="select2"]').ax5select("setValue", [5,6], true);
-                break;
-            case "getValue":
-                console.log($('[data-ax5select="select1"]').ax5select("getValue"));
-                console.log($('[data-ax5select="select2"]').ax5select("getValue"));
-                console.log($(document.forms).serialize());
-                break;
-        }
-    });
-});
-&lt;/script></pre><script type="text/javascript">$(document.body).ready(function(){
-    $('[data-ax5select]').ax5select({
-        theme:'primary',
-        onStateChanged: function(){
-            console.log(this);
-        }
-    });
+    fnObj.updateCategory = function (v1, v2) {
+        var options1 = [], options2 = [];
 
-    $('[data-btn]').click(function () {
-        var act = this.getAttribute("data-btn");
-        switch (act) {
-            case "setValue":
-                $('[data-ax5select="select1"]').ax5select("setValue", 2);
-                $('[data-ax5select="select2"]').ax5select("setValue", [5,6], true);
-                break;
-            case "getValue":
-                console.log($('[data-ax5select="select1"]').ax5select("getValue"));
-                console.log($('[data-ax5select="select2"]').ax5select("getValue"));
-                console.log($(document.forms).serialize());
-                break;
+        this.list.forEach(function(n){
+            if(n.pno == 0) options1.push(n)
+        });
+        if (typeof v1 === "undefined") v1 = options1[0].no;
+
+        this.list.forEach(function(n){
+            if(n.pno == v1) options2.push(n)
+        });
+        if (typeof v2 === "undefined") v2 = options2[0].no;
+
+        select.bind({
+            target: this.cate1,
+            options: options1,
+            onChange: function(){
+                //console.log(this.value[0].no);
+                fnObj.updateCategory(this.value[0].no);
+            }
+        });
+        select.val(this.cate1, v1);
+
+        select.bind({
+            target: this.cate2,
+            options: options2,
+            onChange: function(){
+                //console.log(this.value[0].no);
+                // fnObj.updateCategory(v1, this.value[0].no);
+            }
+        });
+        select.val(this.cate2, v2);
+    };
+
+    $(document.body).ready(function () {
+        fnObj.pageStart();
+    });
+&lt;/script></pre><script type="text/javascript">var select = new ax5.ui.select({
+        columnKeys: {
+            optionValue: "no", optionText: "label"
         }
     });
-});
+    var fnObj = {
+        list: [
+            {pno: 0, no: 1, label: "String"},
+            {pno: 0, no: 2, label: "Number"},
+            {pno: 1, no: 3, label: "substr"},
+            {pno: 1, no: 4, label: "substring"},
+            {pno: 1, no: 5, label: "search"},
+            {pno: 2, no: 6, label: "parseInt"},
+            {pno: 2, no: 7, label: "toFixed"}
+        ],
+        pageStart: function () {
+            this.cate1 = $('[data-ax5select="select1"]');
+            this.cate2 = $('[data-ax5select="select2"]');
+            this.updateCategory();
+            
+            $('[data-btn="getValue"]').click(function () {
+                alert($(document.forms).serialize());
+            })
+        }
+    };
+
+    fnObj.updateCategory = function (v1, v2) {
+        var options1 = [], options2 = [];
+
+        this.list.forEach(function(n){
+            if(n.pno == 0) options1.push(n)
+        });
+        if (typeof v1 === "undefined") v1 = options1[0].no;
+
+        this.list.forEach(function(n){
+            if(n.pno == v1) options2.push(n)
+        });
+        if (typeof v2 === "undefined") v2 = options2[0].no;
+
+        select.bind({
+            target: this.cate1,
+            options: options1,
+            onChange: function(){
+                //console.log(this.value[0].no);
+                fnObj.updateCategory(this.value[0].no);
+            }
+        });
+        select.val(this.cate1, v1);
+
+        select.bind({
+            target: this.cate2,
+            options: options2,
+            onChange: function(){
+                //console.log(this.value[0].no);
+                // fnObj.updateCategory(v1, this.value[0].no);
+            }
+        });
+        select.val(this.cate2, v2);
+    };
+
+    $(document.body).ready(function () {
+        fnObj.pageStart();
+    });
 </script></script>
 
             

@@ -1,0 +1,99 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="7" id="on-expand" title="onExpand" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-select/dist/ax5select.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- select -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # onExpand
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="src/font-awesome/css/font-awesome.css"/>
+                <link rel="stylesheet" type="text/css" href="src/ax5ui-select/dist/ax5select.css"/>
+                <script type="text/javascript" src="src/ax5ui-select/dist/ax5select.min.js"></script>
+                ```
+            </ax5docs-md>
+
+
+            HTML
+            <ax5docs-html run="true">
+                <form name="forms" class="form-inline">
+                    <div class="form-group">
+                        <div data-ax5select="select1"></div>
+                    </div>
+                    <button type="button" class="btn" data-btn="getValue">getValue</button>
+                </form>
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        var EL = $('[data-ax5select="select1"]');
+                        EL.ax5select({
+                            theme: "success",
+                            minWidth: 200,
+                            onStateChanged: function () {
+                                //console.log(this);
+                            },
+                            lang: {
+                                loading: '<i class="fa fa-spinner fa-pulse"></i>'
+                            },
+                            onExpand: function (callBack) {
+                                setTimeout(function () {
+                                    callBack({
+                                        options: [
+                                            {value: "V0", text: "callBack Text 0"},
+                                            {value: "V1", text: "callBack Text 1"},
+                                            {value: "V2", text: "callBack Text 2"},
+                                            {value: "V3", text: "callBack Text 3"}
+                                        ]
+                                    });
+                                }, 300);
+                            }
+                        });
+
+                        $('[data-btn]').click(function () {
+                            var act = this.getAttribute("data-btn");
+                            switch (act) {
+                                case "getValue":
+                                    console.log(EL.ax5select("getValue"));
+                                    break;
+                            }
+                        });
+                    });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>
