@@ -1,0 +1,112 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="9" id="optgroup" title="optgroup" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-select/dist/ax5select.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- select -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # optgroup
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="src/font-awesome/css/font-awesome.css"/>
+                <link rel="stylesheet" type="text/css" href="src/ax5ui-select/dist/ax5select.css"/>
+                <script type="text/javascript" src="src/ax5ui-select/dist/ax5select.min.js"></script>
+                ```
+            </ax5docs-md>
+
+
+            HTML
+            <ax5docs-html run="true">
+                <form name="forms" class="form-inline">
+                    <div class="form-group">
+                        <div data-ax5select="select1" data-ax5select-config='{
+                            size: "",
+                            multiple: false,
+                            minWidth: 200
+                        }'></div>
+                    </div>
+                    <div class="form-group">
+                        <div data-ax5select="select2" data-ax5select-config='{
+                            size: "",
+                            multiple: true,
+                            minWidth: 200,
+                            reset:"<i class=\"fa fa-trash\"></i>"
+                        }'></div>
+                    </div>
+                    <button type="button" class="btn" data-btn="getValue">getValue</button>
+                </form>
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        var options = [
+                            {
+                                optgroup: "group label1",
+                                options: [
+                                    {value: 1, text: "text1"},
+                                    {value: 2, text: "text2"},
+                                    {value: 3, text: "text3"}
+                                ]
+                            },
+                            {
+                                optgroup: "group label2",
+                                options: [
+                                    {value: 4, text: "text4"},
+                                    {value: 5, text: "text5"},
+                                    {value: 6, text: "text6"}
+                                ]
+                            }
+                        ];
+
+                        $('[data-btn]').click(function () {
+                            var act = this.getAttribute("data-btn");
+                            switch (act) {
+                                case "getValue":
+                                    console.log($('[data-ax5select="select1"]').ax5select("getValue"));
+                                    console.log($('[data-ax5select="select2"]').ax5select("getValue"));
+                                    break;
+                            }
+                        });
+
+                        $('[data-ax5select]').ax5select({
+                            options: options
+                        });
+
+                    });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>
