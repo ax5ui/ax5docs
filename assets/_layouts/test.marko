@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><layout-placeholder name="title"/></title>
+</head>
+<body>
+<h1 if(data.showHeader !== false)>
+    <layout-placeholder name="title"/>
+</h1>
+<p>
+    <layout-placeholder name="body"/>
+</p>
+<div>
+    <layout-placeholder name="footer">
+        Default Footer
+    </layout-placeholder>
+</div>
+</body>
+</html>

@@ -137,14 +137,14 @@
 formatter.bind({
     target: $(&quot;#input&quot;),
     pattern: &quot;date&quot;
-);
+});
 
 formatter.bind({
     target: $(&quot;#input&quot;),
     pattern: &quot;custom&quot;,
     getEnterableKeyCodes: function(){},
     getPatternValue: function(){}
-);
+});
 </code></pre>
 <h3>id</h3>
 <p>Type: <code>String</code></p>
@@ -153,7 +153,7 @@ formatter.bind({
 <p>Type: <code>Dom Element | jQuery Object</code></p>
 <p>&quot;.input-Group&quot; elements that are the target of the picker</p>
 <h3>pattern</h3>
-<p>Type: <code>String</code> &quot;money|money(int)|date|date(time)|time|bizno|phone|custom&quot;</p>
+<p>Type: <code>String</code> &quot;money | money(int) | number | date | date(time) | time | bizno | phone | custom&quot;</p>
 <h3>getEnterableKeyCodes</h3>
 <p>Type: <code>Function</code></p>
 <p>You can define the keyCode collection to allow input.</p>

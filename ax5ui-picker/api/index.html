@@ -201,18 +201,65 @@ picker.bind({
 }
 </code></pre>
 <ul>
-<li><strong>width</strong> <code>Number</code></li>
-<li><strong>margin</strong> <code>Number</code></li>
-<li><strong>type</strong> <code>String</code>
+<li>
+<p><strong>width</strong> <code>Number</code></p>
+</li>
+<li>
+<p><strong>margin</strong> <code>Number</code></p>
+</li>
+<li>
+<p><strong>type</strong> <code>String</code></p>
 <ul>
 <li>date</li>
-<li>autocomplete</li>
-<li>...</li>
+<li>secure-num</li>
 </ul>
 </li>
-<li><strong>config</strong> <code>Object</code></li>
-<li><strong>formatter</strong> <code>Object</code></li>
+<li>
+<p><strong>config</strong> <code>Object</code></p>
+</li>
+<li>
+<p><strong>formatter</strong> <code>Object</code></p>
+</li>
 </ul>
+<h4>contentType : 'date'</h4>
+<pre class="prettyprint linenums lang-js"><code>{
+    width: 270,
+    margin: 10,
+    type: 'date',
+    config: {
+        control: {
+            left: '&lt;i class=&quot;fa fa-chevron-left&quot;&gt;&lt;/i&gt;',
+            yearTmpl: '%s',
+            monthTmpl: '%s',
+            right: '&lt;i class=&quot;fa fa-chevron-right&quot;&gt;&lt;/i&gt;'
+        },
+        lang: {
+            yearTmpl: &quot;%s년&quot;,
+            months: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+            dayTmpl: &quot;%s&quot;
+        }
+    },
+    formatter: {
+        pattern: 'date'
+    }
+}
+</code></pre>
+<h4>contentType : 'secure-num'</h4>
+<pre class="prettyprint linenums lang-js"><code>{
+    width: 200,
+    margin: 10,
+    type: 'secure-num',
+    config: {
+        btnWrapStyle: &quot;padding:3px;width:25%;&quot;,
+        btnStyle: &quot;width:100%&quot;,
+        btnTheme: &quot;info btn-sm&quot;,
+        specialBtnTheme: &quot; btn-sm&quot;
+    },
+    formatter: {
+        pattern: 'number'
+    }
+}
+</code></pre>
 <h3>contentWidth</h3>
 <p>Type: <code>Number</code></p>
 <p>If the content type of the function, recommended to set this value.</p>
@@ -257,7 +304,7 @@ picker.onStateChanged = function(){
 <hr>
 <h1>jQuery extends</h1>
 <h2>ax5picker</h2>
-<p><code>$(query).ax5picker({bindConfigs})</code></p>
+<p><code>ax5picker({bindConfigs})</code></p>
 <pre class="prettyprint linenums lang-js"><code>$('[data-ax5picker=&quot;date&quot;]').ax5picker({
     direction: &quot;top&quot;,
     content: {
@@ -266,6 +313,18 @@ picker.onStateChanged = function(){
         type: 'date'
     }
 });
+</code></pre>
+<h3>open</h3>
+<p><code>ax5picker(&quot;open&quot;)</code></p>
+<pre class="prettyprint linenums lang-js"><code>$('[data-ax5picker]').ax5picker(&quot;open&quot;);
+</code></pre>
+<h3>close</h3>
+<p><code>ax5picker(&quot;close&quot;)</code></p>
+<pre class="prettyprint linenums lang-js"><code>$('[data-ax5picker]').ax5picker(&quot;close&quot;);
+</code></pre>
+<h3>setValue</h3>
+<p><code>ax5select(&quot;setValue&quot;, inputSeq, value)</code></p>
+<pre class="prettyprint linenums lang-js"><code>$('[data-ax5picker]').ax5picker(&quot;setValue&quot;, 0, &quot;optionValue2&quot;);
 </code></pre>
 
     
