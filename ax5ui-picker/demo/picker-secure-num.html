@@ -1,14 +1,20 @@
 
-	
-	
-	
+
+
+
+    
+    
+    
+    
+    
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-select : home</title>
+    <title>ax5ui / ax5ui-picker : Picker Secure-num</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -33,9 +39,13 @@
 
     
     
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-picker/dist/ax5picker.css">
+        <script type="text/javascript" src="../../assets/lib/ax5ui-picker/dist/ax5picker.js"></script>
+    
 </head>
 <body>
-<div class="docs index  ">
+<div class="docs sub-page  with-menu">
     <div class="docs-header">
         <div class="docs-header-tool" id="docs-header-tool">
             <nav class="navbar navbar-default">
@@ -45,8 +55,8 @@
 						<span class="navbar-brand">
 							<a href="/">
 							<span class="ax5uicon ax5uicon-ax5"></span>UI</a>
-							<a href="/ax5ui-select">
-							<span class="small">/ ax5ui-select</span></a>
+							<a href="/ax5ui-picker">
+							<span class="small">/ ax5ui-picker</span></a>
 						</span>
                         <a class="visible-xs-inline-block mobile-menu">
                             <i class="icon-menu"></i>
@@ -59,13 +69,13 @@
                         <ul class="nav navbar-nav" id="docs-menu-print-target">
                             
                             
-                                <li ><a href="/ax5ui-select/demo/index.html">Demo</a></li><li ><a href="/ax5ui-select/api/index.html">API</a></li>
+                                <li class='active'><a href="/ax5ui-picker/demo/index.html">Demo</a></li><li ><a href="/ax5ui-picker/api/index.html">API</a></li>
                             
                         </ul>
 
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href="https://github.com/ax5ui/ax5ui-select">
+                                <a href="https://github.com/ax5ui/ax5ui-picker">
                                     <span class="ax5uicon ax5uicon-github"></span>
                                     Star
                                     <span class="gh-count" id="started-count">.</span>
@@ -104,106 +114,122 @@
     <div class="docs-visual">
         <div class="pattern"></div>
         
-
-		<div class="contents">
-			<div class="style-index-visual">
-				<div class="brand-title">AX5UI</div>
-				<div class="project-name">ax5ui-select</div>
-				<div class="DH10"></div>
-				<div class="button-group">
-					<button class="btn btn-lg btn-border white" onclick="location.href = &#39;https://github.com/ax5ui/ax5ui-select&#39;;">
-						Get ax5ui-select
-					</button>
-					&nbsp;
-					<button class="btn btn-lg btn-border white" onclick="location.href = &#39;demo/index.html&#39;;">Demostration
-					</button>
-				</div>
-			</div>
-		</div>
-
-	
+        <div class="contents">
+    <div class="style-sub-visual">
+        <div class="title">Demostration</div>
+        <div class="description">Introduces the basic use of ax5ui-picker UI.</div>
+    </div>
+</div>
+    
     </div>
     <div class="docs-body" id="docs-body">
         <div class="wrapper">
             
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-3">
+                        <div class="docs-menu" id="docs-menu">
+                            
+        <ul><li ><a href="/ax5ui-picker/demo/index.html">Picker Basic</a></li><li ><a href="/ax5ui-picker/demo/picker-date.html">Picker Date</a></li><li ><a href="/ax5ui-picker/demo/picker-multidate.html">Picker Multi Date</a></li><li ><a href="/ax5ui-picker/demo/picker-date-btns.html">Picker Buttons</a></li><li  class='active'><a href="/ax5ui-picker/demo/picker-secure-num.html">Picker Secure-num</a></li><li ><a href="/ax5ui-picker/demo/picker-jquery-bind.html">Picker jQuery bind</a></li></ul>
+    
+                        </div>
+                    </div>
+                    <div class="col-md-9">
                         
 
-		<section class="ax5docs-section">
-			<img src="https://img.shields.io/badge/Bower-0.3.2-blue.svg" alt="Bower-0.3.2" /> <img src="https://img.shields.io/badge/NPM-0.3.2-blue.svg" alt="NPM-0.3.2" /> <div class="DH5"></div>
-			<p><a href="https://github.com/axisj"><img src="https://img.shields.io/badge/AXISJ.com-Contributed-green.svg" alt="axisj-contributed"></a>
-<img src="https://img.shields.io/badge/Seowoo-Mondo&amp;Thomas-red.svg" alt=""></p>
-<h1>ax5ui-select</h1>
-<blockquote>
-<p><em>Dependencies</em></p>
-<ul>
-<li><em><a href="http://jquery.com/">jQuery 1.X+</a></em></li>
-<li><em><a href="http://ax5.io/ax5core">ax5core</a></em></li>
-<li><em><a href="http://getbootstrap.com/">bootstrap</a></em></li>
-</ul>
-</blockquote>
-<h3>Install by bower</h3>
-<pre class="prettyprint linenums lang-sh"><code>bower install ax5ui-select
-</code></pre>
-<p><a href="http://bower.io/#install-bower">bower</a> is web front-end package manager.
-using the <code>bower</code>, when you install the plug-in is installed to resolve the plug-in dependencies under the <code>bower_components</code> folder.<br>
-(You can change the folder location. <a href="http://bower.io/docs/config/#bowerrc-specification">.bowerrc</a> )</p>
-<p>It is recommended that you install by using the <code>bower</code>.
-If you've never used a bower is, you will be able to be used for <a href="http://bower.io/#install-bower">http://bower.io/#install-bower</a>.</p>
-<h3>Install by npm</h3>
-<p>If you do not use the bower, it can be downloaded by using the npm as second best.
-In npm, so pile on the package manager for the front end, you need to solve the problem of plug-in dependencies.</p>
-<pre class="prettyprint linenums lang-sh"><code>npm install jquery
-npm install ax5core
-npm install ax5ui-select
-</code></pre>
-<p>After you download the file in npm install, you will need to copy to the location where you want to use as a resource for the project.
-If the inconvenience in the process that you want to copy the file and can be easily copied by using a <code>gulp</code> or <code>grunt</code>.</p>
-<h3>Download code</h3>
-<ul>
-<li><a href="https://github.com/ax5ui/ax5core/releases">ax5core Github releases</a></li>
-<li><a href="https://github.com/ax5ui/ax5ui-select/releases">ax5ui-select Github releases</a></li>
-</ul>
-<hr>
-<h2>USE ax5slect</h2>
-<h3>Insert the &quot;ax5select&quot; in the HTML HEAD.</h3>
-<p>Location of the folder can be determined freely in your project. But be careful not to accidentally caused exactly the path.</p>
-<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.css&quot; /&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.min.js&quot;&gt;&lt;/script&gt;
-</code></pre>
-<p><strong>CDN urls</strong>
-It is CDN url of ax5ui-select. ax5ui offers the CDN services through the rawgit.</p>
-<pre><code>https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.css
-https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.js
-https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.min.js
-</code></pre>
-<h3>Basic Usages</h3>
-<pre class="prettyprint linenums lang-html"><code>&lt;div class=&quot;form-group&quot;&gt;
-    &lt;div data-ax5select=&quot;select1&quot; data-ax5select-config='{}'&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre class="prettyprint linenums lang-js"><code>var options = [];
-for (var i = 0; i &lt; 100; i++) {
-    options.push({value: &quot;optionValue&quot; + i, text: &quot;optionText&quot; + i});
-}
 
-$('[data-ax5select]').ax5select({
-    options: options
-});
-</code></pre>
-<hr>
-<h2>Preview</h2>
-<ul>
-<li><a href="http://ax5.io/ax5ui-select/demo/index.html">See Demostration</a></li>
-</ul>
-<p>If you have any questions, please refer to the following <a href="https://github.com/ax5ui/ax5ui-kernel">gitHub</a></p>
+        
+        <section class="ax5docs-section">
+            <h1>Picker Secure-num</h1>
 
-		</section>
 
-	
+            <p>
+                <b>Paste the following code into the <code>&lt;head></code> section of your site's HTML.</b>
+            </p>
+            <pre class="prettyprint linenums lang-html">&lt;link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css">
+&lt;script type="text/javascript" src="../../assets/lib/ax5ui-picker/dist/ax5picker.js">&lt;/script></pre>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>secure-num</label>
+                    <input type="password" data-ax5picker="secure-num" class="form-control" maxlength="4" placeholder readonly="readonly">
+                </div>
+            </div>
+
+            <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
+    var picker = new ax5.ui.picker();
+
+    $(document.body).ready(function () {
+
+        picker.bind({
+            target: $('[data-ax5picker="secure-num"]'),
+            direction: "top",
+            content: {
+                width: 200,
+                margin: 10,
+                type: 'secure-num',
+                config: {
+                    btnWrapStyle: "padding:3px;width:25%;",
+                    btnStyle: "width:100%",
+                    btnTheme: "info btn-sm",
+                    specialBtnTheme: " btn-sm"
+                },
+                formatter: {
+                    pattern: 'number'
+                }
+            },
+            onStateChanged: function(){
+                if(this.state == "open"){
+                    this.item.target.val('');
+                }
+                else {
+                    if (this.value && this.value.length > 3) {
+                        picker.close();
+                    }
+                }
+            }
+        });
+
+    });
+&lt;/script></pre><script type="text/javascript">var picker = new ax5.ui.picker();
+
+    $(document.body).ready(function () {
+
+        picker.bind({
+            target: $('[data-ax5picker="secure-num"]'),
+            direction: "top",
+            content: {
+                width: 200,
+                margin: 10,
+                type: 'secure-num',
+                config: {
+                    btnWrapStyle: "padding:3px;width:25%;",
+                    btnStyle: "width:100%",
+                    btnTheme: "info btn-sm",
+                    specialBtnTheme: " btn-sm"
+                },
+                formatter: {
+                    pattern: 'number'
+                }
+            },
+            onStateChanged: function(){
+                if(this.state == "open"){
+                    this.item.target.val('');
+                }
+                else {
+                    if (this.value && this.value.length > 3) {
+                        picker.close();
+                    }
+                }
+            }
+        });
+
+    });
+</script></script>
+
+
+        </section>
+
+    
                     </div>
                 </div>
             
@@ -259,10 +285,8 @@ $('[data-ax5select]').ax5select({
     </div>
 </div>
 
-		<script language="javascript">
 
-		</script>
-	
+    
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 ga('create', 'UA-56252826-3', 'auto');
@@ -276,7 +300,7 @@ ga('send', 'pageview');
 
         $.ajax({
             method: "GET",
-            url: "https://api.github.com/repos/ax5ui/ax5ui-select",
+            url: "https://api.github.com/repos/ax5ui/ax5ui-picker",
             success: function (data) {
                 $("#started-count").html(ax5.util.number(data.stargazers_count, {'money': true}));
                 ax5.util.setCookie('stargazers_count', data.stargazers_count);
