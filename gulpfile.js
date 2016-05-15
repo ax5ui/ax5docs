@@ -9,6 +9,8 @@ var marko_ax5 = require('gulp-marko-ax5');
 var plumber = require('gulp-plumber');
 var notify = require("gulp-notify");
 var babel = require('gulp-babel');
+var argv = require('yargs').argv; // for args parsing
+var spawn = require('child_process').spawn;
 
 var KERNEL_PATH = '/Users/tom/Works-OSS/ax5ui/ax5ui-kernel/';
 var PATHS = {
@@ -125,7 +127,7 @@ gulp.task('AX5UI-docs', function () {
 for (var k in PATHS) {
     var __p = PATHS[k];
     if (__p.isPlugin) {
-        gulp.task(k + '-docs', (function(k, __p){
+        gulp.task(k + '-docs', (function (k, __p) {
             return function () {
                 return gulp.src(PATHS[k].doc_src + '/**/*.html')
                     .pipe(changed(PATHS[k].doc_dest, {extension: '.html', hasChanged: changed.compareSha1Digest}))
@@ -138,7 +140,7 @@ for (var k in PATHS) {
                     }))
                     .pipe(gulp.dest(PATHS[k].doc_dest));
             }
-        })(k, __p) );
+        })(k, __p));
     }
 }
 
@@ -170,22 +172,11 @@ gulp.task('docs:all', function () {
     }
 });
 
-gulp.task('import-ax5ui-npm', function () {
-    for (var k in PATHS) {
-        var __p = PATHS[k];
-        if (__p.isPlugin) {
-            gulp.src('node_modules/' + k + '/**/*', {base:"node_modules"})
-                .pipe(gulp.dest(PATHS.assets.src + '/lib'));
-        }
-    }
-});
-
-
 gulp.task('import-ax5ui-file', function () {
     for (var k in PATHS) {
         var __p = PATHS[k];
         if (__p.isPlugin) {
-            gulp.src('../ax5ui-kernel/src/' + k + '/**/*', {base:"../ax5ui-kernel/src"})
+            gulp.src('../ax5ui-kernel/src/' + k + '/**/*', {base: "../ax5ui-kernel/src"})
                 .pipe(gulp.dest(PATHS.assets.src + '/lib'));
         }
     }
@@ -194,26 +185,12 @@ gulp.task('import-ax5ui-file', function () {
 /**
  * watch
  */
-gulp.task('default', function () {
-
+gulp.task('watching', function () {
     // SASS
     gulp.watch(PATHS.ax5docs.css_src + '/**/*.scss', ['docs-scss']);
-
-    // docs watch
-    gulp.watch(PATHS.assets.src + '/_layouts/root.marko', ['default', 'AX5UI-docs']);
-
-    var docs_list = [];
-    for (var k in PATHS) {
-        var __p = PATHS[k];
-        if (__p.isPlugin) {
-            docs_list.push(k + '-docs');
-        }
-    }
-    gulp.watch(PATHS.assets.src + '/_layouts/index.marko', docs_list);
-    gulp.watch(PATHS.assets.src + '/components/**/*.js', docs_list);
-
     // for MD
     gulp.watch(PATHS.ax5docs.doc_src + '/*.html', ['AX5UI-docs']);
+
     for (var k in PATHS) {
         var __p = PATHS[k];
         if (__p.isPlugin) {
@@ -221,5 +198,22 @@ gulp.task('default', function () {
             gulp.watch([PATHS[k].doc_src + '/**/*.html', PATHS[k].root + '/**/*.md'], [k + '-docs']);
         }
     }
+});
 
+gulp.task('default', function () {
+    var process;
+
+    gulp.watch(PATHS.assets.src + '/_layouts/root.marko', spawnChildren);
+    gulp.watch(PATHS.assets.src + '/_layouts/index.marko', spawnChildren);
+    gulp.watch(PATHS.assets.src + '/_layouts/modal.marko', spawnChildren);
+    gulp.watch(PATHS.assets.src + '/components/**/*.js', spawnChildren);
+    spawnChildren();
+
+    function spawnChildren(e) {
+        // kill previous spawned process
+        if(process) { process.kill(); }
+
+        // `spawn` a child `gulp` process linked to the parent `stdio`
+        process = spawn('gulp', ['docs:all', 'watching'], {stdio: 'inherit'});
+    }
 });
