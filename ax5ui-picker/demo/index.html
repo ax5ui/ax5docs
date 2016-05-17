@@ -190,10 +190,10 @@ Or to define the &quot;content&quot; to &quot;Function&quot;, you can define the
             btns: {
                 ok: {
                     label: "Calculate", theme: "btn-primary", onClick: function () {
-                        // console.log(this);
-                        var w = this.boundObject.pickerContent.find("#exampleInputWidth").val() || 1;
-                        var h = this.boundObject.pickerContent.find("#exampleInputHeight").val() || 1;
-                        this.self.setContentValue(this.boundObject.id, 0, w * h);
+                        //console.log(this);
+                        var w = this.item.pickerContent.find("#exampleInputWidth").val() || 1;
+                        var h = this.item.pickerContent.find("#exampleInputHeight").val() || 1;
+                        this.self.setContentValue(this.item.id, 0, w * h);
                         this.self.close();
 
                     }
@@ -234,10 +234,10 @@ Or to define the &quot;content&quot; to &quot;Function&quot;, you can define the
             btns: {
                 ok: {
                     label: "Calculate", theme: "btn-primary", onClick: function () {
-                        // console.log(this);
-                        var w = this.boundObject.pickerContent.find("#exampleInputWidth").val() || 1;
-                        var h = this.boundObject.pickerContent.find("#exampleInputHeight").val() || 1;
-                        this.self.setContentValue(this.boundObject.id, 0, w * h);
+                        //console.log(this);
+                        var w = this.item.pickerContent.find("#exampleInputWidth").val() || 1;
+                        var h = this.item.pickerContent.find("#exampleInputHeight").val() || 1;
+                        this.self.setContentValue(this.item.id, 0, w * h);
                         this.self.close();
 
                     }
@@ -250,11 +250,11 @@ Or to define the &quot;content&quot; to &quot;Function&quot;, you can define the
 
             <p>When the user clicks on the <code>btns</code>,<code>onClick</code> is called.
 Contains a variety of objects necessary for programming of the passed <code>onClick &gt; this</code> from <code>picker</code>.
-In the example, we used <code>this.boundObject</code> and <code>this.self</code>.</p>
+In the example, we used <code>this.item</code> and <code>this.self</code>.</p>
 <p><strong>onClick &gt; this</strong></p>
 <pre class="prettyprint linenums lang-json"><code>{
     &quot;self&quot;: [picker class instance],
-    &quot;boundObject&quot;: [Object],
+    &quot;item&quot;: [Object],
     &quot;key&quot;: [String], // btns's key
     &quot;value&quot;: [Object] // btns click object
 }

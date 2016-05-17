@@ -83,8 +83,8 @@
                                     label: "Today", onClick: function () {
                                         var today = new Date();
                                         this.self
-                                            .setContentValue(this.boundObject.id, 0, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
-                                            .setContentValue(this.boundObject.id, 1, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
+                                            .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
+                                            .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
                                             .close()
                                         ;
                                     }
@@ -93,8 +93,8 @@
                                     label: "This Month", onClick: function () {
                                         var today = new Date();
                                         this.self
-                                            .setContentValue(this.boundObject.id, 0, ax5.util.date(today, {"return": "yyyy-mm-01"}))
-                                            .setContentValue(this.boundObject.id, 1, ax5.util.date(today, {"return": "yyyy-mm"})
+                                            .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-01"}))
+                                            .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm"})
                                                 + '-'
                                                 + ax5.util.daysOfMonth(today.getFullYear(), today.getMonth()))
                                             .close();
