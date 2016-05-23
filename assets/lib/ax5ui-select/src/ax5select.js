@@ -10,7 +10,7 @@
     /**
      * @class ax5.ui.select
      * @classdesc
-     * @version 0.3.4
+     * @version 0.3.7
      * @author tom@axisj.com
      * @example
      * ```
@@ -138,7 +138,7 @@
                         </div>
                     </div>
                     <input type="text" tabindex="-1" data-ax5-select-display="input" 
-                    style="position:absolute;z-index:0;left:0px;top:0px;font-size:1px;opacity: 0;border: 0px none;color : transparent;text-indent: -9999em;" />
+                    style="position:absolute;z-index:0;left:0px;top:0px;font-size:1px;opacity: 0;width:1px;border: 0px none;color : transparent;text-indent: -9999em;" />
                 </a>
                 `;
             },
@@ -367,29 +367,30 @@
                 })();
             },
             syncLabel = function (queIdx) {
-                this.queue[queIdx].$display
-                    .find('[data-ax5-select-display="label"]')
+                this.queue[queIdx].$displayLabel
                     .html(getLabel.call(this, queIdx));
             },
             focusWord = function (queIdx, searchWord) {
-                var options = [], i = 0, l = this.queue[queIdx].indexedOptions.length, n;
-                while (l - i++) {
-                    n = this.queue[queIdx].indexedOptions[i];
-                    if (('' + n.value).toLowerCase() == searchWord.toLowerCase()) {
-                        options = [{'@findex': n['@findex'], optionsSort: 0}];
-                        break;
-                    } else {
-                        var sort = ('' + n.value).toLowerCase().search(searchWord.toLowerCase());
-                        if (sort > -1) {
-                            options.push({'@findex': n['@findex'], optionsSort: sort});
-                            if (options.length > 2) break;
+                var options = [], i = -1, l = this.queue[queIdx].indexedOptions.length - 1, n;
+                if(searchWord) {
+                    while (l - i++) {
+                        n = this.queue[queIdx].indexedOptions[i];
+                        if (('' + n.value).toLowerCase() == searchWord.toLowerCase()) {
+                            options = [{'@findex': n['@findex'], optionsSort: 0}];
+                            break;
+                        } else {
+                            var sort = ('' + n.value).toLowerCase().search(searchWord.toLowerCase());
+                            if (sort > -1) {
+                                options.push({'@findex': n['@findex'], optionsSort: sort});
+                                if (options.length > 2) break;
+                            }
+                            sort = null;
                         }
-                        sort = null;
                     }
+                    options.sort(function (a, b) {
+                        return a.optionsSort - b.optionsSort;
+                    });
                 }
-                options.sort(function (a, b) {
-                    return a.optionsSort - b.optionsSort;
-                });
                 if (options && options.length > 0) {
                     focusMove.call(this, queIdx, undefined, options[0]['@findex']);
                 }
@@ -529,7 +530,8 @@
                         })();
 
                         item.$display = jQuery(ax5.mustache.render(getTmpl.call(this, queIdx), data));
-
+                        item.$displayLabel = item.$display.find('[data-ax5-select-display="label"]');
+                        
                         if (item.$target.find("select").get(0)) {
                             item.$select = item.$target.find("select");
                             // select 속성만 변경
@@ -564,8 +566,7 @@
                             .bind("keydown.ax5select", selectEvent.keyDown.bind(this, queIdx));
                     }
                     else {
-                        item.$display
-                            .find('[data-ax5-select-display="label"]')
+                        item.$displayLabel
                             .html(getLabel.call(this, queIdx));
                         item.options = syncSelectOptions.call(this, queIdx, item.options);
 
@@ -651,7 +652,7 @@
                         item.$select.html(po.join(''));
                     }
                     else {
-                        /// 현재 사용되지 않는 옵션
+                        /// 현재 사용되지 않는 구문
                         /// select > options 태그로 스크립트 options를 만들어주는 역할
                         elementOptions = U.toArray(item.$select.get(0).options);
                         // select option 스크립트 생성
@@ -662,6 +663,7 @@
                             option[item.columnKeys.optionText] = O.text;
                             option[item.columnKeys.optionSelected] = O.selected;
                             option['@index'] = OIndex;
+                            option['@findex'] = OIndex;
                             if (O.selected) setSelected.call(self, queIdx, option);
                             newOptions.push(option);
                             option = null;
@@ -812,8 +814,7 @@
                         })(item, O);
 
 
-                        item.$display
-                            .find('[data-ax5-select-display="label"]')
+                        item.$displayLabel
                             .html(getLabel.call(this, this.activeSelectQueueIndex));
                         item.options = syncSelectOptions.call(this, this.activeSelectQueueIndex, O.options);
 
@@ -907,8 +908,6 @@
                 setTimeout(function () {
                     item.$displayInput.trigger("focus");
                 }, 1);
-
-                //item.$display.find('[data-ax5-select-display="input"]')
 
                 jQuery(window).bind("keyup.ax5select-" + this.instanceId, (function (e) {
                     e = e || window.event;

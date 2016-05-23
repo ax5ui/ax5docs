@@ -513,6 +513,21 @@ console.log(ax5.util.css('width:100px;padding: 50px; background: #ccc'));
 <h2>ax5.util.stopEvent</h2>
 <pre class="prettyprint linenums lang-js"><code>ax5.util.stopEvent(e);
 </code></pre>
+<h2>ax5.util.selectRange</h2>
+<pre class="prettyprint linenums lang-html"><code>&lt;div id=&quot;select-test-0&quot; contentEditable=&quot;true&quot;&gt;SELECT TEST&lt;/div&gt;
+&lt;div id=&quot;select-test-1&quot; contentEditable=&quot;true&quot;&gt;SELECT TEST&lt;/div&gt;
+&lt;div id=&quot;select-test-2&quot; contentEditable=&quot;true&quot;&gt;SELECT TEST&lt;/div&gt;
+
+&lt;script&gt;
+    $(document.body).ready(function () {
+        ax5.util.selectRange($(&quot;#select-test-0&quot;), &quot;end&quot;); // focus on end
+        ax5.util.selectRange($(&quot;#select-test-1&quot;).get(0), [1, 5]); // select 1~5
+        //ax5.util.selectRange($(&quot;#select-test-2&quot;), &quot;start&quot;); // focus on start
+        //ax5.util.selectRange($(&quot;#select-test-2&quot;)); // selectAll
+        //ax5.util.selectRange($(&quot;#select-test-2&quot;), &quot;selectAll&quot;); // selectAll
+    });
+&lt;/script&gt;
+</code></pre>
 
 
     
