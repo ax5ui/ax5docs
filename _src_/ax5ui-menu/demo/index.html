@@ -68,7 +68,9 @@
                                 }
                             ]
                         });
-
+                        menu.onClick = function () {
+                            console.log(this);
+                        };
                         $("#context-menu-target").bind("contextmenu", function (e) {
                             menu.popup(e);
                             ax5.util.stopEvent(e);
