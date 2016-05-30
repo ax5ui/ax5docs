@@ -18,9 +18,10 @@
                         //parent.modal.css({height: $(document.body).height() + 10});
                         parent.modal.align();
 
-                        var param = ax5.util.param( ax5.info.urlUtil().param );
-                        $("#modal-close").click(function(){
-                           parent[param.callBack]();
+                        var param = ax5.util.param(ax5.info.urlUtil().param);
+                        $("#modal-close").click(function () {
+                            //console.log(param.callBack);
+                            parent[param.callBack]();
                         });
                     });
                 </script>
