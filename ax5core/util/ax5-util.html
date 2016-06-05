@@ -287,6 +287,42 @@ console.log(ax5.util.reduceRight(aarray, function (p, n) {
 // -13
 </code></pre>
 <hr>
+<h2>ax5.util.sum</h2>
+<p>It returns the sum. The sum of all the values returned by the function.</p>
+<pre class="prettyprint linenums lang-js"><code>var arr = [
+    {name: &quot;122&quot;, value: 9},
+    {name: &quot;122&quot;, value: 10},
+    {name: &quot;123&quot;, value: 11}
+];
+
+var rs = ax5.util.sum(arr, function () {
+    if(this.name == &quot;122&quot;) {
+        return this.value;
+    }
+});
+console.log(rs); // 19
+
+console.log(ax5.util.sum(arr, 10, function () {
+    return this.value;
+}));
+// 40
+</code></pre>
+<hr>
+<h2>ax5.util.avg</h2>
+<p>It returns the average. The average of all the values returned by the function.</p>
+<pre class="prettyprint linenums lang-js"><code>var arr = [
+    {name: &quot;122&quot;, value: 9},
+    {name: &quot;122&quot;, value: 10},
+    {name: &quot;123&quot;, value: 11}
+];
+
+var rs = ax5.util.avg(arr, function () {
+    return this.value;
+});
+
+console.log(rs); // 10
+</code></pre>
+<hr>
 <h2>ax5.util.first</h2>
 <p>It returns the first element in the Array, or Object. However, it is faster to use Array in the &quot;Array [0]&quot; rather than using the &quot;first&quot; method.</p>
 <pre class="prettyprint linenums lang-js"><code>var _arr = [&quot;ax5&quot;, &quot;axisj&quot;];
