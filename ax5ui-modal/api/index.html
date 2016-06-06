@@ -153,7 +153,17 @@ myModal.set_config({
     onStateChanged: &quot;Function&quot;,
     animateTime: &quot;Number&quot;,
     zIndex: &quot;Number&quot;,
-    fullScreen: &quot;Boolean&quot;
+    fullScreen: &quot;Boolean&quot;,
+    header: {
+        title: &quot;&quot;,
+        btns: {
+            close: {
+                label: '&lt;i class=&quot;fa fa-times-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function(){
+                    myModal.close();
+                }
+            }
+        }
+    }
 });
 </code></pre>
 <h3>width</h3>
@@ -194,6 +204,29 @@ this.state state value is passed to this time onStateChanged function.</p>
 <p>Type: <code>Boolean</code></p>
 <pre class="prettyprint linenums lang-json"><code>fullScreen : true
 </code></pre>
+<h3>header</h3>
+<p>Type: `Object'</p>
+<pre class="prettyprint linenums lang-json"><code>{
+    title:&quot;MODAL TITLE&quot;,
+    btns: {
+        minimize: {
+            label: '&lt;i class=&quot;fa fa-minus-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function(){
+                modal.minimize();
+            }
+        },
+        maximize: {
+            label: '&lt;i class=&quot;fa fa-plus-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function(){
+                modal.maximize();
+            }
+        },
+        close: {
+            label: '&lt;i class=&quot;fa fa-times-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function(){
+                modal.close();
+            }
+        }
+    }
+}
+</code></pre>
 <hr>
 <h2>open()</h2>
 <p><code>open(Options[, callBack])</code></p>
@@ -224,6 +257,12 @@ modal.align({left:&quot;left&quot;, top:&quot;top&quot;, margin: 20});
 <hr>
 <h2>close()</h2>
 <p><code>close()</code></p>
+<hr>
+<h2>minimize()</h2>
+<p><code>minimize()</code></p>
+<hr>
+<h2>maximize()</h2>
+<p><code>maximize()</code></p>
 <hr>
 <h2>onStateChanged</h2>
 <p>Type: <code>Function</code></p>
