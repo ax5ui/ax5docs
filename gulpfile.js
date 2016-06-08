@@ -89,6 +89,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-select",
         doc_src: "_src_/ax5ui-select",
         doc_dest: "ax5ui-select"
+    },
+    "ax5ui-layout": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-layout",
+        doc_src: "_src_/ax5ui-layout",
+        doc_dest: "ax5ui-layout"
     }
 };
 
