@@ -87,6 +87,7 @@
     <li><a href="/ax5ui-menu">ax5ui-menu</a></li>
     <li><a href="/ax5ui-media-viewer">ax5ui-media-viewer</a></li>
     <li><a href="/ax5ui-select">ax5ui-select</a></li>
+    <li><a href="/ax5ui-layout">ax5ui-layout</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="https://www.axisj.com">axisj.com</a></li>
 </ul>
@@ -180,10 +181,20 @@ https://cdn.rawgit.com/ax5ui/ax5ui-layout/master/dist/ax5layout.js
 https://cdn.rawgit.com/ax5ui/ax5ui-layout/master/dist/ax5layout.min.js
 </code></pre>
 <h3>Basic Usages</h3>
-<pre class="prettyprint linenums lang-html"><code>&lt;div id=&quot;layout-target-0&quot;&gt;&lt;/div&gt;
+<pre class="prettyprint linenums lang-html"><code>&lt;div data-ax5layout=&quot;ax1&quot; data-config='{layout:&quot;dock-panel&quot;}' style=&quot;height: 100%;border:1px solid #ccc;&quot;&gt;
+    &lt;div data-dock-panel='{dock:&quot;top&quot;, split:true, height: 200, maxHeight: 300}'&gt;&lt;/div&gt;
+    &lt;div data-dock-panel='{dock:&quot;bottom&quot;, split:&quot;true&quot;, height: 200, minHeight: 50, maxHeight: 300}'&gt;&lt;/div&gt;
+    &lt;div data-dock-panel='{dock:&quot;left&quot;, split:true, width: 200, minWidth: 50, maxWidth: 300}'&gt;&lt;/div&gt;
+    &lt;div data-dock-panel='{dock:&quot;right&quot;, split:true, width: &quot;10%&quot;, minWidth: 50, maxWidth: 300}'&gt;
+
+    &lt;/div&gt;
+    &lt;div data-dock-panel='{dock:&quot;center&quot;}' style=&quot;padding: 5px;&quot;&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
 </code></pre>
 <pre class="prettyprint linenums lang-js"><code>$(document.body).ready(function () {
-
+    jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout();
 });
 </code></pre>
 <hr>
