@@ -65,7 +65,7 @@ var fn_docs = (function () {
                     _list.push({
                         tagName: this.tagName,
                         id: h_id,
-                        label: this.innerHTML,
+                        label: this.innerHTML.replace(/<(?:.|\n)*?>/gm, ''),
                         child: []
                     });
 

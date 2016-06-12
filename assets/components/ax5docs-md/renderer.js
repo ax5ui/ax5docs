@@ -1,6 +1,10 @@
 exports.render = function (input, out) {
     var _s = "", s, _out, HTML, CSS, JS;
-    var md = require('markdown-it')();
+    var md = require('markdown-it')({
+        html: true,
+        linkify: true,
+        typographer: true
+    });
     var strip_indent = require('strip-indent');
     var fs = require('fs'), readFileData;
 

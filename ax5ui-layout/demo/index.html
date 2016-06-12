@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-layout : basic</title>
+    <title>ax5ui / ax5ui-layout : dockPanel</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -38,8 +38,8 @@
     
     
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css">
-        <script type="text/javascript" src="../../assets/lib/ax5ui-select/dist/ax5select.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-layout/dist/ax5layout.css">
+        <script type="text/javascript" src="../../assets/lib/ax5ui-layout/dist/ax5layout.js"></script>
     
 </head>
 <body>
@@ -116,7 +116,7 @@
         <div class="contents">
     <div class="style-sub-visual">
         <div class="title">Demostration</div>
-        <div class="description">Introduces the basic use of ax5ui-select UI.</div>
+        <div class="description">Introduces the basic use of ax5ui-layout UI.</div>
     </div>
 </div>
     
@@ -128,7 +128,7 @@
                     <div class="col-md-3">
                         <div class="docs-menu" id="docs-menu">
                             
-        <ul><li  class='active'><a href="/ax5ui-layout/demo/index.html">basic</a></li><li ><a href="/ax5ui-layout/demo/split-panel.html">Split Panel</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-layout/demo/index.html">dockPanel</a></li><li ><a href="/ax5ui-layout/demo/split-panel.html">splitPanel</a></li></ul>
     
                         </div>
                     </div>
@@ -138,60 +138,36 @@
         
         <section class="ax5docs-section">
             <h1>Basic</h1>
-<p><strong>Paste the following code into the <code>head</code> section of your site's HTML.</strong></p>
-<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/ax5ui-select/dist/ax5select.css&quot;&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;src/ax5ui-select/dist/ax5select.min.js&quot;&gt;&lt;/script&gt;
-</code></pre>
 
 
             HTML
-            <pre class="prettyprint linenums lang-html">&lt;div class="row">
-    &lt;div class="col-md-6">
-        &lt;div class="form-group">
-            &lt;div data-ax5select="select1" data-ax5select-config="{}">&lt;/div>
-        &lt;/div>
+            <pre class="prettyprint linenums lang-html">&lt;div data-ax5layout="ax1" data-config="{layout:&quot;dock-panel&quot;}" style="height: 500px;border:1px solid #ccc;">
+    &lt;div data-dock-panel="{dock:&quot;top&quot;, split:true, height: 100, maxHeight: 300}" style="text-align: center;">&lt;h4>TOP&lt;/h4>&lt;/div>
+    &lt;div data-dock-panel="{dock:&quot;bottom&quot;, split:&quot;true&quot;, height: 100, minHeight: 10, maxHeight: 300}" style="text-align: center;">&lt;h4>BOTTOM&lt;/h4>&lt;/div>
+    &lt;div data-dock-panel="{dock:&quot;left&quot;, split:true, width: 100, minWidth: 10, maxWidth: 300}">&lt;h4>LEFT&lt;/h4>&lt;/div>
+    &lt;div data-dock-panel="{dock:&quot;right&quot;, split:true, width: 100, minWidth: 10, maxWidth: 300}">&lt;h4>RIGHT&lt;/h4>&lt;/div>
+    &lt;div data-dock-panel="{dock:&quot;center&quot;}" style="padding: 5px;text-align: center;">
+        &lt;h4>CENTER&lt;/h4>
     &lt;/div>
-    &lt;div class="col-md-6">
-        &lt;div class="form-group">
-            &lt;div data-ax5select="select2" data-ax5select-config="{&#10;                                multiple: true,&#10;                                reset:&#39;&lt;i class=\&#39;fa fa-trash\&#39;&gt;&lt;/i&gt;&#39;&#10;                             }">
-            &lt;/div>
-        &lt;/div>
-    &lt;/div>
-&lt;/div></pre><div class="row">
-    <div class="col-md-6">
-        <div class="form-group">
-            <div data-ax5select="select1" data-ax5select-config="{}"></div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            <div data-ax5select="select2" data-ax5select-config="{&#10;                                multiple: true,&#10;                                reset:&#39;&lt;i class=\&#39;fa fa-trash\&#39;&gt;&lt;/i&gt;&#39;&#10;                             }">
-            </div>
-        </div>
+&lt;/div></pre><div data-ax5layout="ax1" data-config="{layout:&quot;dock-panel&quot;}" style="height: 500px;border:1px solid #ccc;">
+    <div data-dock-panel="{dock:&quot;top&quot;, split:true, height: 100, maxHeight: 300}" style="text-align: center;"><h4>TOP</h4></div>
+    <div data-dock-panel="{dock:&quot;bottom&quot;, split:&quot;true&quot;, height: 100, minHeight: 10, maxHeight: 300}" style="text-align: center;"><h4>BOTTOM</h4></div>
+    <div data-dock-panel="{dock:&quot;left&quot;, split:true, width: 100, minWidth: 10, maxWidth: 300}"><h4>LEFT</h4></div>
+    <div data-dock-panel="{dock:&quot;right&quot;, split:true, width: 100, minWidth: 10, maxWidth: 300}"><h4>RIGHT</h4></div>
+    <div data-dock-panel="{dock:&quot;center&quot;}" style="padding: 5px;text-align: center;">
+        <h4>CENTER</h4>
     </div>
 </div>
 
             <div class="DH10"></div>
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-var options = [];
-for (var i = 0; i &lt; 100; i++) {
-    options.push({value: "optionValue" + i, text: "optionText" + i});
-}
-$(document.body).ready(function(){
-    $('[data-ax5select]').ax5select({
-        options: options
+    $(document.body).ready(function () {
+        $('[data-ax5layout]').ax5layout();
     });
-});
-&lt;/script></pre><script type="text/javascript">var options = [];
-for (var i = 0; i < 100; i++) {
-    options.push({value: "optionValue" + i, text: "optionText" + i});
-}
-$(document.body).ready(function(){
-    $('[data-ax5select]').ax5select({
-        options: options
+&lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
+        $('[data-ax5layout]').ax5layout();
     });
-});
 </script></script>
 
             

@@ -3,7 +3,7 @@
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
             parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
-            body-style="sub-page" with-inline-menu="true">
+            body-style="sub-page">
     <layout-put into="visual">
 
         <div class="contents">
@@ -16,7 +16,7 @@
 
     </layout-put>
     <layout-put into="body">
-        <ax5docs-md file="${data.kernelPath}src/ax5ui-select/API.md"></ax5docs-md>
+        <ax5docs-md file="${data.kernelPath}src/ax5ui-layout/API.md"></ax5docs-md>
     </layout-put>
     <layout-put into="page-js">
 

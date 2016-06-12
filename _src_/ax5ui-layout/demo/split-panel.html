@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="split-panel" title="Split Panel" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="split-panel" title="splitPanel" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -16,8 +16,8 @@
     </layout-put>
     <layout-put into="head-js">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css"/>
-        <script type="text/javascript" src="../../assets/lib/ax5ui-select/dist/ax5select.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-layout/dist/ax5layout.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-layout/dist/ax5layout.js"></script>
     </layout-put>
     <layout-put into="body">
 
@@ -25,51 +25,27 @@
         <section class="ax5docs-section">
             <ax5docs-md>
                 # Split Panel
-
-                **Paste the following code into the `head` section of your site's HTML.**
-                ```html
-                <link rel="stylesheet" type="text/css" href="src/ax5ui-select/dist/ax5select.css"/>
-                <script type="text/javascript" src="src/ax5ui-select/dist/ax5select.min.js"></script>
-                ```
-
-                - adf
-                - ddd
             </ax5docs-md>
 
             HTML
             <ax5docs-html run="true">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <div data-ax5select="select1"
-                             data-ax5select-config='{}'></div>
+                <div data-ax5layout="ax1" data-config='{layout:"split-panel", oriental: "horizontal"}' style="height: 500px;border:1px solid #ccc;">
+                    <div data-split-panel='{width: "300", minWidth:50}'></div>
+                    <div data-splitter='{}'></div>
+                    <div data-split-panel='{width: "*"}'>
+                        <h4>Panel</h4>
                     </div>
+                    <div data-splitter='{}'></div>
+                    <div data-split-panel='{width: "200", minWidth: 50, maxWidth: 300}'></div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <div data-ax5select="select2"
-                             data-ax5select-config="{
-                                multiple: true,
-                                reset:'<i class=\'fa fa-trash\'></i>'
-                             }">
-                        </div>
-                    </div>
-                </div>
-            </div>
             </ax5docs-html>
 
             <div class="DH10"></div>
             JS
             <ax5docs-js run="true">
                 <script type="text/javascript">
-                var options = [];
-                for (var i = 0; i < 100; i++) {
-                    options.push({value: "optionValue" + i, text: "optionText" + i});
-                }
                 $(document.body).ready(function(){
-                    $('[data-ax5select]').ax5select({
-                        options: options
-                    });
+                    $('[data-ax5layout]').ax5layout();
                 });
                 </script>
             </ax5docs-js>
