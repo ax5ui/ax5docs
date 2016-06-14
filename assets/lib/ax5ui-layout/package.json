@@ -1,11 +1,11 @@
 {
-	"name": "ax5core",
-	"version": "1.0.3",
-	"description": "`ax5core` is a collection of utility functions that have been designed for use in ax5ui",
+	"name": "ax5ui-layout",
+	"version": "0.1.1",
+	"description": "A mediaViewer plugin that works with Bootstrap & jQuery",
 	"license": "LGPLv3",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ax5ui/ax5core"
+		"url": "git+https://github.com/ax5ui/ax5ui-layout"
 	},
 	"author": {
 		"name": "Thomas Jang",
@@ -18,6 +18,10 @@
 		"ax5ui",
 		"plugin",
 		"bootstrap jQuery plugins",
+		"ax5ui-layout",
 		"javascript ui"
-	]
+	],
+	"dependencies": {
+
+	}
 }

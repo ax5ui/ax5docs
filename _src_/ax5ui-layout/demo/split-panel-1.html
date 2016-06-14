@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="3" id="split-panel" title="splitPanel" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="4" id="split-panel-1" title="splitPanel(Vertical)" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -24,19 +24,19 @@
         <!-- select -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Split Panel
+                # Split Panel (Vertical)
             </ax5docs-md>
 
             HTML
             <ax5docs-html run="true">
-                <div data-ax5layout="ax1" data-config='{layout:"split-panel", oriental: "horizontal"}' style="height: 500px;border:1px solid #ccc;">
-                    <div data-split-panel='{width: "300", minWidth:50}'></div>
+                <div data-ax5layout="ax1" data-config='{layout:"split-panel", oriental: "vertical"}' style="height: 500px;border:1px solid #ccc;">
+                    <div data-split-panel='{height: "100", minHeight:50}'></div>
                     <div data-splitter='{}'></div>
-                    <div data-split-panel='{width: "*"}'>
+                    <div data-split-panel='{height: "*"}'>
                         <h4>Panel</h4>
                     </div>
                     <div data-splitter='{}'></div>
-                    <div data-split-panel='{width: "200", minWidth: 50, maxWidth: 300}'></div>
+                    <div data-split-panel='{height: "100", minHeight: 50, maxHeight: 300}'></div>
                 </div>
             </ax5docs-html>
 
