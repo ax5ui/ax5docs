@@ -327,8 +327,10 @@
          * ```
          */
         this.open = function (opts, callBack) {
-            opts = self.modalConfig = jQuery.extend(true, {}, cfg, opts);
-            open.call(this, opts, callBack);
+            if (!this.activeModal) {
+                opts = self.modalConfig = jQuery.extend(true, {}, cfg, opts);
+                open.call(this, opts, callBack);
+            }
             return this;
         };
 
