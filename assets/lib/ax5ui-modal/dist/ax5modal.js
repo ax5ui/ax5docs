@@ -6,7 +6,7 @@
     /**
      * @class ax5modal
      * @alias ax5.ui.modal
-     * @version 0.6.0
+     * @version 0.6.1
      * @author tom@axisj.com
      * @example
      * ```

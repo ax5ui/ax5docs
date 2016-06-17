@@ -565,6 +565,16 @@ console.log(ax5.util.css('width:100px;padding: 50px; background: #ccc'));
     });
 &lt;/script&gt;
 </code></pre>
+<h2>ax5.util.debounce</h2>
+<p><code>ax5.util.debounce(func, wait)</code></p>
+<pre class="prettyprint linenums lang-js"><code>var debounceFn = ax5.util.debounce(function( val ) {
+    console.log(val);
+}, 300);
+
+$(document.body).click(function(){
+    debounceFn(new Date());
+});
+</code></pre>
 
 
     

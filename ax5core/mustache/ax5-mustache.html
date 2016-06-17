@@ -128,38 +128,79 @@
 
         <h1>ax5.mustache</h1>
 <blockquote>
-<p>“ax5.mustache” is a modified version of the in the “<a href="https://github.com/janl/mustache.js">https://github.com/janl/mustache.js</a>”, some of the syntax.</p>
+<p>“ax5.mustache” is a modified version of mustache
+in the “<a href="https://github.com/janl/mustache.js">https://github.com/janl/mustache.js</a>”, some of the syntax.</p>
 </blockquote>
 <h2>ax5.mustache.render</h2>
-<p><code>ax5.mustache.render(tmpl, view)</code></p>
+<p><code>ax5.mustache.render(template, view)</code></p>
+<blockquote>
+<p><em>Instance01_template, Instance02_view, Usage, Output</em></p>
+</blockquote>
+<p>Instance01_ template:</p>
+<pre class="prettyprint linenums lang-js"><code>var tmpl = &quot;{{title}} spends {{calc}}&quot;;
+</code></pre>
+<blockquote>
+<ul>
+<li>It makes the format.</li>
+</ul>
+</blockquote>
+<p>Instance02_ view:</p>
 <pre class="prettyprint linenums lang-js"><code>var view = {
   title: &quot;Joe&quot;,
   calc: function () {
     return 2 + 4;
   }
 };
-
-var output = ax5.mustache.render(&quot;{{title}} spends {{calc}}&quot;, view);
 </code></pre>
-<p>Please refer to the <code>mustache</code> API is about the template.
-this version added only a few of the key and function in the <code>mustache</code>.
-<a href="https://github.com/janl/mustache.js/blob/master/README.md">Mustache API</a>
-You can use all of the API of <code>mustache</code> in the same way. I will introduce the features added in the <code>ax5.mustache</code> below.</p>
+<ul>
+<li>It will be a data.</li>
+</ul>
+<p>Usage_ ax5.mustache.render(template, view):</p>
+<pre><code>var output = ax5.mustache.render(template, view);
+</code></pre>
+<ul>
+<li>You can use ‘view’ instance as ‘template’ format, by “ax5.mustach.render” code</li>
+</ul>
+<p>Output_ console.log(output):</p>
+<pre class="prettyprint linenums lang-js"><code>Joe spends 6
+</code></pre>
+<blockquote>
+<p>This module is almost like as the basic usage of mustach.
+Please refer to the <a href="https://github.com/janl/mustache.js/blob/master/README.md">Mustache API.</a></p>
+</blockquote>
+<blockquote>
+<p>You can use all API of <code>mustache</code> in the same way.
+I will introduce the features added in the <code>ax5.mustache</code> below.</p>
+</blockquote>
 <h2>Array</h2>
-<p>View:</p>
-<pre class="prettyprint linenums lang-js"><code>{
+<blockquote>
+<p><em>Instance01_template, Instance02_view, Usage, Output</em></p>
+</blockquote>
+<p>Instnace01_ template:</p>
+<pre><code>var template =
+&quot;
+{{#beatles}}
+* {{firstName}} {{lastName}} ({{@i}}) ({{@first}})
+{{/beatles}}
+&quot;
+</code></pre>
+<ul>
+<li>‘#’ annotation : loop start signal at Array type.</li>
+<li>‘/’  annotation : loop end signal at Array type.</li>
+<li>‘@’ annotation : loop index signal.(It can be used like as ‘?’ with ‘first’(@first=?first))</li>
+</ul>
+<p>Instance02_ view:</p>
+<pre class="prettyprint linenums lang-js"><code>var view = {
   &quot;beatles&quot;: [
     { &quot;firstName&quot;: &quot;John&quot;, &quot;lastName&quot;: &quot;Lennon&quot; },
     { &quot;firstName&quot;: &quot;Paul&quot;, &quot;lastName&quot;: &quot;McCartney&quot; },
     { &quot;firstName&quot;: &quot;George&quot;, &quot;lastName&quot;: &quot;Harrison&quot; },
     { &quot;firstName&quot;: &quot;Ringo&quot;, &quot;lastName&quot;: &quot;Star&quot; }
   ]
-}
+};
 </code></pre>
-<p>Template:</p>
-<pre><code>{{#beatles}}
-* {{firstName}} {{lastName}} ({{@i}}) ({{@first}})
-{{/beatles}}
+<p>Usage_ ax5.mustache.render(template, view):</p>
+<pre><code>var output = ax5.mustache.render(template, view);
 </code></pre>
 <p>Output:</p>
 <pre><code>* John Lennon (0) (true)
@@ -168,8 +209,25 @@ You can use all of the API of <code>mustache</code> in the same way. I will intr
 * Ringo Star (3) (false)
 </code></pre>
 <h2>Object.@each</h2>
-<p>View:</p>
-<pre class="prettyprint linenums lang-js"><code>{
+<blockquote>
+<p><em>Instance01_template, Instance02_view, Usage, Output</em></p>
+</blockquote>
+<p>Instance01_ template:</p>
+<pre><code>var template=
+&quot;
+{{#beatles}}
+    {{#@each}}
+    * {{@key}} : {{@value.firstName}} {{@value.lastName}}
+    {{/@each}}
+{{/beatles}}
+&quot;
+</code></pre>
+<ul>
+<li>‘:’ annotation : match the key with value.</li>
+<li>‘.’ annotation : access to child variable.</li>
+</ul>
+<p>Instance02_ view</p>
+<pre class="prettyprint linenums lang-js"><code>var view = {
     &quot;beatles&quot;: {
         &quot;John&quot;: {&quot;firstName&quot;: &quot;John&quot;, &quot;lastName&quot;: &quot;Lennon&quot;},
         &quot;Paul&quot;: {&quot;firstName&quot;: &quot;Paul&quot;, &quot;lastName&quot;: &quot;McCartney&quot;},
@@ -178,12 +236,8 @@ You can use all of the API of <code>mustache</code> in the same way. I will intr
     }
 }
 </code></pre>
-<p>Template:</p>
-<pre><code>{{#beatles}}
-    {{#@each}}
-    * {{@key}} : {{@value.firstName}} {{@value.lastName}}
-    {{/@each}}
-{{/beatles}}
+<p>Usage_ ax5.mustache.render(template, view):</p>
+<pre><code>var output = ax5.mustache.render(template, view);
 </code></pre>
 <p>Output:</p>
 <pre><code>* John : John Lennon
