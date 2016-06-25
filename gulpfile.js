@@ -95,6 +95,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-layout",
         doc_src: "_src_/ax5ui-layout",
         doc_dest: "ax5ui-layout"
+    },
+    "ax5ui-combobox": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-combobox",
+        doc_src: "_src_/ax5ui-combobox",
+        doc_dest: "ax5ui-combobox"
     }
 };
 
@@ -102,7 +108,7 @@ function errorAlert(error) {
     notify.onError({title: "Gulp Error", message: "Check your terminal", sound: "Purr"})(error); //Error Notification
     console.log(error.toString());//Prints Error to Console
     this.emit("end"); //End function
-};
+}
 
 /**
  * SASS
@@ -151,7 +157,6 @@ for (var k in PATHS) {
 }
 
 gulp.task('docs:all', function () {
-
     gulp.src(PATHS['ax5docs'].doc_src + '/*.html')
         .pipe(marko_ax5({
             projectName: "ax5ui",
