@@ -129,7 +129,7 @@
                     <div class="col-md-3">
                         <div class="docs-menu" id="docs-menu">
                             
-        <ul><li  class='active'><a href="/ax5ui-combobox/demo/index.html">basic</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-combobox/demo/index.html">basic</a></li><li ><a href="/ax5ui-combobox/demo/size.html">size</a></li><li ><a href="/ax5ui-combobox/demo/theme.html">theme</a></li></ul>
     
                         </div>
                     </div>
@@ -148,25 +148,29 @@
             HTML
             <pre class="prettyprint linenums lang-html">&lt;div class="row">
     &lt;div class="col-md-6">
+        Default
         &lt;div class="form-group">
             &lt;div data-ax5combobox="combobox1" data-ax5combobox-config="{}">&lt;/div>
         &lt;/div>
     &lt;/div>
     &lt;div class="col-md-6">
         &lt;div class="form-group">
-            &lt;div data-ax5combobox="combobox2" data-ax5combobox-config="{&#10;                                multiple: true,&#10;                                reset:&#39;&lt;i class=\&#39;fa fa-trash\&#39;&gt;&lt;/i&gt;&#39;&#10;                             }">
+            Multiple
+            &lt;div data-ax5combobox="combobox2" data-ax5combobox-config="{&#10;                                multiple: true&#10;                             }">
             &lt;/div>
         &lt;/div>
     &lt;/div>
 &lt;/div></pre><div class="row">
     <div class="col-md-6">
+        Default
         <div class="form-group">
             <div data-ax5combobox="combobox1" data-ax5combobox-config="{}"></div>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <div data-ax5combobox="combobox2" data-ax5combobox-config="{&#10;                                multiple: true,&#10;                                reset:&#39;&lt;i class=\&#39;fa fa-trash\&#39;&gt;&lt;/i&gt;&#39;&#10;                             }">
+            Multiple
+            <div data-ax5combobox="combobox2" data-ax5combobox-config="{&#10;                                multiple: true&#10;                             }">
             </div>
         </div>
     </div>
@@ -175,24 +179,38 @@
             <div class="DH10"></div>
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-var options = [];
-for (var i = 0; i &lt; 100; i++) {
-    options.push({value: "optionValue" + i, text: "optionText" + i});
-}
-$(document.body).ready(function(){
-    $('[data-ax5combobox]').ax5combobox({
-        options: options
+    var options = [];
+    options.push({value: "string", text: "string"});
+    options.push({value: "number", text: "number"});
+    options.push({value: "substr", text: "substr"});
+    options.push({value: "substring", text: "substring"});
+    options.push({value: "search", text: "search"});
+    options.push({value: "parseInt", text: "parseInt"});
+    options.push({value: "toFixed", text: "toFixed"});
+    options.push({value: "min", text: "min"});
+    options.push({value: "max", text: "max"});
+
+    $(document.body).ready(function () {
+        $('[data-ax5combobox]').ax5combobox({
+            options: options
+        });
     });
-});
 &lt;/script></pre><script type="text/javascript">var options = [];
-for (var i = 0; i < 100; i++) {
-    options.push({value: "optionValue" + i, text: "optionText" + i});
-}
-$(document.body).ready(function(){
-    $('[data-ax5combobox]').ax5combobox({
-        options: options
+    options.push({value: "string", text: "string"});
+    options.push({value: "number", text: "number"});
+    options.push({value: "substr", text: "substr"});
+    options.push({value: "substring", text: "substring"});
+    options.push({value: "search", text: "search"});
+    options.push({value: "parseInt", text: "parseInt"});
+    options.push({value: "toFixed", text: "toFixed"});
+    options.push({value: "min", text: "min"});
+    options.push({value: "max", text: "max"});
+
+    $(document.body).ready(function () {
+        $('[data-ax5combobox]').ax5combobox({
+            options: options
+        });
     });
-});
 </script></script>
 
             

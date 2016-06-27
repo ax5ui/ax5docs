@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="basic" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="size" title="size" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -24,7 +24,7 @@
         <!-- combobox -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Basic
+                # Size
 
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
@@ -33,23 +33,23 @@
                 ```
             </ax5docs-md>
 
+
             HTML
             <ax5docs-html run="true">
                 <div class="row">
                     <div class="col-md-6">
-                        Default
                         <div class="form-group">
-                            <div data-ax5combobox="combobox1" data-ax5combobox-config='{}'></div>
+                            <div data-ax5combobox="combobox1"
+                                 data-ax5combobox-config="{size:'sm'}"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            Multiple
                             <div data-ax5combobox="combobox2"
                                  data-ax5combobox-config="{
-                                multiple: true
-                             }">
-                            </div>
+                             size:'lg',
+                             multiple: true
+                             }"></div>
                         </div>
                     </div>
                 </div>
