@@ -10,7 +10,7 @@
     /**
      * @class ax5combobox
      * @classdesc
-     * @version 0.1.3
+     * @version 0.1.5
      * @author tom@axisj.com
      * @example
      * ```
@@ -18,7 +18,7 @@
      * ```
      */
     var U = ax5.util;
- 
+
     //== UI Class
     var axClass = function () {
         var
@@ -385,18 +385,17 @@
                 var item = this.queue[queIdx], displayTableHeight;
                 item.$displayLabel
                     .html(getLabel.call(this, queIdx));
+                item.$target.height('');
+                item.$display.height('');
 
                 // label 사이즈 체크
-                //console.log(this.queue[queIdx].$displayTable.outerHeight());
+                // console.log(item.$target.height(), item.$displayTable.outerHeight());
                 if (item.$target.height() < (displayTableHeight = item.$displayTable.outerHeight())) {
                     var displayTableHeightAdjust = (function () {
                         return U.number(item.$display.css("border-top-width")) + U.number(item.$display.css("border-bottom-width"));
                     })();
                     item.$target.css({height: displayTableHeight + displayTableHeightAdjust});
                     item.$display.css({height: displayTableHeight + displayTableHeightAdjust});
-                } else {
-                    item.$target.height('');
-                    item.$display.height('');
                 }
             },
             focusLabel = function (queIdx) {
@@ -414,11 +413,74 @@
                  }
                  */
             },
+            onSearch = function (queIdx, searchWord) {
+
+                this.queue[queIdx].waitOptions = true;
+                this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(getOptionsTmpl.call(this, this.queue[queIdx].columnKeys), this.queue[queIdx])));
+
+                this.queue[queIdx].onSearch.call({
+                    self: this,
+                    item: this.queue[queIdx]
+                }, (function (O) {
+
+                    var data = {};
+                    var item = this.queue[this.activecomboboxQueueIndex];
+
+                    /// 현재 selected 검증후 처리
+                    (function (item, O) {
+                        var optionsMap = {};
+                        O.options.forEach(function (_O, _OIndex) {
+                            _O["@index"] = _OIndex;
+                            optionsMap[_O[item.columnKeys.optionValue]] = _O;
+                        });
+                        if (U.isArray(item.selected)) {
+                            item.selected.forEach(function (_O) {
+                                if (optionsMap[_O[item.columnKeys.optionValue]]) {
+                                    O.options[optionsMap[_O[item.columnKeys.optionValue]]["@index"]][item.columnKeys.optionSelected] = true;
+                                }
+                            });
+                        }
+                    })(item, O);
+
+                    /*
+                    item.$display
+                        .find('[data-ax5combobox-display="label"]')
+                        .html(getLabel.call(this, this.activecomboboxQueueIndex));
+                        */
+                    item.options = syncComboboxOptions.call(this, this.activecomboboxQueueIndex, O.options);
+
+                    alignComboboxDisplay.call(this);
+
+                    /// 템플릿에 전달할 오브젝트 선언
+                    data.id = item.id;
+                    data.theme = item.theme;
+                    data.size = "ax5combobox-option-group-" + item.size;
+                    data.multiple = item.multiple;
+                    data.lang = item.lang;
+                    data.options = item.options;
+                    this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(getOptionsTmpl.call(this, item.columnKeys), data)));
+
+                }).bind(this));
+            },
             focusWord = function (queIdx, searchWord) {
+                if(this.activecomboboxQueueIndex == -1) return this; // 옵션박스가 닫힌상태이면 진행안함.
                 var options = [], i = -1, l = this.queue[queIdx].indexedOptions.length - 1, n;
                 if (searchWord != "") {
                     var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
                     searchWord = searchWord.replace(regExp, "");
+                    if (this.queue[queIdx].onSearch) {
+                        onSearch.call(this, queIdx, searchWord);
+
+                        try {
+                            return options;
+                        } finally {
+                            options = null;
+                            i = null;
+                            l = null;
+                            n = null;
+                        }
+                        // if there is a "onSearch", to end this process
+                    }
 
                     while (l - i++) {
                         n = this.queue[queIdx].indexedOptions[i];
@@ -562,11 +624,12 @@
             },
             bindComboboxTarget = (function () {
                 var debouncedFocusWord = U.debounce(function (queIdx) {
+                    if(this.activecomboboxQueueIndex == -1) return this; // 옵션박스가 닫힌상태이면 진행안함.
+
                     var values = [];
                     var searchWord = "";
                     var item = this.queue[queIdx];
                     var childNodes = item.$displayLabel.get(0).childNodes;
-
                     for (var i = 0, l = childNodes.length; i < l; i++) {
                         var node = childNodes[i];
                         if (node.nodeType in nodeTypeProcessor) {
@@ -603,8 +666,36 @@
                     else if (searchWord != "") {
                         focusWord.call(self, queIdx, searchWord);
                     }
+                }, 300);
 
-                }, 100);
+                var blurLabel = function (queIdx) {
+                    var values = [];
+                    var item = this.queue[queIdx];
+                    var editingText;
+                    var childNodes = item.$displayLabel.get(0).childNodes;
+
+                    for (var i = 0, l = childNodes.length; i < l; i++) {
+                        var node = childNodes[i];
+                        if (node.nodeType in nodeTypeProcessor) {
+                            var value = nodeTypeProcessor[node.nodeType].call(this, queIdx, node, true);
+                            if (typeof value === "undefined") {
+                                //
+                            }
+                            else if (U.isString(value)) {
+                                editingText = value;
+                                values.push(value);
+                            }
+                            else {
+                                values.push(value);
+                            }
+                        }
+                    }
+
+                    if(typeof editingText !== "undefined"){
+                        this.val(item.id, values, undefined, "internal"); // set Value
+                    }
+                };
+
                 var comboboxEvent = {
                     'click': function (queIdx, e) {
                         var target = U.findParentNode(e.target, function (target) {
@@ -627,6 +718,8 @@
                             else {
                                 self.open(queIdx);
                                 if (this.queue[queIdx].$displayLabel.text().replace(/^\W*|\W*$/g, '') == "") {
+                                    this.queue[queIdx].$displayLabel
+                                        .html(getLabel.call(this, queIdx));
                                     focusLabel.call(this, queIdx);
                                 }
                             }
@@ -666,6 +759,9 @@
                     },
                     'blur': function (queIdx, e) {
                         //console.log(e);
+                        //debouncedFocusWord.call(this, queIdx);
+                        blurLabel.call(this, queIdx);
+                        U.stopEvent(e);
                     }
                 };
 
@@ -791,7 +887,11 @@
                                     }
 
                                     item.indexedOptions.push({
-                                        '@findex': focusIndex, value: OO[item.columnKeys.optionValue], text: OO[item.columnKeys.optionText]
+                                        '@gindex': OIndex,
+                                        '@index': OOIndex,
+                                        '@findex': focusIndex, 
+                                        value: OO[item.columnKeys.optionValue], 
+                                        text: OO[item.columnKeys.optionText]
                                     });
                                     focusIndex++;
                                 });
@@ -807,7 +907,10 @@
                                 }
 
                                 item.indexedOptions.push({
-                                    '@findex': focusIndex, value: O[item.columnKeys.optionValue], text: O[item.columnKeys.optionText]
+                                    '@index': OIndex,
+                                    '@findex': focusIndex, 
+                                    value: O[item.columnKeys.optionValue], 
+                                    text: O[item.columnKeys.optionText]
                                 });
                                 focusIndex++;
                             }
@@ -883,8 +986,9 @@
             '1': function (queIdx, node, editable) {
                 var text = (node.textContent || node.innerText).replace(/^[\s\r\n\t]*|[\s\r\n\t]*$/g, '');
                 var item = this.queue[queIdx];
+
                 var selectedIndex, option;
-                if (node.getAttribute("data-ax5combobox-selected-text") == text) {
+                if (item.selected && item.selected.length > 0 && node.getAttribute("data-ax5combobox-selected-text") == text) {
                     selectedIndex = node.getAttribute("data-ax5combobox-selected-label");
                     option = item.selected[selectedIndex];
                     return {
@@ -1117,8 +1221,10 @@
                     // onExpand 인 경우 UI 대기모드 추가
                     data.waitOptions = true;
                 }
-                data.options = item.options;
-
+                data.options = U.filter(item.options, function(){
+                    return !this.hide;
+                });
+                
                 this.activecomboboxOptionGroup = jQuery(ax5.mustache.render(getOptionGroupTmpl.call(this, item.columnKeys), data));
                 this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(getOptionsTmpl.call(this, item.columnKeys), data)));
                 this.activecomboboxQueueIndex = queIdx;
@@ -1339,6 +1445,7 @@
                                 break;
                             }
                         }
+
                         syncLabel.call(this, queIdx);
                     }
                 }
