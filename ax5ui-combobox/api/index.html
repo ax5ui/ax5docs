@@ -128,10 +128,21 @@
                     </div>
                     <div class="col-md-9">
                         
-        <p><a name="ax5combobox"></a></p>
+        <h2>Classes</h2>
+<dl>
+<dt><a href="#ax5combobox">ax5combobox</a></dt>
+<dd></dd>
+</dl>
+<h2>Objects</h2>
+<dl>
+<dt><a href="#jQueryExtends">jQueryExtends</a> : <code>object</code></dt>
+<dd><p>ax5combobox jquery extends</p>
+</dd>
+</dl>
+<p><a name="ax5combobox"></a></p>
 <h2>ax5combobox</h2>
 <p><strong>Kind</strong>: global class<br>
-<strong>Version</strong>: 0.1.0<br>
+<strong>Version</strong>: 0.1.6<br>
 <strong>Author:</strong> <a href="mailto:tom@axisj.com">tom@axisj.com</a></p>
 <ul>
 <li><a href="#ax5combobox">ax5combobox</a>
@@ -142,6 +153,8 @@
 <li><a href="#ax5combobox.update">.update(item)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
 <li><a href="#ax5combobox.val">.val(boundID, [value], [Selected])</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
 <li><a href="#ax5combobox.close">.close()</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
+<li><a href="#ax5combobox.enable">.enable(boundID)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
+<li><a href="#ax5combobox.disable">.disable(boundID)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
 </ul>
 </li>
 </ul>
@@ -271,7 +284,81 @@
 </table>
 <p><a name="ax5combobox.close"></a></p>
 <h3>ax5combobox.close() ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code><br>
+<a name="ax5combobox.enable"></a></p>
+<h3>ax5combobox.enable(boundID) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boundID</td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5combobox.disable"></a></p>
+<h3>ax5combobox.disable(boundID) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boundID</td>
+</tr>
+</tbody>
+</table>
+<p><a name="jQueryExtends"></a></p>
+<h2>jQueryExtends : <code>object</code></h2>
+<p>ax5combobox jquery extends</p>
+<p><strong>Kind</strong>: global namespace<br>
+<a name="jQueryExtends.ax5combobox"></a></p>
+<h3>jQueryExtends.ax5combobox(methodName, [arguments], [arguments])</h3>
+<p><strong>Kind</strong>: static method of <code><a href="#jQueryExtends">jQueryExtends</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>methodName</td>
+<td><code>String</code></td>
+</tr>
+<tr>
+<td>[arguments]</td>
+<td></td>
+</tr>
+<tr>
+<td>[arguments]</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-html"><code>&lt;div data-ax5combobox=&quot;combo1&quot; data-ax5combobox-config='{
+ multiple: true,
+ editable: true,
+ size: &quot;&quot;,
+ theme:&quot;&quot;
+ }'&gt;&lt;/div&gt;
+&lt;script&gt;
+jQuery('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox();
+$('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;getValue&quot;);
+$('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;setValue&quot;, [&quot;string&quot;, &quot;number&quot;]);
+$('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;enable&quot;);
+$('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;disable&quot;);
+&lt;/script&gt;
+</code></pre>
 
     
                     </div>

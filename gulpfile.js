@@ -101,6 +101,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-combobox",
         doc_src: "_src_/ax5ui-combobox",
         doc_dest: "ax5ui-combobox"
+    },
+    "ax5ui-grid": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-grid",
+        doc_src: "_src_/ax5ui-grid",
+        doc_dest: "ax5ui-grid"
     }
 };
 
