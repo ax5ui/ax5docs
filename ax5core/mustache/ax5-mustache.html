@@ -135,17 +135,15 @@ in the “<a href="https://github.com/janl/mustache.js">https://github.com/janl/
 <h2>ax5.mustache.render</h2>
 <p><code>ax5.mustache.render(template, view)</code></p>
 <blockquote>
-<p><em>Instance01_template, Instance02_view, Usage, Output</em></p>
+<p><em>Argument01_template, Argument02_view, Usage, Output</em></p>
 </blockquote>
-<p>Instance01_ template:</p>
+<p>Argument01_ template:</p>
 <pre class="prettyprint linenums lang-js"><code>var tmpl = &quot;{{title}} spends {{calc}}&quot;;
 </code></pre>
-<blockquote>
 <ul>
-<li>It makes the format.</li>
+<li>It makes an expression format.</li>
 </ul>
-</blockquote>
-<p>Instance02_ view:</p>
+<p>Argument02_ view:</p>
 <pre class="prettyprint linenums lang-js"><code>var view = {
   title: &quot;Joe&quot;,
   calc: function () {
@@ -160,7 +158,7 @@ in the “<a href="https://github.com/janl/mustache.js">https://github.com/janl/
 <pre><code>var output = ax5.mustache.render(template, view);
 </code></pre>
 <ul>
-<li>You can use ‘view’ instance as ‘template’ format, by “ax5.mustach.render” code</li>
+<li>You can express ‘view’ data as ‘template’ format, by “ax5.mustach.render” code</li>
 </ul>
 <p>Output_ console.log(output):</p>
 <pre class="prettyprint linenums lang-js"><code>Joe spends 6
@@ -175,9 +173,9 @@ I will introduce the features added in the <code>ax5.mustache</code> below.</p>
 </blockquote>
 <h2>Array</h2>
 <blockquote>
-<p><em>Instance01_template, Instance02_view, Usage, Output</em></p>
+<p><em>Argument01_template, Argument_view, Usage, Output</em></p>
 </blockquote>
-<p>Instnace01_ template:</p>
+<p>Argument01_ template:</p>
 <pre><code>var template =
 &quot;
 {{#beatles}}
@@ -188,9 +186,9 @@ I will introduce the features added in the <code>ax5.mustache</code> below.</p>
 <ul>
 <li>‘#’ annotation : loop start signal at Array type.</li>
 <li>‘/’  annotation : loop end signal at Array type.</li>
-<li>‘@’ annotation : loop index signal.(It can be used like as ‘?’ with ‘first’(@first=?first))</li>
+<li>‘@’ annotation : loop index signal.(It can be used like as ‘?’ with ‘first’.(@first=?first))</li>
 </ul>
-<p>Instance02_ view:</p>
+<p>Argument02_ view:</p>
 <pre class="prettyprint linenums lang-js"><code>var view = {
   &quot;beatles&quot;: [
     { &quot;firstName&quot;: &quot;John&quot;, &quot;lastName&quot;: &quot;Lennon&quot; },
@@ -211,9 +209,9 @@ I will introduce the features added in the <code>ax5.mustache</code> below.</p>
 </code></pre>
 <h2>Object.@each</h2>
 <blockquote>
-<p><em>Instance01_template, Instance02_view, Usage, Output</em></p>
+<p><em>Argument01_template, Argument02_view, Usage, Output</em></p>
 </blockquote>
-<p>Instance01_ template:</p>
+<p>Argument01_ template:</p>
 <pre><code>var template=
 &quot;
 {{#beatles}}
@@ -227,7 +225,7 @@ I will introduce the features added in the <code>ax5.mustache</code> below.</p>
 <li>‘:’ annotation : match the key with value.</li>
 <li>‘.’ annotation : access to child variable.</li>
 </ul>
-<p>Instance02_ view</p>
+<p>Argument02_ view</p>
 <pre class="prettyprint linenums lang-js"><code>var view = {
     &quot;beatles&quot;: {
         &quot;John&quot;: {&quot;firstName&quot;: &quot;John&quot;, &quot;lastName&quot;: &quot;Lennon&quot;},
