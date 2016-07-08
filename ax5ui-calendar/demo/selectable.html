@@ -186,7 +186,7 @@
         // use Object
         var selectable = {};
         for (var d = _c_date(today, {'add': {d: -1}}); d &lt;= _c_date(today, {'add': {d: 4}}); d.setDate(d.getDate() + 1)) {
-            selectable[_c_date(d, {'return':'yyyy-mm-dd'})] = true;
+            selectable[_c_date(d, {'return':'yyyy-MM-dd'})] = true;
         }
 
         new ax5.ui.calendar({
@@ -241,7 +241,7 @@
         // use Object
         var selectable = {};
         for (var d = _c_date(today, {'add': {d: -1}}); d <= _c_date(today, {'add': {d: 4}}); d.setDate(d.getDate() + 1)) {
-            selectable[_c_date(d, {'return':'yyyy-mm-dd'})] = true;
+            selectable[_c_date(d, {'return':'yyyy-MM-dd'})] = true;
         }
 
         new ax5.ui.calendar({

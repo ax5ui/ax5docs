@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-calendar : Marker</title>
+    <title>ax5ui / ax5ui-grid : size</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -38,8 +38,8 @@
     
     
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css">
-        <script type="text/javascript" src="../../assets/lib/ax5ui-calendar/dist/ax5calendar.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-combobox/dist/ax5combobox.css">
+        <script type="text/javascript" src="../../assets/lib/ax5ui-combobox/dist/ax5combobox.js"></script>
     
 </head>
 <body>
@@ -53,8 +53,8 @@
 						<span class="navbar-brand">
 							<a href="/">
 							<span class="ax5uicon ax5uicon-ax5"></span>UI</a>
-							<a href="/ax5ui-calendar">
-							<span class="small">/ ax5ui-calendar</span></a>
+							<a href="/ax5ui-grid">
+							<span class="small">/ ax5ui-grid</span></a>
 						</span>
                         <a class="visible-xs-inline-block mobile-menu">
                             <i class="icon-menu"></i>
@@ -67,13 +67,13 @@
                         <ul class="nav navbar-nav" id="docs-menu-print-target">
                             
                             
-                                <li class='active'><a href="/ax5ui-calendar/demo/index.html">Demo</a></li><li ><a href="/ax5ui-calendar/api/index.html">API</a></li>
+                                <li class='active'><a href="/ax5ui-grid/demo/index.html">Demo</a></li><li ><a href="/ax5ui-grid/api/index.html">API</a></li>
                             
                         </ul>
 
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href="https://github.com/ax5ui/ax5ui-calendar">
+                                <a href="https://github.com/ax5ui/ax5ui-grid">
                                     <span class="ax5uicon ax5uicon-github"></span>
                                     Star
                                     <span class="gh-count" id="started-count">.</span>
@@ -117,7 +117,7 @@
         <div class="contents">
     <div class="style-sub-visual">
         <div class="title">Demostration</div>
-        <div class="description">Introduces the basic use of ax5ui-calendar UI.</div>
+        <div class="description">Introduces the basic use of ax5ui-combobox UI.</div>
     </div>
 </div>
     
@@ -129,117 +129,87 @@
                     <div class="col-md-3">
                         <div class="docs-menu" id="docs-menu">
                             
-        <ul><li ><a href="/ax5ui-calendar/demo/index.html">Basic Calendar</a></li><li ><a href="/ax5ui-calendar/demo/control.html">Control Calendar</a></li><li ><a href="/ax5ui-calendar/demo/mode.html">Change Calendar mode</a></li><li ><a href="/ax5ui-calendar/demo/dimensions.html">Calendar Dimensions</a></li><li ><a href="/ax5ui-calendar/demo/select.html">Date Select</a></li><li ><a href="/ax5ui-calendar/demo/selectable.html">Selectable</a></li><li  class='active'><a href="/ax5ui-calendar/demo/marker.html">Marker</a></li><li ><a href="/ax5ui-calendar/demo/lang.html">Language</a></li><li ><a href="/ax5ui-calendar/demo/event.html">Event</a></li></ul>
+        <ul><li ><a href="/ax5ui-grid/demo/index.html">basic</a></li><li  class='active'><a href="/ax5ui-grid/demo/size.html">size</a></li><li ><a href="/ax5ui-grid/demo/theme.html">theme</a></li><li ><a href="/ax5ui-grid/demo/get-set-value.html">get/set Value</a></li></ul>
     
                         </div>
                     </div>
                     <div class="col-md-9">
                         
 
+        
         <section class="ax5docs-section">
-            <h1>Marker</h1>
+            <h1>Size</h1>
+<p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
+<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/ax5ui-combobox/dist/ax5combobox.css&quot;&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;src/ax5ui-combobox/dist/ax5combobox.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
 
-            <p>html</p>
-            <pre class="prettyprint linenums lang-html">&lt;div id="build-target">&lt;/div></pre><div id="build-target"></div>
 
+
+            HTML
+            <pre class="prettyprint linenums lang-html">&lt;div class="row">
+    &lt;div class="col-md-6">
+        &lt;div class="form-group">
+            &lt;div data-ax5combobox="combobox1" data-ax5combobox-config="{size:&#39;sm&#39;}">&lt;/div>
+        &lt;/div>
+    &lt;/div>
+    &lt;div class="col-md-6">
+        &lt;div class="form-group">
+            &lt;div data-ax5combobox="combobox2" data-ax5combobox-config="{&#10;                             size:&#39;lg&#39;,&#10;                             multiple: true&#10;                             }">&lt;/div>
+        &lt;/div>
+    &lt;/div>
+&lt;/div></pre><div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <div data-ax5combobox="combobox1" data-ax5combobox-config="{size:&#39;sm&#39;}"></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <div data-ax5combobox="combobox2" data-ax5combobox-config="{&#10;                             size:&#39;lg&#39;,&#10;                             multiple: true&#10;                             }"></div>
+        </div>
+    </div>
+</div>
+
+            <div class="DH10"></div>
+            JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
+    var options = [];
+    options.push({value: "string", text: "string"});
+    options.push({value: "number", text: "number"});
+    options.push({value: "substr", text: "substr"});
+    options.push({value: "substring", text: "substring"});
+    options.push({value: "search", text: "search"});
+    options.push({value: "parseInt", text: "parseInt"});
+    options.push({value: "toFixed", text: "toFixed"});
+    options.push({value: "min", text: "min"});
+    options.push({value: "max", text: "max"});
+
     $(document.body).ready(function () {
-        var
-            buildTarget = $("#build-target"),
-            today = new Date(),
-            _c_date = ax5.util.date;
-
-        buildTarget.html(
-            '&lt;div id="calendar-target-01" style="width:300px;border:1px solid #888;padding: 10px;float:left;margin: 10px;">&lt;/div>'
-            + '&lt;div id="calendar-target-02" style="width:300px;border:1px solid #888;padding: 10px;float:left;margin: 10px;">&lt;/div>'
-            + '&lt;div style="clear:both;">&lt;/div>'
-        );
-
-        // use Array
-        new ax5.ui.calendar({
-            target: document.getElementById("calendar-target-01"),
-            marker: (function () {
-                var marker = {};
-                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: -1}})] = true;
-                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: 0}})] = true;
-                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: 1}})] = true;
-                
-                console.log(marker);
-                
-                return marker;
-            })(),
-            onClick: function () {
-                console.log(this)
-            }
+        $('[data-ax5combobox]').ax5combobox({
+            options: options
         });
-
-        // use Object
-
-        new ax5.ui.calendar({
-            target: document.getElementById("calendar-target-02"),
-            onStateChanged: function () {
-                if (this.action == "printDay") {
-
-                    var holidays = {};
-                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 7}})] = {theme: 'holiday'};
-                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 8}})] = {theme: 'holiday'};
-                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 9}})] = {theme: 'holiday'};
-
-                    this.self.setMarker(holidays);
-                }
-            }
-        });
-
     });
-&lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
-        var
-            buildTarget = $("#build-target"),
-            today = new Date(),
-            _c_date = ax5.util.date;
+&lt;/script></pre><script type="text/javascript">var options = [];
+    options.push({value: "string", text: "string"});
+    options.push({value: "number", text: "number"});
+    options.push({value: "substr", text: "substr"});
+    options.push({value: "substring", text: "substring"});
+    options.push({value: "search", text: "search"});
+    options.push({value: "parseInt", text: "parseInt"});
+    options.push({value: "toFixed", text: "toFixed"});
+    options.push({value: "min", text: "min"});
+    options.push({value: "max", text: "max"});
 
-        buildTarget.html(
-            '<div id="calendar-target-01" style="width:300px;border:1px solid #888;padding: 10px;float:left;margin: 10px;"></div>'
-            + '<div id="calendar-target-02" style="width:300px;border:1px solid #888;padding: 10px;float:left;margin: 10px;"></div>'
-            + '<div style="clear:both;"></div>'
-        );
-
-        // use Array
-        new ax5.ui.calendar({
-            target: document.getElementById("calendar-target-01"),
-            marker: (function () {
-                var marker = {};
-                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: -1}})] = true;
-                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: 0}})] = true;
-                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: 1}})] = true;
-                
-                console.log(marker);
-                
-                return marker;
-            })(),
-            onClick: function () {
-                console.log(this)
-            }
+    $(document.body).ready(function () {
+        $('[data-ax5combobox]').ax5combobox({
+            options: options
         });
-
-        // use Object
-
-        new ax5.ui.calendar({
-            target: document.getElementById("calendar-target-02"),
-            onStateChanged: function () {
-                if (this.action == "printDay") {
-
-                    var holidays = {};
-                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 7}})] = {theme: 'holiday'};
-                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 8}})] = {theme: 'holiday'};
-                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 9}})] = {theme: 'holiday'};
-
-                    this.self.setMarker(holidays);
-                }
-            }
-        });
-
     });
 </script></script>
+
+            
+
         </section>
 
     
@@ -313,7 +283,7 @@ ga('send', 'pageview');
 
         $.ajax({
             method: "GET",
-            url: "https://api.github.com/repos/ax5ui/ax5ui-calendar",
+            url: "https://api.github.com/repos/ax5ui/ax5ui-grid",
             success: function (data) {
                 $("#started-count").html(ax5.util.number(data.stargazers_count, {'money': true}));
                 ax5.util.setCookie('stargazers_count', data.stargazers_count);

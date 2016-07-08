@@ -114,7 +114,7 @@
                     <thead>
                         <tr>
                         {{#weekNames}}
-                            <td class="calendar-col-{{@i}}" style="height: {{colHeadHeight}}">
+                            <td class="calendar-col-{{col}}" style="height: {{colHeadHeight}}">
                             {{label}}
                             </td>
                         {{/weekNames}}
@@ -129,7 +129,7 @@
                         <tr>
                             {{/@first}}
                             {{/isStartOfWeek}}
-                            <td class="calendar-col-{{@i}}" style="{{itemStyles}}">
+                            <td class="calendar-col-{{col}}" style="{{itemStyles}}">
                                 <a class="calendar-item-day {{addClass}}" data-calendar-item-date="{{thisDate}}">
                                     <span class="addon"></span>
                                     {{thisDataLabel}}
@@ -161,7 +161,7 @@
                         <tr>
                             {{/@first}}
                             {{/isStartOfRow}}
-                            <td class="calendar-col-{{@i}}" style="{{itemStyles}}">
+                            <td class="calendar-col-{{col}}" style="{{itemStyles}}">
                                 <a class="calendar-item-month {{addClass}}" data-calendar-item-month="{{thisMonth}}">
                                     <span class="addon"></span>
                                     {{thisMonthLabel}}
@@ -193,7 +193,7 @@
                         <tr>
                             {{/@first}}
                             {{/isStartOfRow}}
-                            <td class="calendar-col-{{@i}}" style="{{itemStyles}}">
+                            <td class="calendar-col-{{col}}" style="{{itemStyles}}">
                                 <a class="calendar-item-year {{addClass}}" data-calendar-item-year="{{thisYear}}">
                                     <span class="addon"></span>
                                     {{thisYearLabel}}
@@ -313,6 +313,8 @@
                         var
                             thisDate = '' + U.date(loopDate, {"return": cfg.dateFormat}),
                             _date = {
+                                'row': i,
+                                'col': k,
                                 isStartOfWeek: (k == 0),
                                 thisDate: '' + thisDate,
                                 thisDataLabel: cfg.lang.dayTmpl.replace('%s', loopDate.getDate()),

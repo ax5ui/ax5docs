@@ -44,9 +44,9 @@
                             target: document.getElementById("calendar-target-01"),
                             marker: (function () {
                                 var marker = {};
-                                marker[_c_date(today, {'return':'yyyy-mm-dd', 'add': {d: -1}})] = true;
-                                marker[_c_date(today, {'return':'yyyy-mm-dd', 'add': {d: 0}})] = true;
-                                marker[_c_date(today, {'return':'yyyy-mm-dd', 'add': {d: 1}})] = true;
+                                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: -1}})] = true;
+                                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: 0}})] = true;
+                                marker[_c_date(today, {'return':'yyyy-MM-dd', 'add': {d: 1}})] = true;
                                 
                                 console.log(marker);
                                 
@@ -65,9 +65,9 @@
                                 if (this.action == "printDay") {
 
                                     var holidays = {};
-                                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-mm-dd', 'add': {d: 7}})] = {theme: 'holiday'};
-                                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-mm-dd', 'add': {d: 8}})] = {theme: 'holiday'};
-                                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-mm-dd', 'add': {d: 9}})] = {theme: 'holiday'};
+                                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 7}})] = {theme: 'holiday'};
+                                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 8}})] = {theme: 'holiday'};
+                                    holidays[_c_date(this.printedDay.start, {'return': 'yyyy-MM-dd', 'add': {d: 9}})] = {theme: 'holiday'};
 
                                     this.self.setMarker(holidays);
                                 }
