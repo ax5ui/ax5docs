@@ -1,0 +1,74 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="10" id="period" title="Period" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}" parentId="${data.metadata.parentId}" activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-toast/dist/ax5toast.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-toast/dist/ax5toast.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-calendar/dist/ax5calendar.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <section class="ax5docs-section">
+            <h1>Period</h1>
+            <p>html</p>
+
+            <ax5docs-html run="true">
+                <div id="calendar-target-01" style="width:300px;border:1px solid #888;padding: 10px;margin: 10px;"></div>
+            </ax5docs-html>
+
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        var today = new Date();
+                        new ax5.ui.calendar({
+                            target: document.getElementById("calendar-target-01"),
+                            control: {
+                                left: '<i class="fa fa-chevron-left"></i>',
+                                right: '<i class="fa fa-chevron-right"></i>'
+                            },
+                            multipleSelect: 2,
+                            dimensions: {
+                                height: 300,
+                                controlHeight: 40,
+                                itemPadding: 1
+                            },
+                            onClick: function () {
+                                var dates = this.self.getSelection();
+                                if (dates.length > 1) {
+                                    var minDate = new Date(Math.min(ax5.util.date(dates[0]).getTime(), ax5.util.date(dates[1]).getTime()));
+                                    var maxDate = new Date(Math.max(ax5.util.date(dates[0]).getTime(), ax5.util.date(dates[1]).getTime()));
+
+                                    this.self.setPeriod({
+                                        range: [
+                                            {from: minDate, to: maxDate, fromLabel: 'S', toLabel: 'E'}
+                                        ]
+                                    });
+                                }
+                            },
+                            onStateChanged: function () {
+
+                                //console.log(this);
+                            }
+                        });
+                    });
+                </script>
+            </ax5docs-js>
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>
