@@ -131,12 +131,10 @@
         <h1>Type</h1>
 <h2>ax5.util.getType()</h2>
 <p>Return argument’s object type.</p>
-<blockquote>
 <ul>
 <li>argument : any type of variable.</li>
 <li>return : The type of argument(number, string, array, object, function, nodelist, fragment).</li>
 </ul>
-</blockquote>
 <pre class="prettyprint linenums lang-js"><code>ax5.util.getType(1); // &quot;number&quot;
 ax5.util.getType(&quot;1&quot;); // &quot;string&quot;
 ax5.util.getType([0, 1, 2]); // &quot;array&quot;
@@ -147,14 +145,12 @@ ax5.util.getType(document.createDocumentFragment()); // &quot;fragment&quot;
 </code></pre>
 <p>Javascript object type name is not clear. so util.getType() method is very useful.</p>
 <hr>
-<h2><a href="http://ax5.util.is">ax5.util.is</a><em>Type</em>()</h2>
+<h2>ax5.util.is<code>Type</code>()</h2>
 <p>Return Boolean value depending on the correspondence of ‘does the argument is this type?’.</p>
-<blockquote>
 <ul>
 <li>argument : any type of variable.</li>
 <li>return : Boolean Value 1 || 0 (True || False)</li>
 </ul>
-</blockquote>
 <pre class="prettyprint linenums lang-js"><code>// return 1 || 0 (True || False)
 ax5.util.isWindow(window);
 ax5.util.isElement(document.getElementById(&quot;#ax5-util-is-type&quot;));
@@ -180,38 +176,26 @@ console.log(ax5.util.isDateFormat('20161132')); // false
 <h2>ax5.util.filter</h2>
 <p>You can freely edit filter function by anonymous function when use.
 The data is filtered by your customized filter function.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Argument 02 : Anonymous function(filter function).</li>
 <li>Usage : ax5.util.filter(Argument01, function(){ return });</li>
 <li>Output</li>
 </ul>
-</blockquote>
-<p>#####<a href="//Example">//Example</a> 01
-Argument :</p>
+<p><strong>Example 01</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var aarray = [5, 4, 3, 2, 1];
 </code></pre>
-<ul>
-<li>aarray : original data.</li>
-</ul>
-<p>Usage :</p>
+<p>aarray : original data.</p>
 <pre class="prettyprint linenums lang-js"><code>var result = ax5.util.filter(array, function () {
     return this % 2;
 });
 </code></pre>
-<ul>
-<li>edit annoymous function. it will be a filter.</li>
-</ul>
-<p>Output :</p>
+<p>edit annoymous function. it will be a filter.</p>
 <pre class="prettyprint linenums lang-js"><code>console.log(result);
 &gt; [5, 3, 1]
 </code></pre>
-<ul>
-<li>if the return value of filter function is false, the data is filtered.</li>
-</ul>
-<p>#####// Example 02
-Argument :</p>
+<p>if the return value of filter function is false, the data is filtered.</p>
+<p><strong>Example 02</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var list = [
     {isdel: 1, name: &quot;ax5-1&quot;},
     {name: &quot;ax5-2&quot;},
@@ -220,20 +204,17 @@ Argument :</p>
     {name: &quot;ax5-5&quot;}
 ];
 </code></pre>
-<p>Usgae :</p>
 <pre class="prettyprint linenums lang-js"><code>var result = ax5.util.filter(list, function () {
     return (this.isdel != 1);
 });
 </code></pre>
-<p>Output :</p>
 <pre class="prettyprint linenums lang-js"><code>console.log(JSON.stringify(result));
 &gt; [object, object, object]
 &gt;&gt; object0.name = ax5-2
 &gt;&gt; object1.name = ax5-4
 &gt;&gt; object2.name = ax5-5
 </code></pre>
-<p>#####//Example03
-Argument :</p>
+<p><strong>Example03</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var filObject = {
 a : 1, 
 s : &quot;string&quot;, 
@@ -241,12 +222,10 @@ oa : {pickup:true, name:&quot;AXISJ&quot;},
 os : {pickup:true, name:&quot;AX5&quot;}
 };
 </code></pre>
-<p>Usage :</p>
 <pre class="prettyprint linenums lang-js"><code>var result = ax5.util.filter( filObject, function(){
 	return this.pickup;
 });
 </code></pre>
-<p>Output :</p>
 <pre class="prettyprint linenums lang-js"><code>console.log( ax5.util.toJson(result) );
 &gt; [{&quot;pickup&quot;: , &quot;name&quot;: &quot;AXISJ&quot;}, {&quot;pickup&quot;: , &quot;name&quot;: &quot;AX5&quot;}]
 </code></pre>
@@ -254,35 +233,25 @@ os : {pickup:true, name:&quot;AX5&quot;}
 <h2>ax5.util.search</h2>
 <p>You can freely edit search function by anonymous function when use.
 The search function will return the first item which is correspondent to the function.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Argument 02 : Anonymous function(search function).</li>
 <li>Usage : Argument01[ ax5.util.search(Argument01, function(){ return }) ];</li>
-<li>Output</li>
 </ul>
-</blockquote>
-<p>#####// Example 01
-Argument :</p>
+<p><strong>Example 01</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var a = [&quot;A&quot;, &quot;X&quot;, &quot;5&quot;];
 </code></pre>
-<p>Usgae :</p>
 <pre class="prettyprint linenums lang-js"><code>var idx = ax5.util.search(a, function () {
     return this == &quot;X&quot;;
 });
 </code></pre>
-<p>Output :</p>
 <pre class="prettyprint linenums lang-js"><code>console.log(a[idx]);
 &gt; X
 </code></pre>
-<ul>
-<li>if there is no correspondont item, it will retrun -1</li>
-</ul>
-<p>#####// Example 02
-Argument :</p>
+<p>if there is no correspondont item, it will retrun -1</p>
+<p><strong>Example 02</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var a = [&quot;A&quot;, &quot;X&quot;, &quot;5&quot;];
 </code></pre>
-<p>Usage :</p>
 <pre class="prettyprint linenums lang-js"><code>console.log(
       a[
         ax5.util.search(a, function (idx){
@@ -290,15 +259,11 @@ Argument :</p>
           })
       ]
     );
+&gt; 5
 </code></pre>
-<p>Output :</p>
-<pre class="prettyprint linenums lang-js"><code>&gt; 5
-</code></pre>
-<p>#####// Example 03
-Argument :</p>
+<p><strong>Example 03</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var b = {a: &quot;AX5-0&quot;, x: &quot;AX5-1&quot;, 5: &quot;AX5-2&quot;};
 </code></pre>
-<p>Usage :</p>
 <pre class="prettyprint linenums lang-js"><code>console.log(
       b[
         ax5.util.search(b, function (k) {
@@ -306,24 +271,19 @@ Argument :</p>
         })
       ]
     );
-</code></pre>
-<p>Output :</p>
-<pre class="prettyprint linenums lang-js"><code>&gt; AX5-1
+&gt; AX5-1
 </code></pre>
 <hr>
 <h2>ax5.util.map</h2>
 <p>You can freely edit mapping function by anonymous function when use.
 The mapping function will return the array or object which is set by original data.
 In the example I’ve created a simple object array as a numeric array.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Argument 02 : Anonymous function(mapping function).</li>
 <li>Usage : ax5.util.map(Argument01, function(){ return }).</li>
 <li>Output</li>
 </ul>
-</blockquote>
-<p>Argument :</p>
 <pre class="prettyprint linenums lang-js"><code>var a = [1, 2, 3, 4, 5];
 </code></pre>
 <p>Usage 01 :</p>
@@ -352,9 +312,11 @@ In the example I’ve created a simple object array as a numeric array.</p>
 <hr>
 <h2>ax5.util.merge</h2>
 <p>concat the ‘array like’ objects.</p>
-<blockquote>
-<p>Argument, Usage, Output</p>
-</blockquote>
+<ul>
+<li>Argument</li>
+<li>Usage</li>
+<li>Output</li>
+</ul>
 <p>Argument :</p>
 <pre class="prettyprint linenums lang-js"><code>var a = [1, 2, 3], b = [7, 8, 9];
 </code></pre>
@@ -367,36 +329,30 @@ In the example I’ve created a simple object array as a numeric array.</p>
 <hr>
 <h2>ax5.util.reduce</h2>
 <p>This method is performed by data argument and anonymous function. the anonymous function has two arguments(result value, index value). the anonymous function excute code using the data argument of index value. return value is saved at result value and index value moves to right. repeat this process for the end of data argument.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Argument 02 : Anonymous function(reduce function).</li>
 <li>Usage : ax5.util.reduce(Argument01, function(result, index){ return }).</li>
 <li>Output</li>
 </ul>
-</blockquote>
-<p>#####// Example 01
-Variable :</p>
+<p><strong>Example 01</strong></p>
 <pre class="prettyprint linenums lang-js"><code>var aarray = [5, 4, 3, 2, 1];
 </code></pre>
-<p>Usage :</p>
 <pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.reduce(aarray, function (p, n) {
     return p * n; //This sentence is same to &lt;return p = p*n&gt;
 }));
+&gt; 120
 </code></pre>
 <ul>
 <li>p : result variable. The return value is saved at ‘p’.(initial value = 5)</li>
 <li>n : ‘second to last’ located variable. (initial value = 4. auto move left to right)</li>
 </ul>
-<p>Output :</p>
-<pre class="prettyprint linenums lang-js"><code>&gt; 120
-</code></pre>
-<p>#####// Example 02
-Usage :</p>
+<p><strong>Example 02</strong></p>
 <pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.reduce({a: 1, b: 2}, function (p, n) {
     return parseInt(p || 0) + parseInt(n);
     // This sentence is same to (return p=p+n;)
 }));
+&gt; 3
 </code></pre>
 <ul>
 <li>if the first ‘p’ value is object, ‘p’ will be undefined. So ‘n’ will point first index.</li>
@@ -404,9 +360,6 @@ Usage :</p>
 <li>n : the ‘value’ value of ‘first to last’ located variable. (initail value = 1)</li>
 <li>parseInt(n) : not necessiry in this example. but parsing is recommended to prevent errors.</li>
 </ul>
-<p>Output :</p>
-<pre class="prettyprint linenums lang-js"><code>&gt; 3
-</code></pre>
 <hr>
 <h2>ax5.util.reduceRight</h2>
 <p>Same as “reduce” but with a different direction.</p>
@@ -414,20 +367,18 @@ Usage :</p>
 console.log(ax5.util.reduceRight(aarray, function (p, n) {
     return p - n;
 }));
-&gt; -13
+-13
 </code></pre>
 <hr>
 <h2>ax5.util.sum</h2>
 <p>You can freely edit summation function by anonymous function when use.
 The summation function will add the values which corresponds to conditions of your summation function.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Argument 02 : Anonymous function(summation function).</li>
 <li>Usage : ax5.util.sum(Argument01, function(){ return }).</li>
 <li>Output</li>
 </ul>
-</blockquote>
 <p>Argument :</p>
 <pre class="prettyprint linenums lang-js"><code>var arr = [
     {name: &quot;122&quot;, value: 9},
@@ -458,14 +409,12 @@ The summation function will add the values which corresponds to conditions of yo
 <h2>ax5.util.avg</h2>
 <p>You can freely edit averaging function by anonymous function when use.
 The averaging function will get average of values which correspond to conditions of your averaging function.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Argument 02 : Anonymous function(averaging function).</li>
 <li>Usage : ax5.util.avg(Argument01, function(){ return }).</li>
 <li>Output</li>
 </ul>
-</blockquote>
 <p>Argument :</p>
 <pre class="prettyprint linenums lang-js"><code>var arr = [
     {name: &quot;122&quot;, value: 9},
@@ -484,13 +433,11 @@ The averaging function will get average of values which correspond to conditions
 <hr>
 <h2>ax5.util.first</h2>
 <p>It returns the first element in Array or Object. However, to use Array in the “Array [0]” is faster than using the “first()” method.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Usage : ax5.util.first(Argument01)</li>
 <li>Output</li>
 </ul>
-</blockquote>
 <p>Argument :</p>
 <pre class="prettyprint linenums lang-js"><code>var _arr = [&quot;ax5&quot;, &quot;axisj&quot;];
 var _obj = {k: &quot;ax5&quot;, z: &quot;axisj&quot;};
@@ -522,14 +469,12 @@ console.log(ax5.util.toJson(ax5.util.last(_obj)));
 <h1>String</h1>
 <h2>ax5.util.left</h2>
 <p>Return string from first index to finall index of original data.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Argument 02 : finall index || finall character.</li>
 <li>Usage : ax5.util.left(Argument01, Argument02)</li>
 <li>Output</li>
 </ul>
-</blockquote>
 <pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.left(&quot;abcd.efd&quot;, 3));
 &gt; abc
 console.log(ax5.util.left(&quot;abcd.efd&quot;, &quot;.&quot;));
@@ -538,14 +483,12 @@ console.log(ax5.util.left(&quot;abcd.efd&quot;, &quot;.&quot;));
 <hr>
 <h2>ax5.util.right</h2>
 <p>Return string from start index to end index of original data. The arrangement is not changing.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Argument 02 : start index || start character.</li>
 <li>Usage : ax5.util.left(Argument01, Argument02)</li>
 <li>Output</li>
 </ul>
-</blockquote>
 <pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.right(&quot;abcd.efd&quot;, 3));
 &gt; efd
 console.log(ax5.util.right(&quot;abcd.efd&quot;, &quot;.&quot;));
@@ -578,7 +521,6 @@ console.log(ax5.util.snakeCase(&quot;aBc&quot;));
 <h2>ax5.util.number</h2>
 <p>by this method, you can modify original data to variety number-like types. there are several options such as round, money, byte, abs.</p>
 <p>When the number covers the development, it often requires multiple steps. The syntax is very complex and it is difficult to maintain. “ax5.util.number” command to convert a number that were resolved by passing a JSON format.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Option_round : set dcimal place. less than that place value will be rounded.</li>
@@ -587,7 +529,6 @@ console.log(ax5.util.snakeCase(&quot;aBc&quot;));
 <li>Option_abs : set absolute value option.</li>
 <li>Output</li>
 </ul>
-</blockquote>
 <pre class="prettyprint linenums lang-js"><code>console.log('round(1) : ' + ax5.util.number(123456789.678, {round: 1}));
 &gt; round(1) : 123456789.7
 
@@ -678,13 +619,11 @@ console.log(ax5.util.toJson(function () {}));
 <hr>
 <h2>ax5.util.toArray</h2>
 <p>It converts ‘Array-like objects’ to ‘Array’ such as nodelist, arguments. ‘Array-like objects’ already have some useful properties such as “length”, however they can not applied for functions defined in Array.prototype. So, if you want to use array functions, convert to Array by toArray() method. it’s very easy to convert.</p>
-<blockquote>
 <ul>
 <li>Argument 01 : Original Data.</li>
 <li>Usgae : ax5.util.toArray(Argument);</li>
 <li>Output</li>
 </ul>
-</blockquote>
 <p>Usage :</p>
 <pre class="prettyprint linenums lang-js"><code>function something() {
     var arr = ax5.util.toArray(arguments);
@@ -694,425 +633,6 @@ something(&quot;A&quot;, &quot;X&quot;, &quot;I&quot;, &quot;S&quot;, &quot;J&qu
 </code></pre>
 <p>Output :</p>
 <pre class="prettyprint linenums lang-js"><code>&gt; [&quot;A&quot;,&quot;X&quot;,&quot;I&quot;,&quot;S&quot;,&quot;J&quot;]
-</code></pre>
-<hr>
-<h2>ax5.util.setCookie</h2>
-<pre class="prettyprint linenums lang-js"><code>ax5.util.setCookie(&quot;ax5-cookie&quot;, &quot;abcde&quot;);
-ax5.util.setCookie(&quot;ax5-cookie-path&quot;, &quot;abcde&quot;, 2, {path: &quot;/&quot;});
-</code></pre>
-<hr>
-<h2>ax5.util.getCookie</h2>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.getCookie(&quot;ax5-cookie&quot;));
-// abcde
-console.log(ax5.util.getCookie(&quot;ax5-cookie-path&quot;));
-// abcde
-</code></pre>
-<hr>
-<h2>ax5.util.findParentNode</h2>
-<pre class="prettyprint linenums lang-js"><code>/*
-var cond = {
-    tagname: {String} - tagName (ex. a, div, span..),
-    clazz: {String} - name of Class
-    [, attributes]
-};
-*/
-
-console.log(
-    ax5.util.findParentNode(e.target, {tagname:&quot;a&quot;, clazz:&quot;ax-menu-handel&quot;, &quot;data-custom-attr&quot;:&quot;attr_value&quot;})
-);
-
-// using cond 
-jQuery('#id').bind(&quot;click.app_expand&quot;, function(e){
-    var target = ax5.dom.findParentNode(e.target, function(target){
-        if($(target).hasClass(&quot;aside&quot;)){
-            return true;
-        }
-        else{
-            return true;
-        }
-    });
-    //client-aside
-    if(target.id !== &quot;client-aside&quot;){
-        // some action
-    }
-}); 
-</code></pre>
-<h2>ax5.util.cssNumber</h2>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.cssNumber('100px'));
-// 100px
-console.log(ax5.util.cssNumber(100));
-// 100px
-console.log(ax5.util.cssNumber('100%'));
-// 100%
-console.log(ax5.util.cssNumber('##100@'));
-// 100px
-</code></pre>
-<h2>ax5.util.css</h2>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.css({
-    background: &quot;#ccc&quot;,
-    padding: &quot;50px&quot;,
-    width: &quot;100px&quot;
-}));
-// background:#ccc;padding:50px;width:100px;
-console.log(ax5.util.css('width:100px;padding: 50px; background: #ccc'));
-// {width: &quot;100px&quot;, padding: &quot;50px&quot;, background: &quot;#ccc&quot;}
-</code></pre>
-<h2>ax5.util.stopEvent</h2>
-<pre class="prettyprint linenums lang-js"><code>ax5.util.stopEvent(e);
-</code></pre>
-<h2>ax5.util.selectRange</h2>
-<pre class="prettyprint linenums lang-html"><code>&lt;div id=&quot;select-test-0&quot; contentEditable=&quot;true&quot;&gt;SELECT TEST&lt;/div&gt;
-&lt;div id=&quot;select-test-1&quot; contentEditable=&quot;true&quot;&gt;SELECT TEST&lt;/div&gt;
-&lt;div id=&quot;select-test-2&quot; contentEditable=&quot;true&quot;&gt;SELECT TEST&lt;/div&gt;
-
-&lt;script&gt;
-    $(document.body).ready(function () {
-        ax5.util.selectRange($(&quot;#select-test-0&quot;), &quot;end&quot;); // focus on end
-        ax5.util.selectRange($(&quot;#select-test-1&quot;).get(0), [1, 5]); // select 1~5
-        //ax5.util.selectRange($(&quot;#select-test-2&quot;), &quot;start&quot;); // focus on start
-        //ax5.util.selectRange($(&quot;#select-test-2&quot;)); // selectAll
-        //ax5.util.selectRange($(&quot;#select-test-2&quot;), &quot;selectAll&quot;); // selectAll
-    });
-&lt;/script&gt;
-</code></pre>
-<h2>ax5.util.debounce</h2>
-<p><code>ax5.util.debounce(func, wait[, immediately])</code></p>
-<pre class="prettyprint linenums lang-js"><code>var debounceFn = ax5.util.debounce(function( val ) {
-    console.log(val);
-}, 300);
-
-$(document.body).click(function(){
-    debounceFn(new Date());
-});
-</code></pre>
-<p>// return is Object.
-ax5.util.isObject({});</p>
-<p>// return is Array.
-ax5.util.isArray([]);</p>
-<p>// return is Functon.
-ax5.util.isFunction(new Function);</p>
-<p>// return is String.
-ax5.util.isString(’’);</p>
-<p>// return is Number.
-ax5.util.isNumber(1);</p>
-<p>// return is nodeList.
-ax5.util.isNodelist(document.querySelectoraAll(&quot;.content&quot;));</p>
-<p>// return is undefined.
-ax5.util.isUndefined();</p>
-<p>// return is undefined|’’|null.
-ax5.util.isNothing();</p>
-<p>// return is Date
-ax5.util.isDate();</p>
-<pre><code>
-## ax5.util.isDateFormat
-`ax5.util.isDateFormat(String)`
-
-```js
-console.log(ax5.util.isDateFormat('20160101')); // true
-console.log(ax5.util.isDateFormat('2016*01*01')); // true
-console.log(ax5.util.isDateFormat('20161132')); // false
-</code></pre>
-<hr>
-<h1>Object</h1>
-<h2>ax5.util.filter</h2>
-<p>The first item is delivered to the second argument of the filter function. The second argument is an anonymous function, the result is True, the items will be collected.</p>
-<pre class="prettyprint linenums lang-js"><code>var result, aarray = [5, 4, 3, 2, 1];
-
-result = ax5.util.filter(aarray, function () {
-    return this % 2;
-});
-console.log(result);
-
-var list = [
-    {isdel: 1, name: &quot;ax5-1&quot;}, {name: &quot;ax5-2&quot;}, {
-        isdel: 1,
-        name: &quot;ax5-3&quot;
-    }, {name: &quot;ax5-4&quot;}, {name: &quot;ax5-5&quot;}
-];
-result = ax5.util.filter(list, function () {
-    return (this.isdel != 1);
-});
-console.log(JSON.stringify(result));
-
-var filObject = {a:1, s:&quot;string&quot;, oa:{pickup:true, name:&quot;AXISJ&quot;}, os:{pickup:true, name:&quot;AX5&quot;}};
-result = ax5.util.filter( filObject, function(){
-	return this.pickup;
-});
-console.log( ax5.util.toJson(result) );
-// [{&quot;pickup&quot;: , &quot;name&quot;: &quot;AXISJ&quot;}, {&quot;pickup&quot;: , &quot;name&quot;: &quot;AX5&quot;}]
-</code></pre>
-<hr>
-<h2>ax5.util.search</h2>
-<p>It returns the first item of the result of the function is True.</p>
-<pre class="prettyprint linenums lang-js"><code>var a = [&quot;A&quot;, &quot;X&quot;, &quot;5&quot;];
-var idx = ax5.util.search(a, function () {
-    return this == &quot;X&quot;;
-});
-console.log(a[idx]);
-
-idx = ax5.util.search(a, function () {
-    return this == &quot;B&quot;;
-});
-console.log(idx);
-// -1
-
-console.log(a[
-    ax5.util.search(a, function (idx) {
-        return idx == 2;
-    })
-    ]);
-// 5
-
-var b = {a: &quot;AX5-0&quot;, x: &quot;AX5-1&quot;, 5: &quot;AX5-2&quot;};
-console.log(b[
-    ax5.util.search(b, function (k, v) {
-        return k == &quot;x&quot;;
-    })
-    ]);
-// AX5-1
-</code></pre>
-<hr>
-<h2>ax5.util.map</h2>
-<p><code>&quot;map&quot;</code> creating a new array features set into an array or object. In the example I’ve created a simple object array as a numeric array.</p>
-<pre class="prettyprint linenums lang-js"><code>var a = [1, 2, 3, 4, 5];
-a = ax5.util.map(a, function () {
-    return {id: this};
-});
-console.log(ax5.util.toJson(a));
-
-console.log(
-    ax5.util.map({a: 1, b: 2}, function (k, v) {
-        return {id: k, value: v};
-    })
-);
-</code></pre>
-<hr>
-<h2>ax5.util.merge</h2>
-<p><code>&quot;array like&quot;</code> the type of object <code>&quot;concat&quot;</code>.</p>
-<pre class="prettyprint linenums lang-js"><code>var a = [1, 2, 3], b = [7, 8, 9];
-console.log(ax5.util.merge(a, b));
-</code></pre>
-<hr>
-<h2>ax5.util.reduce</h2>
-<p>As a result of the process performed in the operation from the left to the right of the array it will be reflected to the left side item. It returns the final value of the item.</p>
-<pre class="prettyprint linenums lang-js"><code>var aarray = [5, 4, 3, 2, 1], result;
-console.log(ax5.util.reduce(aarray, function (p, n) {
-    return p * n;
-}));
-// 120
-
-console.log(ax5.util.reduce({a: 1, b: 2}, function (p, n) {
-    // If the &quot;Object&quot; is the first &quot;p&quot; value is &quot;undefined&quot;.
-    return parseInt(p | 0) + parseInt(n);
-}));
-// 3
-</code></pre>
-<hr>
-<h2>ax5.util.reduceRight</h2>
-<p>Same as “reduce” but with a different direction.</p>
-<pre class="prettyprint linenums lang-js"><code>var aarray = [5, 4, 3, 2, 1];
-console.log(ax5.util.reduceRight(aarray, function (p, n) {
-    return p - n;
-}));
-// -13
-</code></pre>
-<hr>
-<h2>ax5.util.sum</h2>
-<p>It returns the sum. The sum of all the values returned by the function.</p>
-<pre class="prettyprint linenums lang-js"><code>var arr = [
-    {name: &quot;122&quot;, value: 9},
-    {name: &quot;122&quot;, value: 10},
-    {name: &quot;123&quot;, value: 11}
-];
-
-var rs = ax5.util.sum(arr, function () {
-    if(this.name == &quot;122&quot;) {
-        return this.value;
-    }
-});
-console.log(rs); // 19
-
-console.log(ax5.util.sum(arr, 10, function () {
-    return this.value;
-}));
-// 40
-</code></pre>
-<hr>
-<h2>ax5.util.avg</h2>
-<p>It returns the average. The average of all the values returned by the function.</p>
-<pre class="prettyprint linenums lang-js"><code>var arr = [
-    {name: &quot;122&quot;, value: 9},
-    {name: &quot;122&quot;, value: 10},
-    {name: &quot;123&quot;, value: 11}
-];
-
-var rs = ax5.util.avg(arr, function () {
-    return this.value;
-});
-
-console.log(rs); // 10
-</code></pre>
-<hr>
-<h2>ax5.util.first</h2>
-<p>It returns the first element in the Array, or Object. However, it is faster to use Array in the “Array [0]” rather than using the “first” method.</p>
-<pre class="prettyprint linenums lang-js"><code>var _arr = [&quot;ax5&quot;, &quot;axisj&quot;];
-var _obj = {k: &quot;ax5&quot;, z: &quot;axisj&quot;};
-
-console.log(ax5.util.first(_arr));
-// ax5
-
-console.log(ax5.util.toJson(ax5.util.first(_obj)));
-// {&quot;k&quot;: &quot;ax5&quot;}
-</code></pre>
-<hr>
-<h2>ax5.util.last</h2>
-<p>It returns the last element in the Array, or Object.</p>
-<pre class="prettyprint linenums lang-js"><code>var _arr = [&quot;ax5&quot;, &quot;axisj&quot;];
-var _obj = {k: &quot;ax5&quot;, z: &quot;axisj&quot;};
-
-console.log(ax5.util.last(_arr));
-// axisj
-
-console.log(ax5.util.toJson(ax5.util.last(_obj)));
-// {&quot;z&quot;: &quot;axisj&quot;}
-</code></pre>
-<hr>
-<h1>String</h1>
-<h2>ax5.util.left</h2>
-<p>Returns. Since the beginning of the string to the index, up to a certain character in a string from the beginning of the string.</p>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.left(&quot;abcd.efd&quot;, 3));
-// abc
-console.log(ax5.util.left(&quot;abcd.efd&quot;, &quot;.&quot;));
-// abcd
-</code></pre>
-<hr>
-<h2>ax5.util.right</h2>
-<p>Returns. Up from the end of the string index, up to a certain character in a string from the end of the string</p>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.right(&quot;abcd.efd&quot;, 3));
-// efd
-console.log(ax5.util.right(&quot;abcd.efd&quot;, &quot;.&quot;));
-// efd
-</code></pre>
-<hr>
-<h2>ax5.util.camelCase</h2>
-<p>It converts a string to “Camel Case”. “a-b”, “aB” will be the “aB”.</p>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.camelCase(&quot;inner-width&quot;));
-console.log(ax5.util.camelCase(&quot;innerWidth&quot;));
-// innerWidth
-console.log(ax5.util.camelCase(&quot;camelCase&quot;));
-// camelCase
-console.log(ax5.util.camelCase(&quot;aBc&quot;));
-// aBc
-</code></pre>
-<hr>
-<h2>ax5.util.snakeCase</h2>
-<p>It converts a string to “Snake Case”. “aB” will be the “a-b”.</p>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.snakeCase(&quot;inner-width&quot;));
-// inner-width
-console.log(ax5.util.snakeCase(&quot;camelCase&quot;));
-// camel-case
-console.log(ax5.util.snakeCase(&quot;aBc&quot;));
-// a-bc
-</code></pre>
-<hr>
-<h1>Number</h1>
-<h2>ax5.util.number</h2>
-<p>When the number covers the development, often it requires multiple steps. The syntax is very complex and it is difficult to maintain. “ax5.util.number” command to convert a number that were resolved by passing a JSON format.</p>
-<pre class="prettyprint linenums lang-js"><code>console.log('round(1) : ' + ax5.util.number(123456789.678, {round: 1}));
-// round(1) : 123456789.7
-
-console.log('round(1) money() : '
-    + ax5.util.number(123456789.678, {round: 1, money: true}));
-// round(1) money() : 123,456,789.7
-
-console.log('round(2) byte() : '
-    + ax5.util.number(123456789.678, {round: 2, byte: true}));
-// round(2) byte() : 117.7MB
-
-console.log('abs() round(2) money() : '
-    + ax5.util.number(-123456789.678, {abs: true, round: 2, money: true}));
-// abs() round(2) money() : 123,456,789.68
-
-console.log('abs() round(2) money() : '
-    + ax5.util.number(&quot;A-1234~~56789.8~888PX&quot;, {abs: true, round: 2, money: true}));
-// abs() round(2) money() : 123,456,789.89
-</code></pre>
-<hr>
-<h1>Date</h1>
-<h2>date</h2>
-<p><code>ax5.util.date(date[, cond])</code></p>
-<pre class="prettyprint linenums lang-js"><code>ax5.util.date('2013-01-01'); // Tue Jan 01 2013 23:59:00 GMT+0900 (KST)
-ax5.util.date((new Date()), {add:{d:10}, return:'yyyy/MM/dd'}); // &quot;2015/07/01&quot;
-ax5.util.date('1919-03-01', {add:{d:10}, return:'yyyy/MM/dd hh:mm:ss'}); // &quot;1919/03/11 23:59:00&quot;
-</code></pre>
-<h2>dday</h2>
-<p><code>ax5.util.dday(date[, cond])</code></p>
-<pre class="prettyprint linenums lang-js"><code>ax5.util.dday('2016-01-29'); // 1
-ax5.util.dday('2016-01-29', {today:'2016-01-28'}); // 1
-ax5.util.dday('1977-03-29', {today:'2016-01-28', age:true}); // 39
-</code></pre>
-<h2>weeksOfMonth</h2>
-<p><code>ax5.util.weeksOfMonth(date)</code></p>
-<pre class="prettyprint linenums lang-js"><code>ax5.util.weeksOfMonth(&quot;2015-10-01&quot;); // {year: 2015, month: 10, count: 1}
-ax5.util.weeksOfMonth(&quot;2015-09-19&quot;); // {year: 2015, month: 9, count: 3}
-</code></pre>
-<h2>daysOfMonth</h2>
-<p><code>ax5.util.daysOfMonth(year, month)</code></p>
-<pre class="prettyprint linenums lang-js"><code>ax5.util.daysOfMonth(2015, 11); // 31
-ax5.util.daysOfMonth(2015, 1); // 28
-</code></pre>
-<hr>
-<h1>Misc.</h1>
-<h2>ax5.util.param</h2>
-<p>The parameter values may in some cases be the “Object” or “String”. At this time, useing the “param”, it can be the same as verifying the parameter value.</p>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.param({a: 1, b: '123\'&quot;2&amp;'}, &quot;param&quot;));
-// a=1&amp;b=123%27%222%26
-console.log(ax5.util.param(&quot;a=1&amp;b=12'\&quot;32&quot;, &quot;param&quot;));
-//a=1&amp;b=12'&quot;32
-console.log(ax5.util.toJson(util.param(&quot;a=1&amp;b=1232&quot;)));
-// {&quot;a&quot;: &quot;1&quot;, &quot;b&quot;: &quot;1232&quot;}
-</code></pre>
-<hr>
-<h2>ax5.util.parseJson</h2>
-<p>parsing a little more than the less sensitive the JSON syntax “JSON.parse”.</p>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.toJson(ax5.util.parseJson(&quot;[{'a':'99'},'2','3']&quot;)[0]));
-// {&quot;a&quot;: &quot;99&quot;}
-console.log(ax5.util.parseJson(&quot;{a:1}&quot;).a);
-// 1
-console.log(ax5.util.toJson(ax5.util.parseJson(&quot;{'a':1, 'b':function(){return 1;}}&quot;, false)));
-// {&quot;error&quot;: 500, &quot;msg&quot;: &quot;syntax error&quot;}
-console.log(ax5.util.toJson(ax5.util.parseJson(&quot;{'a':1, 'b':function(){return 1;}}&quot;, true)));
-// {&quot;a&quot;: 1, &quot;b&quot;: &quot;{Function}&quot;}
-</code></pre>
-<hr>
-<h2>ax5.util.toJson</h2>
-<pre class="prettyprint linenums lang-js"><code>console.log(ax5.util.toJson(1));
-// 1
-console.log(ax5.util.toJson(&quot;A&quot;));
-// &quot;A&quot;
-console.log(ax5.util.toJson([1, 2, 3, 'A']));
-// [1,2,3,&quot;A&quot;]
-console.log(ax5.util.toJson({a: 'a', x: 'x'}));
-// {&quot;a&quot;: &quot;a&quot;, &quot;x&quot;: &quot;x&quot;}
-console.log(ax5.util.toJson([1, {a: 'a', x: 'x'}]));
-// [1,{&quot;a&quot;: &quot;a&quot;, &quot;x&quot;: &quot;x&quot;}]
-console.log(ax5.util.toJson({a: 'a', x: 'x', list: [1, 2, 3]}));
-// {&quot;a&quot;: &quot;a&quot;, &quot;x&quot;: &quot;x&quot;, &quot;list&quot;: [1,2,3]}
-console.log(ax5.util.toJson(function () {}));
-// &quot;{Function}&quot;
-</code></pre>
-<hr>
-<h2>ax5.util.alert</h2>
-<pre class="prettyprint linenums lang-js"><code>ax5.util.alert({a: 1, b: 2});
-</code></pre>
-<hr>
-<h2>ax5.util.toArray</h2>
-<p>“nodelist” or on the Array Like such “arguments”, has properties such as “length”, but you can not use functions defined in Array.prototype. With “toArray” because it is easy to convert an array.</p>
-<pre class="prettyprint linenums lang-js"><code>function something() {
-    var arr = ax5.util.toArray(arguments);
-    console.log(ax5.util.toJson(arr));
-}
-something(&quot;A&quot;, &quot;X&quot;, &quot;I&quot;, &quot;S&quot;, &quot;J&quot;);
 </code></pre>
 <hr>
 <h2>ax5.util.setCookie</h2>
