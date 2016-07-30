@@ -1855,6 +1855,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return debounced;
         };
 
+        /**
+         * @method ax5.util.deepCopy
+         * @param {Object} obj
+         * @returns {Object}
+         * @example
+         * ```js
+         * var obj = [
+         *  {name:"A", child:[{name:"a-1"}]},
+         *  {name:"B", child:[{name:"b-1"}], callBack: function(){ console.log('callBack'); }}
+         * ];
+         * var copiedObj = ax5.util.deepCopy(obj)
+         * ```
+         */
+        function deepCopy(obj) {
+            var r, l;
+            if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) == 'object') {
+                if (U.isArray(obj)) {
+                    l = obj.length;
+                    r = new Array(l);
+                    for (var i = 0; i < l; i++) {
+                        r[i] = deepCopy(obj[i]);
+                    }
+                    return r;
+                } else {
+                    return jQuery.extend({}, obj);
+                }
+            }
+            return obj;
+        }
+
         return {
             alert: alert,
             each: each,
@@ -1869,6 +1899,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             parseJson: parseJson,
             first: first,
             last: last,
+            deepCopy: deepCopy,
+
             left: left,
             right: right,
             getType: getType,
@@ -2227,16 +2259,13 @@ ax5.info.errorMsg["ax5combobox"] = {
 /**
  * @class ax5.ui.root
  * @classdesc ax5 ui class
- * @version v0.1.0
  * @author tom@axisj.com
- * @logs
- * 2014-12-12 tom : start
  * @example
  * ```
  * var myui = new ax5.ui.root();
  * ```
  */
-ax5.ui = function (core) {
+ax5.ui = function () {
 
     function axUi() {
         this.config = {};
@@ -2268,7 +2297,6 @@ ax5.ui = function (core) {
         };
 
         this.bindWindowResize = function (callBack) {
-
             setTimeout(function () {
                 jQuery(window).resize(function () {
                     if (this.bindWindowResize__) clearTimeout(this.bindWindowResize__);
@@ -2294,11 +2322,62 @@ ax5.ui = function (core) {
         this.main = function () {}.apply(this, arguments);
     }
 
-    return {
-        root: axUi
-    };
-}(ax5);
+    /**
+     * @method ax5.ui.addClass
+     * @param {Object} config
+     * @param {String} config.className - name of Class
+     * @param {String} [config.version=""] - version of Class
+     * @param {Object} [config.classStore=ax5.ui] - 클래스가 저장될 경로
+     * @param {Function} [config.superClass=ax5.ui.root]
+     * @param {Function} cls - Class Function
+     */
+    function addClass(config, cls) {
+        if (!config || !config.className) throw 'invalid call';
+        var classStore = config.classStore ? config.classStore : ax5.ui;
+        if (!classStore) throw 'invalid classStore';
 
+        var factory = function factory(cls, arg) {
+            switch (arg.length) {
+                case 0:
+                    return new cls();
+                    break;
+                case 1:
+                    return new cls(arg[0]);
+                    break;
+                case 2:
+                    return new cls(arg[0], arg[1]);
+                    break;
+                case 3:
+                    return new cls(arg[0], arg[1], arg[2]);
+                    break;
+            }
+        };
+        var initInstance = function initInstance(name, version, instance) {
+            instance.name = name;
+            instance.version = version;
+            instance.instanceId = ax5.getGuid();
+            return instance;
+        };
+        var initPrototype = function initPrototype(cls) {
+            var superClass = config.superClass ? config.superClass : ax5.ui.root;
+            if (!ax5.util.isFunction(superClass)) throw 'invalid superClass';
+            superClass.call(this); // 부모호출
+            cls.prototype = new superClass(); // 상속
+        };
+        var wrapper = function wrapper() {
+            if (!this || !(this instanceof wrapper)) throw 'invalid call';
+            var instance = factory(cls, arguments);
+            return initInstance(config.className, config.version || "", instance);
+        };
+        initPrototype.call(this, cls);
+        classStore[config.className] = wrapper;
+    }
+
+    return {
+        root: axUi,
+        addClass: addClass
+    };
+}();
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js

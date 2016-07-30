@@ -1,16 +1,27 @@
-
-/*
- * Copyright (c) 2016. tom@axisj.com
- * - github.com/thomasjang
- * - www.axisj.com
- */
-
 // ax5.ui.grid.layout
-(function (root) {
+(function () {
     "use strict";
 
-    root.data = {
+    var GRID = ax5.ui.grid;
+    var U = ax5.util;
+
+    var init = function () {
 
     };
 
-})(ax5.ui.grid);
+    var set = function (data) {
+        this.data = U.deepCopy(data);
+        return this;
+    };
+
+    var get = function () {
+
+    };
+
+    GRID.data = {
+        init: init,
+        set: set,
+        get: get
+    };
+
+})();
