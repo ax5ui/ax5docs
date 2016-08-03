@@ -138,10 +138,10 @@
         var cfg = this.config;
         var dividedBodyRowObj = GRID.util.divideTableByFrozenColumnIndex(this.bodyRowTable, this.config.frozenColumnIndex);
         var asideBodyRowData = this.asideBodyRowData = (function (dataTable) {
-            var data = {rows:[]};
+            var data = {rows: []};
             for (var i = 0, l = dataTable.rows.length; i < l; i++) {
-                data.rows[i] = {cols:[]};
-                if(i === 0){
+                data.rows[i] = {cols: []};
+                if (i === 0) {
                     var col = {
                         width: cfg.asideColumnWidth,
                         _width: cfg.asideColumnWidth,
@@ -168,28 +168,40 @@
         var bodyRowData = this.bodyRowData = dividedBodyRowObj.rightData;
 
         var data = this.data;
-        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight);
-        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight);
-        
-        this.xvar.scrollContentHeight = this.xvar.bodyTrHeight * (this.data.length - this.config.frozenRowIndex);
-        // todo : 현재 화면에 출력될 범위를 연산하여 data를 결정.
-        // body-scroll 의 포지션에 의존적이므로..
+        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1;
+        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + cfg.frozenRowIndex;
 
-        var repaintBody = function (_elTarget, _colGroup, _bodyRow, _data) {
+        this.xvar.scrollContentHeight = this.xvar.bodyTrHeight * (this.data.length - cfg.frozenRowIndex);
+        if (this.xvar.dataRowCount === data.length && this.xvar.paintStartRowIndex === paintStartRowIndex) return this;
+        
+        // body-scroll 의 포지션에 의존적이므로..
+        var repaintBody = function (_elTarget, _colGroup, _bodyRow, _data, _scrollConfig) {
             var SS = [];
             var cgi, cgl;
             var di, dl;
-            var tri, trl;
+            var tri, trl; 
             var ci, cl;
             var col, cellHeight, tdCSS_class;
-            var getFieldValue = function(data, index, key){
-                if(key === "__d-index__"){
+            var isScrolled = (function () {
+                if (typeof _scrollConfig === "undefined" || typeof _scrollConfig['paintStartRowIndex'] === "undefined") {
+                    _scrollConfig = {
+                        paintStartRowIndex: 0,
+                        paintRowCount: _data.length
+                    };
+                    return false;
+                } else {
+                    return true;
+                }
+            })();
+
+            var getFieldValue = function (data, index, key) {
+                if (key === "__d-index__") {
                     return index + 1;
                 }
-                else if(key === "__d-checkbox__"){
+                else if (key === "__d-checkbox__") {
                     return "C";
                 }
-                else{
+                else {
                     return data[key] || "&nbsp;";
                 }
             };
@@ -201,11 +213,11 @@
             SS.push('<col  />');
             SS.push('</colgroup>');
 
-            for (di = paintStartRowIndex, dl = (function () {
+            for (di = _scrollConfig.paintStartRowIndex, dl = (function () {
                 var len;
                 len = _data.length;
-                if (paintRowCount + paintStartRowIndex < len) {
-                    len = paintRowCount + paintStartRowIndex;
+                if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
+                    len = _scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex;
                 }
                 return len;
             })(); di < dl; di++) {
@@ -248,16 +260,24 @@
             }
             SS.push('</table>');
 
+            if (isScrolled) {
+                _elTarget.css({paddingTop: (_scrollConfig.paintStartRowIndex - cfg.frozenRowIndex) * _scrollConfig.bodyTrHeight});
+            }
             _elTarget.html(SS.join(''));
         };
-
+        var scrollConfig = {
+            paintStartRowIndex: paintStartRowIndex,
+            paintRowCount: paintRowCount,
+            bodyTrHeight: this.xvar.bodyTrHeight
+        };
+        // aside
         if (cfg.asidePanelWidth > 0) {
             if (cfg.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody(this.$.panel["top-aside-body"], this.asideColGroup, asideBodyRowData, data);
+                repaintBody(this.$.panel["top-aside-body"], this.asideColGroup, asideBodyRowData, data.slice(0, cfg.frozenRowIndex));
             }
 
-            repaintBody(this.$.panel["aside-body-scroll"], this.asideColGroup, asideBodyRowData, data);
+            repaintBody(this.$.panel["aside-body-scroll"], this.asideColGroup, asideBodyRowData, data, scrollConfig);
 
             if (cfg.footSum) {
                 // 바닥 합계
@@ -265,22 +285,69 @@
             }
         }
 
+        // left
+        if (cfg.frozenColumnIndex > 0) {
+            if (cfg.frozenRowIndex > 0) {
+                // 상단 행고정
+                repaintBody(this.$.panel["top-left-body"], this.leftHeaderColGroup, leftBodyRowData, data.slice(0, cfg.frozenRowIndex));
+            }
+            repaintBody(this.$.panel["left-body-scroll"], this.leftHeaderColGroup, leftBodyRowData, data, scrollConfig);
+            if (cfg.footSum) {
 
+            }
+        }
+
+        // body
         if (cfg.frozenRowIndex > 0) {
             // 상단 행고정
+            repaintBody(this.$.panel["top-body-scroll"], this.headerColGroup, bodyRowData, data.slice(0, cfg.frozenRowIndex));
         }
-
-        if (cfg.frozenColumnIndex > 0) {
-            repaintBody(this.$.panel["left-body-scroll"], this.leftHeaderColGroup, leftBodyRowData, data);
-        }
-        repaintBody(this.$.panel["body-scroll"], this.headerColGroup, bodyRowData, data);
-
-        if (cfg.rightSum) {
-
-        }
-
+        repaintBody(this.$.panel["body-scroll"], this.headerColGroup, bodyRowData, data, scrollConfig);
         if (cfg.footSum) {
-            // 바닥 합계
+
+        }
+
+        // right
+        if (cfg.rightSum) {
+            // todo : right 표현 정리
+        }
+
+        this.xvar.paintStartRowIndex = paintStartRowIndex;
+        this.xvar.dataRowCount = data.length;
+    };
+
+    var scrollTo = function (css, type) {
+        var cfg = this.config;
+
+        if (typeof type === "undefined") {
+
+            if (cfg.asidePanelWidth > 0) {
+                this.$.panel["aside-body-scroll"].css({top: css.top});
+            }
+            if (cfg.frozenColumnIndex > 0) {
+                this.$.panel["left-body-scroll"].css({top: css.top});
+            }
+            if (cfg.frozenRowIndex > 0) {
+                this.$.panel["top-body-scroll"].css({left: css.left});
+            }
+            this.$.panel["body-scroll"].css(css);
+
+            repaint.call(this);
+        } else {
+            if (cfg.asidePanelWidth > 0 && type === "vertical") {
+                this.$.panel["aside-body-scroll"].css(css);
+            }
+            if (cfg.frozenColumnIndex > 0 && type === "vertical") {
+                this.$.panel["left-body-scroll"].css(css);
+            }
+            if (cfg.frozenRowIndex > 0 && type === "horizontal") {
+                this.$.panel["top-body-scroll"].css(css);
+            }
+            this.$.panel["body-scroll"].css(css);
+
+            if (type === "vertical") {
+                repaint.call(this);
+            }
         }
     };
 
@@ -291,6 +358,7 @@
     GRID.body = {
         init: init,
         repaint: repaint,
-        setData: setData
+        setData: setData,
+        scrollTo: scrollTo
     };
 })();

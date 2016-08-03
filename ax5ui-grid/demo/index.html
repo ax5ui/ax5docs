@@ -38,8 +38,8 @@
     
     
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-combobox/dist/ax5combobox.css">
-        <script type="text/javascript" src="../../assets/lib/ax5ui-combobox/dist/ax5combobox.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css">
+        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.js"></script>
     
 </head>
 <body>
@@ -129,7 +129,7 @@
                     <div class="col-md-3">
                         <div class="docs-menu" id="docs-menu">
                             
-        <ul><li  class='active'><a href="/ax5ui-grid/demo/index.html">basic</a></li><li ><a href="/ax5ui-grid/demo/size.html">size</a></li><li ><a href="/ax5ui-grid/demo/theme.html">theme</a></li><li ><a href="/ax5ui-grid/demo/get-set-value.html">get/set Value</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-grid/demo/index.html">basic</a></li></ul>
     
                         </div>
                     </div>
@@ -140,76 +140,96 @@
         <section class="ax5docs-section">
             <h1>Basic</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
-<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/ax5ui-combobox/dist/ax5combobox.css&quot;&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;src/ax5ui-combobox/dist/ax5combobox.min.js&quot;&gt;&lt;/script&gt;
+<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css&quot;&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 
 
             HTML
-            <pre class="prettyprint linenums lang-html">&lt;div class="row">
-    &lt;div class="col-md-6">
-        Default
-        &lt;div class="form-group">
-            &lt;div data-ax5combobox="combobox1" data-ax5combobox-config="{}">&lt;/div>
-        &lt;/div>
-    &lt;/div>
-    &lt;div class="col-md-6">
-        &lt;div class="form-group">
-            Multiple
-            &lt;div data-ax5combobox="combobox2" data-ax5combobox-config="{&#10;                                multiple: true&#10;                             }">
-            &lt;/div>
-        &lt;/div>
-    &lt;/div>
-&lt;/div></pre><div class="row">
-    <div class="col-md-6">
-        Default
-        <div class="form-group">
-            <div data-ax5combobox="combobox1" data-ax5combobox-config="{}"></div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            Multiple
-            <div data-ax5combobox="combobox2" data-ax5combobox-config="{&#10;                                multiple: true&#10;                             }">
-            </div>
-        </div>
-    </div>
-</div>
+            <pre class="prettyprint linenums lang-html">&lt;div data-ax5grid="first-grid" data-ax5grid-config="{name:&quot;my first grid&quot;}" style="height: 400px;">&lt;/div></pre><div data-ax5grid="first-grid" data-ax5grid-config="{name:&quot;my first grid&quot;}" style="height: 400px;"></div>
 
             <div class="DH10"></div>
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-    var options = [];
-    options.push({value: "string", text: "string"});
-    options.push({value: "number", text: "number"});
-    options.push({value: "substr", text: "substr"});
-    options.push({value: "substring", text: "substring"});
-    options.push({value: "search", text: "search"});
-    options.push({value: "parseInt", text: "parseInt"});
-    options.push({value: "toFixed", text: "toFixed"});
-    options.push({value: "min", text: "min"});
-    options.push({value: "max", text: "max"});
+    var firstGrid = new ax5.ui.grid();
 
     $(document.body).ready(function () {
-        $('[data-ax5combobox]').ax5combobox({
-            options: options
+
+        firstGrid.setConfig({
+            target: $('[data-ax5grid="first-grid"]'),
+            frozenColumnIndex: 0,
+            frozenRowIndex: 0,
+            showLineNumber: true,
+            showRowSelector: false,
+            lineNumberColumnWidth: 40,
+            header: {
+                columnHeight: 25
+            },
+            body: {
+                columnHeight: 25
+            },
+            columns: [
+                {key: "a", label: "필드A", width: 80},
+                {key: "b", label: "필드B"},
+                {
+                    key: "c", label: "필드C", columns: [
+                    {key: "c1", label: "필드C-1"},{key: "c2", label: "필드C-2"}
+                ]
+                },
+                {key: "c", label: "필드C", multiLine: false},
+                {key: "d", label: "필드D"},
+                {key: "c1", label: "필드D", width: 80},
+                {key: "a", label: "필드A", width: 80},
+                {key: "a", label: "필드A", width: 80}
+            ]
         });
+
+        var list = [];
+        for (var a = 0, l = 1000; a &lt; l; a++) {
+            list.push({a: "컬럼 테스트", b: "필드 B 값", c: "그룹 블라 블라 블라블라그룹 블라 블라 블라블라그룹 블라 블라 블라블라", c1: 1, c2: "!@#$", "d": "필드D값"});
+        }
+        firstGrid.setData(list);
     });
-&lt;/script></pre><script type="text/javascript">var options = [];
-    options.push({value: "string", text: "string"});
-    options.push({value: "number", text: "number"});
-    options.push({value: "substr", text: "substr"});
-    options.push({value: "substring", text: "substring"});
-    options.push({value: "search", text: "search"});
-    options.push({value: "parseInt", text: "parseInt"});
-    options.push({value: "toFixed", text: "toFixed"});
-    options.push({value: "min", text: "min"});
-    options.push({value: "max", text: "max"});
+&lt;/script></pre><script type="text/javascript">var firstGrid = new ax5.ui.grid();
 
     $(document.body).ready(function () {
-        $('[data-ax5combobox]').ax5combobox({
-            options: options
+
+        firstGrid.setConfig({
+            target: $('[data-ax5grid="first-grid"]'),
+            frozenColumnIndex: 0,
+            frozenRowIndex: 0,
+            showLineNumber: true,
+            showRowSelector: false,
+            lineNumberColumnWidth: 40,
+            header: {
+                columnHeight: 25
+            },
+            body: {
+                columnHeight: 25
+            },
+            columns: [
+                {key: "a", label: "필드A", width: 80},
+                {key: "b", label: "필드B"},
+                {
+                    key: "c", label: "필드C", columns: [
+                    {key: "c1", label: "필드C-1"},{key: "c2", label: "필드C-2"}
+                ]
+                },
+                {key: "c", label: "필드C", multiLine: false},
+                {key: "d", label: "필드D"},
+                {key: "c1", label: "필드D", width: 80},
+                {key: "a", label: "필드A", width: 80},
+                {key: "a", label: "필드A", width: 80}
+            ]
         });
+
+        var list = [];
+        for (var a = 0, l = 1000; a < l; a++) {
+            list.push({a: "컬럼 테스트", b: "필드 B 값", c: "그룹 블라 블라 블라블라그룹 블라 블라 블라블라그룹 블라 블라 블라블라", c1: 1, c2: "!@#$", "d": "필드D값"});
+        }
+        firstGrid.setData(list);
     });
 </script></script>
 

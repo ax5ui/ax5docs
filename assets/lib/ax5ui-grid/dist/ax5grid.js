@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.0.3"
+        version: "0.0.5"
     }, function () {
         /**
          * @class ax5grid
@@ -39,7 +39,8 @@
 
                 height: 400,
                 columnMinWidth: 100,
-                asideColumnWidth: 30,
+                lineNumberColumnWidth: 30,
+                rowSelectorColumnWidth: 30,
 
                 header: {
                     columnHeight: 23,
@@ -52,7 +53,8 @@
                     columnBorderWidth: 1
                 },
                 scroller: {
-                    size: 15
+                    size: 15,
+                    barMinSize: 15
                 }
             };
             this.xvar = {
@@ -247,8 +249,8 @@
 
                 var asidePanelWidth = cfg.asidePanelWidth = function () {
                     var width = 0;
-                    if (cfg.showLineNumber) width += cfg.asideColumnWidth;
-                    if (cfg.showRowSelector) width += cfg.asideColumnWidth;
+                    if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
+                    if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
                     return width;
                 }();
                 var frozenPanelWidth = cfg.frozenPanelWidth = function (colGroup, endIndex) {
@@ -259,7 +261,9 @@
                     return width;
                 }(this.colGroup, cfg.frozenColumnIndex);
                 var rightPanelWidth = 0; // todo : 우측 함계컬럼 넘비 계산
-                var frozenRowHeight = 0; // todo : 고정행 높이 계산하기
+                var frozenRowHeight = function (bodyTrHeight) {
+                    return cfg.frozenRowIndex * bodyTrHeight;
+                }(this.xvar.bodyTrHeight); // todo : 고정행 높이 계산하기
                 var footSumHeight = 0;
 
                 var headerHeight = this.headerTable.rows.length * cfg.header.columnHeight;
@@ -331,7 +335,7 @@
                     if (containerType === "body") {
                         switch (vPosition) {
                             case "top":
-                                if (cfg.frozenRowIndex === 0) {
+                                if (cfg.frozenRowIndex == 0) {
                                     isHide = true;
                                 } else {
                                     css["top"] = 0;
@@ -347,16 +351,10 @@
                                 }
                                 break;
                             default:
-                                css["top"] = 0;
-                                css["height"] = bodyHeight; // footSum height
-                                if (cfg.frozenRowIndex === 0) {
-                                    css["top"] = frozenRowHeight;
-                                    css["height"] = bodyHeight - frozenRowHeight; // footSum height
-                                }
-                                if (cfg.footSum) {
-                                    // 높이값 빼기
-                                    css["height"] -= footSumHeight;
-                                }
+
+                                css["top"] = frozenRowHeight;
+                                css["height"] = bodyHeight - frozenRowHeight - footSumHeight;
+
                                 break;
                         }
                     } else if (containerType === "header") {
@@ -710,20 +708,32 @@
         var bodyRowData = this.bodyRowData = dividedBodyRowObj.rightData;
 
         var data = this.data;
-        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight);
-        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight);
+        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1;
+        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + cfg.frozenRowIndex;
 
-        this.xvar.scrollContentHeight = this.xvar.bodyTrHeight * (this.data.length - this.config.frozenRowIndex);
-        // todo : 현재 화면에 출력될 범위를 연산하여 data를 결정.
+        this.xvar.scrollContentHeight = this.xvar.bodyTrHeight * (this.data.length - cfg.frozenRowIndex);
+        if (this.xvar.dataRowCount === data.length && this.xvar.paintStartRowIndex === paintStartRowIndex) return this;
+
         // body-scroll 의 포지션에 의존적이므로..
-
-        var repaintBody = function repaintBody(_elTarget, _colGroup, _bodyRow, _data) {
+        var repaintBody = function repaintBody(_elTarget, _colGroup, _bodyRow, _data, _scrollConfig) {
             var SS = [];
             var cgi, cgl;
             var di, dl;
             var tri, trl;
             var ci, cl;
             var col, cellHeight, tdCSS_class;
+            var isScrolled = function () {
+                if (typeof _scrollConfig === "undefined" || typeof _scrollConfig['paintStartRowIndex'] === "undefined") {
+                    _scrollConfig = {
+                        paintStartRowIndex: 0,
+                        paintRowCount: _data.length
+                    };
+                    return false;
+                } else {
+                    return true;
+                }
+            }();
+
             var getFieldValue = function getFieldValue(data, index, key) {
                 if (key === "__d-index__") {
                     return index + 1;
@@ -741,11 +751,11 @@
             SS.push('<col  />');
             SS.push('</colgroup>');
 
-            for (di = paintStartRowIndex, dl = function () {
+            for (di = _scrollConfig.paintStartRowIndex, dl = function () {
                 var len;
                 len = _data.length;
-                if (paintRowCount + paintStartRowIndex < len) {
-                    len = paintRowCount + paintStartRowIndex;
+                if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
+                    len = _scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex;
                 }
                 return len;
             }(); di < dl; di++) {
@@ -777,16 +787,24 @@
             }
             SS.push('</table>');
 
+            if (isScrolled) {
+                _elTarget.css({ paddingTop: (_scrollConfig.paintStartRowIndex - cfg.frozenRowIndex) * _scrollConfig.bodyTrHeight });
+            }
             _elTarget.html(SS.join(''));
         };
-
+        var scrollConfig = {
+            paintStartRowIndex: paintStartRowIndex,
+            paintRowCount: paintRowCount,
+            bodyTrHeight: this.xvar.bodyTrHeight
+        };
+        // aside
         if (cfg.asidePanelWidth > 0) {
             if (cfg.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody(this.$.panel["top-aside-body"], this.asideColGroup, asideBodyRowData, data);
+                repaintBody(this.$.panel["top-aside-body"], this.asideColGroup, asideBodyRowData, data.slice(0, cfg.frozenRowIndex));
             }
 
-            repaintBody(this.$.panel["aside-body-scroll"], this.asideColGroup, asideBodyRowData, data);
+            repaintBody(this.$.panel["aside-body-scroll"], this.asideColGroup, asideBodyRowData, data, scrollConfig);
 
             if (cfg.footSum) {
                 // 바닥 합계
@@ -794,19 +812,65 @@
             }
         }
 
+        // left
+        if (cfg.frozenColumnIndex > 0) {
+            if (cfg.frozenRowIndex > 0) {
+                // 상단 행고정
+                repaintBody(this.$.panel["top-left-body"], this.leftHeaderColGroup, leftBodyRowData, data.slice(0, cfg.frozenRowIndex));
+            }
+            repaintBody(this.$.panel["left-body-scroll"], this.leftHeaderColGroup, leftBodyRowData, data, scrollConfig);
+            if (cfg.footSum) {}
+        }
+
+        // body
         if (cfg.frozenRowIndex > 0) {
             // 상단 행고정
+            repaintBody(this.$.panel["top-body-scroll"], this.headerColGroup, bodyRowData, data.slice(0, cfg.frozenRowIndex));
+        }
+        repaintBody(this.$.panel["body-scroll"], this.headerColGroup, bodyRowData, data, scrollConfig);
+        if (cfg.footSum) {}
+
+        // right
+        if (cfg.rightSum) {
+            // todo : right 표현 정리
         }
 
-        if (cfg.frozenColumnIndex > 0) {
-            repaintBody(this.$.panel["left-body-scroll"], this.leftHeaderColGroup, leftBodyRowData, data);
-        }
-        repaintBody(this.$.panel["body-scroll"], this.headerColGroup, bodyRowData, data);
+        this.xvar.paintStartRowIndex = paintStartRowIndex;
+        this.xvar.dataRowCount = data.length;
+    };
 
-        if (cfg.rightSum) {}
+    var scrollTo = function scrollTo(css, type) {
+        var cfg = this.config;
 
-        if (cfg.footSum) {
-            // 바닥 합계
+        if (typeof type === "undefined") {
+
+            if (cfg.asidePanelWidth > 0) {
+                this.$.panel["aside-body-scroll"].css({ top: css.top });
+            }
+            if (cfg.frozenColumnIndex > 0) {
+                this.$.panel["left-body-scroll"].css({ top: css.top });
+            }
+            if (cfg.frozenRowIndex > 0) {
+                this.$.panel["top-body-scroll"].css({ left: css.left });
+            }
+            this.$.panel["body-scroll"].css(css);
+
+            repaint.call(this);
+        } else {
+            if (cfg.asidePanelWidth > 0 && type === "vertical") {
+                this.$.panel["aside-body-scroll"].css(css);
+            }
+            if (cfg.frozenColumnIndex > 0 && type === "vertical") {
+                this.$.panel["left-body-scroll"].css(css);
+            }
+            if (cfg.frozenRowIndex > 0 && type === "horizontal") {
+                this.$.panel["top-body-scroll"].css(css);
+            }
+            this.$.panel["body-scroll"].css(css);
+
+            if (type === "vertical") {
+                repaint.call(this);
+            }
         }
     };
 
@@ -815,7 +879,8 @@
     GRID.body = {
         init: init,
         repaint: repaint,
-        setData: setData
+        setData: setData,
+        scrollTo: scrollTo
     };
 })();
 // ax5.ui.grid.layout
@@ -864,8 +929,6 @@
                 data.rows[i] = { cols: [] };
                 if (i === 0) {
                     var col = {
-                        width: cfg.asideColumnWidth,
-                        _width: cfg.asideColumnWidth,
                         label: "",
                         colspan: 1,
                         rowspan: dataTable.rows.length,
@@ -875,12 +938,20 @@
                         _col = {};
 
                     if (cfg.showLineNumber) {
-                        _col = jQuery.extend({}, col, { label: "&nbsp;" });
+                        _col = jQuery.extend({}, col, {
+                            label: "&nbsp;",
+                            width: cfg.lineNumberColumnWidth,
+                            _width: cfg.lineNumberColumnWidth
+                        });
                         colGroup.push(_col);
                         data.rows[i].cols.push(_col);
                     }
                     if (cfg.showRowSelector) {
-                        _col = jQuery.extend({}, col, { label: "" });
+                        _col = jQuery.extend({}, col, {
+                            label: "",
+                            width: cfg.rowSelectorColumnWidth,
+                            _width: cfg.rowSelectorColumnWidth
+                        });
                         colGroup.push(_col);
                         data.rows[i].cols.push(_col);
                     }
@@ -943,7 +1014,6 @@
 
         if (cfg.asidePanelWidth > 0) {
             repaintHeader(this.$.panel["aside-header"], this.asideColGroup, asideHeaderData);
-            // todo : aside
         }
 
         if (cfg.frozenColumnIndex > 0) {
@@ -954,9 +1024,14 @@
         if (cfg.rightSum) {}
     };
 
+    var scrollTo = function scrollTo(css) {
+        this.$.panel["header-scroll"].css(css);
+    };
+
     GRID.header = {
         init: init,
-        repaint: repaint
+        repaint: repaint,
+        scrollTo: scrollTo
     };
 })();
 // ax5.ui.grid.scroller
@@ -966,7 +1041,142 @@
     var GRID = ax5.ui.grid;
     var U = ax5.util;
 
+    var convertScrollPosition = {
+        "vertical": function vertical(css, _var) {
+            var _content_height = _var._content_height - _var._panel_height;
+            var _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight;
+            var top = _content_height * css.top / _scroller_height;
+            if (top < 0) top = 0;else if (_content_height < top) {
+                top = _content_height;
+            }
+            return {
+                top: -top
+            };
+        },
+        "horizontal": function horizontal(css, _var) {
+            var _content_width = _var._content_width - _var._panel_width;
+            var _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth;
+            var left = _content_width * css.left / _scroller_width;
+            if (left < 0) left = 0;else if (_content_width < left) {
+                left = _content_width;
+            }
+            return {
+                left: -left
+            };
+        }
+    };
+    var convertScrollBarPosition = {
+        "vertical": function vertical(_top, _var) {
+            var type = "vertical";
+            var _content_height = _var._content_height - _var._panel_height;
+            var _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight;
+            var top = _scroller_height * _top / _content_height;
+
+            if (-top > _scroller_height) {
+                top = -_scroller_height;
+
+                var scrollPositon = convertScrollPosition[type].call(this, { top: -top }, {
+                    _content_width: _var._content_width,
+                    _content_height: _var._content_height,
+                    _panel_width: _var._panel_width,
+                    _panel_height: _var._panel_height,
+                    _horizontal_scroller_width: _var._horizontal_scroller_width,
+                    _vertical_scroller_height: _var._vertical_scroller_height,
+                    verticalScrollBarHeight: _var.verticalScrollBarHeight,
+                    horizontalScrollBarWidth: _var.horizontalScrollBarWidth
+                });
+
+                GRID.body.scrollTo.call(this, scrollPositon, type);
+            }
+
+            return -top;
+        },
+        "horizontal": function horizontal(_left, _var) {
+            var type = "horizontal";
+            var _content_width = _var._content_width - _var._panel_width;
+            var _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth;
+            var left = _scroller_width * _left / _content_width;
+
+            if (-left > _scroller_width) {
+                left = -_scroller_width;
+                var scrollPositon = convertScrollPosition[type].call(this, { left: -left }, {
+                    _content_width: _var._content_width,
+                    _content_height: _var._content_height,
+                    _panel_width: _var._panel_width,
+                    _panel_height: _var._panel_height,
+                    _horizontal_scroller_width: _var._horizontal_scroller_width,
+                    _vertical_scroller_height: _var._vertical_scroller_height,
+                    verticalScrollBarHeight: _var.verticalScrollBarHeight,
+                    horizontalScrollBarWidth: _var.horizontalScrollBarWidth
+                });
+
+                GRID.header.scrollTo.call(this, scrollPositon);
+                GRID.body.scrollTo.call(this, scrollPositon, type);
+            }
+
+            return -left;
+        }
+    };
     var scrollMover = {
+        "click": function click(track, bar, type, e) {
+
+            var self = this,
+                trackOffset = track.offset(),
+                barBox = {
+                width: bar.width(), height: bar.height()
+            },
+                trackBox = {
+                width: track.innerWidth(), height: track.innerHeight()
+            },
+                _vertical_scroller_height = self.$["scroller"]["vertical"].innerHeight(),
+                _panel_height = self.$["panel"]["body"].height(),
+                _horizontal_scroller_width = self.$["scroller"]["horizontal"].innerWidth(),
+                _panel_width = self.$["panel"]["body"].width(),
+                _content_height = self.xvar.scrollContentHeight,
+                _content_width = self.xvar.scrollContentWidth,
+                verticalScrollBarHeight = self.$["scroller"]["vertical-bar"].height(),
+                horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].width(),
+                getScrollerPosition = {
+                "vertical": function vertical(e) {
+                    var mouseObj = GRID.util.getMousePosition(e);
+                    // track을 벗어 나지 안도록 범위 체크
+                    var newTop = mouseObj.clientY - trackOffset.top;
+                    if (newTop < 0) {
+                        newTop = 0;
+                    } else if (newTop + barBox.height > trackBox.height) {
+                        newTop = trackBox.height - barBox.height;
+                    }
+                    return { top: newTop };
+                },
+                "horizontal": function horizontal(e) {
+                    var mouseObj = GRID.util.getMousePosition(e);
+                    // track을 벗어 나지 안도록 범위 체크
+                    var newLeft = mouseObj.clientX - trackOffset.left;
+                    if (newLeft < 0) {
+                        newLeft = 0;
+                    } else if (newLeft + barBox.width > trackBox.width) {
+                        newLeft = trackBox.width - barBox.width;
+                    }
+                    return { left: newLeft };
+                }
+            };
+
+            var css = getScrollerPosition[type](e);
+            bar.css(css);
+
+            var scrollPositon = convertScrollPosition[type].call(self, css, {
+                _content_width: _content_width,
+                _content_height: _content_height,
+                _panel_width: _panel_width,
+                _panel_height: _panel_height,
+                _horizontal_scroller_width: _horizontal_scroller_width,
+                _vertical_scroller_height: _vertical_scroller_height,
+                verticalScrollBarHeight: verticalScrollBarHeight,
+                horizontalScrollBarWidth: horizontalScrollBarWidth
+            });
+            if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
+            GRID.body.scrollTo.call(self, scrollPositon, type);
+        },
         "on": function on(track, bar, type) {
             var self = this,
                 barOffset = bar.position(),
@@ -976,6 +1186,14 @@
                 trackBox = {
                 width: track.innerWidth(), height: track.innerHeight()
             },
+                _vertical_scroller_height = self.$["scroller"]["vertical"].innerHeight(),
+                _panel_height = self.$["panel"]["body"].height(),
+                _horizontal_scroller_width = self.$["scroller"]["horizontal"].innerWidth(),
+                _panel_width = self.$["panel"]["body"].width(),
+                _content_height = self.xvar.scrollContentHeight,
+                _content_width = self.xvar.scrollContentWidth,
+                verticalScrollBarHeight = self.$["scroller"]["vertical-bar"].height(),
+                horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].width(),
                 getScrollerPosition = {
                 "vertical": function vertical(e) {
                     var mouseObj = GRID.util.getMousePosition(e);
@@ -1008,6 +1226,20 @@
             jQuery(document.body).bind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId, function (e) {
                 var css = getScrollerPosition[type](e);
                 bar.css(css);
+
+                var scrollPositon = convertScrollPosition[type].call(self, css, {
+                    _content_width: _content_width,
+                    _content_height: _content_height,
+                    _panel_width: _panel_width,
+                    _panel_height: _panel_height,
+                    _horizontal_scroller_width: _horizontal_scroller_width,
+                    _vertical_scroller_height: _vertical_scroller_height,
+                    verticalScrollBarHeight: verticalScrollBarHeight,
+                    horizontalScrollBarWidth: horizontalScrollBarWidth
+                });
+
+                if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
+                GRID.body.scrollTo.call(self, scrollPositon, type);
             }).bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                 scrollMover.off.call(self);
             }).bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
@@ -1017,10 +1249,55 @@
             jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
         },
         "off": function off() {
-
             jQuery(document.body).unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId).unbind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId).unbind("mouseleave.ax5grid-" + this.instanceId);
 
             jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
+        },
+        "wheel": function wheel(delta) {
+            var self = this,
+                _panel_height = self.$["panel"]["body"].height(),
+                _panel_width = self.$["panel"]["body"].width(),
+                _content_height = self.xvar.scrollContentHeight,
+                _content_width = self.xvar.scrollContentWidth;
+
+            var _body_scroll_position = self.$["panel"]["body-scroll"].position();
+            var newLeft, newTop;
+            var _top_is_end = false;
+            var _left_is_end = false;
+
+            newLeft = _body_scroll_position.left - delta.x;
+            newTop = _body_scroll_position.top - delta.y;
+
+            // newTop이 범위를 넘었는지 체크
+            if (newTop >= 0) {
+                newTop = 0;
+                _top_is_end = true;
+            } else if (newTop <= _panel_height - _content_height) {
+                newTop = _panel_height - _content_height;
+                if (newTop >= 0) newTop = 0;
+                _top_is_end = true;
+            } else {
+                if (delta.y == 0) _top_is_end = true;
+            }
+
+            // newLeft이 범위를 넘었는지 체크
+            if (newLeft >= 0) {
+                newLeft = 0;
+                _left_is_end = true;
+            } else if (newLeft <= _panel_width - _content_width) {
+                newLeft = _panel_width - _content_width;
+                if (newLeft >= 0) newLeft = 0;
+                _left_is_end = true;
+            } else {
+                if (delta.x == 0) _left_is_end = true;
+            }
+
+            //self.$["panel"]["body-scroll"].css({left: newLeft, top: newTop});
+            GRID.header.scrollTo.call(this, { left: newLeft });
+            GRID.body.scrollTo.call(this, { left: newLeft, top: newTop });
+            resize.call(this);
+
+            return !_top_is_end || !_left_is_end;
         }
     };
 
@@ -1039,7 +1316,11 @@
             U.stopEvent(e);
             return false;
         });
-        this.$["scroller"]["vertical"].bind("click", function (e) {}.bind(this));
+        this.$["scroller"]["vertical"].bind("click", function (e) {
+            if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
+                scrollMover.click.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
+            }
+        }.bind(this));
 
         this.$["scroller"]["horizontal-bar"].bind(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
@@ -1048,23 +1329,81 @@
             U.stopEvent(e);
             return false;
         });
-        this.$["scroller"]["horizontal"].bind("click", function (e) {}.bind(this));
+        this.$["scroller"]["horizontal"].bind("click", function (e) {
+            if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
+                scrollMover.click.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
+            }
+        }.bind(this));
+
+        this.$["container"]["body"].bind('mousewheel DOMMouseScroll', function (e) {
+            var E = e.originalEvent;
+            var delta = { x: 0, y: 0 };
+            if (E.detail) {
+                delta.y = E.detail * 10;
+            } else {
+                if (typeof E.deltaY === "undefined") {
+                    delta.y = E.wheelDelta;
+                    delta.x = 0;
+                } else {
+                    delta.y = E.deltaY;
+                    delta.x = E.deltaX;
+                }
+            }
+
+            if (scrollMover.wheel.call(this, delta)) {
+                U.stopEvent(e);
+            }
+        }.bind(this));
     };
 
     var resize = function resize() {
-        var VERTICAL_SCROLLER_HEIGHT = this.$["scroller"]["vertical"].height();
-        var HORIZONTAL_SCROLLER_WIDTH = this.$["scroller"]["horizontal"].width();
-        var PANEL_HEIGHT = this.$["panel"]["body"].height();
-        var PANEL_WIDTH = this.$["panel"]["body"].width();
-        var CONTENT_HEIGHT = this.xvar.scrollContentHeight;
-        var CONTENT_WIDTH = this.xvar.scrollContentWidth;
-        var verticalScrollBarHeight, horizontalScrollBarWidth;
+        var _vertical_scroller_height = this.$["scroller"]["vertical"].height(),
+            _horizontal_scroller_width = this.$["scroller"]["horizontal"].width(),
+            _panel_height = this.$["panel"]["body"].height(),
+            _panel_width = this.$["panel"]["body"].width(),
+            _content_height = this.xvar.scrollContentHeight,
+            _content_width = this.xvar.scrollContentWidth,
+            verticalScrollBarHeight = _panel_height * _vertical_scroller_height / _content_height,
+            horizontalScrollBarWidth = _panel_width * _horizontal_scroller_width / _content_width;
 
-        verticalScrollBarHeight = PANEL_HEIGHT * VERTICAL_SCROLLER_HEIGHT / CONTENT_HEIGHT;
-        horizontalScrollBarWidth = PANEL_WIDTH * HORIZONTAL_SCROLLER_WIDTH / CONTENT_WIDTH;
+        if (verticalScrollBarHeight < this.config.scroller.barMinSize) verticalScrollBarHeight = this.config.scroller.barMinSize;
+        if (horizontalScrollBarWidth < this.config.scroller.barMinSize) horizontalScrollBarWidth = this.config.scroller.barMinSize;
 
-        this.$["scroller"]["vertical-bar"].css({ top: 0, height: verticalScrollBarHeight });
-        this.$["scroller"]["horizontal-bar"].css({ left: 0, width: horizontalScrollBarWidth });
+        this.$["scroller"]["vertical-bar"].css({
+            top: convertScrollBarPosition.vertical.call(this, this.$.panel["body-scroll"].position().top, {
+                _content_width: _content_width,
+                _content_height: _content_height,
+                _panel_width: _panel_width,
+                _panel_height: _panel_height,
+                _horizontal_scroller_width: _horizontal_scroller_width,
+                _vertical_scroller_height: _vertical_scroller_height,
+                verticalScrollBarHeight: verticalScrollBarHeight,
+                horizontalScrollBarWidth: horizontalScrollBarWidth
+            }),
+            height: verticalScrollBarHeight
+        });
+        this.$["scroller"]["horizontal-bar"].css({
+            left: convertScrollBarPosition.horizontal.call(this, this.$.panel["body-scroll"].position().left, {
+                _content_width: _content_width,
+                _content_height: _content_height,
+                _panel_width: _panel_width,
+                _panel_height: _panel_height,
+                _horizontal_scroller_width: _horizontal_scroller_width,
+                _vertical_scroller_height: _vertical_scroller_height,
+                verticalScrollBarHeight: verticalScrollBarHeight,
+                horizontalScrollBarWidth: horizontalScrollBarWidth
+            }),
+            width: horizontalScrollBarWidth
+        });
+
+        _vertical_scroller_height = null;
+        _horizontal_scroller_width = null;
+        _panel_height = null;
+        _panel_width = null;
+        _content_height = null;
+        _content_width = null;
+        verticalScrollBarHeight = null;
+        horizontalScrollBarWidth = null;
     };
 
     GRID.scroller = {
@@ -1072,6 +1411,8 @@
         resize: resize
     };
 })();
+
+// todo : aside checkbox
 // ax5.ui.grid.tmpl
 (function () {
     "use strict";

@@ -5,7 +5,146 @@
     var GRID = ax5.ui.grid;
     var U = ax5.util;
 
+    var convertScrollPosition = {
+        "vertical": function (css, _var) {
+            var _content_height = _var._content_height - _var._panel_height;
+            var _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight;
+            var top = (_content_height * css.top) / _scroller_height;
+            if (top < 0) top = 0;
+            else if (_content_height < top) {
+                top = _content_height;
+            }
+            return {
+                top: -top
+            }
+        },
+        "horizontal": function (css, _var) {
+            var _content_width = _var._content_width - _var._panel_width;
+            var _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth;
+            var left = (_content_width * css.left) / _scroller_width;
+            if (left < 0) left = 0;
+            else if (_content_width < left) {
+                left = _content_width;
+            }
+            return {
+                left: -left
+            }
+        }
+    };
+    var convertScrollBarPosition = {
+        "vertical": function (_top, _var) {
+            var type = "vertical";
+            var _content_height = _var._content_height - _var._panel_height;
+            var _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight;
+            var top = (_scroller_height * _top) / _content_height;
+
+            if (-top > _scroller_height) {
+                top = -_scroller_height;
+
+                var scrollPositon = convertScrollPosition[type].call(this, {top: -top}, {
+                    _content_width: _var._content_width,
+                    _content_height: _var._content_height,
+                    _panel_width: _var._panel_width,
+                    _panel_height: _var._panel_height,
+                    _horizontal_scroller_width: _var._horizontal_scroller_width,
+                    _vertical_scroller_height: _var._vertical_scroller_height,
+                    verticalScrollBarHeight: _var.verticalScrollBarHeight,
+                    horizontalScrollBarWidth: _var.horizontalScrollBarWidth
+                });
+
+                GRID.body.scrollTo.call(this, scrollPositon, type);
+            }
+
+            return -top
+        },
+        "horizontal": function (_left, _var) {
+            var type = "horizontal";
+            var _content_width = _var._content_width - _var._panel_width;
+            var _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth;
+            var left = (_scroller_width * _left) / _content_width;
+
+            if (-left > _scroller_width) {
+                left = -_scroller_width;
+                var scrollPositon = convertScrollPosition[type].call(this, {left: -left}, {
+                    _content_width: _var._content_width,
+                    _content_height: _var._content_height,
+                    _panel_width: _var._panel_width,
+                    _panel_height: _var._panel_height,
+                    _horizontal_scroller_width: _var._horizontal_scroller_width,
+                    _vertical_scroller_height: _var._vertical_scroller_height,
+                    verticalScrollBarHeight: _var.verticalScrollBarHeight,
+                    horizontalScrollBarWidth: _var.horizontalScrollBarWidth
+                });
+
+                GRID.header.scrollTo.call(this, scrollPositon);
+                GRID.body.scrollTo.call(this, scrollPositon, type);
+            }
+
+            return -left
+        }
+    };
     var scrollMover = {
+        "click": function (track, bar, type, e) {
+
+            var self = this,
+                trackOffset = track.offset(),
+                barBox = {
+                    width: bar.width(), height: bar.height()
+                },
+                trackBox = {
+                    width: track.innerWidth(), height: track.innerHeight()
+                },
+                _vertical_scroller_height = self.$["scroller"]["vertical"].innerHeight(),
+                _panel_height = self.$["panel"]["body"].height(),
+                _horizontal_scroller_width = self.$["scroller"]["horizontal"].innerWidth(),
+                _panel_width = self.$["panel"]["body"].width(),
+                _content_height = self.xvar.scrollContentHeight,
+                _content_width = self.xvar.scrollContentWidth,
+                verticalScrollBarHeight = self.$["scroller"]["vertical-bar"].height(),
+                horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].width(),
+                getScrollerPosition = {
+                    "vertical": function (e) {
+                        var mouseObj = GRID.util.getMousePosition(e);
+                        // track을 벗어 나지 안도록 범위 체크
+                        var newTop = mouseObj.clientY - trackOffset.top;
+                        if (newTop < 0) {
+                            newTop = 0;
+                        }
+                        else if ((newTop + barBox.height) > trackBox.height) {
+                            newTop = trackBox.height - barBox.height;
+                        }
+                        return {top: newTop};
+                    },
+                    "horizontal": function (e) {
+                        var mouseObj = GRID.util.getMousePosition(e);
+                        // track을 벗어 나지 안도록 범위 체크
+                        var newLeft = mouseObj.clientX - trackOffset.left;
+                        if (newLeft < 0) {
+                            newLeft = 0;
+                        }
+                        else if ((newLeft + barBox.width) > trackBox.width) {
+                            newLeft = trackBox.width - barBox.width;
+                        }
+                        return {left: newLeft};
+                    }
+                };
+
+            var css = getScrollerPosition[type](e);
+            bar.css(css);
+
+            var scrollPositon = convertScrollPosition[type].call(self, css, {
+                _content_width: _content_width,
+                _content_height: _content_height,
+                _panel_width: _panel_width,
+                _panel_height: _panel_height,
+                _horizontal_scroller_width: _horizontal_scroller_width,
+                _vertical_scroller_height: _vertical_scroller_height,
+                verticalScrollBarHeight: verticalScrollBarHeight,
+                horizontalScrollBarWidth: horizontalScrollBarWidth
+            });
+            if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
+            GRID.body.scrollTo.call(self, scrollPositon, type);
+        },
         "on": function (track, bar, type) {
             var self = this,
                 barOffset = bar.position(),
@@ -15,6 +154,16 @@
                 trackBox = {
                     width: track.innerWidth(), height: track.innerHeight()
                 },
+
+                _vertical_scroller_height = self.$["scroller"]["vertical"].innerHeight(),
+                _panel_height = self.$["panel"]["body"].height(),
+                _horizontal_scroller_width = self.$["scroller"]["horizontal"].innerWidth(),
+                _panel_width = self.$["panel"]["body"].width(),
+                _content_height = self.xvar.scrollContentHeight,
+                _content_width = self.xvar.scrollContentWidth,
+                verticalScrollBarHeight = self.$["scroller"]["vertical-bar"].height(),
+                horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].width(),
+
                 getScrollerPosition = {
                     "vertical": function (e) {
                         var mouseObj = GRID.util.getMousePosition(e);
@@ -50,6 +199,20 @@
                 .bind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId, function (e) {
                     var css = getScrollerPosition[type](e);
                     bar.css(css);
+
+                    var scrollPositon = convertScrollPosition[type].call(self, css, {
+                        _content_width: _content_width,
+                        _content_height: _content_height,
+                        _panel_width: _panel_width,
+                        _panel_height: _panel_height,
+                        _horizontal_scroller_width: _horizontal_scroller_width,
+                        _vertical_scroller_height: _vertical_scroller_height,
+                        verticalScrollBarHeight: verticalScrollBarHeight,
+                        horizontalScrollBarWidth: horizontalScrollBarWidth
+                    });
+
+                    if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
+                    GRID.body.scrollTo.call(self, scrollPositon, type);
                 })
                 .bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                     scrollMover.off.call(self);
@@ -65,7 +228,6 @@
 
         },
         "off": function () {
-
             jQuery(document.body)
                 .unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId)
                 .unbind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId)
@@ -75,6 +237,52 @@
                 .removeAttr('unselectable')
                 .css('user-select', 'auto')
                 .off('selectstart');
+        },
+        "wheel": function (delta) {
+            var self = this,
+                _panel_height = self.$["panel"]["body"].height(),
+                _panel_width = self.$["panel"]["body"].width(),
+                _content_height = self.xvar.scrollContentHeight,
+                _content_width = self.xvar.scrollContentWidth;
+
+            var _body_scroll_position = self.$["panel"]["body-scroll"].position();
+            var newLeft, newTop;
+            var _top_is_end = false;
+            var _left_is_end = false;
+
+            newLeft = _body_scroll_position.left - delta.x;
+            newTop = _body_scroll_position.top - delta.y;
+
+            // newTop이 범위를 넘었는지 체크
+            if (newTop >= 0) {
+                newTop = 0;
+                _top_is_end = true;
+            } else if (newTop <= _panel_height - _content_height) {
+                newTop = _panel_height - _content_height;
+                if (newTop >= 0) newTop = 0;
+                _top_is_end = true;
+            } else {
+                if (delta.y == 0) _top_is_end = true;
+            }
+
+            // newLeft이 범위를 넘었는지 체크
+            if (newLeft >= 0) {
+                newLeft = 0;
+                _left_is_end = true;
+            } else if (newLeft <= _panel_width - _content_width) {
+                newLeft = _panel_width - _content_width;
+                if (newLeft >= 0) newLeft = 0;
+                _left_is_end = true;
+            } else {
+                if (delta.x == 0) _left_is_end = true;
+            }
+
+            //self.$["panel"]["body-scroll"].css({left: newLeft, top: newTop});
+            GRID.header.scrollTo.call(this, {left: newLeft});
+            GRID.body.scrollTo.call(this, {left: newLeft, top: newTop});
+            resize.call(this);
+
+            return !_top_is_end || !_left_is_end;
         }
     };
 
@@ -97,7 +305,9 @@
             });
         this.$["scroller"]["vertical"]
             .bind("click", (function (e) {
-
+                if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
+                    scrollMover.click.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
+                }
             }).bind(this));
 
         this.$["scroller"]["horizontal-bar"]
@@ -111,25 +321,81 @@
             });
         this.$["scroller"]["horizontal"]
             .bind("click", (function (e) {
-
+                if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
+                    scrollMover.click.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
+                }
             }).bind(this));
+
+        this.$["container"]["body"].bind('mousewheel DOMMouseScroll', (function (e) {
+            var E = e.originalEvent;
+            var delta = {x: 0, y: 0};
+            if (E.detail) {
+                delta.y = E.detail * 10;
+            } else {
+                if (typeof E.deltaY === "undefined") {
+                    delta.y = E.wheelDelta;
+                    delta.x = 0;
+                } else {
+                    delta.y = E.deltaY;
+                    delta.x = E.deltaX;
+                }
+            }
+
+            if (scrollMover.wheel.call(this, delta)) {
+                U.stopEvent(e);
+            }
+        }).bind(this));
 
     };
 
     var resize = function () {
-        var VERTICAL_SCROLLER_HEIGHT = this.$["scroller"]["vertical"].height();
-        var HORIZONTAL_SCROLLER_WIDTH = this.$["scroller"]["horizontal"].width();
-        var PANEL_HEIGHT = this.$["panel"]["body"].height();
-        var PANEL_WIDTH = this.$["panel"]["body"].width();
-        var CONTENT_HEIGHT = this.xvar.scrollContentHeight;
-        var CONTENT_WIDTH = this.xvar.scrollContentWidth;
-        var verticalScrollBarHeight, horizontalScrollBarWidth;
+        var _vertical_scroller_height = this.$["scroller"]["vertical"].height(),
+            _horizontal_scroller_width = this.$["scroller"]["horizontal"].width(),
+            _panel_height = this.$["panel"]["body"].height(),
+            _panel_width = this.$["panel"]["body"].width(),
+            _content_height = this.xvar.scrollContentHeight,
+            _content_width = this.xvar.scrollContentWidth,
+            verticalScrollBarHeight = _panel_height * _vertical_scroller_height / _content_height,
+            horizontalScrollBarWidth = _panel_width * _horizontal_scroller_width / _content_width;
 
-        verticalScrollBarHeight = PANEL_HEIGHT * VERTICAL_SCROLLER_HEIGHT / CONTENT_HEIGHT;
-        horizontalScrollBarWidth = PANEL_WIDTH * HORIZONTAL_SCROLLER_WIDTH / CONTENT_WIDTH;
+        if (verticalScrollBarHeight < this.config.scroller.barMinSize) verticalScrollBarHeight = this.config.scroller.barMinSize;
+        if (horizontalScrollBarWidth < this.config.scroller.barMinSize) horizontalScrollBarWidth = this.config.scroller.barMinSize;
 
-        this.$["scroller"]["vertical-bar"].css({top: 0, height: verticalScrollBarHeight});
-        this.$["scroller"]["horizontal-bar"].css({left: 0, width: horizontalScrollBarWidth});
+        this.$["scroller"]["vertical-bar"].css({
+            top: convertScrollBarPosition.vertical.call(this, this.$.panel["body-scroll"].position().top, {
+                _content_width: _content_width,
+                _content_height: _content_height,
+                _panel_width: _panel_width,
+                _panel_height: _panel_height,
+                _horizontal_scroller_width: _horizontal_scroller_width,
+                _vertical_scroller_height: _vertical_scroller_height,
+                verticalScrollBarHeight: verticalScrollBarHeight,
+                horizontalScrollBarWidth: horizontalScrollBarWidth
+            }),
+            height: verticalScrollBarHeight
+        });
+        this.$["scroller"]["horizontal-bar"].css({
+            left: convertScrollBarPosition.horizontal.call(this, this.$.panel["body-scroll"].position().left, {
+                _content_width: _content_width,
+                _content_height: _content_height,
+                _panel_width: _panel_width,
+                _panel_height: _panel_height,
+                _horizontal_scroller_width: _horizontal_scroller_width,
+                _vertical_scroller_height: _vertical_scroller_height,
+                verticalScrollBarHeight: verticalScrollBarHeight,
+                horizontalScrollBarWidth: horizontalScrollBarWidth
+            }),
+            width: horizontalScrollBarWidth
+        });
+
+        _vertical_scroller_height = null;
+        _horizontal_scroller_width = null;
+        _panel_height = null;
+        _panel_width = null;
+        _content_height = null;
+        _content_width = null;
+        verticalScrollBarHeight = null;
+        horizontalScrollBarWidth = null;
     };
 
     GRID.scroller = {
@@ -138,3 +404,5 @@
     };
 
 })();
+
+// todo : aside checkbox
