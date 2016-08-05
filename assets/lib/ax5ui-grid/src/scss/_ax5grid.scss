@@ -1,14 +1,67 @@
 // mixins
 
-@mixin gridColumn(){
-    &.isLastColumn {
+@mixin gridColumn() {
+    td {
+        &.isLastColumn {
 
-    }
-    &.lineNumberColumn{
+        }
+        &.lineNumberColumn {
 
+        }
     }
-    &.rowSelectorColumn{
+    [data-ax5grid-column-attr="rowSelector"] {
+        cursor: pointer;
+        [data-ax5grid-cellHolder] {
+            padding: 5px;
+        }
         //todo : checkBox CSS 구현
+        .checkBox {
+            $ax5grid-row-selector-checkbox-size: 8px;
+            $ax5grid-row-selector-size: 10px;
+            display: block;
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            @include ax-background(top, #FFFFFF, #F0F0F0);
+            height: 100%;
+            &:after {
+                content: '';
+                width: 60%;
+                height: 40%;
+                position: absolute;
+                top: 20%;
+                right: 20%;
+                border: 0.2em solid #000;
+                border-top: none;
+                border-right: none;
+                background: transparent;
+                opacity: 0.0;
+                @include transform(rotate(-50deg));
+            }
+        }
+    }
+    [data-ax5grid-selected="true"] {
+        .checkBox {
+            &:after {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+@mixin gridRowBackground() {
+    &.tr-0 {
+    }
+    &.tr-1 {
+        background: #f3f3f3;
+    }
+    &.tr-2 {
+    }
+    &.tr-3 {
+        background: #f3f3f3;
+    }
+    &[data-ax5grid-selected="true"] {
+        background: #cce2f3;
     }
 }
 
@@ -28,17 +81,7 @@
             }
             tr {
                 border-bottom: 0 none;
-
-                &.tr-0 {
-                }
-                &.tr-1 {
-                    background: #f3f3f3;
-                }
-                &.tr-2 {
-                }
-                &.tr-3 {
-                    background: #f3f3f3;
-                }
+                @include gridRowBackground();
             }
             td {
                 box-sizing: border-box;
@@ -73,11 +116,11 @@
                         white-space: normal;
                     }
                 }
-                @include gridColumn();
             }
+            @include gridColumn();
         }
 
-        &[data-ax5grid-panel="aside-header"]{
+        &[data-ax5grid-panel="aside-header"] {
             border-right: 1px solid darken(#ccc, 0%);
             table {
                 tr {
@@ -134,12 +177,11 @@
 
     @if ($type == "vertical-bar") {
         cursor: ns-resize;
-    }
-    @else{
+    } @else {
         cursor: ew-resize;
     }
 
-    &:hover{
+    &:hover {
         opacity: 0.6;
     }
 }
