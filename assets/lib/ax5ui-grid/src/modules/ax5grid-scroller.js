@@ -52,7 +52,7 @@
                     horizontalScrollBarWidth: _var.horizontalScrollBarWidth
                 });
 
-                GRID.body.scrollTo.call(this, scrollPositon, type);
+                GRID.body.scrollTo.call(this, scrollPositon);
             }
 
             return -top
@@ -77,7 +77,7 @@
                 });
 
                 GRID.header.scrollTo.call(this, scrollPositon);
-                GRID.body.scrollTo.call(this, scrollPositon, type);
+                GRID.body.scrollTo.call(this, scrollPositon);
             }
 
             return -left
@@ -143,7 +143,7 @@
                 horizontalScrollBarWidth: horizontalScrollBarWidth
             });
             if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
-            GRID.body.scrollTo.call(self, scrollPositon, type);
+            GRID.body.scrollTo.call(self, scrollPositon);
         },
         "on": function (track, bar, type) {
             var self = this,
@@ -212,7 +212,7 @@
                     });
 
                     if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
-                    GRID.body.scrollTo.call(self, scrollPositon, type);
+                    GRID.body.scrollTo.call(self, scrollPositon);
                 })
                 .bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                     scrollBarMover.off.call(self);
@@ -319,27 +319,28 @@
                         if (newLeft >= 0) newLeft = 0;
                     }
 
-                    //console.log(bodyScrollOffset);
                     return {
                         left: newLeft, top: newTop
                     }
                 };
 
-            self.xvar.__x_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
-            self.xvar.__y_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
+            this.xvar.__x_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
+            this.xvar.__y_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
 
             jQuery(document.body)
                 .bind("touchmove" + ".ax5grid-" + this.instanceId, function (e) {
                     var css = getContentPosition(e);
                     GRID.header.scrollTo.call(self, {left: css.left});
-                    GRID.body.scrollTo.call(self, css);
+                    GRID.body.scrollTo.call(self, css, "noRepaint");
                     resize.call(self);
                     U.stopEvent(e);
                 })
                 .bind("touchend" + ".ax5grid-" + this.instanceId, function (e) {
-                    scrollContentMover.off.call(self);
-                })
-                .bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
+                    var css = getContentPosition(e);
+                    GRID.header.scrollTo.call(self, {left: css.left});
+                    GRID.body.scrollTo.call(self, css);
+                    resize.call(self);
+                    U.stopEvent(e);
                     scrollContentMover.off.call(self);
                 });
 
@@ -349,10 +350,10 @@
                 .on('selectstart', false);
         },
         "off": function () {
+
             jQuery(document.body)
                 .unbind("touchmove" + ".ax5grid-" + this.instanceId)
-                .unbind("touchend" + ".ax5grid-" + this.instanceId)
-                .unbind("mouseleave.ax5grid-" + this.instanceId);
+                .unbind("touchend" + ".ax5grid-" + this.instanceId);
 
             jQuery(document.body)
                 .removeAttr('unselectable')
@@ -362,7 +363,7 @@
     };
 
     var init = function () {
-
+        var self = this;
         //this.config.scroller.size
         var margin = 4;
 
@@ -421,15 +422,11 @@
             }
         }).bind(this));
 
-        if(ax5.info.supportTouch) {
+        if (document.addEventListener && ax5.info.supportTouch) {
             this.$["container"]["body"]
-                .bind("touchstart", (function (e) {
-                    this.xvar.mousePosition = GRID.util.getMousePosition(e);
-                    scrollContentMover.on.call(this);
-                }).bind(this))
-                .bind("dragstart", function (e) {
-                    U.stopEvent(e);
-                    return false;
+                .on("touchstart", '[data-ax5grid-panel]', function (e) {
+                    self.xvar.mousePosition = GRID.util.getMousePosition(e);
+                    scrollContentMover.on.call(self);
                 });
         }
     };

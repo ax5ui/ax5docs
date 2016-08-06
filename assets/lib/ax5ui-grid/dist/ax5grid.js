@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.0.5"
+        version: "0.0.6"
     }, function () {
         /**
          * @class ax5grid
@@ -907,41 +907,24 @@
 
         this.xvar.paintStartRowIndex = paintStartRowIndex;
         this.xvar.dataRowCount = data.length;
-        //bindRowHoverEvent.call(this);
     };
 
-    var scrollTo = function scrollTo(css, type) {
+    var scrollTo = function scrollTo(css, noRepaint) {
         var cfg = this.config;
 
-        if (typeof type === "undefined") {
+        if (cfg.asidePanelWidth > 0 && "top" in css) {
+            this.$.panel["aside-body-scroll"].css({ top: css.top });
+        }
+        if (cfg.frozenColumnIndex > 0 && "top" in css) {
+            this.$.panel["left-body-scroll"].css({ top: css.top });
+        }
+        if (cfg.frozenRowIndex > 0 && "left" in css) {
+            this.$.panel["top-body-scroll"].css({ left: css.left });
+        }
+        this.$.panel["body-scroll"].css(css);
 
-            if (cfg.asidePanelWidth > 0) {
-                this.$.panel["aside-body-scroll"].css({ top: css.top });
-            }
-            if (cfg.frozenColumnIndex > 0) {
-                this.$.panel["left-body-scroll"].css({ top: css.top });
-            }
-            if (cfg.frozenRowIndex > 0) {
-                this.$.panel["top-body-scroll"].css({ left: css.left });
-            }
-            this.$.panel["body-scroll"].css(css);
-
+        if (!noRepaint && "top" in css) {
             repaint.call(this);
-        } else {
-            if (cfg.asidePanelWidth > 0 && type === "vertical") {
-                this.$.panel["aside-body-scroll"].css(css);
-            }
-            if (cfg.frozenColumnIndex > 0 && type === "vertical") {
-                this.$.panel["left-body-scroll"].css(css);
-            }
-            if (cfg.frozenRowIndex > 0 && type === "horizontal") {
-                this.$.panel["top-body-scroll"].css(css);
-            }
-            this.$.panel["body-scroll"].css(css);
-
-            if (type === "vertical") {
-                repaint.call(this);
-            }
         }
     };
 
@@ -1187,7 +1170,7 @@
                     horizontalScrollBarWidth: _var.horizontalScrollBarWidth
                 });
 
-                GRID.body.scrollTo.call(this, scrollPositon, type);
+                GRID.body.scrollTo.call(this, scrollPositon);
             }
 
             return -top;
@@ -1212,7 +1195,7 @@
                 });
 
                 GRID.header.scrollTo.call(this, scrollPositon);
-                GRID.body.scrollTo.call(this, scrollPositon, type);
+                GRID.body.scrollTo.call(this, scrollPositon);
             }
 
             return -left;
@@ -1276,7 +1259,7 @@
                 horizontalScrollBarWidth: horizontalScrollBarWidth
             });
             if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
-            GRID.body.scrollTo.call(self, scrollPositon, type);
+            GRID.body.scrollTo.call(self, scrollPositon);
         },
         "on": function on(track, bar, type) {
             var self = this,
@@ -1340,7 +1323,7 @@
                 });
 
                 if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
-                GRID.body.scrollTo.call(self, scrollPositon, type);
+                GRID.body.scrollTo.call(self, scrollPositon);
             }).bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                 scrollBarMover.off.call(self);
             }).bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
@@ -1435,38 +1418,41 @@
                     if (newLeft >= 0) newLeft = 0;
                 }
 
-                //console.log(bodyScrollOffset);
                 return {
                     left: newLeft, top: newTop
                 };
             };
 
-            self.xvar.__x_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
-            self.xvar.__y_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
+            this.xvar.__x_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
+            this.xvar.__y_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
 
             jQuery(document.body).bind("touchmove" + ".ax5grid-" + this.instanceId, function (e) {
+                var css = getContentPosition(e);
+                GRID.header.scrollTo.call(self, { left: css.left });
+                GRID.body.scrollTo.call(self, css, "noRepaint");
+                resize.call(self);
+                U.stopEvent(e);
+            }).bind("touchend" + ".ax5grid-" + this.instanceId, function (e) {
                 var css = getContentPosition(e);
                 GRID.header.scrollTo.call(self, { left: css.left });
                 GRID.body.scrollTo.call(self, css);
                 resize.call(self);
                 U.stopEvent(e);
-            }).bind("touchend" + ".ax5grid-" + this.instanceId, function (e) {
-                scrollContentMover.off.call(self);
-            }).bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
                 scrollContentMover.off.call(self);
             });
 
             jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
         },
         "off": function off() {
-            jQuery(document.body).unbind("touchmove" + ".ax5grid-" + this.instanceId).unbind("touchend" + ".ax5grid-" + this.instanceId).unbind("mouseleave.ax5grid-" + this.instanceId);
+
+            jQuery(document.body).unbind("touchmove" + ".ax5grid-" + this.instanceId).unbind("touchend" + ".ax5grid-" + this.instanceId);
 
             jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
         }
     };
 
     var init = function init() {
-
+        var self = this;
         //this.config.scroller.size
         var margin = 4;
 
@@ -1519,13 +1505,10 @@
             }
         }.bind(this));
 
-        if (ax5.info.supportTouch) {
-            this.$["container"]["body"].bind("touchstart", function (e) {
-                this.xvar.mousePosition = GRID.util.getMousePosition(e);
-                scrollContentMover.on.call(this);
-            }.bind(this)).bind("dragstart", function (e) {
-                U.stopEvent(e);
-                return false;
+        if (document.addEventListener && ax5.info.supportTouch) {
+            this.$["container"]["body"].on("touchstart", '[data-ax5grid-panel]', function (e) {
+                self.xvar.mousePosition = GRID.util.getMousePosition(e);
+                scrollContentMover.on.call(self);
             });
         }
     };
@@ -1654,7 +1637,9 @@
     };
 
     var getMousePosition = function getMousePosition(e) {
-        var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+        var mouseObj,
+            originalEvent = e.originalEvent ? e.originalEvent : e;
+        mouseObj = 'changedTouches' in originalEvent ? originalEvent.changedTouches[0] : originalEvent;
         // clientX, Y 쓰면 스크롤에서 문제 발생
         return {
             clientX: mouseObj.pageX,
