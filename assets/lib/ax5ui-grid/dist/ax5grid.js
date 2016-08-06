@@ -25,7 +25,6 @@
                 cfg;
 
             this.config = {
-                clickEventName: "click", //(('ontouchstart' in document.documentElement) ? "touchend" : "click"),
                 theme: 'default',
                 animateTime: 250,
 
@@ -40,15 +39,15 @@
                 height: 400,
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
-                rowSelectorColumnWidth: 30,
+                rowSelectorColumnWidth: 25,
 
                 header: {
-                    columnHeight: 23,
+                    columnHeight: 25,
                     columnPadding: 3,
                     columnBorderWidth: 1
                 },
                 body: {
-                    columnHeight: 23,
+                    columnHeight: 25,
                     columnPadding: 3,
                     columnBorderWidth: 1
                 },
@@ -556,6 +555,7 @@
     var U = ax5.util;
 
     var init = function init() {
+        var self = this;
         // 바디 초기화
         this.bodyRowTable = {};
         this.leftBodyRowData = {};
@@ -569,10 +569,8 @@
         // 바디에 표현될 한줄의 높이를 계산합니다.
         this.xvar.bodyTrHeight = this.bodyRowTable.rows.length * this.config.body.columnHeight;
 
-        this.$["container"]["body"].on("click", function (e) {
-            var self = this;
-            var panelName, attr, row, col, index, rowIndex, colIndex;
-            var target = ax5.util.findParentNode(e.originalEvent.target, { "data-ax5grid-event": "click" });
+        this.$["container"]["body"].on("click", '[data-ax5grid-event="click"]', function () {
+            var panelName, attr, row, col, index; //, rowIndex, colIndex;
             var targetClick = {
                 "default": function _default(column) {
                     console.log(self[column.panelName + "RowData"].rows[column.row].cols[column.col]);
@@ -586,21 +584,35 @@
                 },
                 "lineNumber": function lineNumber(column) {}
             };
-            if (target) {
-                //console.log();
-                panelName = target.getAttribute("data-ax5grid-panel-name");
-                attr = target.getAttribute("data-ax5grid-column-attr");
-                row = target.getAttribute("data-ax5grid-column-row");
-                col = target.getAttribute("data-ax5grid-column-col");
-                //rowIndex = target.getAttribute("data-ax5grid-column-rowIndex");
-                //colIndex = target.getAttribute("data-ax5grid-column-colIndex");
-                index = target.getAttribute("data-ax5grid-data-index");
 
-                if (attr in targetClick) {
-                    targetClick[attr]({ panelName: panelName, target: target, attr: attr, row: row, col: col, index: index, rowIndex: rowIndex, colIndex: colIndex });
-                }
+            //console.log();
+            panelName = this.getAttribute("data-ax5grid-panel-name");
+            attr = this.getAttribute("data-ax5grid-column-attr");
+            row = this.getAttribute("data-ax5grid-column-row");
+            col = this.getAttribute("data-ax5grid-column-col");
+            //rowIndex = target.getAttribute("data-ax5grid-column-rowIndex");
+            //colIndex = target.getAttribute("data-ax5grid-column-colIndex");
+            index = this.getAttribute("data-ax5grid-data-index");
+
+            if (attr in targetClick) {
+                targetClick[attr]({
+                    panelName: panelName,
+                    attr: attr,
+                    row: row, col: col,
+                    index: index
+                    //rowIndex: rowIndex, colIndex: colIndex
+                });
             }
-        }.bind(this));
+        });
+        this.$["container"]["body"].on("mouseover", "tr", function (e) {
+            var dindex = this.getAttribute("data-ax5grid-tr-data-index");
+            var i = self.$.livePanelKeys.length;
+            while (i--) {
+                if (typeof self.xvar.dataHoveredIndex !== "undefined") self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + self.xvar.dataHoveredIndex + '"]').removeClass("hover");
+                self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + dindex + '"]').addClass("hover");
+            }
+            self.xvar.dataHoveredIndex = dindex;
+        });
     };
 
     var makeBodyRowTable = function makeBodyRowTable(columns) {
@@ -895,6 +907,7 @@
 
         this.xvar.paintStartRowIndex = paintStartRowIndex;
         this.xvar.dataRowCount = data.length;
+        //bindRowHoverEvent.call(this);
     };
 
     var scrollTo = function scrollTo(css, type) {
@@ -957,7 +970,6 @@
     };
 })();
 
-// todo : aside checkbox
 // ax5.ui.grid.layout
 (function () {
     "use strict";
@@ -1206,7 +1218,7 @@
             return -left;
         }
     };
-    var scrollMover = {
+    var scrollBarMover = {
         "click": function click(track, bar, type, e) {
 
             var self = this,
@@ -1330,9 +1342,9 @@
                 if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
                 GRID.body.scrollTo.call(self, scrollPositon, type);
             }).bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
-                scrollMover.off.call(self);
+                scrollBarMover.off.call(self);
             }).bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
-                scrollMover.off.call(self);
+                scrollBarMover.off.call(self);
             });
 
             jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
@@ -1341,15 +1353,17 @@
             jQuery(document.body).unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId).unbind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId).unbind("mouseleave.ax5grid-" + this.instanceId);
 
             jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
-        },
+        }
+    };
+    var scrollContentMover = {
         "wheel": function wheel(delta) {
             var self = this,
+                _body_scroll_position = self.$["panel"]["body-scroll"].position(),
                 _panel_height = self.$["panel"]["body"].height(),
                 _panel_width = self.$["panel"]["body"].width(),
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth;
 
-            var _body_scroll_position = self.$["panel"]["body-scroll"].position();
             var newLeft, newTop;
             var _top_is_end = false;
             var _left_is_end = false;
@@ -1387,6 +1401,67 @@
             resize.call(this);
 
             return !_top_is_end || !_left_is_end;
+        },
+        "on": function on() {
+            var self = this,
+                _body_scroll_position = self.$["panel"]["body-scroll"].position(),
+                _panel_height = self.$["panel"]["body"].height(),
+                _panel_width = self.$["panel"]["body"].width(),
+                _content_height = self.xvar.scrollContentHeight,
+                _content_width = self.xvar.scrollContentWidth,
+                getContentPosition = function getContentPosition(e) {
+                var mouseObj = GRID.util.getMousePosition(e);
+                var newLeft, newTop;
+
+                self.xvar.__x_da = mouseObj.clientX - self.xvar.mousePosition.clientX;
+                self.xvar.__y_da = mouseObj.clientY - self.xvar.mousePosition.clientY;
+
+                newLeft = _body_scroll_position.left + self.xvar.__x_da;
+                newTop = _body_scroll_position.top + self.xvar.__y_da;
+
+                // newTop이 범위를 넘었는지 체크
+                if (newTop >= 0) {
+                    newTop = 0;
+                } else if (newTop <= _panel_height - _content_height) {
+                    newTop = _panel_height - _content_height;
+                    if (newTop >= 0) newTop = 0;
+                }
+
+                // newLeft이 범위를 넘었는지 체크
+                if (newLeft >= 0) {
+                    newLeft = 0;
+                } else if (newLeft <= _panel_width - _content_width) {
+                    newLeft = _panel_width - _content_width;
+                    if (newLeft >= 0) newLeft = 0;
+                }
+
+                //console.log(bodyScrollOffset);
+                return {
+                    left: newLeft, top: newTop
+                };
+            };
+
+            self.xvar.__x_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
+            self.xvar.__y_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
+
+            jQuery(document.body).bind("touchmove" + ".ax5grid-" + this.instanceId, function (e) {
+                var css = getContentPosition(e);
+                GRID.header.scrollTo.call(self, { left: css.left });
+                GRID.body.scrollTo.call(self, css);
+                resize.call(self);
+                U.stopEvent(e);
+            }).bind("touchend" + ".ax5grid-" + this.instanceId, function (e) {
+                scrollContentMover.off.call(self);
+            }).bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
+                scrollContentMover.off.call(self);
+            });
+
+            jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
+        },
+        "off": function off() {
+            jQuery(document.body).unbind("touchmove" + ".ax5grid-" + this.instanceId).unbind("touchend" + ".ax5grid-" + this.instanceId).unbind("mouseleave.ax5grid-" + this.instanceId);
+
+            jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
         }
     };
 
@@ -1400,27 +1475,27 @@
 
         this.$["scroller"]["vertical-bar"].bind(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
-            scrollMover.on.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical");
+            scrollBarMover.on.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical");
         }.bind(this)).bind("dragstart", function (e) {
             U.stopEvent(e);
             return false;
         });
         this.$["scroller"]["vertical"].bind("click", function (e) {
             if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
-                scrollMover.click.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
+                scrollBarMover.click.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
             }
         }.bind(this));
 
         this.$["scroller"]["horizontal-bar"].bind(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
-            scrollMover.on.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal");
+            scrollBarMover.on.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal");
         }.bind(this)).bind("dragstart", function (e) {
             U.stopEvent(e);
             return false;
         });
         this.$["scroller"]["horizontal"].bind("click", function (e) {
             if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
-                scrollMover.click.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
+                scrollBarMover.click.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
             }
         }.bind(this));
 
@@ -1439,10 +1514,20 @@
                 }
             }
 
-            if (scrollMover.wheel.call(this, delta)) {
+            if (scrollContentMover.wheel.call(this, delta)) {
                 U.stopEvent(e);
             }
         }.bind(this));
+
+        if (ax5.info.supportTouch) {
+            this.$["container"]["body"].bind("touchstart", function (e) {
+                this.xvar.mousePosition = GRID.util.getMousePosition(e);
+                scrollContentMover.on.call(this);
+            }.bind(this)).bind("dragstart", function (e) {
+                U.stopEvent(e);
+                return false;
+            });
+        }
     };
 
     var resize = function resize() {

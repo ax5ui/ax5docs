@@ -6,6 +6,7 @@
     var U = ax5.util;
 
     var init = function () {
+        var self = this;
         // 바디 초기화
         this.bodyRowTable = {};
         this.leftBodyRowData = {};
@@ -19,10 +20,8 @@
         // 바디에 표현될 한줄의 높이를 계산합니다.
         this.xvar.bodyTrHeight = this.bodyRowTable.rows.length * this.config.body.columnHeight;
 
-        this.$["container"]["body"].on("click", (function (e) {
-            var self = this;
-            var panelName, attr, row, col, index, rowIndex, colIndex;
-            var target = ax5.util.findParentNode(e.originalEvent.target, {"data-ax5grid-event": "click"});
+        this.$["container"]["body"].on("click", '[data-ax5grid-event="click"]', function () {
+            var panelName, attr, row, col, index; //, rowIndex, colIndex;
             var targetClick = {
                 "default": function (column) {
                     console.log(self[column.panelName + "RowData"].rows[column.row].cols[column.col]);
@@ -38,22 +37,35 @@
 
                 }
             };
-            if (target) {
-                //console.log();
-                panelName = target.getAttribute("data-ax5grid-panel-name");
-                attr = target.getAttribute("data-ax5grid-column-attr");
-                row = target.getAttribute("data-ax5grid-column-row");
-                col = target.getAttribute("data-ax5grid-column-col");
-                //rowIndex = target.getAttribute("data-ax5grid-column-rowIndex");
-                //colIndex = target.getAttribute("data-ax5grid-column-colIndex");
-                index = target.getAttribute("data-ax5grid-data-index");
 
-                if (attr in targetClick) {
-                    targetClick[attr]({panelName: panelName, target: target, attr: attr, row: row, col: col, index: index, rowIndex: rowIndex, colIndex: colIndex});
-                }
+            //console.log();
+            panelName = this.getAttribute("data-ax5grid-panel-name");
+            attr = this.getAttribute("data-ax5grid-column-attr");
+            row = this.getAttribute("data-ax5grid-column-row");
+            col = this.getAttribute("data-ax5grid-column-col");
+            //rowIndex = target.getAttribute("data-ax5grid-column-rowIndex");
+            //colIndex = target.getAttribute("data-ax5grid-column-colIndex");
+            index = this.getAttribute("data-ax5grid-data-index");
+
+            if (attr in targetClick) {
+                targetClick[attr]({
+                    panelName: panelName,
+                    attr: attr,
+                    row: row, col: col,
+                    index: index
+                    //rowIndex: rowIndex, colIndex: colIndex
+                });
             }
-
-        }).bind(this))
+        });
+        this.$["container"]["body"].on("mouseover", "tr", function (e) {
+            var dindex = this.getAttribute("data-ax5grid-tr-data-index");
+            var i = self.$.livePanelKeys.length;
+            while (i--) {
+                if(typeof self.xvar.dataHoveredIndex !== "undefined") self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + self.xvar.dataHoveredIndex + '"]').removeClass("hover");
+                self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + dindex + '"]').addClass("hover");
+            }
+            self.xvar.dataHoveredIndex = dindex;
+        })
     };
 
     var makeBodyRowTable = function (columns) {
@@ -373,6 +385,7 @@
 
         this.xvar.paintStartRowIndex = paintStartRowIndex;
         this.xvar.dataRowCount = data.length;
+        //bindRowHoverEvent.call(this);
     };
 
     var scrollTo = function (css, type) {
@@ -434,5 +447,3 @@
         scrollTo: scrollTo
     };
 })();
-
-// todo : aside checkbox
