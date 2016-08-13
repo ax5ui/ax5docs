@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.0.6"
+        version: "0.0.8"
     }, (function () {
         /**
          * @class ax5grid
@@ -23,6 +23,7 @@
                 self = this,
                 cfg;
 
+            this.instanceId = ax5.getGuid();
             this.config = {
                 theme: 'default',
                 animateTime: 250,
@@ -34,6 +35,7 @@
                 footSum: false,
                 showLineNumber: false,
                 showRowSelector: false,
+                multipleSelect: false,
 
                 height: 400,
                 columnMinWidth: 100,
@@ -50,12 +52,17 @@
                     columnPadding: 3,
                     columnBorderWidth: 1
                 },
+                page: {
+                    height: 25,
+                    display: true,
+                    navigationItemCount: 5
+                },
                 scroller: {
                     size: 15,
                     barMinSize: 15
                 },
 
-                columnKeys:{
+                columnKeys: {
                     selected: '_SELECTED'
                 }
             };
@@ -65,8 +72,18 @@
                 scrollContentHeight: 0 // 스크롤 된 내용물의 높이
             };
             // 그리드 데이터셋
-            this.colGroup = [];
-            this.data = [];
+            this.columns = []; // config.columns에서 복제된 오브젝트
+            this.colGroup = []; // columns를 table태그로 출력하기 좋게 변환한 오브젝트
+            this.data = []; // 그리드의 데이터
+            this.page = {}; // 그리드의 페이지 정보
+            this.focusedColumn = {};
+            this.selectedColumn = {};
+            this.bodyRowTable = {};
+            this.leftBodyRowData = {};
+            this.bodyRowData = {};
+            this.rightBodyRowData = {};
+            this.bodyRowTable = {};
+            this.bodyRowMap = {};
 
             cfg = this.config;
 
@@ -159,9 +176,11 @@
                     // 그리드 패널 프레임의 각 엘리먼트를 캐쉬합시다.
                     this.$ = {
                         "container": {
+                            "hidden": this.$target.find('[data-ax5grid-container="hidden"]'),
                             "root": this.$target.find('[data-ax5grid-container="root"]'),
                             "header": this.$target.find('[data-ax5grid-container="header"]'),
                             "body": this.$target.find('[data-ax5grid-container="body"]'),
+                            "page": this.$target.find('[data-ax5grid-container="page"]'),
                             "scroller": this.$target.find('[data-ax5grid-container="scroller"]')
                         },
                         "panel": {
@@ -196,6 +215,13 @@
                             "horizontal": this.$target.find('[data-ax5grid-scroller="horizontal"]'),
                             "horizontal-bar": this.$target.find('[data-ax5grid-scroller="horizontal-bar"]'),
                             "corner": this.$target.find('[data-ax5grid-scroller="corner"]')
+                        },
+                        "page": {
+                            "navigation": this.$target.find('[data-ax5grid-page="navigation"]'),
+                            "status": this.$target.find('[data-ax5grid-page="status"]')
+                        },
+                        "form": {
+                            "clipboard": this.$target.find('[data-ax5grid-form="clipboard"]')
                         }
                     };
 
@@ -206,6 +232,7 @@
                 initColumns = function (columns) {
                     this.columns = U.deepCopy(columns);
                     this.headerTable = makeHeaderTable.call(this, this.columns);
+                    this.xvar.frozenColumnIndex = (cfg.frozenColumnIndex > this.columns.length) ? this.columns.length : cfg.frozenColumnIndex;
 
                     var colGroupMap = {};
                     for (var r = 0, rl = this.headerTable.rows.length; r < rl; r++) {
@@ -274,11 +301,13 @@
                     var footSumHeight = 0;
 
                     var headerHeight = this.headerTable.rows.length * cfg.header.columnHeight;
-                    /// todo : 그리드 스크롤러 표시여부 결정 스크롤러 표시 여부에 따라 그리드 각 패널들의 크기 조정
+                    var pageHeight = (cfg.page.display) ? cfg.page.height : 0;
+
                     // 데이터의 길이가 body보다 높을때. 수직 스크롤러 활성화
                     var verticalScrollerWidth = (function () {
-                        return ((CT_HEIGHT - headerHeight) < this.data.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
+                        return ((CT_HEIGHT - headerHeight - pageHeight) < this.data.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
                     }).call(this);
+
                     // 남은 너비가 colGroup의 너비보다 넓을때. 수평 스크롤 활성화.
                     var horizontalScrollerHeight = (function () {
                         var totalColGroupWidth = 0;
@@ -294,7 +323,7 @@
                     // 수평 너비 결정
                     CT_INNER_WIDTH = CT_WIDTH - verticalScrollerWidth;
                     // 수직 스크롤러의 높이 결정.
-                    CT_INNER_HEIGHT = CT_HEIGHT - horizontalScrollerHeight;
+                    CT_INNER_HEIGHT = CT_HEIGHT - pageHeight - horizontalScrollerHeight;
 
                     var bodyHeight = CT_INNER_HEIGHT - headerHeight;
 
@@ -327,12 +356,14 @@
                                 }
                                 break;
                             default:
-                                if (cfg.frozenColumnIndex === 0) {
-                                    css["left"] = asidePanelWidth;
-                                } else {
-                                    css["left"] = frozenPanelWidth + asidePanelWidth;
+                                if (containerType !== "page") {
+                                    if (cfg.frozenColumnIndex === 0) {
+                                        css["left"] = asidePanelWidth;
+                                    } else {
+                                        css["left"] = frozenPanelWidth + asidePanelWidth;
+                                    }
+                                    css["width"] = CT_INNER_WIDTH - asidePanelWidth - frozenPanelWidth - rightPanelWidth;
                                 }
-                                css["width"] = CT_INNER_WIDTH - asidePanelWidth - frozenPanelWidth - rightPanelWidth;
                                 break;
                         }
 
@@ -368,6 +399,12 @@
                             }
                         } else if (containerType === "header") {
                             css["height"] = headerHeight;
+                        } else if (containerType === "page") {
+                            if(pageHeight == 0){
+                                isHide = true;
+                            }else {
+                                css["height"] = pageHeight;
+                            }
                         }
 
                         if (isHide) {
@@ -388,7 +425,7 @@
                                 if (scrollerWidth > 0) {
                                     css["width"] = scrollerWidth;
                                     css["height"] = CT_INNER_HEIGHT;
-                                    css["bottom"] = scrollerHeight;
+                                    css["bottom"] = scrollerHeight + pageHeight;
                                 } else {
                                     isHide = true;
                                 }
@@ -398,6 +435,7 @@
                                     css["width"] = CT_INNER_WIDTH;
                                     css["height"] = scrollerHeight;
                                     css["right"] = scrollerWidth;
+                                    css["bottom"] = pageHeight;
                                 } else {
                                     isHide = true;
                                 }
@@ -406,6 +444,7 @@
                                 if (scrollerWidth > 0 && scrollerHeight > 0) {
                                     css["width"] = scrollerWidth;
                                     css["height"] = scrollerHeight;
+                                    css["bottom"] = pageHeight;
                                 } else {
                                     isHide = true;
                                 }
@@ -448,6 +487,8 @@
                     scrollerDisplayProcess.call(this, this.$["scroller"]["vertical"], verticalScrollerWidth, horizontalScrollerHeight, "vertical");
                     scrollerDisplayProcess.call(this, this.$["scroller"]["horizontal"], verticalScrollerWidth, horizontalScrollerHeight, "horizontal");
                     scrollerDisplayProcess.call(this, this.$["scroller"]["corner"], verticalScrollerWidth, horizontalScrollerHeight, "corner");
+
+                    panelDisplayProcess.call(this, this.$["container"]["page"], "", "", "page");
                 };
 
             /// private end
@@ -515,6 +556,41 @@
                     alignGrid.call(this);
                     GRID.scroller.resize.call(this);
                 }).bind(this));
+
+                jQuery(document.body).on("click.ax5grid-" + this.instanceId, function (e) {
+                    var target = U.findParentNode(e.target, {"data-ax5grid-container": "root"});
+                    if (target) {
+                        self.focused = true;
+                    } else {
+                        self.focused = false;
+                        GRID.body.blur.call(self);
+                    }
+                });
+
+                var ctrlKeys = {
+                    "33": "KEY_PAGEUP",
+                    "34": "KEY_PAGEDOWN",
+                    "35": "KEY_END",
+                    "36": "KEY_HOME",
+                    "37": "KEY_LEFT",
+                    "38": "KEY_UP",
+                    "39": "KEY_RIGHT",
+                    "40": "KEY_DOWN"
+                };
+                jQuery(window).on("keydown.ax5grid-" + this.instanceId, function (e) {
+                    if (self.focused) {
+                        if (e.metaKey || e.ctrlKey) {
+                            if (e.which == 67) { // c
+                                //console.log("copy");
+                                self.copySelect();
+                            }
+                        } else {
+                            if (ctrlKeys[e.which]) {
+                                self.keyDown(ctrlKeys[e.which], e);
+                            }
+                        }
+                    }
+                });
                 return this;
             };
 
@@ -529,12 +605,227 @@
                 return this;
             };
 
+            /**
+             * @method ax5grid.keyDown
+             * @param {String} keyName
+             * @param {Event||Object} data
+             * @return {ax5grid}
+             */
+            this.keyDown = (function () {
+                var processor = {
+                    "KEY_UP": function () {
+                        GRID.body.moveFocus.call(this, "UP");
+                    },
+                    "KEY_DOWN": function () {
+                        GRID.body.moveFocus.call(this, "DOWN");
+                    },
+                    "KEY_LEFT": function () {
+                        GRID.body.moveFocus.call(this, "LEFT");
+                    },
+                    "KEY_RIGHT": function () {
+                        GRID.body.moveFocus.call(this, "RIGHT");
+                    },
+                    "KEY_HOME" : function (){
+                        GRID.body.moveFocus.call(this, "HOME");
+                    },
+                    "KEY_END" : function (){
+                        GRID.body.moveFocus.call(this, "END");
+                    }
+                };
+                return function (_act, _data) {
+                    if (_act in processor) processor[_act].call(this, _data);
+                    return this;
+                }
+            })();
 
+            /**
+             * @method ax5grid.copySelect
+             * @returns {Boolean} copysuccess
+             */
+            this.copySelect = function () {
+                var copysuccess;
+                var $clipBoard = this.$["form"]["clipboard"];
+                var copyTextArray = [];
+                var copyText = "";
+
+                var _rowIndex, _colIndex, _dindex;
+                var _di = 0;
+                for (var c in this.selectedColumn) {
+                    var _column = this.selectedColumn[c];
+                    if (_column) {
+                        if (typeof _dindex === "undefined") {
+                            _dindex = _column.dindex;
+                            _rowIndex = _column.rowIndex;
+                            _colIndex = _column.rowIndex;
+                        }
+
+                        if (_dindex != _column.dindex || _rowIndex != _column.rowIndex) {
+                            _di++;
+                        }
+
+                        if (!copyTextArray[_di]) {
+                            copyTextArray[_di] = [];
+                        }
+                        var originalColumn = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
+                        if (originalColumn) {
+                            copyTextArray[_di].push(this.data[_column.dindex][originalColumn.key]);
+                        } else {
+                            copyTextArray[_di].push("");
+                        }
+
+                        _dindex = _column.dindex;
+                        _rowIndex = _column.rowIndex;
+                    }
+                }
+
+                copyTextArray.forEach(function (r) {
+                    copyText += r.join('\t') + "\n";
+                });
+
+                $clipBoard.get(0).innerText = copyText;
+                $clipBoard.select();
+
+                try {
+                    copysuccess = document.execCommand("copy");
+                } catch (e) {
+                    copysuccess = false;
+                }
+                return copysuccess;
+            };
+
+            /**
+             * @method ax5grid.setData
+             * @param {Array} data
+             * @returns {ax5grid}
+             */
             this.setData = function (data) {
                 GRID.data.set.call(this, data);
                 alignGrid.call(this);
+                GRID.body.scrollTo.call(this, {top:0});
                 GRID.body.repaint.call(this);
                 GRID.scroller.resize.call(this);
+                GRID.page.navigationUpdate.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.setHeight
+             * @param {Number} _height
+             * @returns {ax5grid}
+             */
+            this.setHeight = function(_height){
+                //console.log(this.$target);
+
+                if(_height == "100%"){
+                    _height = this.$target.offsetParent().innerHeight();
+                }
+                this.$target.css({height: _height});
+                this.$["container"]["root"].css({height: _height});
+                alignGrid.call(this);
+                GRID.body.repaint.call(this, "reset");
+                GRID.scroller.resize.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.align
+             * @returns {ax5grid}
+             */
+            this.align = function(){
+                alignGrid.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.addRow
+             * @param {Object} _row
+             * @param {Number|String} [_dindex=last]
+             * @returns {ax5grid}
+             */
+            this.addRow = function(_row, _dindex){
+                GRID.data.add.call(this, _row, _dindex);
+                alignGrid.call(this);
+                GRID.body.repaint.call(this, "reset");
+                GRID.body.moveFocus.call(this, "END");
+                GRID.scroller.resize.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.removeRow
+             * @param {Number|String} [_dindex=last]
+             * @returns {ax5grid}
+             */
+            this.removeRow = function(_dindex){
+                GRID.data.remove.call(this, _dindex);
+                alignGrid.call(this);
+                GRID.body.repaint.call(this, "reset");
+                GRID.body.moveFocus.call(this, "END");
+                GRID.scroller.resize.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.updateRow
+             * @param {Object} _row
+             * @param {Number} _dindex
+             * @returns {ax5grid}
+             */
+            this.updateRow = function(_row, _dindex){
+                GRID.data.update.call(this, _row, _dindex);
+                GRID.body.repaint.call(this, "reset");
+                GRID.body.moveFocus.call(this, _dindex);
+                GRID.scroller.resize.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.addColumn
+             * @param {Object} _column
+             * @param {Number|String} [_cindex=last]
+             * @returns {ax5grid}
+             */
+            this.addColumn = function(_column, _cindex){
+                return this;
+            };
+            /**
+             * @method ax5grid.removeCloumn
+             * @param {Number|String} [_cindex=last]
+             * @returns {ax5grid}
+             */
+            this.removeColumn = function(_cindex){
+                return this;
+            };
+            /**
+             * @method ax5grid.updateColumn
+             * @param {Object} _column
+             * @param {Number} _cindex
+             * @returns {ax5grid}
+             */
+            this.updateColumn = function(_column, _cindex){
+                return this;
+            };
+
+            /**
+             * @method ax5grid.select
+             * @param {Number||Object} _selectObject
+             * @param {Number} _selectObject.index - index of row
+             * @param {Number} _selectObject.rowIndex - rowIndex of columns
+             * @param {Number} _selectObject.conIndex - colIndex of columns
+             * @returns {ax5grid}
+             */
+            this.select = function(_selectObject){
+                if(U.isNumber(_selectObject)){
+                    var dindex = _selectObject;
+
+                    if(!this.config.multipleSelect) {
+                        GRID.body.updateRowState.call(this, ["selectedClear"]);
+                        GRID.data.clearSelect.call(this);
+                    }
+                    GRID.data.select.call(this, dindex);
+                    GRID.body.updateRowState.call(this, ["selected"], dindex);
+                }
+
                 return this;
             };
 
@@ -553,3 +844,25 @@
 
     GRID = ax5.ui.grid;
 })();
+
+
+// todo : cell selected -- ok
+// todo : cell multi selected -- ok
+// todo : cell selected focus move by keyboard -- ok & scroll body -- ok
+// todo : clipboard copy -- ok
+// todo : page -- ok
+// todo : paging -- ok
+// todo : setStatus : loading, empty, etcs
+
+// todo : row add / remove / update -- ok
+// todo : body.onClick / select -- ok & multipleSelect : TF
+// todo : column add / remove / update
+// todo : cell inline edit
+
+// todo : column resize
+// todo : column reorder
+// todo : cell formatter
+
+// todo : sort & filter
+// todo : body menu
+

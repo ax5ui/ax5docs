@@ -1,6 +1,5 @@
 // ax5.ui.grid.header
 (function () {
-    "use strict";
 
     var GRID = ax5.ui.grid;
     var U = ax5.util;
@@ -91,11 +90,14 @@
 
                         SS.push((function () {
                             var lineHeight = (cfg.header.columnHeight - cfg.header.columnPadding * 2 - cfg.header.columnBorderWidth);
+                            return '<span data-ax5grid-cellHolder="" style="height: ' + (cfg.header.columnHeight - cfg.header.columnBorderWidth) + 'px;line-height: ' + lineHeight + 'px;">';
+                            /*
                             if (col.multiLine) {
                                 return '<span data-ax5grid-cellHolder="multiLine" style="height:' + cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
                             } else {
-                                return '<span data-ax5grid-cellHolder="" style="height: ' + (cfg.header.columnHeight - cfg.header.columnBorderWidth) + 'px;line-height: ' + lineHeight + 'px;">';
+
                             }
+                            */
                         })(), (col.label || "&nbsp;"), '</span>');
 
                         SS.push('</td>');
