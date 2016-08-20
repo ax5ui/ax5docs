@@ -193,9 +193,9 @@
                         .attr("data-ax5grid-selected", this.data[dindex][cfg.columnKeys.selected]);
                 }
             },
-            "selectedClear": function(){
+            "selectedClear": function () {
                 var si = this.selectedDataIndexs.length;
-                while(si--){
+                while (si--) {
                     var dindex = this.selectedDataIndexs[si];
                     var i = this.$.livePanelKeys.length;
                     while (i--) {
@@ -208,24 +208,13 @@
             }
         };
         states.forEach(function (state) {
-            if(!processor[state]) throw 'invaild state name';
+            if (!processor[state]) throw 'invaild state name';
             processor[state].call(self, dindex, data);
         });
     };
 
     var init = function () {
         var self = this;
-        // 바디 초기화
-        this.bodyRowTable = {};
-        this.leftBodyRowData = {};
-        this.bodyRowData = {};
-        this.rightBodyRowData = {};
-
-        this.bodyRowTable = makeBodyRowTable.call(this, this.columns);
-        this.bodyRowMap = makeBodyRowMap.call(this, this.bodyRowTable);
-
-        // 바디에 표현될 한줄의 높이를 계산합니다.
-        this.xvar.bodyTrHeight = this.bodyRowTable.rows.length * this.config.body.columnHeight;
 
         this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function () {
             var panelName, attr, row, col, dindex, rowIndex, colIndex;
@@ -305,129 +294,6 @@
             });
     };
 
-    var makeBodyRowTable = function (columns) {
-        var table = {
-            rows: []
-        };
-        var colIndex = 0;
-        var maekRows = function (_columns, depth, parentField) {
-            var row = {cols: []};
-            var i = 0, l = _columns.length;
-
-            var selfMakeRow = function (__columns) {
-                var i = 0, l = __columns.length;
-                for (; i < l; i++) {
-                    var field = __columns[i];
-                    var colspan = 1;
-
-                    if (!field.hidden) {
-
-                        if ('key' in field) {
-                            field.colspan = 1;
-                            field.rowspan = 1;
-
-                            field.rowIndex = depth;
-                            field.colIndex = (function () {
-                                if (!parentField) {
-                                    return colIndex++;
-                                } else {
-                                    colIndex = parentField.colIndex + i + 1;
-                                    return parentField.colIndex + i;
-                                }
-                            })();
-
-                            row.cols.push(field);
-                            if ('columns' in field) {
-                                colspan = maekRows(field.columns, depth + 1, field);
-                            }
-                            field.colspan = colspan;
-                        }
-                        else {
-                            if ('columns' in field) {
-                                selfMakeRow(field.columns, depth);
-                            }
-                        }
-                    } else {
-
-                    }
-                }
-            };
-
-            for (; i < l; i++) {
-                var field = _columns[i];
-                var colspan = 1;
-
-                if (!field.hidden) {
-
-                    if ('key' in field) {
-                        field.colspan = 1;
-                        field.rowspan = 1;
-
-                        field.rowIndex = depth;
-                        field.colIndex = (function () {
-                            if (!parentField) {
-                                return colIndex++;
-                            } else {
-                                colIndex = parentField.colIndex + i + 1;
-                                return parentField.colIndex + i;
-                            }
-                        })();
-
-                        row.cols.push(field);
-                        if ('columns' in field) {
-                            colspan = maekRows(field.columns, depth + 1, field);
-                        }
-                        field.colspan = colspan;
-                    }
-                    else {
-                        if ('columns' in field) {
-                            selfMakeRow(field.columns, depth);
-                        }
-                    }
-                } else {
-
-                }
-            }
-
-            if (row.cols.length > 0) {
-                if (!table.rows[depth]) {
-                    table.rows[depth] = {cols: []};
-                }
-                table.rows[depth].cols = table.rows[depth].cols.concat(row.cols);
-                return (row.cols.length - 1) + colspan;
-            } else {
-                return colspan;
-            }
-
-        };
-        maekRows(columns, 0);
-
-        (function () {
-            // set rowspan
-            for (var r = 0, rl = table.rows.length; r < rl; r++) {
-                var row = table.rows[r];
-                for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                    var col = row.cols[c];
-                    if (!('columns' in col)) {
-                        col.rowspan = rl - r;
-                    }
-                }
-            }
-        })();
-
-        return table;
-    };
-
-    var makeBodyRowMap = function (table) {
-        var map = {};
-        table.rows.forEach(function (row) {
-            row.cols.forEach(function (col) {
-                map[col.rowIndex + "_" + col.colIndex] = jQuery.extend({}, col);
-            });
-        });
-        return map;
-    };
-
     var repaint = function (_reset) {
         var cfg = this.config;
         var data = this.data;
@@ -493,7 +359,7 @@
             var di, dl;
             var tri, trl;
             var ci, cl;
-            var col, cellHeight, tdCSS_class;
+            var col, cellHeight;
             var isScrolled = (function () {
                 // repaint 함수가 스크롤되는지 여부
                 if (typeof _scrollConfig === "undefined" || typeof _scrollConfig['paintStartRowIndex'] === "undefined") {
@@ -506,18 +372,34 @@
                     return true;
                 }
             })();
-
-            var getFieldValue = function (data, index, key) {
-                if (key === "__d-index__") {
-                    return index + 1;
+            var getFieldValue = function (_data, _index, _key, _formatter) {
+                if (_key === "__d-index__") {
+                    return _index + 1;
                 }
-                else if (key === "__d-checkbox__") {
+                else if (_key === "__d-checkbox__") {
                     return '<div class="checkBox"></div>';
                 }
                 else {
-                    return data[key] || "&nbsp;";
+                    if (_formatter) {
+                        var that = {
+                            key: _key,
+                            value: _data[_key],
+                            item: _data,
+                            index: _index,
+                            list: data
+                        };
+                        if (U.isFunction(_formatter)) {
+                            return _formatter.call(that);
+                        } else {
+                            return GRID.formatter[_formatter].call(that);
+                        }
+                    } else {
+                        return _data[_key] || "&nbsp;";
+                    }
                 }
             };
+
+
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
             for (cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
@@ -540,12 +422,6 @@
                     for (ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
                         col = _bodyRow.rows[tri].cols[ci];
                         cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
-                        tdCSS_class = "";
-                        if (cfg.body.columnBorderWidth) tdCSS_class += "hasBorder ";
-                        if (ci == cl - 1) tdCSS_class += "isLastColumn ";
-
-                        if (_colGroup[col.colIndex] && _colGroup[col.colIndex].CSSClass) tdCSS_class += _colGroup[col.colIndex].CSSClass + " ";
-                        if (col.CSSClass) tdCSS_class += col.CSSClass + " ";
 
                         SS.push('<td ',
                             'data-ax5grid-panel-name="' + _elTargetKey + '" ',
@@ -565,8 +441,26 @@
                                 }
                                 return attrs;
                             })(this.focusedColumn[di + "_" + col.colIndex + "_" + col.rowIndex], this.selectedColumn[di + "_" + col.colIndex + "_" + col.rowIndex]),
-                            'colspan="' + col.colspan + '" rowspan="' + col.rowspan + '" ',
-                            'class="' + tdCSS_class + '" ',
+                            'colspan="' + col.colspan + '" ',
+                            'rowspan="' + col.rowspan + '" ',
+                            'class="' + (function (_col) {
+                                var tdCSS_class = "";
+                                if (_col.styleClass) {
+                                    if(U.isFunction(_col.styleClass)){
+                                        tdCSS_class += _col.styleClass.call({
+                                                column: _col,
+                                                key: _col.key,
+                                                item: _data[di],
+                                                index: di
+                                            }) + " ";
+                                    }else{
+                                        tdCSS_class += _col.styleClass + " ";
+                                    }
+                                }
+                                if (cfg.body.columnBorderWidth) tdCSS_class += "hasBorder ";
+                                if (ci == cl - 1) tdCSS_class += "isLastColumn ";
+                                return tdCSS_class;
+                            }).call(this, col) + '" ',
                             'style="height: ' + cellHeight + 'px;min-height: 1px;">');
 
                         SS.push((function () {
@@ -576,7 +470,7 @@
                             } else {
                                 return '<span data-ax5grid-cellHolder="" style="height: ' + (cfg.body.columnHeight - cfg.body.columnBorderWidth) + 'px;line-height: ' + lineHeight + 'px;">';
                             }
-                        })(), getFieldValue.call(this, _data[di], di, col.key), '</span>');
+                        })(), getFieldValue.call(this, _data[di], di, col.key, col.formatter), '</span>');
 
                         SS.push('</td>');
                     }
