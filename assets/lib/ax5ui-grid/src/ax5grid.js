@@ -156,6 +156,10 @@
                         },
                         "form": {
                             "clipboard": this.$target.find('[data-ax5grid-form="clipboard"]')
+                        },
+                        "resizer": {
+                            "vertical": this.$target.find('[data-ax5grid-resizer="vertical"]'),
+                            "horizontal": this.$target.find('[data-ax5grid-resizer="horizontal"]')
                         }
                     };
 
@@ -808,6 +812,22 @@
             };
 
             /**
+             * @method ax5grid.updateColumnWidth
+             * @param _width
+             * @param _cindex
+             */
+            this.updateColumnWidth = function(_width, _cindex){
+                this.colGroup[this.xvar.columnResizerIndex]._width = _width;
+
+                // 컬럼너비 변경사항 적용.
+                GRID.header.repaint.call(this);
+                GRID.body.repaint.call(this, true);
+                GRID.scroller.resize.call(this);
+                alignGrid.call(this);
+                return this;
+            };
+
+            /**
              * @method ax5grid.select
              * @param {Number||Object} _selectObject
              * @param {Number} _selectObject.index - index of row
@@ -858,11 +878,13 @@
 // todo : body.onClick / select -- ok & multipleSelect : TF -- ok
 // todo : column add / remove / update -- ok
 // todo : cell formatter -- ok
-// todo : column resize
-// todo : column reorder
+// todo : column resize -- ok
+
 // todo : sort & filter
 // todo : body menu
 // todo : cell inline edit
+
+// todo : column reorder
 
 
 
