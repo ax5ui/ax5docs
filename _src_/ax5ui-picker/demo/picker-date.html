@@ -25,29 +25,30 @@
         <!-- doc-js Basic Alert -->
         <section class="ax5docs-section">
             <ax5docs-md>
-            # Picker Date
+                # Picker Date
 
-            **Paste the following code into the `head` section of your site's HTML.**
+                **Paste the following code into the `head` section of your site's HTML.**
 
-            ```html
-            <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
-            <link rel="stylesheet" href="lib/ax5ui-calendar/dist/ax5calendar.css"/>
-            <script type="text/javascript" src="lib/ax5ui-calendar/dist/ax5calendar.min.js"></script>
-            <script type="text/javascript" src="lib/ax5ui-formatter/dist/ax5formatter.min.js"></script>
-            ```
+                ```html
+                <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
+                <link rel="stylesheet" href="lib/ax5ui-calendar/dist/ax5calendar.css"/>
+                <script type="text/javascript" src="lib/ax5ui-calendar/dist/ax5calendar.min.js"></script>
+                <script type="text/javascript" src="lib/ax5ui-formatter/dist/ax5formatter.min.js"></script>
+                ```
             </ax5docs-md>
 
 
-
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Date</label>
-                    <div class="input-group" data-ax5picker="basic">
-                        <input type="text" class="form-control" placeholder="yyyy/mm/dd"/>
-                        <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+            <ax5docs-html run="true">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Date</label>
+                        <div class="input-group" data-ax5picker="basic">
+                            <input type="text" class="form-control" placeholder="yyyy/mm/dd"/>
+                            <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </ax5docs-html>
 
             <ax5docs-js run="true">
                 <script type="text/javascript">
@@ -79,7 +80,7 @@
                                     pattern: 'date'
                                 }
                             },
-                            onStateChanged: function(){
+                            onStateChanged: function () {
 
                             }
                         });

@@ -154,17 +154,27 @@
 &lt;link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css">
 &lt;script type="text/javascript" src="../../assets/lib/ax5ui-calendar/dist/ax5calendar.min.js">&lt;/script></pre>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Multi Date</label>
-                    <div class="input-group" data-ax5picker="basic">
-                        <input type="text" class="form-control" placeholder="yyyy/mm/dd">
-                        <span class="input-group-addon">~</span>
-                        <input type="text" class="form-control" placeholder="yyyy/mm/dd">
-                        <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
-                    </div>
-                </div>
-            </div>
+            <pre class="prettyprint linenums lang-html">&lt;div class="row">
+    &lt;div class="col-md-6">
+        &lt;label>Multi Date&lt;/label>
+        &lt;div class="input-group" data-ax5picker="basic">
+            &lt;input type="text" class="form-control" placeholder="yyyy/mm/dd">
+            &lt;span class="input-group-addon">~&lt;/span>
+            &lt;input type="text" class="form-control" placeholder="yyyy/mm/dd">
+            &lt;span class="input-group-addon">&lt;i class="fa fa-calendar-o">&lt;/i>&lt;/span>
+        &lt;/div>
+    &lt;/div>
+&lt;/div></pre><div class="row">
+    <div class="col-md-6">
+        <label>Multi Date</label>
+        <div class="input-group" data-ax5picker="basic">
+            <input type="text" class="form-control" placeholder="yyyy/mm/dd">
+            <span class="input-group-addon">~</span>
+            <input type="text" class="form-control" placeholder="yyyy/mm/dd">
+            <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+        </div>
+    </div>
+</div>
 
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     var picker = new ax5.ui.picker();
@@ -192,7 +202,7 @@
                     }
                 }
             },
-            onStateChanged: function(){
+            onStateChanged: function () {
 
             },
             btns: {
@@ -200,9 +210,9 @@
                     label: "Today", onClick: function () {
                         var today = new Date();
                         this.self
-                            .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
-                            .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
-                            .close()
+                                .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
+                                .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
+                                .close()
                         ;
                     }
                 },
@@ -210,11 +220,11 @@
                     label: "This Month", onClick: function () {
                         var today = new Date();
                         this.self
-                            .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-01"}))
-                            .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm"})
-                                + '-'
-                                + ax5.util.daysOfMonth(today.getFullYear(), today.getMonth()))
-                            .close();
+                                .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-01"}))
+                                .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm"})
+                                        + '-'
+                                        + ax5.util.daysOfMonth(today.getFullYear(), today.getMonth()))
+                                .close();
                     }
                 },
                 ok: {label: "Close", theme: "default"}
@@ -247,7 +257,7 @@
                     }
                 }
             },
-            onStateChanged: function(){
+            onStateChanged: function () {
 
             },
             btns: {
@@ -255,9 +265,9 @@
                     label: "Today", onClick: function () {
                         var today = new Date();
                         this.self
-                            .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
-                            .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
-                            .close()
+                                .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
+                                .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm-dd"}))
+                                .close()
                         ;
                     }
                 },
@@ -265,11 +275,11 @@
                     label: "This Month", onClick: function () {
                         var today = new Date();
                         this.self
-                            .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-01"}))
-                            .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm"})
-                                + '-'
-                                + ax5.util.daysOfMonth(today.getFullYear(), today.getMonth()))
-                            .close();
+                                .setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-mm-01"}))
+                                .setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-mm"})
+                                        + '-'
+                                        + ax5.util.daysOfMonth(today.getFullYear(), today.getMonth()))
+                                .close();
                     }
                 },
                 ok: {label: "Close", theme: "default"}

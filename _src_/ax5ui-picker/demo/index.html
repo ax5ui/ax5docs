@@ -30,15 +30,18 @@
                 Or to define the "content" to "Function", you can define the "picker's content".
             </ax5docs-md>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Area</label>
-                    <div class="input-group" data-ax5picker="basic">
-                        <input type="text" class="form-control" placeholder=""/>
-                        <span class="input-group-addon"><i class="fa fa-calculator"></i></span>
+            <ax5docs-html run="true">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Area</label>
+                        <div class="input-group" data-ax5picker="basic">
+                            <input type="text" class="form-control" placeholder=""/>
+                            <span class="input-group-addon"><i class="fa fa-calculator"></i></span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </ax5docs-html>
+
 
             <ax5docs-js run="true">
                 <script type="text/javascript">
@@ -52,21 +55,21 @@
                             contentWidth: 280,
                             content: function (callBack) {
                                 var html = ''
-                                        + '<form style="padding:0 5px;">'
-                                        + '<div class="form-group">'
-                                        + '<label for="exampleInputWidth">Width</label>'
-                                        + '<input type="number" class="form-control" id="exampleInputWidth" placeholder="width" value="10">'
-                                        + '</div>'
-                                        + '<div class="form-group">'
-                                        + '<label for="exampleInputHeight">Height</label>'
-                                        + '<input type="number" class="form-control" id="exampleInputHeight" placeholder="height" value="10">'
-                                        + '</div>'
-                                        + '</form>'
-                                    ;
+                                                + '<form style="padding:0 5px;">'
+                                                + '<div class="form-group">'
+                                                + '<label for="exampleInputWidth">Width</label>'
+                                                + '<input type="number" class="form-control" id="exampleInputWidth" placeholder="width" value="10">'
+                                                + '</div>'
+                                                + '<div class="form-group">'
+                                                + '<label for="exampleInputHeight">Height</label>'
+                                                + '<input type="number" class="form-control" id="exampleInputHeight" placeholder="height" value="10">'
+                                                + '</div>'
+                                                + '</form>'
+                                        ;
                                 callBack(html);
                             },
-                            onStateChanged: function(){
-                                if(this.state == "open"){
+                            onStateChanged: function () {
+                                if (this.state == "open") {
                                     // ..
                                     console.log(this);
                                 }
@@ -97,10 +100,10 @@
                 **onClick > this**
                 ```json
                 {
-                    "self": [picker class instance],
-                    "item": [Object],
-                    "key": [String], // btns's key
-                    "value": [Object] // btns click object
+                "self": [picker class instance],
+                "item": [Object],
+                "key": [String], // btns's key
+                "value": [Object] // btns click object
                 }
                 ```
             </ax5docs-md>

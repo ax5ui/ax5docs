@@ -33,12 +33,14 @@
                 <script type="text/javascript" src="../../assets/lib/ax5ui-picker/dist/ax5picker.js"></script>
             </ax5docs-html>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label>secure-num</label>
-                    <input type="password" data-ax5picker="secure-num" class="form-control" maxlength="4" placeholder="" readonly="readonly" />
+            <ax5docs-html run="true">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>secure-num</label>
+                        <input type="password" data-ax5picker="secure-num" class="form-control" maxlength="4" placeholder="" readonly="readonly"/>
+                    </div>
                 </div>
-            </div>
+            </ax5docs-html>
 
             <ax5docs-js run="true">
                 <script type="text/javascript">
@@ -63,8 +65,8 @@
                                     pattern: 'number'
                                 }
                             },
-                            onStateChanged: function(){
-                                if(this.state == "open"){
+                            onStateChanged: function () {
+                                if (this.state == "open") {
                                     this.item.target.val('');
                                 }
                                 else {

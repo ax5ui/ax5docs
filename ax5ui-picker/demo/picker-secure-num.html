@@ -151,12 +151,17 @@
             <pre class="prettyprint linenums lang-html">&lt;link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css">
 &lt;script type="text/javascript" src="../../assets/lib/ax5ui-picker/dist/ax5picker.js">&lt;/script></pre>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label>secure-num</label>
-                    <input type="password" data-ax5picker="secure-num" class="form-control" maxlength="4" placeholder readonly="readonly">
-                </div>
-            </div>
+            <pre class="prettyprint linenums lang-html">&lt;div class="row">
+    &lt;div class="col-md-6">
+        &lt;label>secure-num&lt;/label>
+        &lt;input type="password" data-ax5picker="secure-num" class="form-control" maxlength="4" placeholder readonly="readonly">
+    &lt;/div>
+&lt;/div></pre><div class="row">
+    <div class="col-md-6">
+        <label>secure-num</label>
+        <input type="password" data-ax5picker="secure-num" class="form-control" maxlength="4" placeholder readonly="readonly">
+    </div>
+</div>
 
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     var picker = new ax5.ui.picker();
@@ -180,8 +185,8 @@
                     pattern: 'number'
                 }
             },
-            onStateChanged: function(){
-                if(this.state == "open"){
+            onStateChanged: function () {
+                if (this.state == "open") {
                     this.item.target.val('');
                 }
                 else {
@@ -214,8 +219,8 @@
                     pattern: 'number'
                 }
             },
-            onStateChanged: function(){
-                if(this.state == "open"){
+            onStateChanged: function () {
+                if (this.state == "open") {
                     this.item.target.val('');
                 }
                 else {

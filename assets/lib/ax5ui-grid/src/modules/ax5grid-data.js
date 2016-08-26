@@ -13,9 +13,9 @@
         var initData = function (_list) {
             // selected 데이터 초기화
             self.selectedDataIndexs = [];
-            var i = _list.length;
+            var i = 0, l = _list.length;
             var returnList = [];
-            while (i--) {
+            for (; i < l; i++) {
                 if (_list[i][self.config.columnKeys.selected]) {
                     self.selectedDataIndexs.push(i);
                 }
@@ -26,13 +26,13 @@
 
         if (U.isArray(data)) {
             this.page = null;
-            this.data = initData(data);
+            this.list = initData(data);
         } else if ("page" in data) {
             this.page = jQuery.extend({}, data.page);
-            this.data = initData(data.list);
+            this.list = initData(data.list);
         }
 
-        this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.data.length) ? this.data.length : this.config.frozenRowIndex;
+        this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
         this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
         GRID.page.navigationUpdate.call(this);
         return this;
@@ -45,10 +45,10 @@
     var add = function (_row, _dindex) {
         var processor = {
             "first": function () {
-                this.data = [].concat(_row).concat(this.data);
+                this.list = [].concat(_row).concat(this.list);
             },
             "last": function () {
-                this.data = this.data.concat([].concat(_row));
+                this.list = this.list.concat([].concat(_row));
             }
         };
 
@@ -60,10 +60,10 @@
                 throw 'invalid argument _dindex';
             }
             //
-            this.data.splice(_dindex, [].concat(_row))
+            this.list.splice(_dindex, [].concat(_row))
         }
 
-        this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.data.length) ? this.data.length : this.config.frozenRowIndex;
+        this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
         this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
         GRID.page.navigationUpdate.call(this);
         return this;
@@ -72,10 +72,10 @@
     var remove = function (_dindex) {
         var processor = {
             "first": function () {
-                this.data.splice(_dindex, 1);
+                this.list.splice(_dindex, 1);
             },
             "last": function () {
-                this.data.splice(this.data.length - 1, 1);
+                this.list.splice(this.list.length - 1, 1);
             }
         };
 
@@ -87,10 +87,10 @@
                 throw 'invalid argument _dindex';
             }
             //
-            this.data.splice(_dindex, 1);
+            this.list.splice(_dindex, 1);
         }
 
-        this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.data.length) ? this.data.length : this.config.frozenRowIndex;
+        this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
         this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
         GRID.page.navigationUpdate.call(this);
         return this;
@@ -101,30 +101,67 @@
             throw 'invalid argument _dindex';
         }
         //
-        this.data.splice(_dindex, 1, _row);
+        this.list.splice(_dindex, 1, _row);
     };
 
     var setValue = function () {
 
     };
 
-    var clearSelect = function(){
+    var clearSelect = function () {
         this.selectedDataIndexs = [];
     };
 
-    var select = function (dindex, selected) {
-        if (typeof selected === "undefined") {
-            if(this.data[dindex][this.config.columnKeys.selected] = !this.data[dindex][this.config.columnKeys.selected]){
-                this.selectedDataIndexs.push(dindex);
+    var select = function (_dindex, _selected) {
+        var cfg = this.config;
+        if (typeof _selected === "undefined") {
+            if (this.list[_dindex][cfg.columnKeys.selected] = !this.list[_dindex][cfg.columnKeys.selected]) {
+                this.selectedDataIndexs.push(_dindex);
             }
         } else {
-            if(this.data[dindex][this.config.columnKeys.selected] = selected){
-                this.selectedDataIndexs.push(dindex);
+            if (this.list[_dindex][cfg.columnKeys.selected] = _selected) {
+                this.selectedDataIndexs.push(_dindex);
             }
         }
-        return this.data[dindex][this.config.columnKeys.selected];
+        return this.list[_dindex][cfg.columnKeys.selected];
     };
 
+    var sort = function (_sortInfo) {
+        var self = this;
+        var sortInfoArray = [];
+
+        for (var k in _sortInfo) {
+            sortInfoArray[_sortInfo[k].seq] = {key: k, order: _sortInfo[k].orderBy};
+        }
+        sortInfoArray = U.filter(sortInfoArray, function () {
+            return typeof this !== "undefined";
+        });
+
+        var i = 0, l = sortInfoArray.length, _a_val, _b_val;
+
+        this.list.sort(function (_a, _b) {
+            i = 0;
+            for (; i < l; i++) {
+                _a_val = _a[sortInfoArray[i].key];
+                _b_val = _b[sortInfoArray[i].key];
+                if (typeof _a_val !== typeof _b_val) {
+                    _a_val = '' + _a_val;
+                    _b_val = '' + _b_val;
+                }
+
+                if (_a_val < _b_val) {
+                    return (sortInfoArray[i].order === "asc") ? -1 : 1;
+                } else if (_a_val > _b_val) {
+                    return (sortInfoArray[i].order === "asc") ? 1 : -1;
+                }
+            }
+        });
+
+        this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
+        this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        GRID.page.navigationUpdate.call(this);
+        return this;
+    };
 
     GRID.data = {
         init: init,
@@ -135,7 +172,8 @@
         select: select,
         add: add,
         remove: remove,
-        update: update
+        update: update,
+        sort: sort
     };
 
 })();

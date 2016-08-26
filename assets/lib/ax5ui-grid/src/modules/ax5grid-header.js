@@ -19,7 +19,6 @@
 
             jQuery(document.body)
                 .bind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId, function (e) {
-                    //var css = getScrollerPosition[type](e);
                     var mouseObj = GRID.util.getMousePosition(e);
                     self.xvar.__da = mouseObj.clientX - self.xvar.mousePosition.clientX;
 
@@ -36,7 +35,6 @@
                     self.$["resizer"]["horizontal"].css({
                         left: columnResizerPositionLeft + self.xvar.__da - gridTargetOffsetLeft
                     });
-
                 })
                 .bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                     columnResizerEvent.off.call(self);
@@ -55,7 +53,7 @@
         "off": function () {
             this.$["resizer"]["horizontal"].removeClass("live");
             this.xvar.columnResizerLived = false;
-            this.updateColumnWidth(this.colGroup[this.xvar.columnResizerIndex]._width + this.xvar.__da, this.xvar.columnResizerIndex);
+            this.setColumnWidth(this.colGroup[this.xvar.columnResizerIndex]._width + this.xvar.__da, this.xvar.columnResizerIndex);
 
             jQuery(document.body)
                 .unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId)
@@ -74,8 +72,16 @@
         var self = this;
 
         this.$["container"]["header"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            console.log(this);
-            /// column click
+            var key = this.getAttribute("data-ax5grid-column-key");
+            var colIndex = this.getAttribute("data-ax5grid-column-colindex");
+            var rowIndex = this.getAttribute("data-ax5grid-column-rowindex");
+            var col = self.colGroup[colIndex];
+            if (key && col) {
+                if (self.config.sortable || col.sortable) {
+                    //console.log(col.sort, col.key);
+                    toggleSort.call(self, col.key);
+                }
+            }
         });
         this.$["container"]["header"]
             .on("mousedown", '[data-ax5grid-column-resizer]', function (e) {
@@ -92,6 +98,7 @@
 
     var repaint = function () {
         var cfg = this.config;
+        var colGroup = this.colGroup;
         var dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.config.frozenColumnIndex);
         var asideHeaderData = this.asideHeaderData = (function (dataTable) {
             var colGroup = [];
@@ -135,8 +142,8 @@
         var headerData = this.headerData = dividedHeaderObj.rightData;
 
         // this.asideColGroup : asideHeaderData에서 처리 함.
-        this.leftHeaderColGroup = this.colGroup.slice(0, this.config.frozenColumnIndex);
-        this.headerColGroup = this.colGroup.slice(this.config.frozenColumnIndex);
+        this.leftHeaderColGroup = colGroup.slice(0, this.config.frozenColumnIndex);
+        this.headerColGroup = colGroup.slice(this.config.frozenColumnIndex);
 
         var repaintHeader = function (_elTarget, _colGroup, _bodyRow) {
             var tableWidth = 0;
@@ -161,6 +168,11 @@
                         'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ',
                         'data-ax5grid-column-row="' + tri + '" ',
                         'data-ax5grid-column-col="' + ci + '" ',
+                        (function () {
+                            return (typeof col.key !== "undefined") ? 'data-ax5grid-column-key="' + col.key + '" ' : '';
+                        })(),
+                        'data-ax5grid-column-colindex="' + col.colIndex + '" ',
+                        'data-ax5grid-column-rowindex="' + col.rowIndex + '" ',
                         'colspan="' + col.colspan + '" ',
                         'rowspan="' + col.rowspan + '" ',
                         'class="' + (function (_col) {
@@ -184,7 +196,21 @@
                     SS.push((function () {
                         var lineHeight = (cfg.header.columnHeight - cfg.header.columnPadding * 2 - cfg.header.columnBorderWidth);
                         return '<span data-ax5grid-cellHolder="" style="height: ' + (cfg.header.columnHeight - cfg.header.columnBorderWidth) + 'px;line-height: ' + lineHeight + 'px;">';
+                    })(), (function () {
+                        var _SS = "";
+                        if (!U.isNothing(col.key) && !U.isNothing(col.colIndex) && cfg.sortable || col.sortable) {
+                            _SS += '<span data-ax5grid-column-sort="' + col.colIndex + '" data-ax5grid-column-sort-order="' + (colGroup[col.colIndex].sort || "") + '" />';
+                        }
+                        return _SS;
                     })(), (col.label || "&nbsp;"), '</span>');
+
+                    if (!U.isNothing(col.colIndex)) {
+                        if (cfg.enableFilter) {
+
+
+                            SS.push('<span data-ax5grid-column-filter="' + col.colIndex + '" data-ax5grid-column-filter-value=""  />');
+                        }
+                    }
 
                     SS.push('</td>');
                 }
@@ -202,16 +228,18 @@
             (function () {
                 var resizerHeight = cfg.header.columnHeight * _bodyRow.rows.length - cfg.header.columnBorderWidth;
                 var resizerLeft = 0;
-                var RR = [];
+                var AS = [];
                 for (var cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
-                    if (!U.isNothing(_colGroup[cgi].colIndex)) {
+                    var col = _colGroup[cgi];
+                    if (!U.isNothing(col.colIndex)) {
                         //_colGroup[cgi]._width
-                        resizerLeft += _colGroup[cgi]._width;
-                        RR.push('<div data-ax5grid-column-resizer="' + _colGroup[cgi].colIndex + '" style="height:' + resizerHeight + 'px;left: ' + (resizerLeft - 4) + 'px;"  />');
+                        resizerLeft += col._width;
+                        AS.push('<div data-ax5grid-column-resizer="' + col.colIndex + '" style="height:' + resizerHeight + 'px;left: ' + (resizerLeft - 4) + 'px;"  />');
                     }
                 }
-                _elTarget.append(RR);
+                _elTarget.append(AS);
             }).call(this);
+
 
             return tableWidth;
         };
@@ -232,12 +260,65 @@
 
     var scrollTo = function (css) {
         this.$.panel["header-scroll"].css(css);
+        return this;
+    };
+
+    var toggleSort = function (_key) {
+        var sortOrder = "";
+        var sortInfo = {};
+        var seq = 0;
+
+
+        for (var i = 0, l = this.colGroup.length; i < l; i++) {
+            if (this.colGroup[i].key == _key) {
+                if (sortOrder == "") {
+                    if (typeof this.colGroup[i].sort === "undefined") {
+                        sortOrder = "desc";
+                    }
+                    else if (this.colGroup[i].sort === "desc") {
+                        sortOrder = "asc";
+                    }
+                    else {
+                        sortOrder = undefined;
+                    }
+                }
+                this.colGroup[i].sort = sortOrder;
+            } else if (!this.config.multiSort) {
+                this.colGroup[i].sort = undefined;
+            }
+
+            if (typeof this.colGroup[i].sort !== "undefined") {
+                if (!sortInfo[this.colGroup[i].key]) {
+                    sortInfo[this.colGroup[i].key] = {
+                        seq: seq++,
+                        orderBy: this.colGroup[i].sort
+                    };
+                }
+            }
+        }
+
+        this.sortInfo = sortInfo;
+        this.setColumnSort();
+        return this;
+    };
+
+    var applySortStatus = function (_sortInfo) {
+        for (var i = 0, l = this.colGroup.length; i < l; i++) {
+            for (var _key in _sortInfo) {
+                if (this.colGroup[i].key == _key) {
+                    this.colGroup[i].sort = _sortInfo[_key].orderBy;
+                }
+            }
+        }
+        return this;
     };
 
     GRID.header = {
         init: init,
         repaint: repaint,
-        scrollTo: scrollTo
+        scrollTo: scrollTo,
+        toggleSort: toggleSort,
+        applySortStatus: applySortStatus
     };
 
 })();

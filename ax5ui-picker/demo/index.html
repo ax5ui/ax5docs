@@ -150,15 +150,24 @@
 Or to define the “content” to “Function”, you can define the “picker’s content”.</p>
 
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Area</label>
-                    <div class="input-group" data-ax5picker="basic">
-                        <input type="text" class="form-control" placeholder>
-                        <span class="input-group-addon"><i class="fa fa-calculator"></i></span>
-                    </div>
-                </div>
-            </div>
+            <pre class="prettyprint linenums lang-html">&lt;div class="row">
+    &lt;div class="col-md-6">
+        &lt;label>Area&lt;/label>
+        &lt;div class="input-group" data-ax5picker="basic">
+            &lt;input type="text" class="form-control" placeholder>
+            &lt;span class="input-group-addon">&lt;i class="fa fa-calculator">&lt;/i>&lt;/span>
+        &lt;/div>
+    &lt;/div>
+&lt;/div></pre><div class="row">
+    <div class="col-md-6">
+        <label>Area</label>
+        <div class="input-group" data-ax5picker="basic">
+            <input type="text" class="form-control" placeholder>
+            <span class="input-group-addon"><i class="fa fa-calculator"></i></span>
+        </div>
+    </div>
+</div>
+
 
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     var picker = new ax5.ui.picker();
@@ -171,21 +180,21 @@ Or to define the “content” to “Function”, you can define the “picker�
             contentWidth: 280,
             content: function (callBack) {
                 var html = ''
-                        + '&lt;form style="padding:0 5px;">'
-                        + '&lt;div class="form-group">'
-                        + '&lt;label for="exampleInputWidth">Width&lt;/label>'
-                        + '&lt;input type="number" class="form-control" id="exampleInputWidth" placeholder="width" value="10">'
-                        + '&lt;/div>'
-                        + '&lt;div class="form-group">'
-                        + '&lt;label for="exampleInputHeight">Height&lt;/label>'
-                        + '&lt;input type="number" class="form-control" id="exampleInputHeight" placeholder="height" value="10">'
-                        + '&lt;/div>'
-                        + '&lt;/form>'
-                    ;
+                                + '&lt;form style="padding:0 5px;">'
+                                + '&lt;div class="form-group">'
+                                + '&lt;label for="exampleInputWidth">Width&lt;/label>'
+                                + '&lt;input type="number" class="form-control" id="exampleInputWidth" placeholder="width" value="10">'
+                                + '&lt;/div>'
+                                + '&lt;div class="form-group">'
+                                + '&lt;label for="exampleInputHeight">Height&lt;/label>'
+                                + '&lt;input type="number" class="form-control" id="exampleInputHeight" placeholder="height" value="10">'
+                                + '&lt;/div>'
+                                + '&lt;/form>'
+                        ;
                 callBack(html);
             },
-            onStateChanged: function(){
-                if(this.state == "open"){
+            onStateChanged: function () {
+                if (this.state == "open") {
                     // ..
                     console.log(this);
                 }
@@ -215,21 +224,21 @@ Or to define the “content” to “Function”, you can define the “picker�
             contentWidth: 280,
             content: function (callBack) {
                 var html = ''
-                        + '<form style="padding:0 5px;">'
-                        + '<div class="form-group">'
-                        + '<label for="exampleInputWidth">Width</label>'
-                        + '<input type="number" class="form-control" id="exampleInputWidth" placeholder="width" value="10">'
-                        + '</div>'
-                        + '<div class="form-group">'
-                        + '<label for="exampleInputHeight">Height</label>'
-                        + '<input type="number" class="form-control" id="exampleInputHeight" placeholder="height" value="10">'
-                        + '</div>'
-                        + '</form>'
-                    ;
+                                + '<form style="padding:0 5px;">'
+                                + '<div class="form-group">'
+                                + '<label for="exampleInputWidth">Width</label>'
+                                + '<input type="number" class="form-control" id="exampleInputWidth" placeholder="width" value="10">'
+                                + '</div>'
+                                + '<div class="form-group">'
+                                + '<label for="exampleInputHeight">Height</label>'
+                                + '<input type="number" class="form-control" id="exampleInputHeight" placeholder="height" value="10">'
+                                + '</div>'
+                                + '</form>'
+                        ;
                 callBack(html);
             },
-            onStateChanged: function(){
-                if(this.state == "open"){
+            onStateChanged: function () {
+                if (this.state == "open") {
                     // ..
                     console.log(this);
                 }
@@ -256,10 +265,10 @@ Contains a variety of objects necessary for programming of the passed <code>onCl
 In the example, we used <code>this.item</code> and <code>this.self</code>.</p>
 <p><strong>onClick &gt; this</strong></p>
 <pre class="prettyprint linenums lang-json"><code>{
-    &quot;self&quot;: [picker class instance],
-    &quot;item&quot;: [Object],
-    &quot;key&quot;: [String], // btns's key
-    &quot;value&quot;: [Object] // btns click object
+&quot;self&quot;: [picker class instance],
+&quot;item&quot;: [Object],
+&quot;key&quot;: [String], // btns's key
+&quot;value&quot;: [Object] // btns click object
 }
 </code></pre>
 

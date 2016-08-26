@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.0.10"
+        version: "0.0.11"
     }, (function () {
         /**
          * @class ax5grid
@@ -31,8 +31,6 @@
                 // 틀고정 속성
                 frozenColumnIndex: 0,
                 frozenRowIndex: 0,
-                rightSum: false,
-                footSum: false,
                 showLineNumber: false,
                 showRowSelector: false,
                 multipleSelect: false,
@@ -41,6 +39,7 @@
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
                 rowSelectorColumnWidth: 25,
+                sortable: false,
 
                 header: {
                     columnHeight: 25,
@@ -52,6 +51,8 @@
                     columnPadding: 3,
                     columnBorderWidth: 1
                 },
+                rightSum: false,
+                footSum: false,
                 page: {
                     height: 25,
                     display: true,
@@ -74,8 +75,10 @@
             // 그리드 데이터셋
             this.columns = []; // config.columns에서 복제된 오브젝트
             this.colGroup = []; // columns를 table태그로 출력하기 좋게 변환한 오브젝트
-            this.data = []; // 그리드의 데이터
+            this.footSum = [];
+            this.list = []; // 그리드의 데이터
             this.page = {}; // 그리드의 페이지 정보
+            this.sortInfo = {};
             this.focusedColumn = {};
             this.selectedColumn = {};
             this.bodyRowTable = {};
@@ -193,7 +196,7 @@
 
                     return this;
                 },
-                onResetColumns = function(){
+                onResetColumns = function () {
                     initColumns.call(this, this.config.columns);
                     resetColGroupWidth.call(this);
                     alignGrid.call(this, true);
@@ -226,6 +229,15 @@
                         }
                     }
                 },
+                initFootSum = function (footSum) {
+                    if(U.isArray(footSum)) {
+                        this.footSum = footSum;
+                        this.footSumTagle = GRID.util.makeFootSumTable.call(this, this.footSum);
+                    }else{
+                        this.footSum = [];
+                        this.footSumTagle = [];
+                    }
+                },
                 alignGrid = function (isFirst) {
                     // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하하는 아규먼트
                     var CT_WIDTH = this.$["container"]["root"].width();
@@ -239,6 +251,7 @@
                         if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
                         return width;
                     })();
+
                     var frozenPanelWidth = cfg.frozenPanelWidth = (function (colGroup, endIndex) {
                         var width = 0;
                         for (var i = 0, l = endIndex; i < l; i++) {
@@ -246,18 +259,23 @@
                         }
                         return width;
                     })(this.colGroup, cfg.frozenColumnIndex);
+
                     var rightPanelWidth = 0; // todo : 우측 함계컬럼 넘비 계산
+
                     var frozenRowHeight = (function (bodyTrHeight) {
                         return cfg.frozenRowIndex * bodyTrHeight;
-                    })(this.xvar.bodyTrHeight); // todo : 고정행 높이 계산하기
-                    var footSumHeight = 0;
+                    })(this.xvar.bodyTrHeight);
+
+                    var footSumHeight = (function (bodyTrHeight) {
+                        return this.footSum.length * bodyTrHeight;
+                    }).call(this, this.xvar.bodyTrHeight);
 
                     var headerHeight = this.headerTable.rows.length * cfg.header.columnHeight;
                     var pageHeight = (cfg.page.display) ? cfg.page.height : 0;
 
                     // 데이터의 길이가 body보다 높을때. 수직 스크롤러 활성화
                     var verticalScrollerWidth = (function () {
-                        return ((CT_HEIGHT - headerHeight - pageHeight) < this.data.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
+                        return ((CT_HEIGHT - headerHeight - pageHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
                     }).call(this);
 
                     // 남은 너비가 colGroup의 너비보다 넓을때. 수평 스크롤 활성화.
@@ -271,6 +289,7 @@
                         }
                         return (totalColGroupWidth > bodyWidth) ? this.config.scroller.size : 0;
                     }).call(this);
+                    
 
                     // 수평 너비 결정
                     CT_INNER_WIDTH = CT_WIDTH - verticalScrollerWidth;
@@ -436,11 +455,18 @@
                     panelDisplayProcess.call(this, this.$["panel"]["bottom-body"], "bottom", "", "body");
                     panelDisplayProcess.call(this, this.$["panel"]["bottom-right-body"], "bottom", "right", "body");
 
+                    
                     scrollerDisplayProcess.call(this, this.$["scroller"]["vertical"], verticalScrollerWidth, horizontalScrollerHeight, "vertical");
                     scrollerDisplayProcess.call(this, this.$["scroller"]["horizontal"], verticalScrollerWidth, horizontalScrollerHeight, "horizontal");
                     scrollerDisplayProcess.call(this, this.$["scroller"]["corner"], verticalScrollerWidth, horizontalScrollerHeight, "corner");
 
                     panelDisplayProcess.call(this, this.$["container"]["page"], "", "", "page");
+                },
+                sortColumns = function (_sortInfo) {
+                    GRID.header.repaint.call(this);
+                    GRID.data.sort.call(this, _sortInfo);
+                    GRID.body.repaint.call(this, true);
+                    GRID.scroller.resize.call(this);
                 };
 
             /// private end
@@ -449,6 +475,36 @@
              * Preferences of grid UI
              * @method ax5grid.setConfig
              * @param {Object} config - 클래스 속성값
+             * @param {Element} config.target
+             * @param {Number} [config.frozenColumnIndex=0]
+             * @param {Number} [config.frozenRowIndex=0]
+             * @param {Boolean} [config.showLineNumber=false]
+             * @param {Boolean} [config.showRowSelector=false]
+             * @param {Boolean} [config.multipleSelect=false]
+             * @param {Number} [config.columnMinWidth=100]
+             * @param {Number} [config.lineNumberColumnWidth=30]
+             * @param {Number} [config.rowSelectorColumnWidth=25]
+             * @param {Boolean} [config.sortable=false]
+             * @param {Boolean} [config.multiSort=false]
+             * @param {Boolean} [config.remoteSort=false]
+             * @param {Object} [config.header]
+             * @param {Number} [config.header.columnHeight=25]
+             * @param {Number} [config.header.columnPadding=3]
+             * @param {Number} [config.header.columnBorderWidth=1]
+             * @param {Object} [config.body]
+             * @param {Number} [config.body.columnHeight=25]
+             * @param {Number} [config.body.columnPadding=3]
+             * @param {Number} [config.body.columnBorderWidth=1]
+             * @param {Object} [config.page]
+             * @param {Number} [config.page.height=25]
+             * @param {Boolean} [config.page.display=true]
+             * @param {Number} [config.page.navigationItemCount=5]
+             * @param {Object} [config.scroller]
+             * @param {Number} [config.scroller.size=15]
+             * @param {Number} [config.scroller.barMinSize=15]
+             * @param {Object} [config.columnKeys]
+             * @param {String} [config.columnKeys.selected="_SELECTED"]
+             * @param {Object} config.columns
              * @returns {ax5grid}
              * @example
              * ```
@@ -464,7 +520,7 @@
                     return this;
                 }
                 this.$target = jQuery(grid.target);
-                if(!this.gridConfig.height){
+                if (!this.gridConfig.height) {
                     this.gridConfig.height = this.$target.height();
                 }
 
@@ -488,6 +544,9 @@
                 // columns데이터를 분석하여 미리 처리해야하는 데이터를 정리합니다.
                 initColumns.call(this, grid.columns);
                 resetColGroupWidth.call(this);
+
+                // footSum데이터를 분석하여 미리 처리해야 하는 데이터를 정리
+                initFootSum.call(this, grid.footSum);
 
                 // 그리드의 각 요소의 크기를 맞춤니다.
                 alignGrid.call(this, true);
@@ -622,7 +681,7 @@
                         }
                         var originalColumn = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
                         if (originalColumn) {
-                            copyTextArray[_di].push(this.data[_column.dindex][originalColumn.key]);
+                            copyTextArray[_di].push(this.list[_column.dindex][originalColumn.key]);
                         } else {
                             copyTextArray[_di].push("");
                         }
@@ -765,12 +824,13 @@
                     return this;
                 }
             })();
+
             /**
              * @method ax5grid.removeCloumn
              * @param {Number|String} [_cindex=last]
              * @returns {ax5grid}
              */
-            this.removeColumn = (function() {
+            this.removeColumn = (function () {
                 var processor = {
                     "first": function (_cindex) {
                         this.config.columns.splice(_cindex, 1);
@@ -812,11 +872,11 @@
             };
 
             /**
-             * @method ax5grid.updateColumnWidth
+             * @method ax5grid.setColumnWidth
              * @param _width
              * @param _cindex
              */
-            this.updateColumnWidth = function(_width, _cindex){
+            this.setColumnWidth = function (_width, _cindex) {
                 this.colGroup[this.xvar.columnResizerIndex]._width = _width;
 
                 // 컬럼너비 변경사항 적용.
@@ -824,6 +884,36 @@
                 GRID.body.repaint.call(this, true);
                 GRID.scroller.resize.call(this);
                 alignGrid.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.getColumnSort
+             * @returns {Object} sortInfo
+             */
+            this.getColumnSort = function () {
+
+                return {}
+            };
+
+            /**
+             * @method ax5grid.setColumnSort
+             * @param {Object} sortInfo
+             * @param {Object} sortInfo.key
+             * @param {Number} sortInfo.key.seq - seq of sortOrder
+             * @param {String} sortInfo.key.orderBy - "desc"|"asc"
+             * @returns {ax5grid}
+             * ```js
+             * ax5grid.setColumnSort({a:{seq:0, orderBy:"desc"}, b:{seq:1, orderBy:"asc"}});
+             * ```
+             */
+            this.setColumnSort = function (_sortInfo) {
+                if (typeof _sortInfo !== "undefined") {
+                    this.sortInfo = _sortInfo;
+                    GRID.header.applySortStatus.call(this, _sortInfo);
+                }
+
+                sortColumns.call(this, this.sortInfo);
                 return this;
             };
 
@@ -880,10 +970,13 @@
 // todo : cell formatter -- ok
 // todo : column resize -- ok
 
-// todo : sort & filter
-// todo : body menu
+// todo : sortable -- ok
+// todo : grid footsum
+// todo : grid body group
 // todo : cell inline edit
 
+// todo : filter
+// todo : body menu
 // todo : column reorder
 
 

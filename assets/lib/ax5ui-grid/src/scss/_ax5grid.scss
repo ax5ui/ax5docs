@@ -25,7 +25,11 @@
     }
 
     @if ($container == "header") {
+        cursor: pointer;
         box-shadow: inset 1px 1px 0px 0px #fff;
+        &:hover{
+            background: #eee;
+        }
         &[data-ax5grid-column-row="null"] {
             box-shadow: none;
         }
@@ -202,6 +206,13 @@
             border-bottom: 1px solid darken(#ccc, 5%); /// frozen Line color
         }
 
+        &[data-ax5grid-panel="bottom-aside-body"],
+        &[data-ax5grid-panel="bottom-left-body"],
+        &[data-ax5grid-panel="bottom-body"],
+        &[data-ax5grid-panel="bottom-right-body"] {
+            border-top: 1px solid darken(#ccc, 5%); /// footSum Line color
+        }
+
         [data-ax5grid-panel-scroll] {
             position: absolute;
             left: 0;
@@ -272,6 +283,7 @@
         }
 
         [data-ax5grid-container="header"] {
+            @include user-select(none);
             @include gridBoxModal();
             position: relative;
             overflow: hidden;
@@ -282,7 +294,7 @@
 
             [data-ax5grid-column-resizer] {
                 position: absolute;
-                left: 0px;
+                right: 0;
                 top: 0;
                 width: 4px;
                 height: 100%;
@@ -291,6 +303,89 @@
                     background: #ff3300;
                     opacity: 0.5;
                 }
+            }
+            [data-ax5grid-column-sort] {
+                $sort-size: 10px;
+
+                position: relative;
+                //right: 0;
+                //top: 2px;
+                width: 10px;
+                height: 10px;
+                display: inline-block;
+
+                @mixin sort-arrow($arrow-size, $ratio-0, $ratio-1, $arrow-color, $opacity, $direction) {
+                    position: absolute;
+                    content: ' ';
+                    width: 0;
+                    height: 0;
+                    display: inline-block;
+                    border-left: $arrow-size/$ratio-0 solid transparent;
+                    border-right: $arrow-size/$ratio-0 solid transparent;
+                    @if ($direction == "up") {
+                        border-bottom: ($arrow-size)/$ratio-1 solid $arrow-color;
+                    } @else {
+                        border-top: ($arrow-size)/2.2 solid $arrow-color;
+                    }
+                    background: transparent;
+                    opacity: $opacity;
+                }
+
+                &:before {
+                    top: 0;
+                    left: 0;
+                    @include sort-arrow(10px, 2.5, 2.2, #000, 0.3, "up");
+                }
+                &:after {
+                    bottom: 0;
+                    left: 0;
+                    @include sort-arrow(10px, 2.5, 2.2, #000, 0.3, "down");
+                }
+
+                &[data-ax5grid-column-sort-order="asc"] {
+                    &:before {
+                        top: 2px;
+                        left: 0;
+                        @include sort-arrow(12px, 2.5, 2.0, #000, 0.8, "up");
+                    }
+                    &:after {
+                        display: none;
+                    }
+                }
+                &[data-ax5grid-column-sort-order="desc"] {
+                    &:before {
+                        display: none;
+                    }
+                    &:after {
+                        bottom: 2px;
+                        left: 0;
+                        @include sort-arrow(12px, 2.5, 2.0, #000, 0.8, "down");
+                    }
+                }
+
+            }
+            [data-ax5grid-column-filter] {
+                $filter-size: 10px;
+
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 10px;
+                height: 10px;
+                cursor: pointer;
+
+                &:before {
+                    content: ' ';
+                    width: 0;
+                    height: 0;
+                    display: inline-block;
+                    border-left: $filter-size/2 solid transparent;
+                    border-right: $filter-size/2 solid transparent;
+                    border-top: ($filter-size) solid #000;
+                    background: transparent;
+                    opacity: 1;
+                }
+
             }
         }
 
