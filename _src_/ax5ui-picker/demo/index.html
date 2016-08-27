@@ -24,12 +24,26 @@
             <ax5docs-md>
                 # Picker Basic
 
-                > picker will be able to enter a value for the input element through the other UI.
-
+                picker will be able to enter a value for the input element through the other UI.
                 The "content.type of picker" can be pre-used as such defined "date".
                 Or to define the "content" to "Function", you can define the "picker's content".
+
+                **Paste the following code into the `head` section of your site's HTML.**
+
+                ```html
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+                <link rel="stylesheet" href="https://cdn.rawgit.com/ax5ui/ax5ui-picker/dist/ax5picker.css"/>
+
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.min.js"></script>
+                ```
+
+                Required file picker to use the plug-in is a "jQuery, ax5core, ax5 picker".
+                If you want to use UI such as the picker calendar will ax5ui-calendar needs.
             </ax5docs-md>
 
+            <h4>html</h4>
             <ax5docs-html run="true">
                 <div class="row">
                     <div class="col-md-6">
@@ -42,7 +56,7 @@
                 </div>
             </ax5docs-html>
 
-
+            <h4>js</h4>
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     var picker = new ax5.ui.picker();
@@ -91,6 +105,7 @@
                     });
                 </script>
             </ax5docs-js>
+
 
             <ax5docs-md>
                 When the user clicks on the `btns`,` onClick` is called.

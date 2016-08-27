@@ -132,7 +132,7 @@
                     <div class="col-md-3">
                         <div class="docs-menu" id="docs-menu">
                             
-        <ul><li  class='active'><a href="/ax5ui-picker/demo/index.html">Picker Basic</a></li><li ><a href="/ax5ui-picker/demo/picker-date.html">Picker Date</a></li><li ><a href="/ax5ui-picker/demo/picker-multidate.html">Picker Multi Date</a></li><li ><a href="/ax5ui-picker/demo/picker-date-btns.html">Picker Buttons</a></li><li ><a href="/ax5ui-picker/demo/picker-secure-num.html">Picker Secure-num</a></li><li ><a href="/ax5ui-picker/demo/picker-jquery-bind.html">Picker jQuery bind</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-picker/demo/index.html">Picker Basic</a></li><li ><a href="/ax5ui-picker/demo/picker-date.html">Picker Date</a></li><li ><a href="/ax5ui-picker/demo/picker-multidate.html">Picker Multi Date</a></li><li ><a href="/ax5ui-picker/demo/picker-date-btns.html">Picker Buttons</a></li><li ><a href="/ax5ui-picker/demo/picker-secure-num.html">Picker Secure-num</a></li><li ><a href="/ax5ui-picker/demo/picker-jquery-bind.html">Picker jQuery bind</a></li><li ><a href="/ax5ui-picker/demo/picker-keyboard.html">Picker Keyboard</a></li></ul>
     
                         </div>
                     </div>
@@ -143,13 +143,22 @@
         
         <section class="ax5docs-section">
             <h1>Picker Basic</h1>
-<blockquote>
-<p>picker will be able to enter a value for the input element through the other UI.</p>
-</blockquote>
-<p>The “content.type of picker” can be pre-used as such defined “date”.
+<p>picker will be able to enter a value for the input element through the other UI.
+The “content.type of picker” can be pre-used as such defined “date”.
 Or to define the “content” to “Function”, you can define the “picker’s content”.</p>
+<p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
+<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-picker/dist/ax5picker.css&quot;&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>Required file picker to use the plug-in is a “jQuery, ax5core, ax5 picker”.
+If you want to use UI such as the picker calendar will ax5ui-calendar needs.</p>
 
 
+            <h4>html</h4>
             <pre class="prettyprint linenums lang-html">&lt;div class="row">
     &lt;div class="col-md-6">
         &lt;label>Area&lt;/label>
@@ -168,7 +177,7 @@ Or to define the “content” to “Function”, you can define the “picker�
     </div>
 </div>
 
-
+            <h4>js</h4>
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     var picker = new ax5.ui.picker();
 
@@ -259,6 +268,7 @@ Or to define the “content” to “Function”, you can define the “picker�
 
     });
 </script></script>
+
 
             <p>When the user clicks on the <code>btns</code>,<code>onClick</code> is called.
 Contains a variety of objects necessary for programming of the passed <code>onClick &gt; this</code> from <code>picker</code>.
