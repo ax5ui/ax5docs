@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="5" id="picker-keyboard" title="Picker Keyboard" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="6" id="picker-numpad" title="Picker Numpad" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -21,7 +21,7 @@
         <!-- doc-js Basic Alert -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Picker Keyboard
+                # Picker Numpad
 
                 **Paste the following code into the `head` section of your site's HTML.**
 
@@ -41,8 +41,8 @@
             <ax5docs-html run="true">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Keyboard</label>
-                        <input type="text" data-ax5picker="keyboard" class="form-control" placeholder="" />
+                        <label>Numpad</label>
+                        <input type="text" data-ax5picker="numpad" class="form-control" placeholder="" />
                     </div>
                 </div>
             </ax5docs-html>
@@ -53,19 +53,42 @@
 
                     $(document.body).ready(function () {
                         picker.bind({
-                            target: $('[data-ax5picker="keyboard"]'),
+                            target: $('[data-ax5picker="numpad"]'),
                             direction: "auto",
                             content: {
-                                width: 550,
+                                width: 200,
                                 margin: 10,
-                                type: 'keyboard',
+                                type: 'numpad',
                                 config: {
-                                    btnWrapStyle: "padding:2px;",
-                                    btnStyle: "width: 35px;",
+                                    btnWrapStyle: "padding:3px;width:25%;",
+                                    btnStyle: "width:100%",
                                     btnTheme: "primary",
-                                    specialBtnWrapStyle: "padding:2px;",
-                                    specialBtnStyle: "",
-                                    specialBtnTheme: " "
+                                    specialBtnWrapStyle: "padding:3px;width:25%;",
+                                    specialBtnStyle: "width:100%;padding-left:0px;padding-right:0px;",
+                                    specialBtnTheme: ""
+                                    /*
+                                     keyArray: [
+                                     {value: "7"},
+                                     {value: "8"},
+                                     {value: "9"},
+                                     {label: "BS", fn: "back"},
+                                     {value: "4"},
+                                     {value: "5"},
+                                     {value: "6"},
+                                     {value: "-"},
+                                     {value: "1"},
+                                     {value: "2"},
+                                     {value: "3"},
+                                     {value: ""},
+                                     {value: "."},
+                                     {value: "0"},
+                                     {value: ""},
+                                     {label: "OK", fn: "close"}
+                                     ]
+                                     */
+                                },
+                                formatter: {
+                                    pattern: 'number'
                                 }
                             },
                             onStateChanged: function () {
