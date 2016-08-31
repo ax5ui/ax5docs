@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.0.12"
+        version: "0.2.0"
     }, (function () {
         /**
          * @class ax5grid
@@ -42,14 +42,17 @@
                 sortable: false,
 
                 header: {
+                    align: false,
                     columnHeight: 25,
                     columnPadding: 3,
                     columnBorderWidth: 1
                 },
                 body: {
+                    align: false,
                     columnHeight: 25,
                     columnPadding: 3,
-                    columnBorderWidth: 1
+                    columnBorderWidth: 1,
+                    grouping: false
                 },
                 rightSum: false,
                 footSum: false,
@@ -62,7 +65,6 @@
                     size: 15,
                     barMinSize: 15
                 },
-
                 columnKeys: {
                     selected: '_SELECTED'
                 }
@@ -75,30 +77,51 @@
             // 그리드 데이터셋
             this.columns = []; // config.columns에서 복제된 오브젝트
             this.colGroup = []; // columns를 table태그로 출력하기 좋게 변환한 오브젝트
-            this.footSum = [];
+            this.footSumColumns = [];
+            this.bodyGrouping = {};
+
             this.list = []; // 그리드의 데이터
             this.page = {}; // 그리드의 페이지 정보
-            this.sortInfo = {};
-            this.focusedColumn = {};
-            this.selectedColumn = {};
+            this.sortInfo = {}; // 그리드의 헤더 정렬 정보
+            this.focusedColumn = {}; // 그리드 바디의 포커스된 셀 정보
+            this.selectedColumn = {}; // 그리드 바디의 선택된 셀 정보
+            this.isInlineEditing = false;
+            this.inlineEditing = {};
+
+            // header
+            this.headerTable = {};
+            this.leftHeaderData = {};
+            this.headerData = {};
+            this.rightHeaderData = {};
+
+            // body
             this.bodyRowTable = {};
             this.leftBodyRowData = {};
             this.bodyRowData = {};
             this.rightBodyRowData = {};
             this.bodyRowMap = {};
-            this.leftHeaderData = {};
-            this.headerData = {};
-            this.rightHeaderData = {};
+
+            this.bodyGroupingTable = {};
+            this.leftBodyGroupingData = {};
+            this.bodyGroupingData = {};
+            this.rightBodyGroupingData = {};
+
+            // footSum
+            this.footSumTable = {}; // footSum의 출력레이아웃
+            this.leftFootSumData = {}; // frozenColumnIndex 를 기준으로 나누어진 출력 레이아웃 왼쪽
+            this.footSumData = {}; // frozenColumnIndex 를 기준으로 나누어진 출력 레이아웃 오른쪽
+            this.needToPaintSum = true; // 데이터 셋이 변경되어 summary 변경 필요여부
+
 
             cfg = this.config;
 
             var
-                onStateChanged = function (opts, that) {
-                    if (opts && opts.onStateChanged) {
-                        opts.onStateChanged.call(that, that);
+                onStateChanged = function (_opts, _that) {
+                    if (_opts && _opts.onStateChanged) {
+                        _opts.onStateChanged.call(_that, _that);
                     }
                     else if (this.onStateChanged) {
-                        this.onStateChanged.call(that, that);
+                        this.onStateChanged.call(_that, _that);
                     }
                     return true;
                 },
@@ -170,8 +193,8 @@
 
                     return this;
                 },
-                initColumns = function (columns) {
-                    this.columns = U.deepCopy(columns);
+                initColumns = function (_columns) {
+                    this.columns = U.deepCopy(_columns);
                     this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
 
                     this.xvar.frozenColumnIndex = (cfg.frozenColumnIndex > this.columns.length) ? this.columns.length : cfg.frozenColumnIndex;
@@ -199,8 +222,13 @@
                 onResetColumns = function () {
                     initColumns.call(this, this.config.columns);
                     resetColGroupWidth.call(this);
+                    if (this.config.footSum) {
+                        initFootSum.call(this, this.config.footSum);
+                        this.needToPaintSum = true;
+                    }
+                    if (this.config.body.grouping) initBodyGroup.call(this, this.config.body.grouping);
                     alignGrid.call(this, true);
-                    GRID.header.repaint.call(this);
+                    GRID.header.repaint.call(this, true);
                     GRID.body.repaint.call(this, true);
                     GRID.scroller.resize.call(this);
                 },
@@ -229,16 +257,45 @@
                         }
                     }
                 },
-                initFootSum = function (footSum) {
-                    if(U.isArray(footSum)) {
-                        this.footSum = footSum;
-                        this.footSumTagle = GRID.util.makeFootSumTable.call(this, this.footSum);
-                    }else{
-                        this.footSum = [];
-                        this.footSumTagle = [];
+                initFootSum = function (_footSum) {
+                    if (U.isArray(_footSum)) {
+                        this.footSumTable = GRID.util.makeFootSumTable.call(this, this.footSumColumns = _footSum);
+                    } else {
+                        this.footSumColumns = [];
+                        this.footSumTable = {};
                     }
                 },
-                alignGrid = function (isFirst) {
+                initBodyGroup = function (_grouping) {
+                    var grouping = jQuery.extend({}, _grouping);
+                    if ("by" in grouping && "columns" in grouping) {
+
+                        this.bodyGrouping = {
+                            by: grouping.by,
+                            columns: grouping.columns
+                        };
+                        this.bodyGroupingTable = GRID.util.makeBodyGroupingTable.call(this, this.bodyGrouping.columns);
+                        this.sortInfo = (function () {
+                            var sortInfo = {};
+                            for (var k = 0, kl = this.bodyGrouping.by.length; k < kl; k++) {
+                                sortInfo[this.bodyGrouping.by[k]] = {
+                                    orderBy: "asc",
+                                    seq: k,
+                                    fixed: true
+                                };
+                                for (var c = 0, cl = this.colGroup.length; c < cl; c++) {
+                                    if (this.colGroup[c].key === this.bodyGrouping.by[k]) {
+                                        this.colGroup[c].sort = "asc";
+                                        this.colGroup[c].sortFixed = true;
+                                    }
+                                }
+                            }
+                            return sortInfo;
+                        }).call(this);
+                    } else {
+                        cfg.body.grouping = false;
+                    }
+                },
+                alignGrid = function (_isFirst) {
                     // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하하는 아규먼트
                     var CT_WIDTH = this.$["container"]["root"].width();
                     var CT_HEIGHT = this.$["container"]["root"].height();
@@ -267,7 +324,7 @@
                     })(this.xvar.bodyTrHeight);
 
                     var footSumHeight = (function (bodyTrHeight) {
-                        return this.footSum.length * bodyTrHeight;
+                        return this.footSumColumns.length * bodyTrHeight;
                     }).call(this, this.xvar.bodyTrHeight);
 
                     var headerHeight = this.headerTable.rows.length * cfg.header.columnHeight;
@@ -276,8 +333,8 @@
                     // 데이터의 길이가 body보다 높을때. 수직 스크롤러 활성화
                     var verticalScrollerWidth, horizontalScrollerHeight;
 
-                    (function(){
-                        verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
+                    (function () {
+                        verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
                         // 남은 너비가 colGroup의 너비보다 넓을때. 수평 스크롤 활성화.
                         horizontalScrollerHeight = (function () {
                             var totalColGroupWidth = 0;
@@ -290,8 +347,8 @@
                             return (totalColGroupWidth > bodyWidth) ? this.config.scroller.size : 0;
                         }).call(this);
 
-                        if(horizontalScrollerHeight > 0){
-                            verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - horizontalScrollerHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
+                        if (horizontalScrollerHeight > 0) {
+                            verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight - horizontalScrollerHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
                         }
                     }).call(this);
 
@@ -459,7 +516,7 @@
                     panelDisplayProcess.call(this, this.$["panel"]["bottom-body"], "bottom", "", "body");
                     panelDisplayProcess.call(this, this.$["panel"]["bottom-right-body"], "bottom", "right", "body");
 
-                    
+
                     scrollerDisplayProcess.call(this, this.$["scroller"]["vertical"], verticalScrollerWidth, horizontalScrollerHeight, "vertical");
                     scrollerDisplayProcess.call(this, this.$["scroller"]["horizontal"], verticalScrollerWidth, horizontalScrollerHeight, "horizontal");
                     scrollerDisplayProcess.call(this, this.$["scroller"]["corner"], verticalScrollerWidth, horizontalScrollerHeight, "corner");
@@ -468,7 +525,24 @@
                 },
                 sortColumns = function (_sortInfo) {
                     GRID.header.repaint.call(this);
-                    GRID.data.sort.call(this, _sortInfo);
+
+                    if (this.config.body.grouping) {
+                        this.list = GRID.data.initData.call(this,
+                            GRID.data.sort.call(this,
+                                _sortInfo,
+                                GRID.data.clearGroupingData.call(this,
+                                    this.list
+                                )
+                            )
+                        );
+                    }
+                    else {
+                        this.list = GRID.data.sort.call(this, _sortInfo,
+                            GRID.data.clearGroupingData.call(this,
+                                this.list
+                            )
+                        );
+                    }
                     GRID.body.repaint.call(this, true);
                     GRID.scroller.resize.call(this);
                 };
@@ -478,47 +552,52 @@
             /**
              * Preferences of grid UI
              * @method ax5grid.setConfig
-             * @param {Object} config - 클래스 속성값
-             * @param {Element} config.target
-             * @param {Number} [config.frozenColumnIndex=0]
-             * @param {Number} [config.frozenRowIndex=0]
-             * @param {Boolean} [config.showLineNumber=false]
-             * @param {Boolean} [config.showRowSelector=false]
-             * @param {Boolean} [config.multipleSelect=false]
-             * @param {Number} [config.columnMinWidth=100]
-             * @param {Number} [config.lineNumberColumnWidth=30]
-             * @param {Number} [config.rowSelectorColumnWidth=25]
-             * @param {Boolean} [config.sortable=false]
-             * @param {Boolean} [config.multiSort=false]
-             * @param {Boolean} [config.remoteSort=false]
-             * @param {Object} [config.header]
-             * @param {Number} [config.header.columnHeight=25]
-             * @param {Number} [config.header.columnPadding=3]
-             * @param {Number} [config.header.columnBorderWidth=1]
-             * @param {Object} [config.body]
-             * @param {Number} [config.body.columnHeight=25]
-             * @param {Number} [config.body.columnPadding=3]
-             * @param {Number} [config.body.columnBorderWidth=1]
-             * @param {Object} [config.page]
-             * @param {Number} [config.page.height=25]
-             * @param {Boolean} [config.page.display=true]
-             * @param {Number} [config.page.navigationItemCount=5]
-             * @param {Object} [config.scroller]
-             * @param {Number} [config.scroller.size=15]
-             * @param {Number} [config.scroller.barMinSize=15]
-             * @param {Object} [config.columnKeys]
-             * @param {String} [config.columnKeys.selected="_SELECTED"]
-             * @param {Object} config.columns
+             * @param {Object} _config - 클래스 속성값
+             * @param {Element} _config.target
+             * @param {Number} [_config.frozenColumnIndex=0]
+             * @param {Number} [_config.frozenRowIndex=0]
+             * @param {Boolean} [_config.showLineNumber=false]
+             * @param {Boolean} [_config.showRowSelector=false]
+             * @param {Boolean} [_config.multipleSelect=false]
+             * @param {Number} [_config.columnMinWidth=100]
+             * @param {Number} [_config.lineNumberColumnWidth=30]
+             * @param {Number} [_config.rowSelectorColumnWidth=25]
+             * @param {Boolean} [_config.sortable=false]
+             * @param {Boolean} [_config.multiSort=false]
+             * @param {Boolean} [_config.remoteSort=false]
+             * @param {Object} [_config.header]
+             * @param {String} [_config.header.align]
+             * @param {Number} [_config.header.columnHeight=25]
+             * @param {Number} [_config.header.columnPadding=3]
+             * @param {Number} [_config.header.columnBorderWidth=1]
+             * @param {Object} [_config.body]
+             * @param {String} [_config.body.align]
+             * @param {Number} [_config.body.columnHeight=25]
+             * @param {Number} [_config.body.columnPadding=3]
+             * @param {Number} [_config.body.columnBorderWidth=1]
+             * @param {Object} [_config.body.grouping]
+             * @param {Array} [_config.body.grouping.by] - list grouping keys
+             * @param {Array} [_config.body.grouping.columns] - list grouping columns
+             * @param {Object} [_config.page]
+             * @param {Number} [_config.page.height=25]
+             * @param {Boolean} [_config.page.display=true]
+             * @param {Number} [_config.page.navigationItemCount=5]
+             * @param {Object} [_config.scroller]
+             * @param {Number} [_config.scroller.size=15]
+             * @param {Number} [_config.scroller.barMinSize=15]
+             * @param {Object} [_config.columnKeys]
+             * @param {String} [_config.columnKeys.selected="_SELECTED"]
+             * @param {Object} _config.columns
              * @returns {ax5grid}
              * @example
              * ```
              * ```
              */
-            this.init = function (config) {
+            this.init = function (_config) {
                 this.onStateChanged = cfg.onStateChanged;
                 this.onClick = cfg.onClick;
 
-                var grid = this.gridConfig = jQuery.extend(true, {}, cfg, config);
+                var grid = this.gridConfig = jQuery.extend(true, {}, cfg, _config);
                 if (!grid.target) {
                     console.log(ax5.info.getError("ax5grid", "401", "init"));
                     return this;
@@ -549,8 +628,11 @@
                 initColumns.call(this, grid.columns);
                 resetColGroupWidth.call(this);
 
-                // footSum데이터를 분석하여 미리 처리해야 하는 데이터를 정리
-                initFootSum.call(this, grid.footSum);
+                // footSum 데이터를 분석하여 미리 처리해야 하는 데이터를 정리
+                if (grid.footSum) initFootSum.call(this, grid.footSum);
+
+                // bodyGrouping 데이터를 분석하여 미리 처리해야 하는 데이터를 정리
+                if (grid.body.grouping) initBodyGroup.call(this, grid.body.grouping);
 
                 // 그리드의 각 요소의 크기를 맞춤니다.
                 alignGrid.call(this, true);
@@ -598,12 +680,26 @@
                     if (self.focused) {
                         if (e.metaKey || e.ctrlKey) {
                             if (e.which == 67) { // c
-                                //console.log("copy");
                                 self.copySelect();
                             }
                         } else {
-                            if (ctrlKeys[e.which]) {
-                                self.keyDown(ctrlKeys[e.which], e);
+                            if(self.isInlineEditing){
+                                if (e.which == ax5.info.eventKeys.ESC) {
+                                    self.keyDown("ESC", e.originalEvent);
+                                }
+                                else if (e.which == ax5.info.eventKeys.RETURN) {
+                                    self.keyDown("RETURN", e.originalEvent);
+                                }
+                            }else{
+                                if (ctrlKeys[e.which]) {
+                                    self.keyDown(ctrlKeys[e.which], e.originalEvent);
+                                } else if (e.which == ax5.info.eventKeys.ESC) {
+
+                                }else if (e.which == ax5.info.eventKeys.RETURN) {
+                                    self.keyDown("RETURN", e.originalEvent);
+                                } else if (Object.keys(self.focusedColumn).length) {
+                                    self.keyDown("INLINE_EDIT", e.originalEvent);
+                                }
                             }
                         }
                     }
@@ -624,8 +720,8 @@
 
             /**
              * @method ax5grid.keyDown
-             * @param {String} keyName
-             * @param {Event||Object} data
+             * @param {String} _keyName
+             * @param {Event|Object} _data
              * @return {ax5grid}
              */
             this.keyDown = (function () {
@@ -647,6 +743,19 @@
                     },
                     "KEY_END": function () {
                         GRID.body.moveFocus.call(this, "END");
+                    },
+                    "INLINE_EDIT": function (_e) {
+                        GRID.body.inlineEdit.active.call(this, this.focusedColumn, _e);
+                        if(!/[0-9a-zA-Z]/.test(_e.key)) {
+                            U.stopEvent(_e);
+                        }
+                    },
+                    "ESC": function (_e) {
+                        //console.log("ESC");
+                        GRID.body.inlineEdit.keydown.call(this, "ESC");
+                    },
+                    "RETURN": function(_e){
+                        GRID.body.inlineEdit.keydown.call(this, "RETURN");
                     }
                 };
                 return function (_act, _data) {
@@ -669,6 +778,7 @@
                 var _di = 0;
                 for (var c in this.selectedColumn) {
                     var _column = this.selectedColumn[c];
+
                     if (_column) {
                         if (typeof _dindex === "undefined") {
                             _dindex = _column.dindex;
@@ -685,7 +795,11 @@
                         }
                         var originalColumn = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
                         if (originalColumn) {
-                            copyTextArray[_di].push(this.list[_column.dindex][originalColumn.key]);
+                            if (this.list[_column.dindex].__isGrouping) {
+                                copyTextArray[_di].push(this.list[_column.dindex][_column.colIndex]);
+                            } else {
+                                copyTextArray[_di].push(this.list[_column.dindex][originalColumn.key]);
+                            }
                         } else {
                             copyTextArray[_di].push("");
                         }
@@ -712,16 +826,16 @@
 
             /**
              * @method ax5grid.setData
-             * @param {Array} data
+             * @param {Array} _data
              * @returns {ax5grid}
              */
-            this.setData = function (data) {
-                GRID.data.set.call(this, data);
+            this.setData = function (_data) {
+                GRID.data.set.call(this, _data);
                 alignGrid.call(this);
-                GRID.body.scrollTo.call(this, {top: 0});
                 GRID.body.repaint.call(this);
                 GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
+                GRID.body.scrollTo.call(this, {top: 0});
                 return this;
             };
 
@@ -763,7 +877,7 @@
                 GRID.data.add.call(this, _row, _dindex);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
-                GRID.body.moveFocus.call(this, "END");
+                GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
                 GRID.scroller.resize.call(this);
                 return this;
             };
@@ -777,7 +891,7 @@
                 GRID.data.remove.call(this, _dindex);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
-                GRID.body.moveFocus.call(this, "END");
+                GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
                 GRID.scroller.resize.call(this);
                 return this;
             };
@@ -792,7 +906,7 @@
                 GRID.data.update.call(this, _row, _dindex);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
-                GRID.body.moveFocus.call(this, _dindex);
+                GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : _dindex);
                 GRID.scroller.resize.call(this);
                 return this;
             };
@@ -882,11 +996,13 @@
              */
             this.setColumnWidth = function (_width, _cindex) {
                 this.colGroup[this.xvar.columnResizerIndex]._width = _width;
+                this.needToPaintSum = true;
 
                 // 컬럼너비 변경사항 적용.
                 GRID.header.repaint.call(this);
                 GRID.body.repaint.call(this, true);
                 GRID.scroller.resize.call(this);
+
                 alignGrid.call(this);
                 return this;
             };
@@ -902,11 +1018,12 @@
 
             /**
              * @method ax5grid.setColumnSort
-             * @param {Object} sortInfo
-             * @param {Object} sortInfo.key
-             * @param {Number} sortInfo.key.seq - seq of sortOrder
-             * @param {String} sortInfo.key.orderBy - "desc"|"asc"
+             * @param {Object} _sortInfo
+             * @param {Object} _sortInfo.key
+             * @param {Number} _sortInfo.key.seq - seq of sortOrder
+             * @param {String} _sortInfo.key.orderBy - "desc"|"asc"
              * @returns {ax5grid}
+             * @example
              * ```js
              * ax5grid.setColumnSort({a:{seq:0, orderBy:"desc"}, b:{seq:1, orderBy:"asc"}});
              * ```
@@ -917,13 +1034,13 @@
                     GRID.header.applySortStatus.call(this, _sortInfo);
                 }
 
-                sortColumns.call(this, this.sortInfo);
+                sortColumns.call(this, _sortInfo || this.sortInfo);
                 return this;
             };
 
             /**
              * @method ax5grid.select
-             * @param {Number||Object} _selectObject
+             * @param {Number|Object} _selectObject
              * @param {Number} _selectObject.index - index of row
              * @param {Number} _selectObject.rowIndex - rowIndex of columns
              * @param {Number} _selectObject.conIndex - colIndex of columns
@@ -937,6 +1054,7 @@
                         GRID.body.updateRowState.call(this, ["selectedClear"]);
                         GRID.data.clearSelect.call(this);
                     }
+
                     GRID.data.select.call(this, dindex);
                     GRID.body.updateRowState.call(this, ["selected"], dindex);
                 }
@@ -973,12 +1091,11 @@
 // todo : column add / remove / update -- ok
 // todo : cell formatter -- ok
 // todo : column resize -- ok
-
 // todo : sortable -- ok
-// todo : grid footsum
-// todo : grid body group
-// todo : cell inline edit
+// todo : grid footsum -- ok, footsum area cell selected -- ok
+// todo : grid body group -- ok, 그룹핑 된 상태에서 정렬 예외처리 -- ok, 그룹핑 된상태에서 데이터 추가/수정/삭제 -- ok, 그룹핑 된 row 셀렉트 문제. -- ok
 
+// todo : cell inline edit
 // todo : filter
 // todo : body menu
 // todo : column reorder

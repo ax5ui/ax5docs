@@ -77,9 +77,8 @@
             var rowIndex = this.getAttribute("data-ax5grid-column-rowindex");
             var col = self.colGroup[colIndex];
             if (key && col) {
-                if (self.config.sortable || col.sortable) {
-                    //console.log(col.sort, col.key);
-                    toggleSort.call(self, col.key);
+                if (col.sortable !== false && self.config.sortable !== false) {
+                    if(!col.sortFixed) toggleSort.call(self, col.key);
                 }
             }
         });
@@ -94,13 +93,14 @@
                 U.stopEvent(e);
                 return false;
             });
+
+        resetFrozenColumn.call(this);
     };
 
-    var repaint = function () {
+    var resetFrozenColumn = function(){
         var cfg = this.config;
-        var colGroup = this.colGroup;
         var dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.config.frozenColumnIndex);
-        var asideHeaderData = this.asideHeaderData = (function (dataTable) {
+        this.asideHeaderData = (function (dataTable) {
             var colGroup = [];
             var data = {rows: []};
             for (var i = 0, l = dataTable.rows.length; i < l; i++) {
@@ -138,8 +138,21 @@
             this.asideColGroup = colGroup;
             return data;
         }).call(this, this.headerTable);
-        var leftHeaderData = this.leftHeaderData = dividedHeaderObj.leftData;
-        var headerData = this.headerData = dividedHeaderObj.rightData;
+        this.leftHeaderData = dividedHeaderObj.leftData;
+        this.headerData = dividedHeaderObj.rightData;
+    };
+
+    var repaint = function (_reset) {
+        var cfg = this.config;
+        var colGroup = this.colGroup;
+        if (_reset) {
+            resetFrozenColumn.call(this);
+            this.xvar.paintStartRowIndex = undefined;
+        }
+        var asideHeaderData = this.asideHeaderData;
+        var leftHeaderData = this.leftHeaderData;
+        var headerData = this.headerData;
+        var headerAlign = cfg.header.align;
 
         // this.asideColGroup : asideHeaderData에서 처리 함.
         this.leftHeaderColGroup = colGroup.slice(0, this.config.frozenColumnIndex);
@@ -163,7 +176,7 @@
                 for (var ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
                     var col = _bodyRow.rows[tri].cols[ci];
                     var cellHeight = cfg.header.columnHeight * col.rowspan - cfg.header.columnBorderWidth;
-
+                    var colAlign = headerAlign || col.align;
                     SS.push('<td ',
                         'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ',
                         'data-ax5grid-column-row="' + tri + '" ',
@@ -195,10 +208,12 @@
 
                     SS.push((function () {
                         var lineHeight = (cfg.header.columnHeight - cfg.header.columnPadding * 2 - cfg.header.columnBorderWidth);
-                        return '<span data-ax5grid-cellHolder="" style="height: ' + (cfg.header.columnHeight - cfg.header.columnBorderWidth) + 'px;line-height: ' + lineHeight + 'px;">';
+                        return '<span data-ax5grid-cellHolder="" ' +
+                            ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
+                            ' style="height: ' + (cfg.header.columnHeight - cfg.header.columnBorderWidth) + 'px;line-height: ' + lineHeight + 'px;">';
                     })(), (function () {
                         var _SS = "";
-                        if (!U.isNothing(col.key) && !U.isNothing(col.colIndex) && cfg.sortable || col.sortable) {
+                        if (!U.isNothing(col.key) && !U.isNothing(col.colIndex) && (cfg.sortable !== false && col.sortable !== false)) {
                             _SS += '<span data-ax5grid-column-sort="' + col.colIndex + '" data-ax5grid-column-sort-order="' + (colGroup[col.colIndex].sort || "") + '" />';
                         }
                         return _SS;
@@ -206,8 +221,6 @@
 
                     if (!U.isNothing(col.colIndex)) {
                         if (cfg.enableFilter) {
-
-
                             SS.push('<span data-ax5grid-column-filter="' + col.colIndex + '" data-ax5grid-column-filter-value=""  />');
                         }
                     }
@@ -268,7 +281,13 @@
         var sortInfo = {};
         var seq = 0;
 
-
+        for(var k in this.sortInfo){
+            if(this.sortInfo[k].fixed){
+                sortInfo[k] = this.sortInfo[k];
+                seq++;
+            }
+        }
+        
         for (var i = 0, l = this.colGroup.length; i < l; i++) {
             if (this.colGroup[i].key == _key) {
                 if (sortOrder == "") {
@@ -297,8 +316,7 @@
             }
         }
 
-        this.sortInfo = sortInfo;
-        this.setColumnSort();
+        this.setColumnSort(sortInfo);
         return this;
     };
 

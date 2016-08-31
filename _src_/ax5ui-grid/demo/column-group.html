@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="Basic" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="column-group" title="Column group" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -50,11 +50,27 @@
 
                         firstGrid.setConfig({
                             target: $('[data-ax5grid="first-grid"]'),
+                            frozenColumnIndex: 0,
+                            frozenRowIndex: 0,
+                            showLineNumber: true,
+                            showRowSelector: true,
+                            lineNumberColumnWidth: 40,
+                            rowSelectorColumnWidth: 25,
+                            header: {
+                                columnHeight: 25
+                            },
+                            body: {
+                                columnHeight: 25
+                            },
                             columns: [
                                 {key: "a", label: "필드A", width: 80},
                                 {key: "b", label: "필드B"},
-                                {key:"a", label: "필드C"},
-                                {key: "c", label: "필드C", width: 150},
+                                {
+                                    key:"a", label: "필드C", columns: [
+                                    {key: "c1", label: "필드C-1"},{key: "c2", label: "필드C-2"}
+                                ]
+                                },
+                                {key: "c", label: "필드C", width: 150, multiLine: true},
                                 {key: "d", label: "필드D"},
                                 {key: "c1", label: "필드D", width: 80},
                                 {key: "a", label: "필드A", width: 80},

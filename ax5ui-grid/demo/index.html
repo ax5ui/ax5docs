@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-grid : basic</title>
+    <title>ax5ui / ax5ui-grid : Basic</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -130,7 +130,7 @@
                     <div class="col-md-3">
                         <div class="docs-menu" id="docs-menu">
                             
-        <ul><li  class='active'><a href="/ax5ui-grid/demo/index.html">basic</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/column-group.html">Column group</a></li></ul>
     
                         </div>
                     </div>
@@ -160,27 +160,11 @@
 
         firstGrid.setConfig({
             target: $('[data-ax5grid="first-grid"]'),
-            frozenColumnIndex: 0,
-            frozenRowIndex: 0,
-            showLineNumber: true,
-            showRowSelector: true,
-            lineNumberColumnWidth: 40,
-            rowSelectorColumnWidth: 25,
-            header: {
-                columnHeight: 25
-            },
-            body: {
-                columnHeight: 25
-            },
             columns: [
                 {key: "a", label: "필드A", width: 80},
                 {key: "b", label: "필드B"},
-                {
-                    key:"a", label: "필드C", columns: [
-                    {key: "c1", label: "필드C-1"},{key: "c2", label: "필드C-2"}
-                ]
-                },
-                {key: "c", label: "필드C", width: 150, multiLine: true},
+                {key:"a", label: "필드C"},
+                {key: "c", label: "필드C", width: 150},
                 {key: "d", label: "필드D"},
                 {key: "c1", label: "필드D", width: 80},
                 {key: "a", label: "필드A", width: 80},
@@ -200,27 +184,11 @@
 
         firstGrid.setConfig({
             target: $('[data-ax5grid="first-grid"]'),
-            frozenColumnIndex: 0,
-            frozenRowIndex: 0,
-            showLineNumber: true,
-            showRowSelector: true,
-            lineNumberColumnWidth: 40,
-            rowSelectorColumnWidth: 25,
-            header: {
-                columnHeight: 25
-            },
-            body: {
-                columnHeight: 25
-            },
             columns: [
                 {key: "a", label: "필드A", width: 80},
                 {key: "b", label: "필드B"},
-                {
-                    key:"a", label: "필드C", columns: [
-                    {key: "c1", label: "필드C-1"},{key: "c2", label: "필드C-2"}
-                ]
-                },
-                {key: "c", label: "필드C", width: 150, multiLine: true},
+                {key:"a", label: "필드C"},
+                {key: "c", label: "필드C", width: 150},
                 {key: "d", label: "필드D"},
                 {key: "c1", label: "필드D", width: 80},
                 {key: "a", label: "필드A", width: 80},

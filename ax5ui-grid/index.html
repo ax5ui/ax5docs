@@ -134,7 +134,7 @@
                         
 
 		<section class="ax5docs-section">
-			<img src="https://img.shields.io/badge/Bower-0.0.12-blue.svg" alt="Bower-0.0.12" /> <img src="https://img.shields.io/badge/NPM-0.0.12-blue.svg" alt="NPM-0.0.12" /> <div class="DH5"></div>
+			<img src="https://img.shields.io/badge/Bower-0.2.0-blue.svg" alt="Bower-0.2.0" /> <img src="https://img.shields.io/badge/NPM-0.2.0-blue.svg" alt="NPM-0.2.0" /> <div class="DH5"></div>
 			<p><a href="https://github.com/axisj"><img src="https://img.shields.io/badge/AXISJ.com-Contributed-green.svg" alt="axisj-contributed"></a>
 <img src="https://img.shields.io/badge/Seowoo-Mondo&amp;Thomas-red.svg" alt=""></p>
 <h1>ax5ui-grid</h1>
@@ -183,9 +183,56 @@ https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.js
 https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js
 </code></pre>
 <h3>Basic Usages</h3>
-<pre class="prettyprint linenums lang-html"><code>
+<pre class="prettyprint linenums lang-html"><code>&lt;div data-ax5grid=&quot;first-grid&quot; data-ax5grid-config='{name:&quot;my first grid&quot;}' style=&quot;height: 100%;&quot;&gt;&lt;/div&gt;
 </code></pre>
-<pre class="prettyprint linenums lang-js"><code>
+<pre class="prettyprint linenums lang-js"><code>var firstGrid = new ax5.ui.grid();
+firstGrid.setConfig({
+    target: $('[data-ax5grid=&quot;first-grid&quot;]'),
+    frozenColumnIndex: 2,
+    frozenRowIndex: 0,
+    showLineNumber: true,
+    showRowSelector: true,
+    multipleSelect: true,
+    lineNumberColumnWidth: 40,
+    rowSelectorColumnWidth: 28,
+    sortable: true, 
+    multiSort: false,
+    header: {
+        align: &quot;center&quot;,
+        columnHeight: 28
+    },
+    body: {
+        align: &quot;center&quot;,
+        columnHeight: 28,
+        onClick: function () {
+            // console.log(this);
+            this.self.select(this.dindex);
+        }
+    },
+    columns: [
+        {
+            key: &quot;a&quot;,
+            label: &quot;필드A&quot;,
+            width: 80,
+            styleClass: function () {
+                return &quot;ABC&quot;;
+            },
+            enableFilter: true,
+            align: &quot;center&quot;
+        },
+        {key: &quot;b&quot;, label: &quot;필드B&quot;, align: &quot;center&quot;},
+        {
+            key: undefined, label: &quot;필드C&quot;, columns: [
+            {key: &quot;price&quot;, label: &quot;단가&quot;, formatter: &quot;money&quot;, align: &quot;right&quot;},
+            {key: &quot;amount&quot;, label: &quot;수량&quot;, formatter: &quot;money&quot;, align: &quot;right&quot;},
+            {key: &quot;cost&quot;, label: &quot;금액&quot;, align: &quot;right&quot;, formatter: &quot;money&quot;}
+        ]
+        },
+        {key: &quot;saleDt&quot;, label: &quot;판매일자&quot;, align: &quot;center&quot;},
+        {key: &quot;customer&quot;, label: &quot;고객명&quot;},
+        {key: &quot;saleType&quot;, label: &quot;판매타입&quot;}
+    ]
+});
 </code></pre>
 <hr>
 <h3>Preview</h3>
