@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="column-group" title="Column group" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="aside-columns" title="lineNumber, Rowselector" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -24,11 +24,11 @@
         <!-- grid -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Basic
+                # lineNumber, Rowselector
 
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
-                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css" />
+                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css"/>
                 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
                 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
                 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
@@ -37,7 +37,13 @@
 
             HTML
             <ax5docs-html run="true">
-                <div data-ax5grid="first-grid" data-ax5grid-config='{name:"my first grid"}' style="height: 400px;"></div>
+                <div data-ax5grid="first-grid" data-ax5grid-config='{
+                    showLineNumber: true,
+                    showRowSelector: true,
+                    multipleSelect: true,
+                    lineNumberColumnWidth: 40,
+                    rowSelectorColumnWidth: 27,
+                }' style="height: 300px;"></div>
             </ax5docs-html>
 
             <div class="DH10"></div>
@@ -50,46 +56,26 @@
 
                         firstGrid.setConfig({
                             target: $('[data-ax5grid="first-grid"]'),
-                            frozenColumnIndex: 0,
-                            frozenRowIndex: 0,
-                            showLineNumber: true,
-                            showRowSelector: true,
-                            lineNumberColumnWidth: 40,
-                            rowSelectorColumnWidth: 25,
-                            header: {
-                                columnHeight: 25
-                            },
-                            body: {
-                                columnHeight: 25
-                            },
                             columns: [
-                                {key: "a", label: "필드A", width: 80},
-                                {key: "b", label: "필드B"},
-                                {
-                                    key:"a", label: "필드C", columns: [
-                                    {key: "c1", label: "필드C-1"},{key: "c2", label: "필드C-2"}
-                                ]
-                                },
-                                {key: "c", label: "필드C", width: 150, multiLine: true},
-                                {key: "d", label: "필드D"},
-                                {key: "c1", label: "필드D", width: 80},
-                                {key: "a", label: "필드A", width: 80},
-                                {key: "a", label: "필드A", width: 150}
+                                {key: "a", label: "field A"},
+                                {key: "b", label: "field B"},
+                                {key: "c", label: "numbers C"},
+                                {key: "d", label: "field D"},
+                                {key: "e", label: "field E"},
+                                {key: "f", label: "field F"},
+                                {key: "g", label: "field G"},
+                                {key: "h", label: "field H"}
                             ]
                         });
 
                         var list = [];
-                        for (var a = 0, l = 9999; a < l; a++) {
-                            list.push({a: "컬럼 테스트", b: "필드 B 값", c: "그룹 블라 블라 블라블라그룹 블라 블라 블라블라그룹 블라 블라 블라블라", c1: 1, c2: "!@#$", "d": "필드D값"});
+                        for (var a = 0, l = 100; a < l; a++) {
+                            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
                         }
                         firstGrid.setData(list);
                     });
                 </script>
             </ax5docs-js>
-
-            <ax5docs-md>
-
-            </ax5docs-md>
 
         </section>
 

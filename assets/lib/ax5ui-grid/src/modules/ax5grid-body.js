@@ -502,7 +502,10 @@
                     return GRID.formatter[_col.formatter].call(that);
                 }
             } else {
-                return _value || _item[_key] || "&nbsp;";
+                var returnValue = "&nbsp;";
+                if(typeof _value !== "undefined") returnValue = _value;
+                if(typeof _item[_key] !== "undefined") returnValue = _item[_key];
+                return returnValue;
             }
         }
     };

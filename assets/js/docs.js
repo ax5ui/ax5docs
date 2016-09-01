@@ -25,7 +25,7 @@ var fn_docs = (function () {
                     $this.find('a[data-name]').remove();
                     var h_id = 'doc-' + this.innerHTML.replace(/\W/g, "-") + '-' + idx;
 
-                    if(idx == 0 && this.tagName !== "H1"){
+                    if (idx == 0 && this.tagName !== "H1") {
                         // 상위 아이템 없음.
                         h1_index = 0;
                         h2_index = 0;
@@ -93,7 +93,7 @@ var fn_docs = (function () {
                     po.push('</li>');
                     if (item.child.length > 0) {
                         po.push('<ul data-parent-h' + depth + '-id="' + item.id + '">');
-                        po.push(_this.getMenuList(item.child, (depth+1)));
+                        po.push(_this.getMenuList(item.child, (depth + 1)));
                         po.push('</ul>');
                     }
                 });
@@ -112,7 +112,7 @@ var fn_docs = (function () {
                 var $menu = fn_docs._jos["docs-inline-menu"];
                 for (var i = 0, l = this.offsetList.length, item; i < l; i++) {
                     item = this.offsetList[i];
-                    if(item.h1_index === -1) break;
+                    if (item.h1_index === -1) break;
                     if (item.top >= scTop) { // 보정이 필요할수도 있음.
                         if (this.focusedH1 !== item.h1_index) {
                             $menu.find('[data-parent-h1-id]').removeClass("open");
@@ -152,17 +152,23 @@ $(document.body).ready(function () {
             "docs-body": $("#docs-body"),
             "docs-foot": $("#docs-foot"),
             "docs-inline-menu": $("#docs-inline-menu"),
-            "docs-menu": $("#docs-menu")
+            "docs-menu": $("#docs-menu"),
+            "docs-menu-parent": $("#docs-menu").parent()
         }
     })();
 
+    var menuParentTop = 0;
     $(window).on('load resize', function () {
         // toolbar position cache
-        fn_docs._data["doc-heder-tool-change-position"] = ax5.util.number(fn_docs._jos["docs-body"].css("margin-top")) - fn_docs._jos["docs-header-tool"].height();
+        fn_docs._data["doc-header-tool-change-position"] = ax5.util.number(fn_docs._jos["docs-body"].css("margin-top")) - fn_docs._jos["docs-header-tool"].height();
 
         // change print way(static) -- remove
         if (fn_docs._jos['docs-inline-menu'][0]) {
             fn_docs.menu.ready(fn_docs._jos['docs-inline-menu'], 'inline');
+        } else {
+            fn_docs.menu.target = fn_docs._jos['docs-menu'];
+            fn_docs.menu.target_parent = fn_docs._jos['docs-menu-parent'];
+            //menuParentTop = fn_docs.menu.target_parent.offset().top;
         }
     });
 
@@ -170,15 +176,11 @@ $(document.body).ready(function () {
     $(window).on('load resize scroll', function () {
         windowScrollTop = $(window).scrollTop();
 
+
         /// viewType 결정
         var viewType;
-        if (windowScrollTop >= fn_docs._data["doc-heder-tool-change-position"]) {
+        if (windowScrollTop >= fn_docs._data["doc-header-tool-change-position"]) {
             viewType = 1;
-            if (fn_docs.menu.target) {
-                if (fn_docs.menu.target.outerHeight() + windowScrollTop > $(document.body).height() - fn_docs._jos['docs-foot'].height()) {
-                    viewType = 2;
-                }
-            }
         }
         else {
             viewType = 0;
@@ -188,17 +190,19 @@ $(document.body).ready(function () {
         if (fn_docs.menu.viewType != viewType) {
             if (viewType == 0) {
                 fn_docs._jos["docs-header-tool"].removeClass("reflection");
-                if (fn_docs.menu.printed) fn_docs.menu.target.attr("class", "docs-menu").css({top: 'auto'});
+                //if (fn_docs.menu.printed) {
+                //    fn_docs.menu.target.attr("class", "docs-menu").css({top: 'auto'});
+                //}
+
+                if (fn_docs.menu.target) fn_docs.menu.target.attr("class", "docs-menu").css({top: 'auto'});
             }
             else if (viewType == 1) {
                 fn_docs._jos["docs-header-tool"].addClass("reflection");
-                if (fn_docs.menu.printed) fn_docs.menu.target.attr("class", "docs-menu fixed").css({top: 70});
-            }
-            else if (viewType == 2) {
-                fn_docs._jos["docs-header-tool"].addClass("reflection");
-                if (fn_docs.menu.printed) {
-                    fn_docs.menu.target.attr("class", "docs-menu fixed fixed-bottom")
-                        .css({top: $(document.body).height() - fn_docs._jos['docs-foot'].height() - fn_docs.menu.target.outerHeight() - fn_docs._data["doc-heder-tool-change-position"]});
+                //if (fn_docs.menu.printed) {
+                //    fn_docs.menu.target.attr("class", "docs-menu fixed").css({top: 70});
+                //}
+                if (fn_docs.menu.target) {
+                    fn_docs.menu.target.attr("class", "docs-menu fixed").css({top: 0});
                 }
             }
             fn_docs.menu.viewType = viewType;

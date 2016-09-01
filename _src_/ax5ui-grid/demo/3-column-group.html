@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="Basic" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="3" id="column-group" title="Column group" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -24,7 +24,7 @@
         <!-- grid -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Basic
+                # Column group
 
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
@@ -37,26 +37,31 @@
 
             HTML
             <ax5docs-html run="true">
-                <div data-ax5grid="first-grid" data-ax5grid-config='{}' style="height: 300px;"></div>
+                <div data-ax5grid="first-grid" data-ax5grid-config='{
+                    showLineNumber: true,
+                    showRowSelector: true,
+                    lineNumberColumnWidth: 40,
+                    rowSelectorColumnWidth: 25
+                }' style="height: 300px;"></div>
             </ax5docs-html>
 
             <div class="DH10"></div>
             JS
             <ax5docs-js run="true">
                 <script type="text/javascript">
-                    var firstGrid = new ax5.ui.grid();
-
                     $(document.body).ready(function () {
-
-                        firstGrid.setConfig({
+                        var firstGrid = new ax5.ui.grid({
                             target: $('[data-ax5grid="first-grid"]'),
                             columns: [
                                 {key: "a", label: "field A"},
                                 {key: "b", label: "field B"},
-                                {key: "c", label: "numbers C"},
-                                {key: "d", label: "field D"},
-                                {key: "e", label: "field E"},
-                                {key: "f", label: "field F"},
+                                {
+                                    key: "c", label: "field C", columns: [ // child columns
+                                        {key: "d", label: "field D"},
+                                        {key: "e", label: "field E"},
+                                        {key: "f", label: "field F"}
+                                    ]
+                                },
                                 {key: "g", label: "field G"},
                                 {key: "h", label: "field H"}
                             ]
@@ -72,34 +77,39 @@
             </ax5docs-js>
 
             <ax5docs-md>
-                ## Setting up Grid attribute of tag
-                기본적으로 Grid의 속성설정은 setConfig메소드를 이용하여 정의할 수 있습니다.
-                ax5grid는 태그에 `data-ax5grid-config` 속성의 값을 setConfig의 속성으로 인식하도록 되어 있어, 사용자는 선택적으로 이용이 가능합니다.
+                `columns` 아이템들중에 key로 `columns`를 가진 column이 있다면 grid의 헤더를 그룹으로 표현합니다.
+                grid의 body를 표현하는 규칙은 헤더와는 다르게 column에 key가 있으면 그룹으로 표현하고 key가 없으면 표현하지 않습니다.
+                예제로 설명하면 다음과 같습니다.
             </ax5docs-md>
+
 
             HTML
             <ax5docs-html run="true">
                 <div data-ax5grid="second-grid" data-ax5grid-config='{
-                    showLineNumber: true,
-                    columns: [
-                        {key: "a", label: "field A"},
-                        {key: "b", label: "field B"},
-                        {key: "c", label: "numbers C"},
-                        {key: "d", label: "field D"},
-                        {key: "e", label: "field E"},
-                        {key: "f", label: "field F"},
-                        {key: "g", label: "field G"},
-                        {key: "h", label: "field H"}
-                    ]
+                    showLineNumber: true
                 }' style="height: 300px;"></div>
             </ax5docs-html>
+
             <div class="DH10"></div>
             JS
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     $(document.body).ready(function () {
                         var secondGrid = new ax5.ui.grid({
-                            target: $('[data-ax5grid="second-grid"]')
+                            target: $('[data-ax5grid="second-grid"]'),
+                            columns: [
+                                {key: "a", label: "field A"},
+                                {key: "b", label: "field B"},
+                                {
+                                    label: "field C", columns: [ // child columns
+                                    {key: "d", label: "field D"},
+                                    {key: "e", label: "field E"},
+                                    {key: "f", label: "field F"}
+                                ]
+                                },
+                                {key: "g", label: "field G"},
+                                {key: "h", label: "field H"}
+                            ]
                         });
 
                         var list = [];
@@ -110,14 +120,6 @@
                     });
                 </script>
             </ax5docs-js>
-
-
-            <ax5docs-md>
-                첫번째 그리드와 두번째 그리드는 선언방법에 차이점이 있습니다.
-                두번째 그리드는 `setConfig`메소드를 사용하지 않고 있습니다.
-                `ax5.ui.grid`는 속성의 정의를 UI를 선언할 때(new) 바로 정의하거나, 선언타임과 시간을 두고 `setConfig`를 이용하여 정의할 수 있습니다.
-            </ax5docs-md>
-
         </section>
 
     </layout-put>

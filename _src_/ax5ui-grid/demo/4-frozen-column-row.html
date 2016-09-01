@@ -1,0 +1,94 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="4" id="frozen-column-row" title="Frozen Column&Row" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- grid -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Frozen Column&Row
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css"/>
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
+                ```
+            </ax5docs-md>
+
+            HTML
+            <ax5docs-html run="true">
+                <div data-ax5grid="first-grid" data-ax5grid-config='{
+                    frozenColumnIndex: 3,
+                    frozenRowIndex: 2,
+                    showLineNumber: true,
+                    showRowSelector: true,
+                    lineNumberColumnWidth: 40,
+                    rowSelectorColumnWidth: 25
+                }' style="height: 300px;"></div>
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        var firstGrid = new ax5.ui.grid({
+                            target: $('[data-ax5grid="first-grid"]'),
+                            columns: [
+                                {key: "a", label: "field A", width: 80},
+                                {key: "b", label: "field B", width: 80},
+                                {
+                                    label: "Group", columns: [ // child columns
+                                        {key: "d", label: "field D"},
+                                        {key: "e", label: "field E"},
+                                        {key: "f", label: "field F"}
+                                    ]
+                                },
+                                {key: "c", label: "field C", width: 200},
+                                {key: "g", label: "field G", width: 300},
+                                {key: "h", label: "field H"}
+                            ]
+                        });
+
+                        var list = [];
+                        for (var a = 0, l = 100; a < l; a++) {
+                            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
+                        }
+                        firstGrid.setData(list);
+                    });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+                `frozenColumnIndex`속성을 이용하여 틀고정 컬럼을 설정 할 수 있습니다.
+                그룹이 아닌 컬럼인 경우엔 개발도 간단하고 이해도 쉽습니다. 하지만 그룹된 컬럼의 사이로 틀고정 컬럼이 설정된다면 문제가 간단하지 않습니다.
+                ax5grid는 틀고정 컬럼을 기준으로 그룹된 컬럼을 나누어 처리합니다.
+            </ax5docs-md>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>
