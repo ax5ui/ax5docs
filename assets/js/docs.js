@@ -101,14 +101,17 @@ var fn_docs = (function () {
             },
             print: function () {
                 var po = [];
+                po.push('<div class="docs-menu-scroll">');
                 po.push('<ul>');
                 po.push(this.getMenuList(this.list, 1));
                 po.push('</ul>');
+                po.push('</div>');
                 this.target.html(po.join(''));
                 this.printed = true;
             },
 
             setFocus: function (scTop) {
+                
                 var $menu = fn_docs._jos["docs-inline-menu"];
                 for (var i = 0, l = this.offsetList.length, item; i < l; i++) {
                     item = this.offsetList[i];
@@ -161,10 +164,13 @@ $(document.body).ready(function () {
     $(window).on('load resize', function () {
         // toolbar position cache
         fn_docs._data["doc-header-tool-change-position"] = ax5.util.number(fn_docs._jos["docs-body"].css("margin-top")) - fn_docs._jos["docs-header-tool"].height();
-
+        fn_docs._data["window-height"] = $(window).height();
+        fn_docs._data["window-width"] = $(window).width();
+        fn_docs._data["dpcs-foot-top"] = fn_docs._jos["docs-foot"].offset().top || 0;
         // change print way(static) -- remove
         if (fn_docs._jos['docs-inline-menu'][0]) {
             fn_docs.menu.ready(fn_docs._jos['docs-inline-menu'], 'inline');
+            fn_docs.menu.setFocus(0);
         } else {
             fn_docs.menu.target = fn_docs._jos['docs-menu'];
             fn_docs.menu.target_parent = fn_docs._jos['docs-menu-parent'];
@@ -172,11 +178,10 @@ $(document.body).ready(function () {
         }
     });
 
-    var windowScrollTop = 0;
     $(window).on('load resize scroll', function () {
-        windowScrollTop = $(window).scrollTop();
-
-
+        var windowScrollTop = $(window).scrollTop();
+        var docsFootTop = fn_docs._data["dpcs-foot-top"] || 0;
+        var windowHeight = fn_docs._data["window-height"];
         /// viewType 결정
         var viewType;
         if (windowScrollTop >= fn_docs._data["doc-header-tool-change-position"]) {
@@ -190,17 +195,10 @@ $(document.body).ready(function () {
         if (fn_docs.menu.viewType != viewType) {
             if (viewType == 0) {
                 fn_docs._jos["docs-header-tool"].removeClass("reflection");
-                //if (fn_docs.menu.printed) {
-                //    fn_docs.menu.target.attr("class", "docs-menu").css({top: 'auto'});
-                //}
-
-                if (fn_docs.menu.target) fn_docs.menu.target.attr("class", "docs-menu").css({top: 'auto'});
+                if (fn_docs.menu.target) fn_docs.menu.target.attr("class", "docs-menu").css({top: 'auto', height: 'auto'});
             }
             else if (viewType == 1) {
                 fn_docs._jos["docs-header-tool"].addClass("reflection");
-                //if (fn_docs.menu.printed) {
-                //    fn_docs.menu.target.attr("class", "docs-menu fixed").css({top: 70});
-                //}
                 if (fn_docs.menu.target) {
                     fn_docs.menu.target.attr("class", "docs-menu fixed").css({top: 0});
                 }
@@ -208,9 +206,19 @@ $(document.body).ready(function () {
             fn_docs.menu.viewType = viewType;
         }
 
+        if(fn_docs._data["window-width"] > 650) {
+            if (windowScrollTop + windowHeight > docsFootTop) {
+                fn_docs.menu.target.css({height: windowHeight - (windowScrollTop + windowHeight - docsFootTop)});
+            } else if (fn_docs.menu.viewType == 1) {
+                fn_docs.menu.target.css({height: windowHeight});
+            }
+        }
+
         /// windowScrollTop 위치에 맞게 메뉴 하이라이트
         if (fn_docs.menu.scrollType === "inline") {
             fn_docs.menu.setFocus(windowScrollTop);
         }
     });
+
+
 });
