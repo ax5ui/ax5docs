@@ -131,7 +131,7 @@
                     <div class="col-md-3">
                         <div class="docs-menu" id="docs-menu">
                             
-        <ul><li  class='active'><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li></ul>
     
                         </div>
                     </div>
@@ -204,6 +204,20 @@
         firstGrid.setData(list);
     });
 </script></script>
+
+            <div class="docs-callout docs-callout-primary">
+                <h4>Column attribute</h4>
+                <ul>
+                    <li><b>key</b> : 데이터의 키 이름</li>
+                    <li><b>label</b> : 헤더컬럼 표시명</li>
+                    <li><b>width</b> : 컬럼의 너비 값 ("*")를 사용하면 해당 컬럼의 너비는 나머지공간이 됩니다. 또한 `width`를 선언하지 않으면 기본값 `100`으로 설정되는데 `setConfig({columnMinWidth: 120})` 으로 초기 값을 변경 할 수 있습니다.</li>
+                    <li><b>align</b> : 컬럼의 정렬</li>
+                    <li><b>formatter</b> : 표시값을 변환하는데 사용합니다. 미리 정의된 함수이름 `money`를 사용 할 수 있고. formatter 함수 정의는 `ax5.ui.grid.formatter["myFn"] = function(){}` 로 직접 정의 할 수 있습니다.</li>
+                    <li><b>styleClass</b> : 컬럼에 CSS Class를 추가 할 수 있습니다. `String`으로 정의하면 해당 컬럼에 CSS Class가 추가되고 `Function`으로 정의하면 함수의 리턴값을 해당 컬럼 CSS Class로 추가 합니다</li>
+                    <li><b>multiLine</b> : 그리드의 모든 컬럼은 줄넘김을 허용하지 않습니다. 만약 해당컬럼의 줄넘김을 허용하고자 하면 이 값을 `true`로 설정 하세요.</li>
+                    <li><b>sortable</b> : 해당 컬럼의 정렬 표시 여부</li>
+                </ul>
+            </div>
 
             <h2>Setting up Grid attribute of tag</h2>
 <p>기본적으로 Grid의 속성설정은 setConfig메소드를 이용하여 정의할 수 있습니다.

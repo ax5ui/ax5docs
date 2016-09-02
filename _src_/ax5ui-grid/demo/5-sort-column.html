@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="Basic" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="5" id="sort-column" title="Sort Column" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -24,7 +24,7 @@
         <!-- grid -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Basic
+                # Sort Column
 
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
@@ -37,27 +37,36 @@
 
             HTML
             <ax5docs-html run="true">
-                <div data-ax5grid="first-grid" data-ax5grid-config='{}' style="height: 300px;"></div>
+                <div data-ax5grid="first-grid" data-ax5grid-config='{
+                    frozenColumnIndex: 3,
+                    frozenRowIndex: 0,
+                    showLineNumber: true,
+                    showRowSelector: true,
+                    lineNumberColumnWidth: 40,
+                    rowSelectorColumnWidth: 26
+                }' style="height: 300px;"></div>
             </ax5docs-html>
 
             <div class="DH10"></div>
             JS
             <ax5docs-js run="true">
                 <script type="text/javascript">
-                    var firstGrid = new ax5.ui.grid();
-
                     $(document.body).ready(function () {
-
-                        firstGrid.setConfig({
+                        var firstGrid = new ax5.ui.grid({
                             target: $('[data-ax5grid="first-grid"]'),
+                            header: {
+                                align: "center"
+                            },
                             columns: [
-                                {key: "a", label: "field A"},
-                                {key: "b", label: "field B"},
-                                {key: "c", label: "numbers C"},
-                                {key: "d", label: "field D"},
-                                {key: "e", label: "field E"},
-                                {key: "f", label: "field F"},
-                                {key: "g", label: "field G"},
+                                {key: "a", label: "field A", width: 80},
+                                {key: "b", label: "field B", width: 80},
+                                {
+                                    label: "Group", columns: [ // child columns
+                                    {key: "d", label: "field D"}
+                                ]
+                                },
+                                {key: "c", label: "<b>field C</b>", width: 100, sortable: true, align: "right"},
+                                {key: "g", label: "field G", width: 100},
                                 {key: "h", label: "field H"}
                             ]
                         });
@@ -71,49 +80,46 @@
                 </script>
             </ax5docs-js>
 
-            <div class="docs-callout docs-callout-primary">
-                <h4>Column attribute</h4>
-                <ul>
-                    <li><b>key</b> : 데이터의 키 이름</li>
-                    <li><b>label</b> : 헤더컬럼 표시명</li>
-                    <li><b>width</b> : 컬럼의 너비 값 ("*")를 사용하면 해당 컬럼의 너비는 나머지공간이 됩니다. 또한 `width`를 선언하지 않으면 기본값 `100`으로 설정되는데 `setConfig({columnMinWidth: 120})` 으로 초기 값을 변경 할 수 있습니다.</li>
-                    <li><b>align</b> : 컬럼의 정렬</li>
-                    <li><b>formatter</b> : 표시값을 변환하는데 사용합니다. 미리 정의된 함수이름 `money`를 사용 할 수 있고. formatter 함수 정의는 `ax5.ui.grid.formatter["myFn"] = function(){}` 로 직접 정의 할 수 있습니다.</li>
-                    <li><b>styleClass</b> : 컬럼에 CSS Class를 추가 할 수 있습니다. `String`으로 정의하면 해당 컬럼에 CSS Class가 추가되고 `Function`으로 정의하면 함수의 리턴값을 해당 컬럼 CSS Class로 추가 합니다</li>
-                    <li><b>multiLine</b> : 그리드의 모든 컬럼은 줄넘김을 허용하지 않습니다. 만약 해당컬럼의 줄넘김을 허용하고자 하면 이 값을 `true`로 설정 하세요.</li>
-                    <li><b>sortable</b> : 해당 컬럼의 정렬 표시 여부</li>
-                </ul>
-            </div>
-
             <ax5docs-md>
-                ## Setting up Grid attribute of tag
-                기본적으로 Grid의 속성설정은 setConfig메소드를 이용하여 정의할 수 있습니다.
-                ax5grid는 태그에 `data-ax5grid-config` 속성의 값을 setConfig의 속성으로 인식하도록 되어 있어, 사용자는 선택적으로 이용이 가능합니다.
+                컬럼또는 그리드에 `sortable:true` 값을 주면 컬럼헤더의 특정 컬럼또는 전체 컬럼에 sortable 표시가 활성화 됩니다.
+                다음의 예제에서는 그리드에 `sortable:true`후에 특정 컬럼에 `sortable:false`하게 되면 특정 컬럼만 sortable 표시가 비 활성화 됩니다.
             </ax5docs-md>
 
             HTML
             <ax5docs-html run="true">
                 <div data-ax5grid="second-grid" data-ax5grid-config='{
+                    frozenColumnIndex: 3,
+                    frozenRowIndex: 0,
                     showLineNumber: true,
-                    columns: [
-                        {key: "a", label: "field A"},
-                        {key: "b", label: "field B"},
-                        {key: "c", label: "numbers C"},
-                        {key: "d", label: "field D"},
-                        {key: "e", label: "field E"},
-                        {key: "f", label: "field F"},
-                        {key: "g", label: "field G"},
-                        {key: "h", label: "field H"}
-                    ]
+                    showRowSelector: true,
+                    lineNumberColumnWidth: 40,
+                    rowSelectorColumnWidth: 26
                 }' style="height: 300px;"></div>
             </ax5docs-html>
+
             <div class="DH10"></div>
             JS
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     $(document.body).ready(function () {
                         var secondGrid = new ax5.ui.grid({
-                            target: $('[data-ax5grid="second-grid"]')
+                            target: $('[data-ax5grid="second-grid"]'),
+                            header: {
+                                align: "center"
+                            },
+                            sortable: true,
+                            columns: [
+                                {key: "a", label: "field A", width: 80},
+                                {key: "b", label: "field B", width: 80},
+                                {
+                                    label: "Group", columns: [ // child columns
+                                    {key: "d", label: "field D"}
+                                ]
+                                },
+                                {key: "c", label: "<b>field C</b>", width: 100, sortable: false, align: "right"},
+                                {key: "g", label: "field G", width: 100},
+                                {key: "h", label: "field H"}
+                            ]
                         });
 
                         var list = [];
@@ -124,14 +130,6 @@
                     });
                 </script>
             </ax5docs-js>
-
-
-            <ax5docs-md>
-                첫번째 그리드와 두번째 그리드는 선언방법에 차이점이 있습니다.
-                두번째 그리드는 `setConfig`메소드를 사용하지 않고 있습니다.
-                `ax5.ui.grid`는 속성의 정의를 UI를 선언할 때(new) 바로 정의하거나, 선언타임과 시간을 두고 `setConfig`를 이용하여 정의할 수 있습니다.
-            </ax5docs-md>
-
         </section>
 
     </layout-put>

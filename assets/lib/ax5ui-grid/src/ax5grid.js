@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.2.1"
+        version: "0.2.3"
     }, (function () {
         /**
          * @class ax5grid
@@ -39,7 +39,7 @@
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
                 rowSelectorColumnWidth: 26,
-                sortable: false,
+                sortable: undefined,
 
                 header: {
                     align: false,
@@ -63,7 +63,8 @@
                 },
                 scroller: {
                     size: 15,
-                    barMinSize: 15
+                    barMinSize: 15,
+                    trackPadding: 4
                 },
                 columnKeys: {
                     selected: '_SELECTED'
@@ -587,6 +588,7 @@
              * @param {Object} [_config.scroller]
              * @param {Number} [_config.scroller.size=15]
              * @param {Number} [_config.scroller.barMinSize=15]
+             * @param {Number} [_config.scroller.trackPadding=4]
              * @param {Object} [_config.columnKeys]
              * @param {String} [_config.columnKeys.selected="_SELECTED"]
              * @param {Object} _config.columns

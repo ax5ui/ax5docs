@@ -11,7 +11,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.2.1"
+        version: "0.2.3"
     }, function () {
         /**
          * @class ax5grid
@@ -42,7 +42,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
                 rowSelectorColumnWidth: 26,
-                sortable: false,
+                sortable: undefined,
 
                 header: {
                     align: false,
@@ -66,7 +66,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 },
                 scroller: {
                     size: 15,
-                    barMinSize: 15
+                    barMinSize: 15,
+                    trackPadding: 4
                 },
                 columnKeys: {
                     selected: '_SELECTED'
@@ -572,6 +573,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Object} [_config.scroller]
              * @param {Number} [_config.scroller.size=15]
              * @param {Number} [_config.scroller.barMinSize=15]
+             * @param {Number} [_config.scroller.trackPadding=4]
              * @param {Object} [_config.columnKeys]
              * @param {String} [_config.columnKeys.selected="_SELECTED"]
              * @param {Object} _config.columns
@@ -2732,7 +2734,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var rowIndex = this.getAttribute("data-ax5grid-column-rowindex");
             var col = self.colGroup[colIndex];
             if (key && col) {
-                if (col.sortable !== false && self.config.sortable !== false) {
+                if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
                     if (!col.sortFixed) toggleSort.call(self, col.key);
                 }
             }
@@ -2855,7 +2857,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return '<span data-ax5grid-cellHolder="" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + ' style="height: ' + (cfg.header.columnHeight - cfg.header.columnBorderWidth) + 'px;line-height: ' + lineHeight + 'px;">';
                     }(), function () {
                         var _SS = "";
-                        if (!U.isNothing(col.key) && !U.isNothing(col.colIndex) && cfg.sortable !== false && col.sortable !== false) {
+
+                        if (!U.isNothing(col.key) && !U.isNothing(col.colIndex) && (cfg.sortable === true || col.sortable === true) && col.sortable !== false) {
                             _SS += '<span data-ax5grid-column-sort="' + col.colIndex + '" data-ax5grid-column-sort-order="' + (colGroup[col.colIndex].sort || "") + '" />';
                         }
                         return _SS;
@@ -3322,7 +3325,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var self = this,
                 trackOffset = track.offset(),
                 barBox = {
-                width: bar.width(), height: bar.height()
+                width: bar.outerWidth(), height: bar.outerHeight()
             },
                 trackBox = {
                 width: track.innerWidth(), height: track.innerHeight()
@@ -3333,8 +3336,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 _panel_width = self.$["panel"]["body"].width(),
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth,
-                verticalScrollBarHeight = self.$["scroller"]["vertical-bar"].height(),
-                horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].width(),
+                verticalScrollBarHeight = self.$["scroller"]["vertical-bar"].outerHeight(),
+                horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].outerWidth(),
                 getScrollerPosition = {
                 "vertical": function vertical(e) {
                     var mouseObj = GRID.util.getMousePosition(e);
@@ -3380,7 +3383,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var self = this,
                 barOffset = bar.position(),
                 barBox = {
-                width: bar.width(), height: bar.height()
+                width: bar.outerWidth(), height: bar.outerHeight()
             },
                 trackBox = {
                 width: track.innerWidth(), height: track.innerHeight()
@@ -3391,8 +3394,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 _panel_width = self.$["panel"]["body"].width(),
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth,
-                verticalScrollBarHeight = self.$["scroller"]["vertical-bar"].height(),
-                horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].width(),
+                verticalScrollBarHeight = self.$["scroller"]["vertical-bar"].outerHeight(),
+                horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].outerWidth(),
                 getScrollerPosition = {
                 "vertical": function vertical(e) {
                     var mouseObj = GRID.util.getMousePosition(e);
@@ -3569,7 +3572,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var init = function init() {
         var self = this;
         //this.config.scroller.size
-        var margin = 4;
+        var margin = this.config.scroller.trackPadding;
 
         this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size - (margin + 1), left: margin / 2 });
         this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size - (margin + 1), top: margin / 2 });
