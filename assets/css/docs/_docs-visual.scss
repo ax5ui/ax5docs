@@ -56,10 +56,6 @@
                 line-height: 60px;
                 font-weight: 100;
             }
-
-            .btn.btn-lg{
-                font-size:12px;
-            }
         }
         .style-sub-visual {
             padding-top: 50px;
@@ -116,6 +112,10 @@
                 line-height: 50px;
                 font-weight: 100;
             }
+
+            .btn.btn-lg{
+                font-size:12px;
+            }
         }
         .style-sub-visual {
             .title {
@@ -124,6 +124,11 @@
             }
             .description {
                 font-size: 15px;
+            }
+
+
+            .btn.btn-lg{
+                font-size:12px;
             }
         }
     }
