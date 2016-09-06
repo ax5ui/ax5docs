@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-grid : Column Height</title>
+    <title>ax5ui / ax5ui-grid : Row Add&amp;Remove</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -132,7 +132,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li  class='active'><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li ><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li></ul>
+        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li ><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li  class='active'><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li></ul>
     
                             </div>
                         </div>
@@ -142,7 +142,7 @@
 
         
         <section class="ax5docs-section">
-            <h1>Column Height</h1>
+            <h1>Row Add&amp;Remove</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css&quot;&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
@@ -152,7 +152,23 @@
 
 
             HTML
-            <pre class="prettyprint linenums lang-html">&lt;div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    header: {&#10;                        align: &quot;center&quot;,&#10;                        columnHeight: 40&#10;                    },&#10;                    body: {&#10;                        align: &quot;center&quot;,&#10;                        columnHeight: 40&#10;                    }&#10;                }" style="height: 300px;">&lt;/div></pre><div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    header: {&#10;                        align: &quot;center&quot;,&#10;                        columnHeight: 40&#10;                    },&#10;                    body: {&#10;                        align: &quot;center&quot;,&#10;                        columnHeight: 40&#10;                    }&#10;                }" style="height: 300px;"></div>
+            <pre class="prettyprint linenums lang-html">&lt;div style="position: relative;height:400px;" id="grid-parent">
+    &lt;div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;">&lt;/div>
+&lt;/div>
+
+&lt;div style="padding: 10px;">
+    &lt;button class="btn btn-default" data-grid-control="row-add">row add&lt;/button>
+    &lt;button class="btn btn-default" data-grid-control="row-remove">row remove&lt;/button>
+    &lt;button class="btn btn-default" data-grid-control="row-update">row update&lt;/button>
+&lt;/div></pre><div style="position: relative;height:400px;" id="grid-parent">
+    <div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;"></div>
+</div>
+
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-grid-control="row-add">row add</button>
+    <button class="btn btn-default" data-grid-control="row-remove">row remove</button>
+    <button class="btn btn-default" data-grid-control="row-update">row update</button>
+</div>
 
             <div class="DH10"></div>
             JS
@@ -161,43 +177,111 @@
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
-                {key: "a", label: "field A", width: 80},
-                {key: "b", label: "field B", width: 80},
-                {key: "d", label: "field D"},
-                {key: "c", label: "&lt;b>field C&lt;/b>", width: 100, sortable: true, align: "right"},
-                {key: "g", label: "field G", width: 100},
-                {key: "h", label: "field H"}
+                {
+                    key: "a",
+                    label: "field A",
+                    width: 80,
+                    styleClass: function () {
+                        return "ABC";
+                    },
+                    enableFilter: true,
+                    align: "center"
+                },
+                {key: "b", label: "field  B", align: "center"},
+                {
+                    key: undefined, label: "field C", columns: [
+                    {key: "price", label: "price", formatter: "money", align: "right"},
+                    {key: "amount", label: "amount", formatter: "money", align: "right"},
+                    {key: "cost", label: "cost", align: "right", formatter: "money"}
+                ]
+                },
+                {key: "saleDt", label: "saleDt", align: "center"},
+                {key: "customer", label: "customer"},
+                {key: "userType", label: "userType"}
             ]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a &lt; l; a++) {
-            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-        }
-        firstGrid.setData(list);
+        var sampleData = [
+            {a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
+        ];
+
+        firstGrid.setData(sampleData);
+
+        $('[data-grid-control]').click(function () {
+            switch (this.getAttribute("data-grid-control")) {
+                case "row-add":
+                    firstGrid.addRow(sampleData[Math.floor(Math.random() * sampleData.length)]);
+                    break;
+                case "row-remove":
+                    firstGrid.removeRow();
+                    break;
+                case "row-update":
+                    var updateIndex = Math.floor(Math.random() * firstGrid.list.length);
+                    firstGrid.updateRow($.extend({}, firstGrid.list[updateIndex], {price: 100, amount: 100, cost: 10000}), updateIndex);
+                    break;
+            }
+        });
     });
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
-                {key: "a", label: "field A", width: 80},
-                {key: "b", label: "field B", width: 80},
-                {key: "d", label: "field D"},
-                {key: "c", label: "<b>field C</b>", width: 100, sortable: true, align: "right"},
-                {key: "g", label: "field G", width: 100},
-                {key: "h", label: "field H"}
+                {
+                    key: "a",
+                    label: "field A",
+                    width: 80,
+                    styleClass: function () {
+                        return "ABC";
+                    },
+                    enableFilter: true,
+                    align: "center"
+                },
+                {key: "b", label: "field  B", align: "center"},
+                {
+                    key: undefined, label: "field C", columns: [
+                    {key: "price", label: "price", formatter: "money", align: "right"},
+                    {key: "amount", label: "amount", formatter: "money", align: "right"},
+                    {key: "cost", label: "cost", align: "right", formatter: "money"}
+                ]
+                },
+                {key: "saleDt", label: "saleDt", align: "center"},
+                {key: "customer", label: "customer"},
+                {key: "userType", label: "userType"}
             ]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a < l; a++) {
-            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-        }
-        firstGrid.setData(list);
+        var sampleData = [
+            {a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
+        ];
+
+        firstGrid.setData(sampleData);
+
+        $('[data-grid-control]').click(function () {
+            switch (this.getAttribute("data-grid-control")) {
+                case "row-add":
+                    firstGrid.addRow(sampleData[Math.floor(Math.random() * sampleData.length)]);
+                    break;
+                case "row-remove":
+                    firstGrid.removeRow();
+                    break;
+                case "row-update":
+                    var updateIndex = Math.floor(Math.random() * firstGrid.list.length);
+                    firstGrid.updateRow($.extend({}, firstGrid.list[updateIndex], {price: 100, amount: 100, cost: 10000}), updateIndex);
+                    break;
+            }
+        });
     });
 </script></script>
-
-            
         </section>
 
     
