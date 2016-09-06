@@ -141,7 +141,6 @@
 <p><a name="ax5layout"></a></p>
 <h2>ax5layout</h2>
 <p><strong>Kind</strong>: global class<br>
-<strong>Version</strong>: 0.1.0<br>
 <strong>Author:</strong> <a href="mailto:tom@axisj.com">tom@axisj.com</a></p>
 <ul>
 <li><a href="#ax5layout">ax5layout</a>
@@ -163,6 +162,7 @@
 <tr>
 <th>Param</th>
 <th>Type</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -170,12 +170,37 @@
 <tr>
 <td>config</td>
 <td><code>Object</code></td>
+<td></td>
 <td>클래스 속성값</td>
+</tr>
+<tr>
+<td>[config.animateTime]</td>
+<td><code>Number</code></td>
+<td><code>250</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.splitter]</td>
+<td><code>Object</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.splitter.size]</td>
+<td><code>Number</code></td>
+<td><code>4</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.autoResize]</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 <p><strong>Example</strong></p>
-<pre><code></code></pre>
+<pre class="prettyprint linenums lang-js"><code></code></pre>
 <p><a name="ax5layout.bind"></a></p>
 <h3>ax5layout.bind(item) ⇒ <code><a href="#ax5layout">ax5layout</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5layout">ax5layout</a></code></p>
@@ -184,28 +209,49 @@
 <tr>
 <th>Param</th>
 <th>Type</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>item</td>
 <td><code>Object</code></td>
+<td></td>
 </tr>
 <tr>
 <td>[item.layout]</td>
 <td><code>String</code></td>
+<td></td>
 </tr>
 <tr>
 <td>[item.theme]</td>
 <td><code>String</code></td>
+<td></td>
 </tr>
 <tr>
 <td>item.target</td>
 <td><code>Element</code></td>
+<td></td>
 </tr>
 <tr>
 <td>item.options</td>
 <td><code>Array.&lt;Object&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[item.splitter]</td>
+<td><code>Object</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[item.splitter.size]</td>
+<td><code>Number</code></td>
+<td><code>4</code></td>
+</tr>
+<tr>
+<td>[item.autoResize]</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
 </tr>
 </tbody>
 </table>
