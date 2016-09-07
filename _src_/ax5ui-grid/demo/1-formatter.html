@@ -1,0 +1,101 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="formatter" title="Formatter" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- grid -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Formatter
+
+                formatter는 컬럼의 출력 될 값을 미리 정의된 함수명 또는 사용자가 직접 정의한 함수의 리턴값으로 대체하여 출력하는 컬럼의 속성을 말합니다.
+                `ax5.ui.grid.formatter` 오브젝트 안에 미리 정의된 함수들이 담겨 있습니다. 기본 정의된 formatter함수는 `money`입니다.
+                사용자가 `formatter`를 확장하고 싶다면, 그리드 실행전에. 다음의 코드를 추가 하시면 됩니다.
+
+                ```js
+                // capital formatter 추가
+                ax5.ui.grid.formatter["capital"] = function(){
+                    // console.log(this);
+                    return this.value.toUpperCase();
+                }
+                ```
+                ### formatter this
+                formatter 함수에 this는 다음과 같습니다. 최종 return 의 값을 사용 하므로 자유롭게 프로그래밍 할 수 있습니다.
+                ```
+                {key: "c", value: 3000, index: 5, item: Object, list: Array[6]}
+                ```
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css"/>
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
+                ```
+            </ax5docs-md>
+
+            HTML
+            <ax5docs-html run="true">
+                <div data-ax5grid="first-grid" data-ax5grid-config='{
+                    showLineNumber: true,
+                    showRowSelector: true,
+                    multipleSelect: true
+                }' style="height: 300px;"></div>
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    var firstGrid = new ax5.ui.grid();
+
+                    $(document.body).ready(function () {
+
+                        firstGrid.setConfig({
+                            target: $('[data-ax5grid="first-grid"]'),
+                            columns: [
+                                {key: "a", label: "field A"},
+                                {key: "b", label: "field B"},
+                                {key: "c", label: "<b>numbers C</b>", formatter: "money"},
+                                {key: "d", label: "field D"},
+                                {key: "e", label: "field E"},
+                                {key: "f", label: "field F"},
+                                {key: "g", label: "field G"},
+                                {key: "h", label: "field H"}
+                            ]
+                        });
+
+                        var list = [];
+                        for (var a = 0, l = 100; a < l; a++) {
+                            list.push({a: "A value", b: "B value", c: (a*1000), d: "D value", e: "E value", f: "F value", g: "G value"});
+                        }
+                        firstGrid.setData(list);
+                    });
+                </script>
+            </ax5docs-js>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>

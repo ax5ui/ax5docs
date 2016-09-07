@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-grid : lineNumber, Rowselector</title>
+    <title>ax5ui / ax5ui-grid : Foot Summary</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -132,7 +132,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/1-formatter.html">Formatter</a></li><li  class='active'><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li ><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li ><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/9-column-aru.html">Column Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/10-footsum.html">Foot Summary</a></li><li ><a href="/ax5ui-grid/demo/11-collector.html">Collector</a></li><li ><a href="/ax5ui-grid/demo/12-body-grouping.html">Body Grouping</a></li><li ><a href="/ax5ui-grid/demo/13-inline-edit.html">Inline edit</a></li></ul>
+        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/1-formatter.html">Formatter</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li ><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li ><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/9-column-aru.html">Column Add&Remove</a></li><li  class='active'><a href="/ax5ui-grid/demo/10-footsum.html">Foot Summary</a></li><li ><a href="/ax5ui-grid/demo/11-collector.html">Collector</a></li><li ><a href="/ax5ui-grid/demo/12-body-grouping.html">Body Grouping</a></li><li ><a href="/ax5ui-grid/demo/13-inline-edit.html">Inline edit</a></li></ul>
     
                             </div>
                         </div>
@@ -142,7 +142,7 @@
 
         
         <section class="ax5docs-section">
-            <h1>lineNumber, Rowselector</h1>
+            <h1>Foot Summary</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css&quot;&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
@@ -152,61 +152,144 @@
 
 
             HTML
-            <pre class="prettyprint linenums lang-html">&lt;div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    multipleSelect: true,&#10;                    lineNumberColumnWidth: 40,&#10;                    rowSelectorColumnWidth: 27,&#10;                }" style="height: 300px;">&lt;/div></pre><div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    multipleSelect: true,&#10;                    lineNumberColumnWidth: 40,&#10;                    rowSelectorColumnWidth: 27,&#10;                }" style="height: 300px;"></div>
+            <pre class="prettyprint linenums lang-html">&lt;div style="position: relative;height:400px;" id="grid-parent">
+    &lt;div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;">&lt;/div>
+&lt;/div></pre><div style="position: relative;height:400px;" id="grid-parent">
+    <div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;"></div>
+</div>
 
             <div class="DH10"></div>
+
+            <p>footSum은 2차원 배열입니다. 그리드 맨 아래 영역에 출력될 summary가 여러줄 일때는 고려해 2차원 배열로 설계 하였습니다.
+footSum은 label만 선언하여 문자열을 출력하는 컬럼과 key, collector를 선언하여 연산된 결과를 출력하는 컬럼 끝으로 빈 공백을 추가할 수 있는 <code>{}</code>컬럼이 있습니다.</p>
+<pre class="prettyprint linenums lang-js"><code>footSum: [
+    [
+        {label:&quot;~~~&quot;, colspan:2},
+        {},
+        {key:&quot;a&quot;, collector:&quot;sum&quot;, formatter:&quot;money&quot;}
+    ]
+]
+</code></pre>
+<p>key, collector를 선언하여 연산된 결과를 출력하는 컬럼은 연산된 결과 값을 출력전에 만약 formatter가 있다면 formatter를 통과하여 값을 출력하게 됩니다.</p>
+
+
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-    var firstGrid = new ax5.ui.grid();
-
     $(document.body).ready(function () {
-
-        firstGrid.setConfig({
+        var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
-                {key: "a", label: "field A"},
-                {key: "b", label: "field B"},
-                {key: "c", label: "numbers C"},
-                {key: "d", label: "field D"},
-                {key: "e", label: "field E"},
-                {key: "f", label: "field F"},
-                {key: "g", label: "field G"},
-                {key: "h", label: "field H"}
-            ]
+                {
+                    key: "a",
+                    label: "field A",
+                    width: 80,
+                    styleClass: function () {
+                        return "ABC";
+                    },
+                    enableFilter: true,
+                    align: "center"
+                },
+                {key: "b", label: "field  B", align: "center"},
+                {
+                    key: undefined, label: "field C", columns: [
+                        {key: "price", label: "price", formatter: "money", align: "right"},
+                        {key: "amount", label: "amount", formatter: "money", align: "right"},
+                        {key: "cost", label: "cost", align: "right", formatter: function () {
+                                return ax5.util.number(this.item.price * this.item.amount, {"money": true});
+                            }
+                        }
+                    ]
+                },
+                {key: "saleDt", label: "saleDt", align: "center"},
+                {key: "customer", label: "customer"},
+                {key: "userType", label: "userType"}
+            ],
+            footSum: [
+                [
+                    {label: "SUMMARY", colspan: 2, align: "center"},
+                    {key: "price", collector: "avg", formatter: "money", align: "right"},
+                    {key: "amount", collector: "sum", formatter: "money", align: "right"},
+                    {
+                        key: "cost", collector: function () {
+                            var value = 0;
+                            this.list.forEach(function (n) {
+                                if (!n.__isGrouping) value += (n.price * n.amount);
+                            });
+                            return ax5.util.number(value, {"money": 1});
+                        }, align: "right"
+                    }
+                ]]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a &lt; l; a++) {
-            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-        }
-        firstGrid.setData(list);
+        var sampleData = [
+            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
+        ];
+
+        firstGrid.setData(sampleData);
     });
-&lt;/script></pre><script type="text/javascript">var firstGrid = new ax5.ui.grid();
-
-    $(document.body).ready(function () {
-
-        firstGrid.setConfig({
+&lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
+        var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
-                {key: "a", label: "field A"},
-                {key: "b", label: "field B"},
-                {key: "c", label: "numbers C"},
-                {key: "d", label: "field D"},
-                {key: "e", label: "field E"},
-                {key: "f", label: "field F"},
-                {key: "g", label: "field G"},
-                {key: "h", label: "field H"}
-            ]
+                {
+                    key: "a",
+                    label: "field A",
+                    width: 80,
+                    styleClass: function () {
+                        return "ABC";
+                    },
+                    enableFilter: true,
+                    align: "center"
+                },
+                {key: "b", label: "field  B", align: "center"},
+                {
+                    key: undefined, label: "field C", columns: [
+                        {key: "price", label: "price", formatter: "money", align: "right"},
+                        {key: "amount", label: "amount", formatter: "money", align: "right"},
+                        {key: "cost", label: "cost", align: "right", formatter: function () {
+                                return ax5.util.number(this.item.price * this.item.amount, {"money": true});
+                            }
+                        }
+                    ]
+                },
+                {key: "saleDt", label: "saleDt", align: "center"},
+                {key: "customer", label: "customer"},
+                {key: "userType", label: "userType"}
+            ],
+            footSum: [
+                [
+                    {label: "SUMMARY", colspan: 2, align: "center"},
+                    {key: "price", collector: "avg", formatter: "money", align: "right"},
+                    {key: "amount", collector: "sum", formatter: "money", align: "right"},
+                    {
+                        key: "cost", collector: function () {
+                            var value = 0;
+                            this.list.forEach(function (n) {
+                                if (!n.__isGrouping) value += (n.price * n.amount);
+                            });
+                            return ax5.util.number(value, {"money": 1});
+                        }, align: "right"
+                    }
+                ]]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a < l; a++) {
-            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-        }
-        firstGrid.setData(list);
+        var sampleData = [
+            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
+        ];
+
+        firstGrid.setData(sampleData);
     });
 </script></script>
-
         </section>
 
     
