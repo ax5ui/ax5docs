@@ -11,7 +11,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.2.6"
+        version: "0.2.9"
     }, function () {
         /**
          * @class ax5grid
@@ -650,13 +650,23 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }.bind(this));
 
                 jQuery(document.body).on("click.ax5grid-" + this.instanceId, function (e) {
-                    var target = U.findParentNode(e.target, { "data-ax5grid-container": "root" });
+                    var imEl = false;
+                    var target = U.findParentNode(e.target, function (_target) {
+                        if (!U.isNothing(_target.getAttribute("data-ax5grid-data-index"))) {
+                            imEl = true;
+                        }
+                        return _target.getAttribute("data-ax5grid-container");
+                    });
+
                     if (target) {
                         self.focused = true;
+                        if (!imEl) {
+                            // GRID.body.blur.call(self);
+                        }
                     } else {
-                        self.focused = false;
-                        GRID.body.blur.call(self);
-                    }
+                            self.focused = false;
+                            GRID.body.blur.call(self);
+                        }
                 });
 
                 var ctrlKeys = {
@@ -679,6 +689,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         } else {
                             if (self.isInlineEditing) {
                                 if (e.which == ax5.info.eventKeys.ESC) {
+                                    console.log("ESC");
                                     self.keyDown("ESC", e.originalEvent);
                                 } else if (e.which == ax5.info.eventKeys.RETURN) {
                                     self.keyDown("RETURN", e.originalEvent);
@@ -687,7 +698,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 if (ctrlKeys[e.which]) {
                                     self.keyDown(ctrlKeys[e.which], e.originalEvent);
                                     U.stopEvent(e);
-                                } else if (e.which == ax5.info.eventKeys.ESC) {} else if (e.which == ax5.info.eventKeys.RETURN) {
+                                } else if (e.which == ax5.info.eventKeys.ESC) {
+                                    if (self.focused) {
+                                        GRID.body.blur.call(self);
+                                    }
+                                } else if (e.which == ax5.info.eventKeys.RETURN) {
                                     self.keyDown("RETURN", e.originalEvent);
                                 } else if (Object.keys(self.focusedColumn).length) {
                                     self.keyDown("INLINE_EDIT", e.originalEvent);
@@ -1218,7 +1233,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var self = this;
             columnSelect.init.call(self, cell);
 
-            this.$["container"]["body"].on("mousemove.ax5grid-" + this.instanceId, '[data-ax5grid-column-attr="default"]', function () {
+            this.$["container"]["body"].on("mousemove.ax5grid-" + this.instanceId, '[data-ax5grid-column-attr="default"]', function (e) {
                 if (this.getAttribute("data-ax5grid-column-rowIndex")) {
                     columnSelect.update.call(self, {
                         panelName: this.getAttribute("data-ax5grid-panel-name"),
@@ -1227,6 +1242,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         colIndex: Number(this.getAttribute("data-ax5grid-column-colIndex")),
                         colspan: Number(this.getAttribute("colspan"))
                     });
+                    U.stopEvent(e);
                 }
             }).on("mouseup.ax5grid-" + this.instanceId, function () {
                 columnSelector.off.call(self);
@@ -1292,15 +1308,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var init = function init() {
         var self = this;
 
-        this.$["container"]["root"].on("click", function (e) {
-            var target = U.findParentNode(e.target, function (_target) {
-                return _target.getAttribute("data-ax5grid-column-attr");
-            });
-            if (!target) {
-                GRID.body.blur.call(self);
-            }
-        });
-        this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function () {
+        /*
+        this.$["container"]["root"].on("click", function(e){
+         });
+        */
+        this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function (e) {
             var panelName, attr, row, col, dindex, rowIndex, colIndex;
             var targetClick = {
                 "default": function _default(_column) {
@@ -1318,8 +1330,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     if (column.editor && column.editor.type == "checkbox") {
                         // todo : GRID.inlineEditor에서 처리 할수 있도록 구문 변경 필요.
-                        var value = self.list[_column.dindex][column.key];
-
+                        var value = GRID.data.getValue.call(this, _column.dindex, column.key);
                         var checked = value == false || value == "false" || value < "1" ? "true" : "false";
                         GRID.data.setValue.call(self, _column.dindex, column.key, checked);
                         updateRowState.call(self, ["cellChecked"], _column.dindex, {
@@ -1370,7 +1381,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var value = "";
                     if (column) {
                         if (!self.list[dindex].__isGrouping) {
-                            value = self.list[dindex][column.key];
+                            value = GRID.data.getValue.call(self, dindex, column.key);
                         }
                     }
                     GRID.body.inlineEdit.active.call(self, self.focusedColumn, e, value);
@@ -1418,6 +1429,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     colIndex: Number(this.getAttribute("data-ax5grid-column-colIndex")),
                     colspan: Number(this.getAttribute("colspan"))
                 });
+                U.stopEvent(e);
             }
         }).on("dragstart", function (e) {
             U.stopEvent(e);
@@ -1535,13 +1547,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }(_col.editor)) {
 
                 // print editor
-                return GRID.inlineEditor[_col.editor.type].getHtml(this, _col.editor, _value || _item[_key]);
+                return GRID.inlineEditor[_col.editor.type].getHtml(this, _col.editor, _value || GRID.data.getValue.call(this, _index, _key));
             }
             if (_col.formatter) {
                 var that = {
                     key: _key,
-                    value: _value || _item[_key],
-                    index: _index,
+                    value: _value || GRID.data.getValue.call(this, _index, _key),
+                    dindex: _index,
                     item: _item,
                     list: _list
                 };
@@ -1552,8 +1564,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             } else {
                 var returnValue = "&nbsp;";
-                if (typeof _value !== "undefined") returnValue = _value;
-                if (typeof _item[_key] !== "undefined") returnValue = _item[_key];
+                if (typeof _value !== "undefined") {
+                    returnValue = _value;
+                } else {
+                    _value = GRID.data.getValue.call(this, _index, _key);
+                    if (typeof _value !== "undefined") returnValue = _value;
+                }
                 return returnValue;
             }
         }
@@ -2273,7 +2289,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         GRID.body.repaint.call(this, true);
                         // 한칸씩 바꿀 수도 있지 않을까? 고려할 게 많아져서 어렵겠다. footSum도 변경 해줘야 하고, body.grouping도 변경 해줘야 하는데
                         // this.inlineEditing.$inlineEditorCell.html(getFieldValue(this.list, this.list[_dindex], _dindex, _column, _newValue));
-                    }
+                    } else {
+                            action["__clear"].call(this);
+                        }
                 },
                 "__clear": function __clear() {
                     this.isInlineEditing = false;
@@ -2311,7 +2329,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             var value = "";
                             if (column) {
                                 if (!this.list[dindex].__isGrouping) {
-                                    value = this.list[dindex][column.key];
+                                    value = GRID.data.getValue.call(this, dindex, column.key);
                                 }
                             }
                             GRID.body.inlineEdit.active.call(this, this.focusedColumn, null, value);
@@ -2480,7 +2498,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return this;
     };
 
-    var get = function get() {};
+    var get = function get() {
+        return {
+            list: this.list,
+            page: this.page
+        };
+    };
 
     var add = function add(_row, _dindex) {
         var list = this.config.body.grouping ? clearGroupingData.call(this, this.list) : this.list;
@@ -2572,7 +2595,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var setValue = function setValue(_dindex, _key, _value) {
         this.needToPaintSum = true;
-        return this.list[_dindex][_key] = _value;
+        if (/[\.\[\]]/.test(_key)) {
+            Function("val", "this[" + GRID.util.getRealPathForDataItem(_key) + "] = val;").call(this.list[_dindex], _value);
+        } else {
+            this.list[_dindex][_key] = _value;
+        }
+        return _value;
+    };
+    var getValue = function getValue(_dindex, _key) {
+        if (/[\.\[\]]/.test(_key)) {
+            return Function("", "return this[" + GRID.util.getRealPathForDataItem(_key) + "];").call(this.list[_dindex]);
+        } else {
+            return this.list[_dindex][_key];
+        }
     };
 
     var clearSelect = function clearSelect() {
@@ -2643,6 +2678,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         set: set,
         get: get,
         setValue: setValue,
+        getValue: getValue,
         clearSelect: clearSelect,
         select: select,
         add: add,
@@ -4090,6 +4126,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     };
 
+    var getRealPathForDataItem = function getRealPathForDataItem(_dataPath) {
+        var path = [];
+        var _path = [].concat(_dataPath.split(/[\.\[\]]/g));
+        _path.forEach(function (n) {
+            if (n !== "") path.push(n);
+        });
+        _path = null;
+        return "'" + path.join("']['") + "'";
+    };
+
     GRID.util = {
         divideTableByFrozenColumnIndex: divideTableByFrozenColumnIndex,
         getMousePosition: getMousePosition,
@@ -4099,6 +4145,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         makeBodyRowMap: makeBodyRowMap,
         makeFootSumTable: makeFootSumTable,
         makeBodyGroupingTable: makeBodyGroupingTable,
-        findPanelByColumnIndex: findPanelByColumnIndex
+        findPanelByColumnIndex: findPanelByColumnIndex,
+        getRealPathForDataItem: getRealPathForDataItem
     };
 })();
