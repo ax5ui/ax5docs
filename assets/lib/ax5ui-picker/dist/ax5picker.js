@@ -8,7 +8,7 @@
 
     UI.addClass({
         className: "picker",
-        version: "0.7.11"
+        version: "0.7.12"
     }, function () {
         /**
          * @class ax5picker
@@ -29,9 +29,19 @@
                 theme: 'default',
                 title: '',
                 lang: {
-                    "ok": "ok", "cancel": "cancel"
+                    "ok": "ok",
+                    "cancel": "cancel"
                 },
-                animateTime: 250
+                animateTime: 250,
+                calendar: {
+                    control: {
+                        left: ax5.def.picker.date_leftArrow || '&#x02190',
+                        yearTmpl: ax5.def.picker.date_yearTmpl || '%s',
+                        monthTmpl: ax5.def.picker.date_monthTmpl || '%s',
+                        right: ax5.def.picker.date_rightArrow || '&#x02192',
+                        yearFirst: true
+                    }
+                }
             };
             this.queue = [];
             this.activePicker = null;
@@ -200,82 +210,88 @@
                 alignPicker = function alignPicker(append) {
                 if (!this.activePicker) return this;
 
-                var $window = jQuery(window),
-                    $body = jQuery(document.body),
-                    item = this.queue[this.activePickerQueueIndex],
-                    pos = {},
-                    positionMargin = 12,
-                    dim = {},
-                    pickerDim = {},
-                    pickerDirection;
+                var _alignPicker = function _alignPicker(item) {
+                    var $window = jQuery(window),
+                        $body = jQuery(document.body);
+                    var pos = {},
+                        positionMargin = 12,
+                        dim = {},
+                        pickerDim = {},
+                        pickerDirection;
+
+                    pos = item.$target.offset();
+                    dim = {
+                        width: item.$target.outerWidth(),
+                        height: item.$target.outerHeight()
+                    };
+                    pickerDim = {
+                        winWidth: Math.max($window.width(), $body.width()),
+                        winHeight: Math.max($window.height(), $body.height()),
+                        width: this.activePicker.outerWidth(),
+                        height: this.activePicker.outerHeight()
+                    };
+
+                    // picker css(width, left, top) & direction 결정
+                    if (!item.direction || item.direction === "" || item.direction === "auto") {
+                        // set direction
+                        pickerDirection = "top";
+                        if (pos.top - pickerDim.height - positionMargin < 0) {
+                            pickerDirection = "top";
+                        } else if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                            pickerDirection = "bottom";
+                        }
+                    } else {
+                        pickerDirection = item.direction;
+                    }
+
+                    if (append) {
+                        this.activePicker.addClass("direction-" + pickerDirection);
+                    }
+
+                    var positionCSS = function () {
+                        var css = { left: 0, top: 0 };
+                        switch (pickerDirection) {
+                            case "top":
+                                css.left = pos.left + dim.width / 2 - pickerDim.width / 2;
+                                css.top = pos.top + dim.height + positionMargin;
+                                break;
+                            case "bottom":
+                                css.left = pos.left + dim.width / 2 - pickerDim.width / 2;
+                                css.top = pos.top - pickerDim.height - positionMargin;
+                                break;
+                            case "left":
+                                css.left = pos.left + dim.width + positionMargin;
+                                css.top = pos.top - pickerDim.height / 2 + dim.height / 2;
+                                break;
+                            case "right":
+                                css.left = pos.left - pickerDim.width - positionMargin;
+                                css.top = pos.top - pickerDim.height / 2 + dim.height / 2;
+                                break;
+                        }
+                        return css;
+                    }();
+
+                    (function () {
+                        if (pickerDirection == "top" || pickerDirection == "bottom") {
+                            if (positionCSS.left < 0) {
+                                positionCSS.left = positionMargin;
+                                this.activePickerArrow.css({ left: pos.left + dim.width / 2 - positionCSS.left });
+                            } else if (positionCSS.left + pickerDim.width > pickerDim.winWidth) {
+                                positionCSS.left = pickerDim.winWidth - pickerDim.width - positionMargin;
+                                this.activePickerArrow.css({ left: pos.left + dim.width / 2 - positionCSS.left });
+                            }
+                        }
+                    }).call(this);
+
+                    this.activePicker.css(positionCSS);
+                };
+
+                var item = this.queue[this.activePickerQueueIndex];
 
                 if (append) jQuery(document.body).append(this.activePicker);
-
-                pos = item.$target.offset();
-                dim = {
-                    width: item.$target.outerWidth(),
-                    height: item.$target.outerHeight()
-                };
-                pickerDim = {
-                    winWidth: Math.max($window.width(), $body.width()),
-                    winHeight: Math.max($window.height(), $body.height()),
-                    width: this.activePicker.outerWidth(),
-                    height: this.activePicker.outerHeight()
-                };
-
-                // picker css(width, left, top) & direction 결정
-                if (!item.direction || item.direction === "" || item.direction === "auto") {
-                    // set direction
-                    pickerDirection = "top";
-                    if (pos.top - pickerDim.height - positionMargin < 0) {
-                        pickerDirection = "top";
-                    } else if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
-                        pickerDirection = "bottom";
-                    }
-                } else {
-                    pickerDirection = item.direction;
-                }
-
-                if (append) {
-                    this.activePicker.addClass("direction-" + pickerDirection);
-                }
-
-                var positionCSS = function () {
-                    var css = { left: 0, top: 0 };
-                    switch (pickerDirection) {
-                        case "top":
-                            css.left = pos.left + dim.width / 2 - pickerDim.width / 2;
-                            css.top = pos.top + dim.height + positionMargin;
-                            break;
-                        case "bottom":
-                            css.left = pos.left + dim.width / 2 - pickerDim.width / 2;
-                            css.top = pos.top - pickerDim.height - positionMargin;
-                            break;
-                        case "left":
-                            css.left = pos.left + dim.width + positionMargin;
-                            css.top = pos.top - pickerDim.height / 2 + dim.height / 2;
-                            break;
-                        case "right":
-                            css.left = pos.left - pickerDim.width - positionMargin;
-                            css.top = pos.top - pickerDim.height / 2 + dim.height / 2;
-                            break;
-                    }
-                    return css;
-                }();
-
-                (function () {
-                    if (pickerDirection == "top" || pickerDirection == "bottom") {
-                        if (positionCSS.left < 0) {
-                            positionCSS.left = positionMargin;
-                            this.activePickerArrow.css({ left: pos.left + dim.width / 2 - positionCSS.left });
-                        } else if (positionCSS.left + pickerDim.width > pickerDim.winWidth) {
-                            positionCSS.left = pickerDim.winWidth - pickerDim.width - positionMargin;
-                            this.activePickerArrow.css({ left: pos.left + dim.width / 2 - positionCSS.left });
-                        }
-                    }
-                }).call(this);
-
-                this.activePicker.css(positionCSS);
+                setTimeout(function () {
+                    _alignPicker.call(this, item);
+                }.bind(this));
             },
                 onBodyClick = function onBodyClick(e, target) {
                 if (!this.activePicker) return this;
@@ -457,16 +473,7 @@
                         html.push('<div style="clear:both;"></div>');
                         item.pickerContent.html(html.join(''));
 
-                        var calendarConfig = {
-                            displayDate: new Date(),
-                            control: {
-                                left: ax5.def.picker.date_leftArrow || '&#x02190',
-                                yearTmpl: ax5.def.picker.date_yearTmpl || '%s',
-                                monthTmpl: ax5.def.picker.date_monthTmpl || '%s',
-                                right: ax5.def.picker.date_rightArrow || '&#x02192',
-                                yearFirst: true
-                            }
-                        };
+                        var calendarConfig = jQuery.extend({}, cfg.calendar, { displayDate: new Date() });
                         var input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : item.$target.find('input[type]');
 
                         // calendar bind
@@ -758,6 +765,7 @@
                     }.bind(this));
 
                     alignPicker.call(this, "append");
+
                     jQuery(window).bind("resize.ax5picker", function () {
                         alignPicker.call(this);
                     }.bind(this));
@@ -825,6 +833,17 @@
     }());
 })();
 
+/**
+ * ax5.ui.picker_instance
+ * @type {ax5picker}
+ * @example
+ * ```js
+ * // picker 기본 속성을 변경해야 한다면
+ * ax5.ui.picker_instance.setConfig({
+ * });
+ * 
+ * ```
+ */
 ax5.ui.picker_instance = new ax5.ui.picker();
 
 jQuery.fn.ax5picker = function () {
@@ -858,5 +877,3 @@ jQuery.fn.ax5picker = function () {
         return this;
     };
 }();
-
-// todo : picker realign
