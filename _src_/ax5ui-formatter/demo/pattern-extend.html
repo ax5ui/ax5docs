@@ -1,0 +1,87 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="4" id="pattern-extend" title="Pattern Extend" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}" parentId="${data.metadata.parentId}" activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-formatter/dist/ax5formatter.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+
+        <!-- doc-js Basic Alert -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Pattern Extend
+
+                To format computing pattern predefined to ax5formatter (money, number, date, time, bizno, phone) and so on.
+                There are times when there is a need to extend the pattern depending on the user's needs.
+                The following describes the method to extend the format pattern.
+
+                When you add an object in a desired pattern name in `ax5.ui.formatter.formatter`, you can add a format computing pattern necessary.
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <script type="text/javascript" src="src/ax5ui-formatter/dist/ax5formatter.js"></script>
+                ```
+            </ax5docs-md>
+
+
+            HTML
+            <ax5docs-html run="true">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">myPattern</span>
+                        <input name="3" type="text" class="form-control" placeholder="" data-ax5formatter="myPattern"/>
+                    </div>
+                </div>
+            </ax5docs-html>
+
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    // extend pattern "myPattern"
+                    ax5.ui.formatter.formatter["myPattern"] = {
+                        getEnterableKeyCodes: function (_opts) {
+                            var enterableKeyCodes = {
+                                '189': '-' // eventKeyCode
+                            };
+                            return jQuery.extend(
+                                enterableKeyCodes,
+                                ax5.ui.formatter.formatter.ctrlKeys,
+                                ax5.ui.formatter.formatter.numKeys
+                            );
+                        },
+                        getPatternValue: function (_opts, optIdx, e, val, eType) {
+                            val = val.replace(/\D/g, "");
+                            var regExpPattern = /^([0-9]{2})\-?([0-9]{2})?\-?([0-9]{2})?\-?([0-9]{2})?/;
+                            return val.replace(regExpPattern, function (a, b) {
+                                var nval = [arguments[1]];
+                                if (arguments[2]) nval.push(arguments[2]);
+                                if (arguments[3]) nval.push(arguments[3]);
+                                if (arguments[4]) nval.push(arguments[4]);
+                                return nval.join("-");
+                            });
+                        }
+                    };
+
+                    $('[data-ax5formatter]').ax5formatter();
+                </script>
+            </ax5docs-js>
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+
+</layout-use>
