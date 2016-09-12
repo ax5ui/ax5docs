@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.2.11"
+        version: "0.2.14"
     }, (function () {
         /**
          * @class ax5grid
@@ -67,7 +67,9 @@
                     trackPadding: 4
                 },
                 columnKeys: {
-                    selected: '_SELECTED'
+                    selected: '__selected__',
+                    modified: '__modified__',
+                    deleted: '__deleted__'
                 }
             };
             this.xvar = {
@@ -83,6 +85,7 @@
 
             this.list = []; // 그리드의 데이터
             this.page = {}; // 그리드의 페이지 정보
+            this.deletedList = [];
             this.sortInfo = {}; // 그리드의 헤더 정렬 정보
             this.focusedColumn = {}; // 그리드 바디의 포커스된 셀 정보
             this.selectedColumn = {}; // 그리드 바디의 선택된 셀 정보
@@ -667,7 +670,7 @@
                 jQuery(document.body).on("click.ax5grid-" + this.instanceId, function (e) {
                     var isPickerClick = false;
                     var target = U.findParentNode(e.target, function (_target) {
-                        if(isPickerClick = _target.getAttribute("data-ax5grid-inline-edit-picker")){
+                        if (isPickerClick = _target.getAttribute("data-ax5grid-inline-edit-picker")) {
                             return true;
                         }
                         return _target.getAttribute("data-ax5grid-container");
@@ -693,33 +696,45 @@
                 };
                 jQuery(window).on("keydown.ax5grid-" + this.instanceId, function (e) {
                     if (self.focused) {
-                        if (e.metaKey || e.ctrlKey) {
-                            if (e.which == 67) { // c
-                                self.copySelect();
+
+                        if (self.isInlineEditing) {
+                            if (e.which == ax5.info.eventKeys.ESC) {
+                                self.keyDown("ESC", e.originalEvent);
+                            }
+                            else if (e.which == ax5.info.eventKeys.RETURN) {
+                                self.keyDown("RETURN", e.originalEvent);
+                            }
+                            else if (e.which == ax5.info.eventKeys.TAB) {
+                                self.keyDown("TAB", e.originalEvent);
+                                U.stopEvent(e);
+                            }
+                            else if (e.which == ax5.info.eventKeys.UP) {
+                                self.keyDown("RETURN", {shiftKey:true});
+                            }
+                            else if (e.which == ax5.info.eventKeys.DOWN) {
+                                self.keyDown("RETURN", {});
                             }
                         } else {
-                            if (self.isInlineEditing) {
-                                if (e.which == ax5.info.eventKeys.ESC) {
-                                    console.log("ESC");
-                                    self.keyDown("ESC", e.originalEvent);
-                                }
-                                else if (e.which == ax5.info.eventKeys.RETURN) {
-                                    self.keyDown("RETURN", e.originalEvent);
+
+                            if (e.metaKey || e.ctrlKey) {
+                                if (e.which == 67) { // c
+                                    self.copySelect();
                                 }
                             } else {
                                 if (ctrlKeys[e.which]) {
                                     self.keyDown(ctrlKeys[e.which], e.originalEvent);
                                     U.stopEvent(e);
                                 } else if (e.which == ax5.info.eventKeys.ESC) {
-                                    if(self.focused){
+                                    if (self.focused) {
                                         GRID.body.blur.call(self);
                                     }
                                 } else if (e.which == ax5.info.eventKeys.RETURN) {
                                     self.keyDown("RETURN", e.originalEvent);
-                                } else if (Object.keys(self.focusedColumn).length) {
+                                } else if (e.which != ax5.info.eventKeys.SPACE && Object.keys(self.focusedColumn).length) {
                                     self.keyDown("INLINE_EDIT", e.originalEvent);
                                 }
                             }
+
                         }
                     }
                 });
@@ -770,11 +785,38 @@
                         }
                     },
                     "ESC": function (_e) {
-                        //console.log("ESC");
                         GRID.body.inlineEdit.keydown.call(this, "ESC");
                     },
                     "RETURN": function (_e) {
-                        GRID.body.inlineEdit.keydown.call(this, "RETURN");
+                        var activeEditLength = 0;
+                        for (var columnKey in this.inlineEditing) {
+                            activeEditLength++;
+
+                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey);
+                            // next focus
+                            if (activeEditLength == 1) {
+                                if (GRID.body.moveFocus.call(this, (_e.shiftKey) ? "UP" : "DOWN")) {
+                                    GRID.body.inlineEdit.keydown.call(this, "RETURN");
+                                }
+                            }
+                        }
+                        if (activeEditLength == 0) {
+                            GRID.body.inlineEdit.keydown.call(this, "RETURN");
+                        }
+                    },
+                    "TAB": function(_e){
+                        var activeEditLength = 0;
+                        for (var columnKey in this.inlineEditing) {
+                            activeEditLength++;
+
+                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey);
+                            // next focus
+                            if (activeEditLength == 1) {
+                                if (GRID.body.moveFocus.call(this, (_e.shiftKey) ? "LEFT" : "RIGHT")) {
+                                    GRID.body.inlineEdit.keydown.call(this, "RETURN");
+                                }
+                            }
+                        }
                     }
                 };
                 return function (_act, _data) {
@@ -859,6 +901,15 @@
             };
 
             /**
+             * @method ax5grid.getList
+             * @param _type
+             * @returns {Array}
+             */
+            this.getList = function (_type) {
+                return GRID.data.getList.call(this, _type);
+            };
+
+            /**
              * @method ax5grid.setHeight
              * @param {Number} _height
              * @returns {ax5grid}
@@ -917,6 +968,16 @@
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
                 GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : _dindex);
+                GRID.scroller.resize.call(this);
+                return this;
+            };
+
+            this.deleteRow = function (_dindex){
+                GRID.data.deleteRow.call(this, _dindex);
+                alignGrid.call(this);
+                GRID.body.repaint.call(this, "reset");
+                // 삭제시엔 포커스 ?
+                // GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
                 GRID.scroller.resize.call(this);
                 return this;
             };
@@ -1088,23 +1149,6 @@
     GRID = ax5.ui.grid;
 })();
 
-
-// todo : cell selected -- ok
-// todo : cell multi selected -- ok
-// todo : cell selected focus move by keyboard -- ok & scroll body -- ok
-// todo : clipboard copy -- ok
-// todo : page -- ok
-// todo : paging -- ok
-// todo : setStatus : loading, empty, etcs
-// todo : row add / remove / update -- ok
-// todo : body.onClick / select -- ok & multipleSelect : TF -- ok
-// todo : column add / remove / update -- ok
-// todo : cell formatter -- ok
-// todo : column resize -- ok
-// todo : sortable -- ok
-// todo : grid footsum -- ok, footsum area cell selected -- ok
-// todo : grid body group -- ok, 그룹핑 된 상태에서 정렬 예외처리 -- ok, 그룹핑 된상태에서 데이터 추가/수정/삭제 -- ok, 그룹핑 된 row 셀렉트 문제. -- ok
-// todo : cell inline edit -- ok
 
 // todo : filter
 // todo : body menu

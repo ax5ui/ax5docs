@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "layout",
-        version: "0.2.8"
+        version: "0.2.10"
     }, function () {
         /**
          * @class ax5layout
@@ -80,7 +80,7 @@
                     "split": {
                         "vertical": function vertical(item, panel, panelIndex) {
                             if (panel.splitter) {
-                                panel.__height = panel.splitter.size;
+                                panel.__height = item.splitter.size;
                             } else {
                                 if (panelIndex == item.splitPanel.length - 1) {
                                     if (item.splitPanel.asteriskLength == 0) {
@@ -101,7 +101,7 @@
                         },
                         "horizontal": function horizontal(item, panel, panelIndex) {
                             if (panel.splitter) {
-                                panel.__width = panel.splitter.size;
+                                panel.__width = item.splitter.size;
                             } else {
                                 if (panelIndex == item.splitPanel.length - 1) {
                                     if (item.splitPanel.asteriskLength == 0) {
@@ -517,7 +517,6 @@
             },
                 tabControl = {
                 "open": function open(queIdx, layout, panelIndex) {
-                    //console.log(panel);
                     if (layout.activePanelIndex != panelIndex) {
                         layout.tabPanel[panelIndex].active = true;
                         layout.tabPanel[layout.activePanelIndex].active = false;
@@ -653,9 +652,9 @@
 
                             panelInfo.$target = jQuery(this);
 
-                            if (panelInfo.active) {
+                            if (panelInfo.active && panelInfo.active != "false") {
                                 hasActivePanel = true;
-                                activePanelIndex = ELIndex;
+                                item.activePanelIndex = ELIndex;
                                 panelInfo.$target.attr("data-tab-active", "true");
                             }
 
