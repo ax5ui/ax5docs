@@ -252,7 +252,7 @@ menu.onLoad = function(){
 </code></pre>
 <hr>
 <h2>popup</h2>
-<p><code>popup(event|position)</code></p>
+<p><code>popup(event|position, opts)</code></p>
 <pre class="prettyprint linenums lang-js"><code>$(document).bind(&quot;contextmenu&quot;, function (e) {
     menu.popup(e);
     ax5.util.stopEvent(e);
@@ -260,6 +260,12 @@ menu.onLoad = function(){
 </code></pre>
 <p>or use custom position</p>
 <pre class="prettyprint linenums lang-js"><code>menu.popup({left:0, top:0, width:200});
+$(document).bind(&quot;contextmenu&quot;, function (e) {
+    menu.popup(e, {theme:&quot;basic&quot;, filter:function(){
+        return true;
+    }});
+    ax5.util.stopEvent(e);
+});
 </code></pre>
 <hr>
 <h2>close</h2>
