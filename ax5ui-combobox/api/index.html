@@ -144,7 +144,6 @@
 <p><a name="ax5combobox"></a></p>
 <h2>ax5combobox</h2>
 <p><strong>Kind</strong>: global class<br>
-<strong>Version</strong>: 0.1.6<br>
 <strong>Author:</strong> <a href="mailto:tom@axisj.com">tom@axisj.com</a></p>
 <ul>
 <li><a href="#ax5combobox">ax5combobox</a>
@@ -153,10 +152,13 @@
 <li><a href="#ax5combobox.bind">.bind(item)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
 <li><a href="#ax5combobox.open">.open(boundID, [tryCount])</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
 <li><a href="#ax5combobox.update">.update(item)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
-<li><a href="#ax5combobox.val">.val(boundID, [value], [Selected])</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
+<li><a href="#ax5combobox.setValue">.setValue(_boundID, _value, [_selected])</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
+<li><a href="#ax5combobox.setText">.setText(_boundID, _text, [_selected])</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
+<li><a href="#ax5combobox.getSelectedOption">.getSelectedOption(_boundID)</a> ⇒ <code>Array</code></li>
 <li><a href="#ax5combobox.close">.close()</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
-<li><a href="#ax5combobox.enable">.enable(boundID)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
-<li><a href="#ax5combobox.disable">.disable(boundID)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
+<li><a href="#ax5combobox.blur">.blur(_boundID)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
+<li><a href="#ax5combobox.enable">.enable(_boundID)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
+<li><a href="#ax5combobox.disable">.disable(_boundID)</a> ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></li>
 </ul>
 </li>
 </ul>
@@ -259,8 +261,8 @@
 </tr>
 </tbody>
 </table>
-<p><a name="ax5combobox.val"></a></p>
-<h3>ax5combobox.val(boundID, [value], [Selected]) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
+<p><a name="ax5combobox.setValue"></a></p>
+<h3>ax5combobox.setValue(_boundID, _value, [_selected]) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code></p>
 <table>
 <thead>
@@ -271,49 +273,120 @@
 </thead>
 <tbody>
 <tr>
-<td>boundID</td>
-<td><code>String</code> | <code>Number</code> | <code>Element</code></td>
+<td>_boundID</td>
+<td><code>jQueryObject</code> | <code>Element</code> | <code>Number</code></td>
 </tr>
 <tr>
-<td>[value]</td>
-<td><code>String</code> | <code>Object</code> | <code>Array</code></td>
+<td>_value</td>
+<td><code>String</code> | <code>Array</code></td>
 </tr>
 <tr>
-<td>[Selected]</td>
+<td>[_selected]</td>
 <td><code>Boolean</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>myCombo.setValue($('[data-ax5combobox=&quot;combo1&quot;]'), &quot;1&quot;);
+myCombo.setValue($('[data-ax5combobox=&quot;combo1&quot;]'), [&quot;1&quot;, &quot;2&quot;]);
+</code></pre>
+<p><a name="ax5combobox.setText"></a></p>
+<h3>ax5combobox.setText(_boundID, _text, [_selected]) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_boundID</td>
+<td><code>jQueryObject</code> | <code>Element</code> | <code>Number</code></td>
+</tr>
+<tr>
+<td>_text</td>
+<td><code>String</code> | <code>Array</code></td>
+</tr>
+<tr>
+<td>[_selected]</td>
+<td><code>Boolean</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>myCombo.setText($('[data-ax5combobox=&quot;combo1&quot;]'), &quot;string&quot;);
+myCombo.setText($('[data-ax5combobox=&quot;combo1&quot;]'), [&quot;substring&quot;, &quot;search&quot;]);
+</code></pre>
+<p><a name="ax5combobox.getSelectedOption"></a></p>
+<h3>ax5combobox.getSelectedOption(_boundID) ⇒ <code>Array</code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_boundID</td>
+<td><code>jQueryObject</code> | <code>Element</code> | <code>Number</code></td>
 </tr>
 </tbody>
 </table>
 <p><a name="ax5combobox.close"></a></p>
 <h3>ax5combobox.close() ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code><br>
-<a name="ax5combobox.enable"></a></p>
-<h3>ax5combobox.enable(boundID) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
+<a name="ax5combobox.blur"></a></p>
+<h3>ax5combobox.blur(_boundID) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code></p>
 <table>
 <thead>
 <tr>
 <th>Param</th>
+<th>Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>boundID</td>
+<td>_boundID</td>
+<td><code>jQueryObject</code> | <code>Element</code> | <code>Number</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5combobox.enable"></a></p>
+<h3>ax5combobox.enable(_boundID) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_boundID</td>
+<td><code>jQueryObject</code> | <code>Element</code> | <code>Number</code></td>
 </tr>
 </tbody>
 </table>
 <p><a name="ax5combobox.disable"></a></p>
-<h3>ax5combobox.disable(boundID) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
+<h3>ax5combobox.disable(_boundID) ⇒ <code><a href="#ax5combobox">ax5combobox</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5combobox">ax5combobox</a></code></p>
 <table>
 <thead>
 <tr>
 <th>Param</th>
+<th>Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>boundID</td>
+<td>_boundID</td>
+<td><code>jQueryObject</code> | <code>Element</code> | <code>Number</code></td>
 </tr>
 </tbody>
 </table>
