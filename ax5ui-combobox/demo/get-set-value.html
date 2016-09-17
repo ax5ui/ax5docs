@@ -195,8 +195,8 @@ $(document.body).ready(function(){
                 $('[data-ax5combobox="combobox2"]').ax5combobox("setValue", [5,6], true);
                 break;
             case "getValue":
-                console.log($('[data-ax5combobox="combobox1"]').ax5combobox("getValue"));
-                console.log($('[data-ax5combobox="combobox2"]').ax5combobox("getValue"));
+                console.log($('[data-ax5combobox="combobox1"]').ax5combobox("getSelectedOption"));
+                console.log($('[data-ax5combobox="combobox2"]').ax5combobox("getSelectedOption"));
                 console.log($(document.forms).serialize());
                 break;
         }
@@ -218,8 +218,8 @@ $(document.body).ready(function(){
                 $('[data-ax5combobox="combobox2"]').ax5combobox("setValue", [5,6], true);
                 break;
             case "getValue":
-                console.log($('[data-ax5combobox="combobox1"]').ax5combobox("getValue"));
-                console.log($('[data-ax5combobox="combobox2"]').ax5combobox("getValue"));
+                console.log($('[data-ax5combobox="combobox1"]').ax5combobox("getSelectedOption"));
+                console.log($('[data-ax5combobox="combobox2"]').ax5combobox("getSelectedOption"));
                 console.log($(document.forms).serialize());
                 break;
         }
