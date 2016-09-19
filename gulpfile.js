@@ -107,6 +107,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-grid",
         doc_src: "_src_/ax5ui-grid",
         doc_dest: "ax5ui-grid"
+    },
+    "ax5ui-autocomplete": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-autocomplete",
+        doc_src: "_src_/ax5ui-autocomplete",
+        doc_dest: "ax5ui-autocomplete"
     }
 };
 

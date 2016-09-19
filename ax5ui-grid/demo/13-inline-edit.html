@@ -106,6 +106,7 @@
     <li><a href="/ax5ui-select">ax5ui-select</a></li>
     <li><a href="/ax5ui-layout">ax5ui-layout</a></li>
     <li><a href="/ax5ui-combobox">ax5ui-combobox</a></li>
+    <li><a href="/ax5ui-autocomplete">ax5ui-autocomplete</a></li>
     <li><a href="/ax5ui-grid">ax5ui-grid</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="https://www.axisj.com">axisj.com</a></li>
@@ -194,8 +195,8 @@
                 {key: "b", label: "field  B", align: "center", editor: {type: "text"}},
                 {
                     key: undefined, label: "field C", columns: [
-                    {key: "price", label: "price", formatter: "money", align: "right", editor: {type: "money"}},
-                    {key: "amount", label: "amount", formatter: "money", align: "right", editor: {type: "money"}},
+                    {key: "price", label: "price", formatter: "money", align: "right", editor: {type: "money", updateWith:['cost']}},
+                    {key: "amount", label: "amount", formatter: "money", align: "right", editor: {type: "money", updateWith:['cost']}},
                     {
                         key: "cost", label: "cost", align: "right", formatter: function () {
                         return ax5.util.number(this.item.price * this.item.amount, {"money": true});
@@ -289,8 +290,8 @@
                 {key: "b", label: "field  B", align: "center", editor: {type: "text"}},
                 {
                     key: undefined, label: "field C", columns: [
-                    {key: "price", label: "price", formatter: "money", align: "right", editor: {type: "money"}},
-                    {key: "amount", label: "amount", formatter: "money", align: "right", editor: {type: "money"}},
+                    {key: "price", label: "price", formatter: "money", align: "right", editor: {type: "money", updateWith:['cost']}},
+                    {key: "amount", label: "amount", formatter: "money", align: "right", editor: {type: "money", updateWith:['cost']}},
                     {
                         key: "cost", label: "cost", align: "right", formatter: function () {
                         return ax5.util.number(this.item.price * this.item.amount, {"money": true});
