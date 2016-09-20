@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="basic" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="editable" title="editable" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -24,7 +24,7 @@
         <!-- autocomplete -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Basic
+                # Editable
 
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
@@ -39,7 +39,7 @@
                     <div class="col-md-6">
                         Default
                         <div class="form-group">
-                            <div data-ax5autocomplete="autocomplete1" data-ax5autocomplete-config='{}'></div>
+                            <div data-ax5autocomplete="autocomplete1" data-ax5autocomplete-config='{editable: true}'></div>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                     <div class="col-md-6">
                         Multiple
                         <div class="form-group">
-                            <div data-ax5autocomplete="autocomplete2" data-ax5autocomplete-config="{multiple: true}"></div>
+                            <div data-ax5autocomplete="autocomplete2" data-ax5autocomplete-config="{editable: true, multiple: true}"></div>
                         </div>
                     </div>
                 </div>

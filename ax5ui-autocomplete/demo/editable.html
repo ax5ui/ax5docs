@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-autocomplete : basic</title>
+    <title>ax5ui / ax5ui-autocomplete : editable</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -133,7 +133,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li  class='active'><a href="/ax5ui-autocomplete/demo/index.html">basic</a></li><li ><a href="/ax5ui-autocomplete/demo/editable.html">editable</a></li></ul>
+        <ul><li ><a href="/ax5ui-autocomplete/demo/index.html">basic</a></li><li  class='active'><a href="/ax5ui-autocomplete/demo/editable.html">editable</a></li></ul>
     
                             </div>
                         </div>
@@ -143,7 +143,7 @@
 
         
         <section class="ax5docs-section">
-            <h1>Basic</h1>
+            <h1>Editable</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/ax5ui-autocomplete/dist/ax5autocomplete.css&quot;&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;src/ax5ui-autocomplete/dist/ax5autocomplete.min.js&quot;&gt;&lt;/script&gt;
@@ -155,7 +155,7 @@
     &lt;div class="col-md-6">
         Default
         &lt;div class="form-group">
-            &lt;div data-ax5autocomplete="autocomplete1" data-ax5autocomplete-config="{}">&lt;/div>
+            &lt;div data-ax5autocomplete="autocomplete1" data-ax5autocomplete-config="{editable: true}">&lt;/div>
         &lt;/div>
     &lt;/div>
 &lt;/div>
@@ -163,14 +163,14 @@
     &lt;div class="col-md-6">
         Multiple
         &lt;div class="form-group">
-            &lt;div data-ax5autocomplete="autocomplete2" data-ax5autocomplete-config="{multiple: true}">&lt;/div>
+            &lt;div data-ax5autocomplete="autocomplete2" data-ax5autocomplete-config="{editable: true, multiple: true}">&lt;/div>
         &lt;/div>
     &lt;/div>
 &lt;/div></pre><div class="row">
     <div class="col-md-6">
         Default
         <div class="form-group">
-            <div data-ax5autocomplete="autocomplete1" data-ax5autocomplete-config="{}"></div>
+            <div data-ax5autocomplete="autocomplete1" data-ax5autocomplete-config="{editable: true}"></div>
         </div>
     </div>
 </div>
@@ -178,7 +178,7 @@
     <div class="col-md-6">
         Multiple
         <div class="form-group">
-            <div data-ax5autocomplete="autocomplete2" data-ax5autocomplete-config="{multiple: true}"></div>
+            <div data-ax5autocomplete="autocomplete2" data-ax5autocomplete-config="{editable: true, multiple: true}"></div>
         </div>
     </div>
 </div>
