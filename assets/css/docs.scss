@@ -1,6 +1,9 @@
 // 변수만 사용할 경우
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss";
-@import "../lib/ax5uicon/style.css";
+
+$icomoon-font-path: "../lib/ax-icon/fonts";
+@import "../lib/ax-icon/variables";
+@import "../lib/ax-icon/style.scss";
 
 /* {{ -------------------- Bootstrap variables */
 

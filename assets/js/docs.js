@@ -166,7 +166,7 @@ $(document.body).ready(function () {
         fn_docs._data["doc-header-tool-change-position"] = ax5.util.number(fn_docs._jos["docs-body"].css("margin-top")) - fn_docs._jos["docs-header-tool"].height();
         fn_docs._data["window-height"] = $(window).height();
         fn_docs._data["window-width"] = $(window).width();
-        fn_docs._data["dpcs-foot-top"] = fn_docs._jos["docs-foot"].offset().top || 0;
+        fn_docs._data["dpcs-foot-top"] = (fn_docs._jos["docs-foot"].get(0)) ? fn_docs._jos["docs-foot"].offset().top || 0 : 0;
         // change print way(static) -- remove
         if (fn_docs._jos['docs-inline-menu'][0]) {
             fn_docs.menu.ready(fn_docs._jos['docs-inline-menu'], 'inline');
