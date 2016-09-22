@@ -12,7 +12,7 @@ var babel = require('gulp-babel');
 var argv = require('yargs').argv; // for args parsing
 var spawn = require('child_process').spawn;
 
-var KERNEL_PATH = '/Users/tom/Works-OSS/ax5ui/ax5ui-kernel/';
+var KERNEL_PATH = '../ax5ui-kernel/';
 var PATHS = {
     kernel: KERNEL_PATH,
     assets: {
