@@ -233,6 +233,15 @@
 			.navbar {
 				max-width: $break-mobilewide-width;
 			}
+			#docs-navbar-collapse{
+				&.open-in-mobile{
+					display: block;
+					background: #444;
+					.dropdown-menu{
+						background: #fff;
+					}
+				}
+			}
 		}
 	}
 }
