@@ -161,7 +161,7 @@ $(document.body).ready(function () {
         }
     })();
 
-    $(document.body).on("click", "#mobile-menu", function () {
+    $("#mobile-menu").click(function () {
         fn_docs._jos["docs-navbar-collapse"].toggleClass("open-in-mobile");
     });
 
