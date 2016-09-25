@@ -1,0 +1,237 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="14" id="paging" title="Paging" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- grid -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Paging
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css"/>
+
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
+                ```
+            </ax5docs-md>
+
+            HTML
+            <ax5docs-html run="true">
+                <div style="position: relative;height:400px;" id="grid-parent">
+                    <div data-ax5grid="first-grid" data-ax5grid-config='{
+                    showLineNumber: true,
+                    showRowSelector: true,
+                    sortable: true,
+                    header: {align:"center"}
+                    }' style="height: 100%;"></div>
+                </div>
+
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    var sampleData = [
+                        {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+                        {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+                        {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+                        {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+                        {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+                        {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
+                    ];
+                    var gridView = {
+                        initView: function () {
+                            this.target = new ax5.ui.grid();
+                            this.target.setConfig({
+                                target: $('[data-ax5grid="first-grid"]'),
+                                frozenColumnIndex: 2,
+                                frozenRowIndex: 0,
+                                showLineNumber: true,
+                                showRowSelector: true,
+                                multipleSelect: true,
+                                lineNumberColumnWidth: 40,
+                                rowSelectorColumnWidth: 28,
+                                sortable: true, // 모든 컬럼에 정렬 아이콘 표시
+                                multiSort: false, // 다중 정렬 여부
+                                remoteSort: false, // remoteSort에 함수를 sortable 컬럼이 클릭되었을때 실행 setColumnSort를 직접 구현. (remoteSort를 사용하면 헤더에 정렬 상태만 표시 하고 데이터 정렬은 처리 안함)
+                                header: {
+                                    align: "center",
+                                    columnHeight: 28
+                                },
+                                body: {
+                                    align: "center",
+                                    columnHeight: 28,
+                                    onClick: function () {
+                                        // console.log(this);
+                                        this.self.select(this.dindex);
+                                    },
+                                    grouping: {
+                                        by: ["b"],
+                                        columns: [
+                                            {
+                                                label: function () {
+                                                    return this.groupBy.labels.join(", ") + " 합계";
+                                                }, colspan: 2
+                                            },
+                                            {key: "price", collector: "avg", formatter: "money", align: "right"},
+                                            {key: "amount", collector: "sum", formatter: "money", align: "right"},
+                                            {
+                                                key: "cost", collector: function () {
+                                                var value = 0;
+                                                this.list.forEach(function (n) {
+                                                    if (!n.__isGrouping) value += (n.price * n.amount);
+                                                });
+                                                return ax5.util.number(value, {"money": 1});
+                                            }, align: "right"
+                                            },
+                                            {label: "~~~", colspan: 3}
+                                        ]
+                                    }
+                                },
+                                page: {
+                                    navigationItemCount: 9,
+                                    height: 30,
+                                    display: true,
+                                    firstIcon: '<i class="fa fa-step-backward" aria-hidden="true"></i>',
+                                    prevIcon: '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+                                    nextIcon: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                                    lastIcon: '<i class="fa fa-step-forward" aria-hidden="true"></i>',
+                                    onChange: function () {
+                                        gridView.setData(this.page.selectPage);
+                                    }
+                                },
+                                columns: [
+                                    {
+                                        key: "a",
+                                        label: "필드A",
+                                        width: 80,
+                                        styleClass: function () {
+                                            return "ABC";
+                                        },
+                                        enableFilter: true,
+                                        align: "center",
+                                        editor: {
+                                            type: "text", disabled: function () {
+                                                // item, value
+                                                return false;
+                                            }
+                                        }
+                                    },
+                                    {key: "b", label: "필드B", align: "center", editor: {type: "text"}},
+                                    {
+                                        key: undefined,
+                                        label: "필드C", columns: [
+                                        {key: "price", label: "단가", align: "right", formatter: "money", editor: {type: "money", updateWith: ['cost']}},
+                                        {key: "amount", label: "수량", align: "right", formatter: "money", editor: {type: "number", updateWith: ['cost']}},
+                                        {
+                                            key: "cost", label: "금액", align: "right", formatter: function () {
+                                            return ax5.util.number(this.item.price * this.item.amount, {"money": true});
+                                        }
+                                        }
+                                    ]
+                                    },
+                                    {
+                                        key: "saleDt", label: "판매일자", align: "center", editor: {
+                                        type: "date", config: {}
+                                    }
+                                    },
+
+                                    {
+                                        key: "saleType", label: "판매타입", editor: {
+                                        type: "select", config: {
+                                            columnKeys: {
+                                                optionValue: "CD", optionText: "NM"
+                                            },
+                                            options: [
+                                                {CD: "A", NM: "A: String"},
+                                                {CD: "B", NM: "B: Number"},
+                                                {CD: "C", NM: "C: substr"},
+                                                {CD: "D", NM: "D: substring"}
+                                            ]
+                                        }
+                                    }
+                                    },
+                                    {
+                                        key: "isChecked", label: "체크박스", width: 50, sortable: false, editor: {
+                                        type: "checkbox", config: {height: 17, trueValue: "Y", falseValue: "N"}
+                                    }
+                                    },
+                                    {
+                                        key: "customer", label: "고객명", editor: {type: "text"}
+                                    }
+                                ],
+                                footSum: [
+                                    [
+                                        {label: "전체 합계", colspan: 2, align: "center"},
+                                        {key: "price", collector: "avg", formatter: "money", align: "right"},
+                                        {key: "amount", collector: "sum", formatter: "money", align: "right"},
+                                        {
+                                            key: "cost", collector: function () {
+                                            var value = 0;
+                                            this.list.forEach(function (n) {
+                                                if (!n.__isGrouping) value += (n.price * n.amount);
+                                            });
+                                            return ax5.util.number(value, {"money": 1});
+                                        }, align: "right"
+                                        }
+                                    ]]
+                            });
+                            return this;
+                        },
+                        setData: function (_pageNo) {
+
+                            var list = [];
+                            for (var i = 0, l = 100; i < l; i++) {
+                                list.push(sampleData[(Math.floor(Math.random() * sampleData.length))]);
+                            }
+
+                            this.target.setData({
+                                list: list,
+                                page: {
+                                    currentPage: _pageNo || 0,
+                                    pageSize: 50,
+                                    totalElements: 500,
+                                    totalPages: 100
+                                }
+                            });
+
+                            return this;
+                        }
+                    };
+
+                    $(document.body).ready(function () {
+
+                        gridView
+                                .initView()
+                                .setData();
+                    });
+                </script>
+            </ax5docs-js>
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>
