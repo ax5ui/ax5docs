@@ -21,7 +21,8 @@ exports.render = function (input, out) {
         });
 
         var url_replace = function (url) {
-            return url.replace(process.cwd() + "/" + hrefRoot, "/");
+            //return url.replace(process.cwd() + "/" + hrefRoot, "/");
+            return url.substring(url.indexOf("_src_") + 5);
         };
 
         var menus = [], trees = [];
