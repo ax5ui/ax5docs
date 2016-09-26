@@ -188,12 +188,12 @@
                                         {key: "amount", collector: "sum", formatter: "money", align: "right"},
                                         {
                                             key: "cost", collector: function () {
-                                            var value = 0;
-                                            this.list.forEach(function (n) {
-                                                if (!n.__isGrouping) value += (n.price * n.amount);
-                                            });
-                                            return ax5.util.number(value, {"money": 1});
-                                        }, align: "right"
+                                                var value = 0;
+                                                this.list.forEach(function (n) {
+                                                    if (!n.__isGrouping) value += (n.price * n.amount);
+                                                });
+                                                return ax5.util.number(value, {"money": 1});
+                                            }, align: "right"
                                         }
                                     ]]
                             });
