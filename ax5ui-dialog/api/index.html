@@ -206,7 +206,7 @@ this.state state value is passed to this time onStateChanged function.</p>
 </code></pre>
 <hr>
 <h2>alert()</h2>
-<p><code>alert(String|Options[, callBack])</code></p>
+<p><code>alert(String|Options[, callback])</code></p>
 <p>If this is String in the first argument and recognizes the first argument to <code>msg</code>.<br>
 it is possible to redefine all of the options that can be used in setConfig.<br>
 If after the alert, user clicks the [OK] button, you need to pass an anonymous function as the second argument of the alert if there is a need of any such actions.</p>
@@ -223,8 +223,8 @@ dialog.alert({
 });
 </code></pre>
 <h2>confirm()</h2>
-<p><code>confirm(String|Options[, callBack])</code></p>
-<p>alert and use the way is similar. Remember only the portion that determines the input of users in callBack function confirm is if you can.</p>
+<p><code>confirm(String|Options[, callback])</code></p>
+<p>alert and use the way is similar. Remember only the portion that determines the input of users in callback function confirm is if you can.</p>
 <pre class="prettyprint linenums lang-js"><code>confirmDialog.confirm({
     title: &quot;Confirm Title&quot;,
     msg: 'Confirm message'
@@ -238,7 +238,7 @@ dialog.alert({
 });
 </code></pre>
 <h2>prompt()</h2>
-<p><code>prompt(String|Options[, callBack])</code></p>
+<p><code>prompt(String|Options[, callback])</code></p>
 <p>alert and use the way is similar.</p>
 <pre class="prettyprint linenums lang-js"><code>promptDialog.prompt({
     title: &quot;Confirm Title&quot;,

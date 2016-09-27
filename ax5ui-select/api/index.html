@@ -251,14 +251,14 @@ select.onStateChanged = function(){
   lang: {
       loading: '&lt;i class=&quot;fa fa-spinner fa-pulse&quot;&gt;&lt;/i&gt;'
   },
-  onExpand: function (callBack) {
+  onExpand: function (callback) {
       setTimeout(function () {
-        callBack({
+        callback({
             options: [
-                {value: &quot;V0&quot;, text: &quot;callBack Text 0&quot;},
-                {value: &quot;V1&quot;, text: &quot;callBack Text 1&quot;},
-                {value: &quot;V2&quot;, text: &quot;callBack Text 2&quot;},
-                {value: &quot;V3&quot;, text: &quot;callBack Text 3&quot;}
+                {value: &quot;V0&quot;, text: &quot;callback Text 0&quot;},
+                {value: &quot;V1&quot;, text: &quot;callback Text 1&quot;},
+                {value: &quot;V2&quot;, text: &quot;callback Text 2&quot;},
+                {value: &quot;V3&quot;, text: &quot;callback Text 3&quot;}
             ]
         });
       }, 300);

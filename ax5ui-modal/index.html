@@ -135,9 +135,10 @@
                         
 
         <section class="ax5docs-section">
-            <img src="https://img.shields.io/badge/Bower-0.7.8-blue.svg" alt="Bower-0.7.8" /> <img src="https://img.shields.io/badge/NPM-0.7.8-blue.svg" alt="NPM-0.7.8" /> <div class="DH5"></div>
+            <img src="https://img.shields.io/badge/Bower-0.7.9-blue.svg" alt="Bower-0.7.9" /> <img src="https://img.shields.io/badge/NPM-0.7.9-blue.svg" alt="NPM-0.7.9" /> <div class="DH5"></div>
             <p><a href="https://github.com/axisj"><img src="https://img.shields.io/badge/AXISJ.com-Contributed-green.svg" alt="axisj-contributed"></a> <img src="https://img.shields.io/badge/Seowoo-Mondo&amp;Thomas-red.svg" alt=""></p>
 <h1>ax5ui-modal</h1>
+<p>“modal” to display content on a secondary window which disables interactions with the main view.</p>
 <blockquote>
 <p><em>Dependencies</em></p>
 <ul>
@@ -146,43 +147,42 @@
 <li><em><a href="http://getbootstrap.com/">bootstrap</a></em></li>
 </ul>
 </blockquote>
-<h3>Install by bower</h3>
-<pre class="prettyprint linenums lang-sh"><code>bower install ax5ui-modal
+<h3>Install with bower</h3>
+<pre class="prettyprint linenums lang-sh"><code>bower install ax5ui-mask
 </code></pre>
 <p><a href="http://bower.io/#install-bower">bower</a> is web front-end package manager.
-using the <code>bower</code>, when you install the plug-in is installed to resolve the plug-in dependencies under the <code>bower_components</code> folder.
+When you install <code>bower</code>, it will be installed under the <code>bower_components</code> folder to resolve the plug-in dependencies.<br>
 (You can change the folder location. <a href="http://bower.io/docs/config/#bowerrc-specification">.bowerrc</a> )</p>
-<p>It is recommended that you install by using the <code>bower</code>.
-If you’ve never used a bower is, you will be able to be used for <a href="http://bower.io/#install-bower">http://bower.io/#install-bower</a>.</p>
-<h3>Install by npm</h3>
-<p>If you do not use the bower, it can be downloaded by using the npm as second best.
-In npm, so pile on the package manager for the front end, you need to solve the problem of plug-in dependencies.</p>
+<p>It is recommended that you install by using <code>bower</code>.
+If you’ve never used bower, please refer to <a href="http://bower.io/#install-bower">http://bower.io/#install-bower</a>.</p>
+<h3>Install with npm</h3>
+<p>If you do not use bower, it also can be installed by using npm as an alternative.
+In case of npm, which is the package manager for the front end, you need to solve the problem of plug-in dependencies.</p>
 <pre class="prettyprint linenums lang-sh"><code>npm install jquery
 npm install ax5core
 npm install ax5ui-modal
 </code></pre>
-<p>After you download the file in npm install, you will need to copy to the location where you want to use as a resource for the project.
-If the inconvenience in the process that you want to copy the file and can be easily copied by using a <code>gulp</code> or <code>grunt</code>.</p>
+<p>After downloading the install file of npm, you will need to copy it to the location where you want to use as a resource for the project.
+If the copy process is inconvenient, it also can be done easily by using <code>gulp</code> or <code>grunt</code>.</p>
 <h3>Download code</h3>
 <ul>
 <li><a href="https://github.com/ax5ui/ax5core/releases">ax5core Github releases</a></li>
 <li><a href="https://github.com/ax5ui/ax5ui-modal/releases">ax5ui-modal Github releases</a></li>
 </ul>
-<h3>Insert the “ax5modal” in the HTML HEAD.</h3>
-<p>Location of the folder can be determined freely in your project. But be careful not to accidentally caused
-exactly the path.</p>
+<h3>Insert “ax5modal” in HTML HEAD.</h3>
+<p>Folder location can be any for your project. However, please be sure to assign the right path in the project.</p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-modal/master/dist/ax5modal.css&quot; /&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-modal/master/dist/ax5modal.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 <p><strong>CDN urls</strong>
-It is CDN url of ax5ui-select. ax5ui offers the CDN services through the rawgit.</p>
+This is a list of CDN urls for ax5ui-mask. ax5ui offers the CDN services through rawgit.</p>
 <pre><code>https://cdn.rawgit.com/ax5ui/ax5ui-modal/master/dist/ax5modal.css
 https://cdn.rawgit.com/ax5ui/ax5ui-modal/master/dist/ax5modal.js
 https://cdn.rawgit.com/ax5ui/ax5ui-modal/master/dist/ax5modal.min.js
 </code></pre>
-<h3>Basic Usages</h3>
+<h3>Basic Usage</h3>
 <pre class="prettyprint linenums lang-js"><code>var modal = new ax5.ui.modal();
 modal.setConfig({
     onStateChanged: function(){
@@ -194,7 +194,7 @@ modal.open();
 <hr>
 <h3>Preview</h3>
 <ul>
-<li><a href="http://ax5.io/ax5ui-modal/demo/index.html">See Demostration</a></li>
+<li><a href="http://ax5.io/ax5ui-modal/demo/index.html">See Demonstration</a></li>
 </ul>
 <p>If you have any questions, please refer to the following <a href="https://github.com/ax5ui/ax5ui-kernel">gitHub</a></p>
 
