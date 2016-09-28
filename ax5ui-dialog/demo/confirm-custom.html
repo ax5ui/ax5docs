@@ -127,7 +127,7 @@
         
         <div class="contents">
     <div class="style-sub-visual">
-        <div class="title">Demostration</div>
+        <div class="title">Demonstration</div>
         <div class="description">Introduces the basic use of ax5ui-dialog UI.</div>
     </div>
 </div>
@@ -197,13 +197,14 @@
                 msg: 'Confirm message'
             }, function(){
                 if(this.key == "ok"){
-                    alert('OK');
+                    confirmDialog.close();
                 }
                 else if(this.key == "cancel"){
-                    alert('CANCEL');
+                    confirmDialog.close();
                 }
             });
         });
+
     });
 </script></script>
         </section>
