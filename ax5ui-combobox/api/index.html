@@ -420,7 +420,7 @@ myCombo.setText($('[data-ax5combobox=&quot;combo1&quot;]'), [&quot;substring&quo
 </tbody>
 </table>
 <p><strong>Example</strong></p>
-<pre class="prettyprint linenums lang-html"><code>&lt;div data-ax5combobox=&quot;combo1&quot; data-ax5combobox-config='{
+<pre class="prettyprint linenums lang-html"><code>&lt;div data-ax5combobox=&quot;ax1&quot; data-ax5combobox-config='{
  multiple: true,
  editable: true,
  size: &quot;&quot;,
@@ -428,7 +428,7 @@ myCombo.setText($('[data-ax5combobox=&quot;combo1&quot;]'), [&quot;substring&quo
  }'&gt;&lt;/div&gt;
 &lt;script&gt;
 jQuery('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox();
-$('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;getValue&quot;);
+$('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;getSelectedOption&quot;);
 $('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;setValue&quot;, [&quot;string&quot;, &quot;number&quot;]);
 $('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;enable&quot;);
 $('[data-ax5combobox=&quot;ax1&quot;]').ax5combobox(&quot;disable&quot;);

@@ -142,11 +142,11 @@ picker.bind({
     target: $(&quot;#input&quot;),
     direction: &quot;top&quot;,
     contentWidth: 200,
-    content: function (callBack) {
+    content: function (callback) {
         var html = ''
                 + 'HTML CONTENT'
             ;
-        callBack(html);
+        callback(html);
     }
 );
 
@@ -184,9 +184,9 @@ picker.bind({
 <ul>
 <li><strong>Function</strong></li>
 </ul>
-<pre class="prettyprint linenums lang-js"><code>function (callBack) {
+<pre class="prettyprint linenums lang-js"><code>function (callback) {
     var html = 'HTML CONTENT';
-    callBack(html);
+    callback(html);
 }
 </code></pre>
 <ul>
