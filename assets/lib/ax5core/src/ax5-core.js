@@ -43,11 +43,13 @@
          * @member {String} ax5.info.version
          */
         var version = "0.0.1";
+
         /**
          * ax5 library path
          * @member {String} ax5.info.baseUrl
          */
         var baseUrl = "";
+
         /**
          * ax5 에러 출력메세지 사용자 재 정의
          * @member {Object} ax5.info.onerror
@@ -80,6 +82,20 @@
             HOME: 36, END: 35, PAGEUP: 33, PAGEDOWN: 34, INSERT: 45, SPACE: 32
         };
 
+        /**
+         * week names
+         * @member {Object[]} weekNames
+         * @member {string} weekNames[].label
+         *
+         * @example
+         * ```
+         * [
+         *  {label: "SUN"},{label: "MON"},{label: "TUE"},{label: "WED"},{label: "THU"},{label: "FRI"},{label: "SAT"}
+         * ]
+         * console.log( weekNames[0] );
+         * console.log( ax5.info.weekNames[(new Date()).getDay()].label )
+         * ```
+         */
         var weekNames = [
             {label: "SUN"},
             {label: "MON"},
@@ -130,11 +146,13 @@
             }
             ua = null, mobile = null, browserName = null, match = null, browser = null, browserVersion = null;
         })();
+
         /**
          * 브라우저 여부
          * @member {Boolean} ax5.info.isBrowser
          */
         var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && win.document);
+
         /**
          * 브라우저에 따른 마우스 휠 이벤트이름
          * @member {Object} ax5.info.wheelEnm
@@ -155,7 +173,7 @@
          * @returns {Object}
          * @example
          * ```
-         * console.log( ax5.util.toJson( ax5.util.urlUtil() ) );
+         * console.log( ax5.util.toJson( ax5.info.urlUtil() ) );
          * {
 		 *	"baseUrl": "http://ax5:2018",
 		 *	"href": "http://ax5:2018/samples/index.html?a=1&b=1#abc",
@@ -189,11 +207,13 @@
         }
 
         /**
-         * ax5 error를 반환합니다.
+         * ax5-error-msg.js 에 정의된 ax5 error를 반환합니다.
          * @method ax5.info.getError
          * @returns {Object}
          * @example
          * ```
+         * console.log( ax5.info.getError("single-uploader", "460", "upload") );
+         *
          * if(!this.selectedFile){
 		 *      if (cfg.onEvent) {
 		 *      	var that = {
@@ -680,6 +700,9 @@
             else if (ax5.util.isFunction(O)) {
                 jsonString = '"{Function}"';
             }
+            else {
+                jsonString = O;
+            }
             return jsonString;
         }
 
@@ -744,6 +767,9 @@
             }
             else if (!!(O && O.nodeType == 11)) {
                 typeName = "fragment";
+            }
+            else if (O === null) {
+                typeName = "null";
             }
             else if (typeof O === "undefined") {
                 typeName = "undefined";
@@ -846,7 +872,7 @@
          * @returns {Boolean}
          */
         function isNodelist(O) {
-            return (_toString.call(O) == "[object NodeList]" || (O && O[0] && O[0].nodeType == 1));
+            return !!(_toString.call(O) == "[object NodeList]" || (typeof O !== "undefined" && O && O[0] && O[0].nodeType == 1));
         }
 
         /**
@@ -883,6 +909,11 @@
                 result = true;
             }
             else {
+                if (O.length > 7) {
+                    if(date(O) instanceof Date){
+                        return true;
+                    }
+                }
                 O = O.replace(/\D/g, '');
                 if (O.length > 7) {
                     var
@@ -1035,7 +1066,7 @@
         function left(str, pos) {
             if (typeof str === "undefined" || typeof pos === "undefined") return "";
             if (isString(pos)) {
-                return (str.indexOf(pos) > -1) ? str.substr(0, str.indexOf(pos)) : str;
+                return (str.indexOf(pos) > -1) ? str.substr(0, str.indexOf(pos)) : "";
             }
             else if (isNumber(pos)) {
                 return str.substr(0, pos);
@@ -1063,7 +1094,7 @@
             if (typeof str === "undefined" || typeof pos === "undefined") return "";
             str = '' + str;
             if (isString(pos)) {
-                return (str.lastIndexOf(pos) > -1) ? str.substr(str.lastIndexOf(pos) + 1) : str;
+                return (str.lastIndexOf(pos) > -1) ? str.substr(str.lastIndexOf(pos) + 1) : "";
             }
             else if (isNumber(pos)) {
                 return str.substr(str.length - pos);
@@ -1350,23 +1381,29 @@
                 aDateTime, aTimes, aTime, aDate,
                 utcD, localD,
                 va;
+            var ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
+            var ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
 
             if (isString(d)) {
                 if (d.length == 0) {
                     d = new Date();
                 }
                 else if (d.length > 15) {
-                    aDateTime = d.split(/ /g), aTimes, aTime,
-                        aDate = aDateTime[0].split(/\D/g),
-                        yy = aDate[0];
-                    mm = parseFloat(aDate[1]);
-                    dd = parseFloat(aDate[2]);
-                    aTime = aDateTime[1] || "09:00";
-                    aTimes = aTime.substring(0, 5).split(":");
-                    hh = parseFloat(aTimes[0]);
-                    mi = parseFloat(aTimes[1]);
-                    if (right(aTime, 2) === "AM" || right(aTime, 2) === "PM") hh += 12;
-                    d = localDate(yy, mm - 1, dd, hh, mi);
+                    if (ISO_8601_FULL.test(d) || ISO_8601.test(d)) {
+                        d = new Date(d);
+                    } else {
+                        aDateTime = d.split(/ /g), aTimes, aTime,
+                            aDate = aDateTime[0].split(/\D/g),
+                            yy = aDate[0];
+                        mm = parseFloat(aDate[1]);
+                        dd = parseFloat(aDate[2]);
+                        aTime = aDateTime[1] || "09:00";
+                        aTimes = aTime.substring(0, 5).split(":");
+                        hh = parseFloat(aTimes[0]);
+                        mi = parseFloat(aTimes[1]);
+                        if (right(aTime, 2) === "AM" || right(aTime, 2) === "PM") hh += 12;
+                        d = localDate(yy, mm - 1, dd, hh, mi);
+                    }
                 }
                 else if (d.length == 14) {
                     va = d.replace(/\D/g, "");
@@ -2019,7 +2056,7 @@
 
     if (typeof module === "object" && typeof module.exports === "object") {
         module.exports = ax5;
-    }else{
+    } else {
         root.ax5 = (function () {
             return ax5;
         })(); // ax5.ui에 연결

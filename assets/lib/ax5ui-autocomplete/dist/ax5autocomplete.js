@@ -15,15 +15,45 @@
 
     UI.addClass({
         className: "autocomplete",
-        version: "0.0.4"
+        version: "0.0.5"
     }, function () {
         /**
          * @class ax5autocomplete
          * @classdesc
          * @author tom@axisj.com
          * @example
-         * ```
-         *
+         * ```js
+         * var options = [];
+         * options.push({value: "1", text: "string"});
+         * options.push({value: "2", text: "number"});
+         * options.push({value: "3", text: "substr"});
+         * options.push({value: "4", text: "substring"});
+         * options.push({value: "5", text: "search"});
+         * options.push({value: "6", text: "parseInt"});
+         * options.push({value: "7", text: "toFixed"});
+         * options.push({value: "8", text: "min"});
+         * options.push({value: "9", text: "max"});
+         * options.push({value: "10", text: "장기영"});
+         * options.push({value: "11", text: "장서우"});
+         * options.push({value: "12", text: "이영희"});
+         * options.push({value: "13", text: "황인서"});
+         * options.push({value: "14", text: "황세진"});
+         * options.push({value: "15", text: "이서연"});
+         * options.push({value: "16", text: "액시스제이"});
+         * options.push({value: "17", text: "ax5"});
+         * options.push({value: "18", text: "ax5grid"});
+         * options.push({value: "19", text: "ax5combobox"});
+         * options.push({value: "20", text: "ax5autocomplete"});
+         * options.push({value: "21", text: "ax5binder"});
+         * options.push({value: "22", text: "ax5select"});
+         * options.push({value: "23", text: "ax5mask"});
+         * options.push({value: "24", text: "ax5toast"});
+         * options.push({value: "25", text: "ax5dialog"});
+         * options.push({value: "26", text: "ax5modal"});
+          * var myUI = new ax5.ui.autocomplete({
+         *      theme: "danger",
+         *      removeIcon: '<i class="fa fa-times" aria-hidden="true"></i>'
+         * });
          * ```
          */
         var ax5autocomplete = function ax5autocomplete() {
@@ -259,7 +289,7 @@
                 data.selected = item.selected;
                 data.hasSelected = data.selected && data.selected.length > 0;
                 data.removeIcon = item.removeIcon;
-                return ax5.mustache.render(AUTOCOMPLETE.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;";
+                return AUTOCOMPLETE.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
             },
                 syncLabel = function syncLabel(queIdx) {
                 var item = this.queue[queIdx],
@@ -273,9 +303,9 @@
                     n["@index"] = nindex;
                 });
 
-                item.$select.html(ax5.mustache.render(AUTOCOMPLETE.tmpl["formSelectOptions"].call(this, item.columnKeys), {
+                item.$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
                     selected: item.selected
-                }));
+                }, item.columnKeys));
 
                 item.$displayLabel.html(getLabel.call(this, queIdx));
                 item.$target.height('');
@@ -341,7 +371,7 @@
                     data.multiple = item.multiple;
                     data.lang = item.lang;
                     data.options = item.options;
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl.options.call(this, item.columnKeys), data)));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
 
                     focusWord.call(this, this.activeautocompleteQueueIndex, searchWord);
                 }.bind(this));
@@ -917,7 +947,7 @@
                                 return item.size ? "input-" + item.size : "";
                             }();
 
-                            item.$display = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["autocompleteDisplay"].call(this, queIdx), data));
+                            item.$display = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "autocompleteDisplay", data, item.columnKeys));
                             item.$displayTable = item.$display.find('[data-els="display-table"]');
                             item.$displayLabel = item.$display.find('[data-ax5autocomplete-display="label"]');
 
@@ -930,7 +960,7 @@
                                 }
                                 item.$select.attr("multiple", "multiple");
                             } else {
-                                item.$select = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["formSelect"].call(this, queIdx), data));
+                                item.$select = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "formSelect", data, item.columnKeys));
                                 item.$target.append(item.$select);
                             }
 
@@ -1060,8 +1090,8 @@
                     data.waitOptions = true;
                     data.options = [];
 
-                    this.activeautocompleteOptionGroup = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["optionGroup"].call(this, item.columnKeys), data));
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["options"].call(this, item.columnKeys), data)));
+                    this.activeautocompleteOptionGroup = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "optionGroup", data, item.columnKeys));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
                     this.activeautocompleteQueueIndex = queIdx;
 
                     alignAutocompleteOptionGroup.call(this, "append"); // alignAutocompleteOptionGroup 에서 body append
@@ -1348,7 +1378,6 @@ jQuery.fn.ax5autocomplete = function () {
 }();
 // ax5.ui.autocomplete.tmpl
 (function () {
-
     var AUTOCOMPLETE = ax5.ui.autocomplete;
     var U = ax5.util;
 
@@ -1382,7 +1411,11 @@ jQuery.fn.ax5autocomplete = function () {
         "formSelectOptions": formSelectOptions,
         "optionGroup": optionGroup,
         "options": options,
-        "label": label
+        "label": label,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(AUTOCOMPLETE.tmpl[tmplName].call(this, columnKeys), data);
+        }
     };
 })();
 // ax5.ui.autocomplete.util

@@ -54,11 +54,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * @member {String} ax5.info.version
          */
         var version = "0.0.1";
+
         /**
          * ax5 library path
          * @member {String} ax5.info.baseUrl
          */
         var baseUrl = "";
+
         /**
          * ax5 에러 출력메세지 사용자 재 정의
          * @member {Object} ax5.info.onerror
@@ -91,6 +93,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             HOME: 36, END: 35, PAGEUP: 33, PAGEDOWN: 34, INSERT: 45, SPACE: 32
         };
 
+        /**
+         * week names
+         * @member {Object[]} weekNames
+         * @member {string} weekNames[].label
+         *
+         * @example
+         * ```
+         * [
+         *  {label: "SUN"},{label: "MON"},{label: "TUE"},{label: "WED"},{label: "THU"},{label: "FRI"},{label: "SAT"}
+         * ]
+         * console.log( weekNames[0] );
+         * console.log( ax5.info.weekNames[(new Date()).getDay()].label )
+         * ```
+         */
         var weekNames = [{ label: "SUN" }, { label: "MON" }, { label: "TUE" }, { label: "WED" }, { label: "THU" }, { label: "FRI" }, { label: "SAT" }];
 
         /**
@@ -130,11 +146,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
             ua = null, mobile = null, browserName = null, match = null, browser = null, browserVersion = null;
         }();
+
         /**
          * 브라우저 여부
          * @member {Boolean} ax5.info.isBrowser
          */
         var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && win.document);
+
         /**
          * 브라우저에 따른 마우스 휠 이벤트이름
          * @member {Object} ax5.info.wheelEnm
@@ -155,7 +173,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * @returns {Object}
          * @example
          * ```
-         * console.log( ax5.util.toJson( ax5.util.urlUtil() ) );
+         * console.log( ax5.util.toJson( ax5.info.urlUtil() ) );
          * {
         *	"baseUrl": "http://ax5:2018",
         *	"href": "http://ax5:2018/samples/index.html?a=1&b=1#abc",
@@ -189,11 +207,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         /**
-         * ax5 error를 반환합니다.
+         * ax5-error-msg.js 에 정의된 ax5 error를 반환합니다.
          * @method ax5.info.getError
          * @returns {Object}
          * @example
          * ```
+         * console.log( ax5.info.getError("single-uploader", "460", "upload") );
+         *
          * if(!this.selectedFile){
         *      if (cfg.onEvent) {
         *      	var that = {
@@ -666,6 +686,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 jsonString = "undefined";
             } else if (ax5.util.isFunction(O)) {
                 jsonString = '"{Function}"';
+            } else {
+                jsonString = O;
             }
             return jsonString;
         }
@@ -728,6 +750,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 typeName = "element";
             } else if (!!(O && O.nodeType == 11)) {
                 typeName = "fragment";
+            } else if (O === null) {
+                typeName = "null";
             } else if (typeof O === "undefined") {
                 typeName = "undefined";
             } else if (_toString.call(O) == "[object Object]") {
@@ -823,7 +847,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * @returns {Boolean}
          */
         function isNodelist(O) {
-            return _toString.call(O) == "[object NodeList]" || O && O[0] && O[0].nodeType == 1;
+            return !!(_toString.call(O) == "[object NodeList]" || typeof O !== "undefined" && O && O[0] && O[0].nodeType == 1);
         }
 
         /**
@@ -855,6 +879,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (!O) {} else if (O instanceof Date && !isNaN(O.valueOf())) {
                 result = true;
             } else {
+                if (O.length > 7) {
+                    if (date(O) instanceof Date) {
+                        return true;
+                    }
+                }
                 O = O.replace(/\D/g, '');
                 if (O.length > 7) {
                     var mm = O.substr(4, 2),
@@ -999,7 +1028,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function left(str, pos) {
             if (typeof str === "undefined" || typeof pos === "undefined") return "";
             if (isString(pos)) {
-                return str.indexOf(pos) > -1 ? str.substr(0, str.indexOf(pos)) : str;
+                return str.indexOf(pos) > -1 ? str.substr(0, str.indexOf(pos)) : "";
             } else if (isNumber(pos)) {
                 return str.substr(0, pos);
             } else {
@@ -1025,7 +1054,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (typeof str === "undefined" || typeof pos === "undefined") return "";
             str = '' + str;
             if (isString(pos)) {
-                return str.lastIndexOf(pos) > -1 ? str.substr(str.lastIndexOf(pos) + 1) : str;
+                return str.lastIndexOf(pos) > -1 ? str.substr(str.lastIndexOf(pos) + 1) : "";
             } else if (isNumber(pos)) {
                 return str.substr(str.length - pos);
             } else {
@@ -1297,20 +1326,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function date(d, cond) {
             var yy, mm, dd, hh, mi, aDateTime, aTimes, aTime, aDate, utcD, localD, va;
+            var ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
+            var ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
 
             if (isString(d)) {
                 if (d.length == 0) {
                     d = new Date();
                 } else if (d.length > 15) {
-                    aDateTime = d.split(/ /g), aTimes, aTime, aDate = aDateTime[0].split(/\D/g), yy = aDate[0];
-                    mm = parseFloat(aDate[1]);
-                    dd = parseFloat(aDate[2]);
-                    aTime = aDateTime[1] || "09:00";
-                    aTimes = aTime.substring(0, 5).split(":");
-                    hh = parseFloat(aTimes[0]);
-                    mi = parseFloat(aTimes[1]);
-                    if (right(aTime, 2) === "AM" || right(aTime, 2) === "PM") hh += 12;
-                    d = localDate(yy, mm - 1, dd, hh, mi);
+                    if (ISO_8601_FULL.test(d) || ISO_8601.test(d)) {
+                        d = new Date(d);
+                    } else {
+                        aDateTime = d.split(/ /g), aTimes, aTime, aDate = aDateTime[0].split(/\D/g), yy = aDate[0];
+                        mm = parseFloat(aDate[1]);
+                        dd = parseFloat(aDate[2]);
+                        aTime = aDateTime[1] || "09:00";
+                        aTimes = aTime.substring(0, 5).split(":");
+                        hh = parseFloat(aTimes[0]);
+                        mi = parseFloat(aTimes[1]);
+                        if (right(aTime, 2) === "AM" || right(aTime, 2) === "PM") hh += 12;
+                        d = localDate(yy, mm - 1, dd, hh, mi);
+                    }
                 } else if (d.length == 14) {
                     va = d.replace(/\D/g, "");
                     d = localDate(va.substr(0, 4), va.substr(4, 2) - 1, number(va.substr(6, 2)), number(va.substr(8, 2)), number(va.substr(10, 2)), number(va.substr(12, 2)));
@@ -1951,6 +1986,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }(); // ax5.ui에 연결
     }
 }).call(typeof window !== "undefined" ? window : undefined);
+
 ax5.def = {};
 ax5.info.errorMsg["ax5dialog"] = {
     "501": "Duplicate call error"

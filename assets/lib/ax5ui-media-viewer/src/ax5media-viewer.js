@@ -3,6 +3,7 @@
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var MEDIAVIEWER;
 
     UI.addClass({
         className: "mediaViewer",
@@ -13,8 +14,80 @@
          * @classdesc
          * @author tom@axisj.com
          * @example
-         * ```
-         * var myViewer = new ax5.ui.mediaViewer();
+         * ```js
+         * var myViewer = new ax5.ui.mediaViewer({
+         *     theme: "danger",
+         *     target: $("#media-viewer-target-0"),
+         *     loading: {
+         *         icon: '<i class="fa fa-spinner fa-pulse fa-2x fa-fw margin-bottom" aria-hidden="true"></i>',
+         *         text: '<div>Now Loading</div>'
+         *     },
+         *     media: {
+         *         width: '11%', height: '11%',
+         *         prevHandle: '<i class="fa fa-chevron-left"></i>',
+         *         nextHandle: '<i class="fa fa-chevron-right"></i>',
+         *         poster: '<i class="fa fa-youtube-play" style="font-size: 20px;"></i>',
+         *         list: [
+         *             {
+         *                 video: {
+         *                     html: '<iframe src="https://player.vimeo.com/video/121840700?color=fcfcfc&badge=0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
+         *                     poster: ''
+         *                 }
+         *             },
+         *             {
+         *                 video: {
+         *                     html: '<iframe width="560" height="315" src="https://www.youtube.com/embed/w9Uh2oP88JI" frameborder="0" allowfullscreen></iframe>',
+         *                     poster: ''
+         *                 }
+         *             },
+         *             {
+         *                 image: {
+         *                     src: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg',
+         *                     poster: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg'
+         *                 }
+         *             },
+         *             {
+         *                 image: {
+         *                     src: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg',
+         *                     poster: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg'
+         *                 }
+         *             },
+         *             {
+         *                 image: {
+         *                     src: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg',
+         *                     poster: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg'
+         *                 }
+         *             },
+         *             {
+         *                 image: {
+         *                     src: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg',
+         *                     poster: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg'
+         *                 }
+         *             },
+         *             {
+         *                 image: {
+         *                     src: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg',
+         *                     poster: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg'
+         *                 }
+         *             },
+         *             {
+         *                 image: {
+         *                     src: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg',
+         *                     poster: 'http://www.improgrammer.net/wp-content/uploads/2015/11/top-20-node-js-Frameworks-1.jpg'
+         *                 }
+         *             },
+         *             {
+         *                 image: {
+         *                     src: 'https://www.twilio.com/blog/wp-content/uploads/2013/11/Screen-Shot-2013-11-06-at-12.05.36-PM.png',
+         *                     poster: 'https://www.twilio.com/blog/wp-content/uploads/2013/11/Screen-Shot-2013-11-06-at-12.05.36-PM.png'
+         *                 }
+         *             }
+         *         ]
+         *     },
+         *     onClick: function () {
+         *         console.log(this);
+         *     }
+         * });
          * ```
          */
         var ax5mediaViewer = function () {
@@ -80,58 +153,15 @@
                     }
                     return true;
                 },
-                getFrameTmpl = function (columnKeys) {
-                    return `
-                    <div data-ax5-ui-media-viewer="{{id}}" class="{{theme}}">
-                        <div data-media-viewer-els="viewer-holder">
-                        <div data-media-viewer-els="viewer"></div>
-                        </div>
-                        <div data-media-viewer-els="viewer-loading">
-                        <div class="ax5-ui-media-viewer-loading-holder">
-                        <div class="ax5-ui-media-viewer-loading-cell">
-                        {{{loading.icon}}}
-                    {{{loading.text}}}
-                    </div>
-                    </div>
-                    </div>
-                    {{#media}}
-                    <div data-media-viewer-els="media-list-holder">
-                        <div data-media-viewer-els="media-list-prev-handle">{{{prevHandle}}}</div>
-                    <div data-media-viewer-els="media-list">
-                        <div data-media-viewer-els="media-list-table">
-                        {{#list}}
-                    <div data-media-viewer-els="media-list-table-td">
-                        {{#image}}
-                    <div data-media-thumbnail="{{@i}}">
-                        <img src="{{${columnKeys.poster}}}" data-media-thumbnail-image="{{@i}}" />
-                        </div>
-                        {{/image}}
-                    {{#video}}
-                    <div data-media-thumbnail="{{@i}}">{{#${columnKeys.poster}}}<img src="{{.}}" data-media-thumbnail-video="{{@i}}" />>{{/${columnKeys.poster}}}{{^${columnKeys.poster}}}<a data-media-thumbnail-video="{{@i}}">{{{media.${columnKeys.poster}}}}</a>{{/${columnKeys.poster}}}</div>
-                    {{/video}}
-                    </div>
-                        {{/list}}
-                    </div>
-                        </div>
-                        <div data-media-viewer-els="media-list-next-handle">{{{nextHandle}}}</div>
-                        </div>
-                        {{/media}}
-                    </div>
-                        `;
-                },
                 getFrame = function () {
                     var
-                        data = jQuery.extend(true, {}, cfg),
-                        tmpl = getFrameTmpl(cfg.columnKeys);
-
-                    data.id = this.id;
+                        data = jQuery.extend(true, {id: this.id}, cfg);
 
                     try {
-                        return ax5.mustache.render(tmpl, data);
+                        return MEDIAVIEWER.tmpl.get.call(this, "frame", data, cfg.columnKeys);
                     }
                     finally {
                         data = null;
-                        tmpl = null;
                     }
                 },
                 onClick = function (e, target) {
@@ -461,7 +491,7 @@
              */
             this.select = (function () {
                 var mediaView = {
-                    image: function (obj, callBack) {
+                    image: function (obj, callback) {
                         self.$["viewer-loading"].show();
                         var dim = [this.$["viewer"].width(), this.$["viewer"].height()];
                         var img = new Image();
@@ -470,15 +500,15 @@
                             self.$["viewer-loading"].fadeOut();
                             var h = dim[1];
                             var w = h * img.width / img.height;
-                            callBack(img, Math.floor(w), h);
+                            callback(img, Math.floor(w), h);
                         };
                         return img;
                     },
-                    video: function (obj, callBack) {
+                    video: function (obj, callback) {
                         self.$["viewer-loading"].show();
                         var dim = [this.$["viewer"].width(), this.$["viewer"].height()];
                         var html = jQuery(obj.video[cfg.columnKeys.html]);
-                        callBack(html, dim[0], dim[1]);
+                        callback(html, dim[0], dim[1]);
                         self.$["viewer-loading"].fadeOut();
                     }
                 };
@@ -551,4 +581,5 @@
         return ax5mediaViewer;
     })());
 
+    MEDIAVIEWER = ax5.ui.mediaViewer;
 })();

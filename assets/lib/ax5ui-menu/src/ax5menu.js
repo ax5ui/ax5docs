@@ -2,18 +2,133 @@
 (function () {
     var UI = ax5.ui;
     var U = ax5.util;
+    var MENU;
 
     UI.addClass({
         className: "menu",
-        version: "0.6.5"
+        version: "0.7.0"
     }, (function () {
         /**
          * @class ax5.ui.menu
          * @classdesc
          * @author tom@axisj.com
          * @example
-         * ```
-         * var menu = new ax5.ui.menu();
+         * ```js
+         * var menu = new ax5.ui.menu({
+         *     theme: 'primary',
+         *     iconWidth: 20,
+         *     acceleratorWidth: 100,
+         *     itemClickAndClose: false,
+         *     icons: {
+         *         'arrow': '<i class="fa fa-caret-right"></i>'
+         *     },
+         *     columnKeys: {
+         *         label: 'name',
+         *         items: 'chidren'
+         *     },
+         *     items: [
+         *         {
+         *             icon: '<i class="fa fa-archive"></i>',
+         *             name: "Menu Parent 0",
+         *             chidren: [
+         *                 {
+         *                     check: {
+         *                         type: 'checkbox',
+         *                         name: 'A',
+         *                         value: '0',
+         *                         checked: false
+         *                     },
+         *                     name: "Menu Z",
+         *                     data: {},
+         *                     role: "",
+         *                     accelerator: "CmdOrCtrl+Z"
+         *                 },
+         *                 {
+         *                     check: {
+         *                         type: 'checkbox',
+         *                         name: 'A',
+         *                         value: '1',
+         *                         checked: true
+         *                     },
+         *                     name: "Menu A",
+         *                     data: {},
+         *                     role: ""
+         *                 }
+         *             ],
+         *             filterType: "A"
+         *         },
+         *         {
+         *             divide: true,
+         *             filterType: "A"
+         *         },
+         *         {
+         *             icon: '<i class="fa fa-mixcloud"></i>',
+         *             name: "Menu Parent 1",
+         *             chidren: [
+         *                 {
+         *                     name: "Menu Z",
+         *                     data: {},
+         *                     role: "",
+         *                     chidren: [
+         *                         {
+         *                             name: "Menu Z",
+         *                             data: {},
+         *                             role: ""
+         *                         },
+         *                         {
+         *                             name: "Menu A",
+         *                             data: {},
+         *                             role: ""
+         *                         }
+         *                     ]
+         *                 },
+         *                 {
+         *                     name: "Menu A",
+         *                     data: {},
+         *                     role: ""
+         *                 }
+         *             ],
+         *             filterType: "A"
+         *         },
+         *         {
+         *             check: {
+         *                 type: 'radio',
+         *                 name: 'radioName',
+         *                 value: '1',
+         *                 checked: false
+         *             },
+         *             icon: '<i class="fa fa-bluetooth"></i>',
+         *             name: "Menu Parent 2"
+         *         },
+         *         {
+         *             check: {
+         *                 type: 'radio',
+         *                 name: 'radioName',
+         *                 value: '2',
+         *                 checked: false
+         *             },
+         *             name: "Menu Parent 3"
+         *         },
+         *         {
+         *             check: {
+         *                 type: 'radio',
+         *                 name: 'radioName',
+         *                 value: '3',
+         *                 checked: false
+         *             },
+         *             name: "Menu Parent 4"
+         *         },
+         *         {divide: true},
+         *         {
+         *             html: function () {
+         *                 return '<div style="text-align: center;">' +
+         *                     '<button class="btn btn-primary" data-menu-btn="OK">OK</button> ' +
+         *                     '<button class="btn btn-danger" data-menu-btn="CANCEL">CANCEL</button>' +
+         *                     '</div>';
+         *             }
+         *         }
+         *     ]
+         * });
          * ```
          */
         var ax5menu = function () {
@@ -87,74 +202,6 @@
                     that = null;
                     return true;
                 },
-                getTmpl = function (columnKeys) {
-                    return `
-                    <div class="ax5-ui-menu {{theme}}" {{#width}}style="width:{{width}}px;"{{/width}}>
-                        <div class="ax-menu-body">
-                            {{#${columnKeys.items}}}
-                                {{^@isMenu}}
-                                    {{#divide}}
-                                    <div class="ax-menu-item-divide" data-menu-item-index="{{@i}}"></div>
-                                    {{/divide}}
-                                    {{#html}}
-                                    <div class="ax-menu-item-html" data-menu-item-index="{{@i}}">{{{@html}}}</div>
-                                    {{/html}}
-                                {{/@isMenu}}
-                                {{#@isMenu}}
-                                <div class="ax-menu-item" data-menu-item-depth="{{@depth}}" data-menu-item-index="{{@i}}" data-menu-item-path="{{@path}}.{{@i}}">
-                                    <span class="ax-menu-item-cell ax-menu-item-checkbox">
-                                        {{#check}}
-                                        <span class="item-checkbox-wrap useCheckBox" {{#checked}}data-item-checked="true"{{/checked}}></span>
-                                        {{/check}}
-                                        {{^check}}
-                                        <span class="item-checkbox-wrap"></span>
-                                        {{/check}}
-                                    </span>
-                                    {{#icon}}
-                                    <span class="ax-menu-item-cell ax-menu-item-icon" style="width:{{cfg.iconWidth}}px;">{{{.}}}</span>
-                                    {{/icon}}
-                                    <span class="ax-menu-item-cell ax-menu-item-label">{{{${columnKeys.label}}}}</span>
-                                    {{#accelerator}}
-                                    <span class="ax-menu-item-cell ax-menu-item-accelerator" style="width:{{cfg.acceleratorWidth}}px;"><span class="item-wrap">{{.}}</span></span>
-                                    {{/accelerator}}
-                                    {{#@hasChild}}
-                                    <span class="ax-menu-item-cell ax-menu-item-handle">{{{cfg.icons.arrow}}}</span>
-                                    {{/@hasChild}}
-                                </div>
-                                {{/@isMenu}}
-        
-                            {{/${columnKeys.items}}}
-                        </div>
-                        <div class="ax-menu-arrow"></div>
-                    </div>
-                    `;
-                },
-                getTmpl_menuBar = function (columnKeys) {
-                    return `
-                    <div class="ax5-ui-menubar {{theme}}">
-                        <div class="ax-menu-body">
-                            {{#${columnKeys.items}}}
-                                {{^@isMenu}}
-                                    {{#divide}}
-                                    <div class="ax-menu-item-divide" data-menu-item-index="{{@i}}"></div>
-                                    {{/divide}}
-                                    {{#html}}
-                                    <div class="ax-menu-item-html" data-menu-item-index="{{@i}}">{{{@html}}}</div>
-                                    {{/html}}
-                                {{/@isMenu}}
-                                {{#@isMenu}}
-                                <div class="ax-menu-item" data-menu-item-index="{{@i}}">
-                                    {{#icon}}
-                                    <span class="ax-menu-item-cell ax-menu-item-icon" style="width:{{cfg.iconWidth}}px;">{{{.}}}</span>
-                                    {{/icon}}
-                                    <span class="ax-menu-item-cell ax-menu-item-label">{{{${columnKeys.label}}}}</span>
-                                </div>
-                                {{/@isMenu}}
-                            {{/${columnKeys.items}}}
-                        </div>
-                    </div>
-                    `;
-                },
                 popup = function (opt, items, depth, path) {
                     var
                         data = opt,
@@ -191,7 +238,7 @@
                     data['@hasChild'] = function () {
                         return this[cfg.columnKeys.items] && this[cfg.columnKeys.items].length > 0;
                     };
-                    activeMenu = jQuery(ax5.mustache.render(getTmpl(cfg.columnKeys), data));
+                    activeMenu = jQuery(MENU.tmpl.get.call(this, "tmpl", data, cfg.columnKeys));
                     jQuery(document.body).append(activeMenu);
 
                     // remove queue
@@ -631,7 +678,7 @@
 
                     data[cfg.columnKeys.items] = items;
 
-                    activeMenu = jQuery(ax5.mustache.render(getTmpl_menuBar(cfg.columnKeys), data));
+                    activeMenu = jQuery(MENU.tmpl.get.call(this, "tmplMenubar", data, cfg.columnKeys));
                     self.menuBar = {
                         target: jQuery(el),
                         opened: false
@@ -744,4 +791,5 @@
         return ax5menu;
     })());
 
+    MENU = ax5.ui.menu;
 })();

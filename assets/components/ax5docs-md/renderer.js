@@ -4,7 +4,13 @@ exports.render = function (input, out) {
         html: true,
         linkify: true,
         typographer: true
-    });
+    }).use(require('markdown-it-video', { // <-- this use(package_name) is required
+        youtube: { width: 640, height: 390 },
+        vimeo: { width: 500, height: 281 },
+        vine: { width: 600, height: 600, embed: 'simple' },
+        prezi: { width: 550, height: 400 }
+    }));
+
     var strip_indent = require('strip-indent');
     var fs = require('fs'), readFileData;
 

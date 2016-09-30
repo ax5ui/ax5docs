@@ -56,13 +56,13 @@
 							<a href="/ax5ui-layout">
 							<span class="small">/ ax5ui-layout</span></a>
 						</span>
-                        <a class="visible-xs-inline-block mobile-menu">
-                            <i class="icon-menu"></i>
+                        <a class="visible-xs-inline-block mobile-menu" id="mobile-menu">
+                            <i class="axc-menu"></i>
                         </a>
                     </div>
 
                     
-                    <div class="collapse navbar-collapse">
+                    <div class="collapse navbar-collapse" id="docs-navbar-collapse">
 
                         <ul class="nav navbar-nav" id="docs-menu-print-target">
                             
@@ -132,7 +132,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-layout/demo/index.html">dockPanel</a></li><li ><a href="/ax5ui-layout/demo/doc-panel-1.html">dockPanel(non splitter)</a></li><li  class='active'><a href="/ax5ui-layout/demo/split-panel.html">splitPanel</a></li><li ><a href="/ax5ui-layout/demo/split-panel-1.html">splitPanel(Vertical)</a></li><li ><a href="/ax5ui-layout/demo/nested.html">Nested Layout</a></li><li ><a href="/ax5ui-layout/demo/event.html">Layout Event</a></li></ul>
+        <ul><li ><a href="/ax5ui-layout/demo/index.html">dockPanel</a></li><li ><a href="/ax5ui-layout/demo/doc-panel-1.html">dockPanel(non splitter)</a></li><li  class='active'><a href="/ax5ui-layout/demo/split-panel.html">splitPanel</a></li><li ><a href="/ax5ui-layout/demo/split-panel-1.html">splitPanel(Horizontal)</a></li><li ><a href="/ax5ui-layout/demo/nested.html">Nested Layout</a></li><li ><a href="/ax5ui-layout/demo/event.html">Layout Event</a></li></ul>
     
                             </div>
                         </div>
@@ -146,7 +146,7 @@
 
 
             HTML
-            <pre class="prettyprint linenums lang-html">&lt;div data-ax5layout="ax1" data-config="{layout:&quot;split-panel&quot;, oriental: &quot;horizontal&quot;}" style="height: 500px;border:1px solid #ccc;">
+            <pre class="prettyprint linenums lang-html">&lt;div data-ax5layout="ax1" data-config="{layout:&quot;split-panel&quot;, oriental: &quot;vertical&quot;}" style="height: 500px;border:1px solid #ccc;">
     &lt;div data-split-panel="{width: &quot;300&quot;, minWidth:50}">&lt;/div>
     &lt;div data-splitter="{}">&lt;/div>
     &lt;div data-split-panel="{width: &quot;*&quot;}">
@@ -154,7 +154,7 @@
     &lt;/div>
     &lt;div data-splitter="{}">&lt;/div>
     &lt;div data-split-panel="{width: &quot;200&quot;, minWidth: 50, maxWidth: 300}">&lt;/div>
-&lt;/div></pre><div data-ax5layout="ax1" data-config="{layout:&quot;split-panel&quot;, oriental: &quot;horizontal&quot;}" style="height: 500px;border:1px solid #ccc;">
+&lt;/div></pre><div data-ax5layout="ax1" data-config="{layout:&quot;split-panel&quot;, oriental: &quot;vertical&quot;}" style="height: 500px;border:1px solid #ccc;">
     <div data-split-panel="{width: &quot;300&quot;, minWidth:50}"></div>
     <div data-splitter="{}"></div>
     <div data-split-panel="{width: &quot;*&quot;}">

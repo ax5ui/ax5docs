@@ -111,7 +111,7 @@ var fn_docs = (function () {
             },
 
             setFocus: function (scTop) {
-                
+
                 var $menu = fn_docs._jos["docs-inline-menu"];
                 for (var i = 0, l = this.offsetList.length, item; i < l; i++) {
                     item = this.offsetList[i];
@@ -156,9 +156,14 @@ $(document.body).ready(function () {
             "docs-foot": $("#docs-foot"),
             "docs-inline-menu": $("#docs-inline-menu"),
             "docs-menu": $("#docs-menu"),
-            "docs-menu-parent": $("#docs-menu").parent()
+            "docs-menu-parent": $("#docs-menu").parent(),
+            "docs-navbar-collapse": $("#docs-navbar-collapse")
         }
     })();
+
+    $("#mobile-menu").click(function () {
+        fn_docs._jos["docs-navbar-collapse"].toggleClass("open-in-mobile");
+    });
 
     var menuParentTop = 0;
     $(window).on('load resize', function () {
@@ -206,7 +211,7 @@ $(document.body).ready(function () {
             fn_docs.menu.viewType = viewType;
         }
 
-        if(fn_docs._data["window-width"] > 650) {
+        if (fn_docs._data["window-width"] > 650) {
             if (windowScrollTop + windowHeight > docsFootTop) {
                 fn_docs.menu.target.css({height: windowHeight - (windowScrollTop + windowHeight - docsFootTop)});
             } else if (fn_docs.menu.viewType == 1) {
@@ -219,6 +224,5 @@ $(document.body).ready(function () {
             fn_docs.menu.setFocus(windowScrollTop);
         }
     });
-
 
 });

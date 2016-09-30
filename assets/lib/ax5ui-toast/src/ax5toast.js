@@ -3,10 +3,11 @@
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var TOAST;
 
     UI.addClass({
         className: "toast",
-        version: "0.3.3"
+        version: "0.4.1"
     }, (function () {
         /**
          * @class ax5toast
@@ -14,7 +15,27 @@
          * @author tom@axisj.com
          * @example
          * ```
-         * var my_toast = new ax5.ui.toast();
+         * ```js
+         * var toast = new ax5.ui.toast();
+         * toast.setConfig({
+         *     icon: '<i class="fa fa-bug"></i>',
+         *     containerPosition: "bottom-right",
+         *     closeIcon: '<i class="fa fa-times"></i>'
+         * });
+         *
+         * toast.onStateChanged = function(){
+         *     console.log(this);
+         * };
+         *
+         * toast.push({
+         *     icon: '<i class="fa fa-book"></i>',
+         *     msg:"999999"
+         * });
+         *
+         * toast.push({
+         *     theme: theme,
+         *     msg: 'toast message'
+         * });
          * ```
          */
         var ax5toast = function () {
@@ -56,29 +77,6 @@
                     that = null;
                     return true;
                 },
-                getContentTmpl = function () {
-                    return `
-                    <div id="{{toastId}}" data-ax5-ui="toast" class="ax5-ui-toast {{theme}}">
-                        {{#icon}}
-                        <div class="ax-toast-icon">{{{.}}}</div>
-                        {{/icon}}
-                        <div class="ax-toast-body">{{{msg}}}</div>
-                        {{#btns}}
-                        <div class="ax-toast-buttons">
-                            <div class="ax-button-wrap">
-                            {{#@each}}
-                            <button type="button" data-ax-toast-btn="{{@key}}" class="btn btn-{{@value.theme}}">{{{@value.label}}}</button>
-                            {{/@each}}
-                            </div>
-                        </div>
-                        {{/btns}}
-                        {{^btns}}
-                        <a class="ax-toast-close" data-ax-toast-btn="ok">{{{closeIcon}}}</a>
-                        {{/btns}}
-                        <div style="clear:both;"></div>
-                    </div>
-                    `;
-                },
                 getContent = function (toastId, opts) {
                     var
                         data = {
@@ -91,7 +89,7 @@
                         };
 
                     try {
-                        return ax5.mustache.render(getContentTmpl(), data);
+                        return TOAST.tmpl.get.call(this, "toastDisplay", data);
                     }
                     finally {
                         toastId = null;
@@ -334,5 +332,5 @@
         };
         return ax5toast;
     })());
-
+    TOAST = ax5.ui.toast;
 })();
