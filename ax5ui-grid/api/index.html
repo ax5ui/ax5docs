@@ -469,7 +469,67 @@
 </tbody>
 </table>
 <p><strong>Example</strong></p>
-<pre><code></code></pre>
+<pre class="prettyprint linenums lang-js"><code>var firstGrid = new ax5.ui.grid();
+
+ax5.ui.grid.formatter[&quot;myType&quot;] = function () {
+    return &quot;myType&quot; + (this.value || &quot;&quot;);
+};
+ax5.ui.grid.formatter[&quot;capital&quot;] = function(){
+    return (''+this.value).toUpperCase();
+};
+
+ax5.ui.grid.collector[&quot;myType&quot;] = function () {
+    return &quot;myType&quot; + (this.value || &quot;&quot;);
+};
+
+var sampleData = [
+    {a: &quot;A&quot;, b: &quot;A01&quot;, price: 1000, amount: 12, cost: 12000, saleDt: &quot;2016-08-29&quot;, customer: &quot;장기영&quot;, saleType: &quot;A&quot;},
+    {companyJson: {&quot;대표자명&quot;:&quot;abcd&quot;}, a: &quot;A&quot;, b: &quot;B01&quot;, price: 1100, amount: 11, cost: 12100, saleDt: &quot;2016-08-28&quot;, customer: &quot;장서우&quot;, saleType: &quot;B&quot;},
+    {companyJson: {&quot;대표자명&quot;:&quot;abcd&quot;}, a: &quot;A&quot;, b: &quot;C01&quot;, price: 1200, amount: 10, cost: 12000, saleDt: &quot;2016-08-27&quot;, customer: &quot;이영희&quot;, saleType: &quot;A&quot;},
+    {companyJson: {&quot;대표자명&quot;:&quot;위세라&quot;}, a: &quot;A&quot;, b: &quot;A01&quot;, price: 1300, amount: 8, cost: 10400, saleDt: &quot;2016-08-25&quot;, customer: &quot;황인서&quot;, saleType: &quot;C&quot;},
+    {companyJson: {&quot;대표자명&quot;:&quot;abcd&quot;}, a: &quot;A&quot;, b: &quot;B01&quot;, price: 1400, amount: 5, cost: 7000, saleDt: &quot;2016-08-29&quot;, customer: &quot;황세진&quot;, saleType: &quot;D&quot;},
+    {companyJson: {&quot;대표자명&quot;:&quot;abcd&quot;}, a: &quot;A&quot;, b: &quot;A01&quot;, price: 1500, amount: 2, cost: 3000, saleDt: &quot;2016-08-26&quot;, customer: &quot;이서연&quot;, saleType: &quot;A&quot;}
+];
+
+var gridView = {
+    initView: function () {
+        firstGrid.setConfig({
+            target: $('[data-ax5grid=&quot;first-grid&quot;]'),
+            columns: [
+                {
+                    key: &quot;companyJson['대표자명']&quot;,
+                    label: &quot;필드A&quot;,
+                    width: 80,
+                    styleClass: function () {
+                        return &quot;ABC&quot;;
+                    },
+                    enableFilter: true,
+                    align: &quot;center&quot;,
+                    editor: {type:&quot;text&quot;}
+                },
+                {key: &quot;b&quot;, label: &quot;필드B&quot;, align: &quot;center&quot;},
+                {
+                    key: undefined, label: &quot;필드C&quot;, columns: [
+                    {key: &quot;price&quot;, label: &quot;단가&quot;, formatter: &quot;money&quot;, align: &quot;right&quot;},
+                    {key: &quot;amount&quot;, label: &quot;수량&quot;, formatter: &quot;money&quot;, align: &quot;right&quot;},
+                    {key: &quot;cost&quot;, label: &quot;금액&quot;, align: &quot;right&quot;, formatter: &quot;money&quot;}
+                ]
+                },
+                {key: &quot;saleDt&quot;, label: &quot;판매일자&quot;, align: &quot;center&quot;},
+                {key: &quot;customer&quot;, label: &quot;고객명&quot;},
+                {key: &quot;saleType&quot;, label: &quot;판매타입&quot;}
+            ]
+        });
+        return this;
+    },
+    setData: function (_pageNo) {
+
+        firstGrid.setData(sampleData);
+
+        return this;
+    }
+};
+</code></pre>
 <p><a name="ax5grid.align"></a></p>
 <h3>ax5grid.align() ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
 <p>align grid size</p>

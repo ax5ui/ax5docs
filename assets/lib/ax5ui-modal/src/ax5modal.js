@@ -14,8 +14,43 @@
          * @alias ax5.ui.modal
          * @author tom@axisj.com
          * @example
-         * ```
-         * var my_modal = new ax5.ui.modal();
+         * ```js
+         * var modal = new ax5.ui.modal({
+         *     iframeLoadingMsg: '<i class="fa fa-spinner fa-5x fa-spin" aria-hidden="true"></i>',
+         *     header: {
+         *         title: "MODAL TITLE",
+         *         btns: {
+         *             minimize: {
+         *                 label: '<i class="fa fa-minus-circle" aria-hidden="true"></i>', onClick: function () {
+         *                     modal.minimize();
+         *                 }
+         *             },
+         *             maximize: {
+         *                 label: '<i class="fa fa-plus-circle" aria-hidden="true"></i>', onClick: function () {
+         *                     modal.maximize();
+         *                 }
+         *             },
+         *             close: {
+         *                 label: '<i class="fa fa-times-circle" aria-hidden="true"></i>', onClick: function () {
+         *                     modal.close();
+         *                 }
+         *             }
+         *         }
+         *     }
+         * });
+         *
+         * modal.open({
+         *     width: 800,
+         *     height: 600,
+         *     fullScreen: function(){
+         *         return ($(window).width() < 600);
+         *     },
+         *     iframe: {
+         *         method: "get",
+         *         url: "http://chequer-app:2017/html/login.html",
+         *         param: "callback=modalCallback"
+         *     }
+         * });
          * ```
          */
         var ax5modal = function () {
@@ -389,6 +424,9 @@
                         });
                     }).bind(this), cfg.animateTime);
                 }
+
+                this.minimized = false; // hoksi
+
                 return this;
             };
 
@@ -399,18 +437,23 @@
             this.minimize = (function () {
 
                 return function (minimizePosition) {
-                    var opts = self.modalConfig;
-                    if (typeof minimizePosition === "undefined") minimizePosition = cfg.minimizePosition;
-                    this.minimized = true;
-                    this.$.body.hide();
-                    self.modalConfig.originalHeight = opts.height;
-                    self.modalConfig.height = 0;
-                    alignProcessor[minimizePosition].call(this);
 
-                    onStateChanged.call(this, opts, {
-                        self : this,
-                        state: "minimize"
-                    });
+                    if(this.minimized !== true) {
+                        
+                        var opts = self.modalConfig;
+                        if (typeof minimizePosition === "undefined") minimizePosition = cfg.minimizePosition;
+
+                        this.minimized = true;
+                        this.$.body.hide();
+                        self.modalConfig.originalHeight = opts.height;
+                        self.modalConfig.height = 0;
+                        alignProcessor[minimizePosition].call(this);
+
+                        onStateChanged.call(this, opts, {
+                            self: this,
+                            state: "minimize"
+                        });
+                    }
 
                     return this;
                 };
