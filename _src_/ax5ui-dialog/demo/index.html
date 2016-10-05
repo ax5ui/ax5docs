@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="alert" title="Basic Alert" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="alert" title="Basic Alert" desc="" />
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -16,40 +16,77 @@
     </layout-put>
     <layout-put into="body">
 
-        <ax5docs-md>
-            # 제목
-            어쩌구 저쩌구 합니다
-            > 인용문
-            ```js
-            var a = "1";
-            // ~~~
-            ```
+        <!-- doc-js Basic Alert -->
+        <section class="ax5docs-section">
+            <h1>Basic Alert</h1>
 
-            다음의 코드를 html head에 넣어주세요.
-        </ax5docs-md>
+            <p>
+                ax5dialog creates a dialog by extending the argument to be passed to the alert method to the attributes defined in setConfig, then delivered to the user.<br/>
+                how to call the dialog is, <code>alert</code>, <code>confirm</code> and <code>prompt</code>, we will introduce the basic use of alert in it.
+            </p>
+
+            <button class="btn btn-default" type="button" id="alert-open">Alert</button>
+            <button class="btn btn-default" type="button" id="alert-close">Alert Close</button>
+
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        var dialog = new ax5.ui.dialog({
+                            title: "AX5 Dialog"
+                        });
+
+                        $('#alert-open').click(function () {
+                            dialog.alert('Alert message');
+                        });
+                        $('#alert-close').click(function () {
+                            dialog.close();
+                        });
+                    });
+                </script>
+            </ax5docs-js>
 
 
-        <ax5docs-html>
-            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-dialog/master/dist/ax5dialog.css"/>
-            <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-dialog/master/dist/ax5dialog.min.js"></script>
-        </ax5docs-html>
+            <p>
+                In the example, we introduce the basic use to output a alert dialog using <code>dialog.alert</code>.<br/>
+                However, you can not completely stopping the operation of the application as window.alert in dialog.alert.<br/>
+                If after the alert, user clicks the [OK] button, you need to pass an anonymous function as the second argument of the alert if there is a need of any such actions.
+            </p>
 
-        <h3>HTML</h3>
-        <ax5docs-html run="true">
-            <button class="btn btn-default" data-btn="alert">다이얼로그 열기</button>
-        </ax5docs-html>
+        </section>
 
-        <h3>SCRIPT</h3>
-        <ax5doc-js run="true">
-            <script>
-                var myDialog = new ax5.ui.dialog();
-                $(document.body).on("click", '[data-btn="alert"]', function () {
-                    myDialog.alert("나 나왔어요.");
-                });
-            </script>
-        </ax5doc-js>
+        <!-- doc-js alert callback -->
+        <section class="ax5docs-section">
+            <h2>Alert callBack</h2>
+
+            <p>
+                In the following example, after the alert, when the user clicks the [OK] button, run an anonymous function that is defined as the second argument,
+                To "this" anonymous function, you pass multiple arguments required developers.
+            </p>
+
+            <button class="btn btn-default" type="button" id="alert-open-callback">Alert</button>
+
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        var dialog = new ax5.ui.dialog({
+                            title: "AX5 Dialog"
+                        });
+
+                        $('#alert-open-callback').click(function () {
+                            dialog.alert('Alert message', function () {
+                                console.log(this);
+                            });
+                        });
+                    });
+                </script>
+            </ax5docs-js>
+            <p>
+                To "this" anonymous function, has been included, such as the following objects. You can check directly open a console window.
+            </p>
+            <ax5docs-js>
+                {key: "ok", value: Object, dialogId: "ax5-dialog-2", btnTarget: button.btn.btn-default}
+            </ax5docs-js>
+        </section>
 
 
     </layout-put>

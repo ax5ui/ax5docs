@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "dialog",
-        version: "0.8.6"
+        version: "0.8.7"
     }, (function () {
         /**
          * @class ax5dialog
@@ -71,7 +71,12 @@
                     that = null;
                     return true;
                 },
-
+                /**
+                 * @method ax5dialog.getContent
+                 * @param {String} dialogId
+                 * @param {Object} opts
+                 * @returns dialogDisplay
+                 */
                 getContent = function (dialogId, opts) {
                     var
                         data = {
@@ -92,6 +97,11 @@
                         data = null;
                     }
                 },
+                /**
+                 * @method ax5dialog.open
+                 * @param {Object} opts
+                 * @param callback
+                 */
                 open = function (opts, callback) {
                     var pos = {}, box;
 
@@ -475,8 +485,10 @@
                     jQuery(window).unbind("resize.ax5dialog");
 
                     setTimeout((function () {
-                        this.activeDialog.remove();
-                        this.activeDialog = null;
+                        if(this.activeDialog) {
+                            this.activeDialog.remove();
+                            this.activeDialog = null;
+                        }
 
                         that = {
                             self: this,
