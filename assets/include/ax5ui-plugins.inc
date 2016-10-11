@@ -15,6 +15,7 @@
     <li><a href="/ax5ui-layout">ax5ui-layout</a></li>
     <li><a href="/ax5ui-combobox">ax5ui-combobox</a></li>
     <li><a href="/ax5ui-autocomplete">ax5ui-autocomplete</a></li>
+    <li><a href="/ax5ui-binder">ax5ui-binder</a></li>
     <li><a href="/ax5ui-grid">ax5ui-grid</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="https://www.axisj.com">axisj.com</a></li>

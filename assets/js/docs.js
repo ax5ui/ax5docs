@@ -85,15 +85,15 @@ var fn_docs = (function () {
                 this.offsetList = offsetList;
                 if (!this.printed) this.print();
             },
-            getMenuList: function (list, depth) {
+            getMenuList: function (parentLabel, list, depth) {
                 var _this = this, po = [];
                 list.forEach(function (item) {
                     po.push('<li data-h' + depth + '-id="' + item.id + '">');
-                    po.push('<a href="#' + item.id + '">' + item.label + "</a>");
+                    po.push('<a href="#' + item.id + '">' + item.label.replace(parentLabel, "") + "</a>");
                     po.push('</li>');
                     if (item.child.length > 0) {
                         po.push('<ul data-parent-h' + depth + '-id="' + item.id + '">');
-                        po.push(_this.getMenuList(item.child, (depth + 1)));
+                        po.push(_this.getMenuList(item.label, item.child, (depth + 1)));
                         po.push('</ul>');
                     }
                 });
@@ -103,7 +103,7 @@ var fn_docs = (function () {
                 var po = [];
                 po.push('<div class="docs-menu-scroll">');
                 po.push('<ul>');
-                po.push(this.getMenuList(this.list, 1));
+                po.push(this.getMenuList("", this.list, 1));
                 po.push('</ul>');
                 po.push('</div>');
                 this.target.html(po.join(''));

@@ -1,0 +1,138 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="basic" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-binder/dist/ax5binder.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-toast/dist/ax5toast.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-toast/dist/ax5toast.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- binder -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Basic
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-binder/master/dist/ax5binder.min.js"></script>
+                ```
+            </ax5docs-md>
+
+            HTML
+            <ax5docs-html run="true">
+                <form class="" name="binder-form" onsubmit="return false;" style="border: 1px solid #ccc;padding: 10px;border-radius: 10px;">
+                    <div class="form-group">
+                        <label>Email address</label>
+                        <input type="email" class="form-control" data-ax-path="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" data-ax-path="password">
+                    </div>
+                    <div class="form-group">
+                        <label>Select</label>
+                        <select class="form-control" data-ax-path="select">
+                            <option value=""></option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                        </select>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" data-ax-path="useYn" value="Y"/>
+                            Y/N
+                        </label>
+                    </div>
+                    <div class="radio">
+
+                        <label>
+                            <input type="radio" name="radio" data-ax-path="sex" value="M"/>
+                            M
+                        </label>
+                        <label>
+                            <input type="radio" name="radio" data-ax-path="sex" value="F"/>
+                            F
+                        </label>
+
+                    </div>
+                </form>
+
+                <div style="padding: 10px;">
+                    <button class="btn btn-default" data-btn="change-model">change model</button>
+                    <button class="btn btn-default" data-btn="get-model">get model</button>
+                </div>
+
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(function () {
+                        var myToast = new ax5.ui.toast();
+                        var myModel = new ax5.ui.binder();
+
+                        myModel.setModel({
+                            email: "tom@axisj.com",
+                            password: "12345",
+                            select: "B",
+                            useYn: "Y",
+                            sex: "F"
+                        }, $(document["binder-form"]));
+
+                        $('[data-btn]').click(function () {
+                            var act = this.getAttribute("data-btn");
+                            switch (act) {
+                                case "change-model":
+                                    myModel.setModel({
+                                        email: "brant@axisj.com",
+                                        password: "9999",
+                                        select: "A",
+                                        useYn: "N",
+                                        sex: "M"
+                                    });
+                                    break;
+
+                                case "get-model":
+                                    var data = myModel.get();
+                                    console.log(data);
+                                    myToast.push(JSON.stringify(data));
+                                    break;
+                            }
+                        });
+
+                    });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+                웹 애플리케이션을 개발하다 보면 코딩의 대부분을 폼 엘리먼트에 값을 넣거나 입력된 값을 가져오는데 쓰게 된다.
+                이런 불편함을 간단하게 해결 하기위 개발된 플러그인이 `ax5.ui.binder` 입니다.
+                바인더를 이용하면 폼 엘리먼트에 `data-ax-path`를 지정하는 것 만으로 폼 엘리먼트에 원하는 값을 넣을 수 있습니다.
+            </ax5docs-md>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>

@@ -13,7 +13,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.3.1"
+        version: "0.3.7"
     }, (function () {
         /**
          * @class ax5grid
@@ -39,7 +39,7 @@
                 frozenRowIndex: 0,
                 showLineNumber: false,
                 showRowSelector: false,
-                multipleSelect: false,
+                multipleSelect: true,
 
                 height: 0,
                 columnMinWidth: 100,
@@ -84,6 +84,7 @@
                 scrollContentWidth: 0, // 스크롤 될 내용물의 너비 (스크롤 될 내용물 : panel['body-scroll'] 안에 컬럼이 있는)
                 scrollContentHeight: 0 // 스크롤 된 내용물의 높이
             };
+
             // 그리드 데이터셋
             this.columns = []; // config.columns에서 복제된 오브젝트
             this.colGroup = []; // columns를 table태그로 출력하기 좋게 변환한 오브젝트
@@ -92,6 +93,7 @@
 
             this.list = []; // 그리드의 데이터
             this.page = {}; // 그리드의 페이지 정보
+            this.selectedDataIndexs = [];
             this.deletedList = [];
             this.sortInfo = {}; // 그리드의 헤더 정렬 정보
             this.focusedColumn = {}; // 그리드 바디의 포커스된 셀 정보
@@ -137,6 +139,7 @@
                 },
                 initGrid = function () {
                     // 그리드 템플릿에 전달하고자 하는 데이터를 정리합시다.
+                    
                     var data = {
                         instanceId: this.id
                     };
@@ -585,7 +588,7 @@
              * @param {Number} [_config.frozenRowIndex=0]
              * @param {Boolean} [_config.showLineNumber=false]
              * @param {Boolean} [_config.showRowSelector=false]
-             * @param {Boolean} [_config.multipleSelect=false]
+             * @param {Boolean} [_config.multipleSelect=true]
              * @param {Number} [_config.columnMinWidth=100]
              * @param {Number} [_config.lineNumberColumnWidth=30]
              * @param {Number} [_config.rowSelectorColumnWidth=25]
@@ -724,7 +727,8 @@
 
                 if (!this.id) this.id = this.$target.data("data-ax5grid-id");
                 if (!this.id) {
-                    this.id = 'ax5grid-' + ax5.getGuid();
+                    //this.id = 'ax5grid-' + ax5.getGuid();
+                    this.id = 'ax5grid-' + this.instanceId;
                     this.$target.data("data-ax5grid-id", grid.id);
                 }
 
@@ -759,27 +763,27 @@
                 GRID.scroller.init.call(this);
                 GRID.scroller.resize.call(this);
 
-                jQuery(window).bind("resize.ax5grid-" + this.instanceId, (function () {
+                jQuery(window).bind("resize.ax5grid-" + this.id, function () {
                     alignGrid.call(this);
                     GRID.scroller.resize.call(this);
-                }).bind(this));
+                }.bind(this));
 
-                jQuery(document.body).on("click.ax5grid-" + this.instanceId, function (e) {
+                jQuery(document.body).on("click.ax5grid-" + this.id, (function (e) {
                     var isPickerClick = false;
                     var target = U.findParentNode(e.target, function (_target) {
                         if (isPickerClick = _target.getAttribute("data-ax5grid-inline-edit-picker")) {
                             return true;
                         }
-                        return _target.getAttribute("data-ax5grid-container");
+                        return _target.getAttribute("data-ax5grid-container") === "root";
                     });
 
-                    if (target) {
+                    if (target && target.getAttribute("data-ax5grid-instance") === this.id) {
                         self.focused = true;
                     } else {
                         self.focused = false;
-                        GRID.body.blur.call(self);
+                        GRID.body.blur.call(this);
                     }
-                });
+                }).bind(this));
 
                 var ctrlKeys = {
                     "33": "KEY_PAGEUP",
@@ -793,8 +797,8 @@
                 };
                 jQuery(window).on("keydown.ax5grid-" + this.instanceId, function (e) {
                     if (self.focused) {
-
                         if (self.isInlineEditing) {
+
                             if (e.which == ax5.info.eventKeys.ESC) {
                                 self.keyDown("ESC", e.originalEvent);
                             }
@@ -811,6 +815,7 @@
                             else if (e.which == ax5.info.eventKeys.DOWN) {
                                 self.keyDown("RETURN", {});
                             }
+
                         } else {
 
                             if (e.metaKey || e.ctrlKey) {
@@ -828,7 +833,8 @@
                                 } else if (e.which == ax5.info.eventKeys.RETURN) {
                                     self.keyDown("RETURN", e.originalEvent);
                                 } else if (e.which == ax5.info.eventKeys.TAB) {
-                                    self.keyDown("RETURN", e.originalEvent);
+                                    //self.keyDown("RETURN", e.originalEvent);
+                                    U.stopEvent(e);
                                 } else if (e.which != ax5.info.eventKeys.SPACE && Object.keys(self.focusedColumn).length) {
                                     self.keyDown("INLINE_EDIT", e.originalEvent);
                                 }

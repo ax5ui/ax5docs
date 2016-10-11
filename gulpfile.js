@@ -113,6 +113,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-autocomplete",
         doc_src: "_src_/ax5ui-autocomplete",
         doc_dest: "ax5ui-autocomplete"
+    },
+    "ax5ui-binder": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-binder",
+        doc_src: "_src_/ax5ui-binder",
+        doc_dest: "ax5ui-binder"
     }
 };
 
