@@ -210,7 +210,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 initColumns = function initColumns(_columns) {
                 this.columns = U.deepCopy(_columns);
                 this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
-
                 this.xvar.frozenColumnIndex = cfg.frozenColumnIndex > this.columns.length ? this.columns.length : cfg.frozenColumnIndex;
 
                 this.bodyRowTable = GRID.util.makeBodyRowTable.call(this, this.columns);
@@ -248,7 +247,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
                 resetColGroupWidth = function resetColGroupWidth() {
                 /// !! 그리드 target의 크기가 변경되면 이 함수를 호출하려 this.colGroup의 _width 값을 재 계산 하여야 함. [tom]
-                var CT_WIDTH = this.$["container"]["root"].width();
+                var CT_WIDTH = this.$["container"]["root"].width() - function () {
+                    var width = 0;
+                    if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
+                    if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                    return width;
+                }();
                 var totalWidth = 0;
                 var computedWidth;
                 var autoWidthColgroupIndexs = [];
@@ -1269,7 +1273,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number} _selectObject.rowIndex - rowIndex of columns
              * @param {Number} _selectObject.conIndex - colIndex of columns
              * @param {Object} _options
+             * @param {Boolean} _options.selectedClear
+             * @param {Boolean} _options.selected
              * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.select(0);
+             * firstGrid.select(0, {selected: true});
+             * firstGrid.select(0, {selected: false});
+             * ```
              */
             this.select = function (_selectObject, _options) {
                 if (U.isNumber(_selectObject)) {
@@ -1285,10 +1297,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }
 
-                    GRID.data.select.call(this, dindex);
+                    GRID.data.select.call(this, dindex, _options && _options.selected);
                     GRID.body.updateRowState.call(this, ["selected"], dindex);
                 }
+                return this;
+            };
 
+            /**
+             * @method ax5grid.selectAll
+             * @param {Object} _options
+             * @param {Boolean} _options.selected
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.selectAll();
+             * firstGrid.selectAll({selected: true});
+             * firstGrid.selectAll({selected: false});
+             * ```
+             */
+            this.selectAll = function (_options) {
+                GRID.data.selectAll.call(this, _options && _options.selected);
+                GRID.body.updateRowStateAll.call(this, ["selected"]);
                 return this;
             };
 
@@ -1528,6 +1557,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         _states.forEach(function (_state) {
             if (!processor[_state]) throw 'invaild state name';
             processor[_state].call(self, _dindex, _data);
+        });
+    };
+
+    var updateRowStateAll = function updateRowStateAll(_states, _data) {
+        var self = this;
+        var cfg = this.config;
+
+        var processor = {
+            "selected": function selected(_dindex) {
+                GRID.body.repaint.call(this, true);
+            }
+        };
+        _states.forEach(function (_state) {
+            if (!processor[_state]) throw 'invaild state name';
+            processor[_state].call(self, _data);
         });
     };
 
@@ -1782,6 +1826,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var getFieldValue = function getFieldValue(_list, _item, _index, _col, _value) {
         var _key = _col.key;
+        var tagsToReplace = {
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+
         if (_key === "__d-index__") {
             return _index + 1;
         } else if (_key === "__d-checkbox__") {
@@ -1825,14 +1874,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     return GRID.formatter[_col.formatter].call(that);
                 }
             } else {
-                var returnValue = "&nbsp;";
+                var returnValue = "";
+
                 if (typeof _value !== "undefined") {
                     returnValue = _value;
                 } else {
                     _value = GRID.data.getValue.call(this, _index, _key);
-                    if (typeof _value !== "undefined") returnValue = _value;
+                    if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
-                return returnValue;
+
+                return typeof returnValue === "number" ? returnValue : returnValue.replace(/[<>]/g, function (tag) {
+                    return tagsToReplace[tag] || tag;
+                });
             }
         }
     };
@@ -2048,7 +2101,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                             return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
                         }(cellHeight), isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
-
                         SS.push('</td>');
                     }
                     SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
@@ -2060,7 +2112,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (isScrolled) {
                 _elTarget.css({ paddingTop: (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight });
             }
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
+
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -2137,7 +2190,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -2312,7 +2365,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
         var replaceGroupTr = function replaceGroupTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
@@ -2381,7 +2434,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                         SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
                     }
-                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
                 }
             }
         };
@@ -2510,7 +2563,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
         var replaceGroupTr = function replaceGroupTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
@@ -2579,7 +2632,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                         SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
                     }
-                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
                 }
             }
         };
@@ -2639,7 +2692,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
             }
 
-            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            //_elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 
         // left
@@ -3032,7 +3086,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
 
                         GRID.data.setValue.call(self, dindex, col.key, newValue);
-
                         updateRowState.call(self, ["cellChecked"], dindex, {
                             key: col.key, rowIndex: rowIndex, colIndex: colIndex,
                             editorConfig: col.editor.config, checked: checked
@@ -3057,11 +3110,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
             if (this.isInlineEditing) {
 
+                var originalValue = GRID.data.getValue.call(self, dindex, col.key);
                 var initValue = function (__value, __editor) {
+                    if (U.isNothing(__value)) {
+                        __value = U.isNothing(originalValue) ? "" : originalValue;
+                    }
+
                     if (__editor.type == "money") {
                         return U.number(__value, { "money": true });
                     } else {
-                        return __value || "";
+                        return __value;
                     }
                 }.call(this, _initValue, editor);
 
@@ -3099,7 +3157,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (__editor.type == "money") {
                     return U.number(__value);
                 } else {
-                    return document.createElement('a').appendChild(document.createTextNode(__value)).parentNode.innerHTML;
+                    return __value;
                 }
             }.call(this, editorValue, column.editor);
 
@@ -3210,6 +3268,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         repaintCell: repaintCell,
         repaintRow: repaintRow,
         updateRowState: updateRowState,
+        updateRowStateAll: updateRowStateAll,
         scrollTo: scrollTo,
         blur: blur,
         moveFocus: moveFocus,
@@ -3551,30 +3610,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var setValue = function setValue(_dindex, _key, _value) {
-
+        var originalValue = getValue.call(this, _dindex, _key);
         this.needToPaintSum = true;
-        if (/[\.\[\]]/.test(_key)) {
-            try {
+
+        if (originalValue !== _value) {
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    this.list[_dindex][this.config.columnKeys.modified] = true;
+                    Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;").call(this.list[_dindex], _value);
+                } catch (e) {}
+            } else {
                 this.list[_dindex][this.config.columnKeys.modified] = true;
-                Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;").call(this.list[_dindex], _value);
-            } catch (e) {}
-        } else {
-            this.list[_dindex][this.config.columnKeys.modified] = true;
-            this.list[_dindex][_key] = _value;
+                this.list[_dindex][_key] = _value;
+            }
+
+            if (this.onDataChanged) {
+                this.onDataChanged.call({
+                    self: this,
+                    list: this.list,
+                    dindex: _dindex,
+                    item: this.list[_dindex],
+                    key: _key,
+                    value: _value
+                });
+            }
         }
 
-        console.log(this.list[_dindex][_key], _value);
-
-        if (this.onDataChanged) {
-            this.onDataChanged.call({
-                self: this,
-                list: this.list,
-                dindex: _dindex,
-                item: this.list[_dindex],
-                key: _key,
-                value: _value
-            });
-        }
         return true;
     };
 
@@ -3620,6 +3681,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         return this.list[_dindex][cfg.columnKeys.selected];
+    };
+
+    var selectAll = function selectAll(_selected, _options) {
+        var cfg = this.config;
+
+        var dindex = this.list.length;
+        if (typeof _selected === "undefined") {
+            while (dindex--) {
+                if (this.list[dindex].__isGrouping) continue;
+                if (this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]) {
+                    this.selectedDataIndexs.push(dindex);
+                }
+            }
+        } else {
+            while (dindex--) {
+                if (this.list[dindex].__isGrouping) continue;
+                if (this.list[dindex][cfg.columnKeys.selected] = _selected) {
+                    this.selectedDataIndexs.push(dindex);
+                }
+            }
+        }
+
+        if (this.onDataChanged && _options && _options.internalCall) {
+            this.onDataChanged.call({
+                self: this,
+                list: this.list
+            });
+        }
+
+        return this.list;
     };
 
     var sort = function sort(_sortInfo, _list) {
@@ -3673,6 +3764,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         getValue: getValue,
         clearSelect: clearSelect,
         select: select,
+        selectAll: selectAll,
         add: add,
         remove: remove,
         deleteRow: deleteRow,
@@ -3744,7 +3836,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         "off": function off() {
             this.$["resizer"]["horizontal"].removeClass("live");
             this.xvar.columnResizerLived = false;
-            this.setColumnWidth(this.colGroup[this.xvar.columnResizerIndex]._width + this.xvar.__da, this.xvar.columnResizerIndex);
+
+            if (typeof this.xvar.__da === "undefined") {} else {
+                this.setColumnWidth(this.colGroup[this.xvar.columnResizerIndex]._width + this.xvar.__da, this.xvar.columnResizerIndex);
+            }
 
             jQuery(document.body).unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId).unbind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId).unbind("mouseleave.ax5grid-" + this.instanceId);
 
@@ -3761,11 +3856,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var colIndex = this.getAttribute("data-ax5grid-column-colindex");
             var rowIndex = this.getAttribute("data-ax5grid-column-rowindex");
             var col = self.colGroup[colIndex];
-            if (key && col) {
-                if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
-                    if (!col.sortFixed) toggleSort.call(self, col.key);
+
+            if (key === "__checkbox_header__") {
+                var selected = this.getAttribute("data-ax5grid-selected");
+                selected = U.isNothing(selected) ? true : selected === "true" ? false : true;
+
+                $(this).attr("data-ax5grid-selected", selected);
+                self.selectAll({ selected: selected });
+            } else {
+                if (key && col) {
+                    console.log(key, col);
+                    if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
+                        if (!col.sortFixed) toggleSort.call(self, col.key);
+                    }
                 }
             }
+
             GRID.body.blur.call(self);
         });
         this.$["container"]["header"].on("mousedown", '[data-ax5grid-column-resizer]', function (e) {
@@ -3794,25 +3900,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         label: "",
                         colspan: 1,
                         rowspan: dataTable.rows.length,
-                        key: "__dindex__",
                         colIndex: null
                     },
                         _col = {};
 
                     if (cfg.showLineNumber) {
                         _col = jQuery.extend({}, col, {
-                            label: "&nbsp;",
                             width: cfg.lineNumberColumnWidth,
-                            _width: cfg.lineNumberColumnWidth
+                            _width: cfg.lineNumberColumnWidth,
+                            columnAttr: "lineNumber",
+                            key: "__index_header__", label: "&nbsp;"
                         });
                         colGroup.push(_col);
                         data.rows[i].cols.push(_col);
                     }
                     if (cfg.showRowSelector) {
                         _col = jQuery.extend({}, col, {
-                            label: "",
                             width: cfg.rowSelectorColumnWidth,
-                            _width: cfg.rowSelectorColumnWidth
+                            _width: cfg.rowSelectorColumnWidth,
+                            columnAttr: "rowSelector",
+                            key: "__checkbox_header__", label: ""
                         });
                         colGroup.push(_col);
                         data.rows[i].cols.push(_col);
@@ -3825,6 +3932,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }.call(this, this.headerTable);
         this.leftHeaderData = dividedHeaderObj.leftData;
         this.headerData = dividedHeaderObj.rightData;
+    };
+
+    var getFieldValue = function getFieldValue(_col) {
+        var cfg = this.config;
+        var colGroup = this.colGroup;
+        var _key = _col.key;
+        var tagsToReplace = {
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+
+        if (_key === "__checkbox_header__") {
+            return '<div class="checkBox"></div>';
+        } else {
+            return _col.label || "&nbsp;";
+        }
     };
 
     var repaint = function repaint(_reset) {
@@ -3891,7 +4014,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             _SS += '<span data-ax5grid-column-sort="' + col.colIndex + '" data-ax5grid-column-sort-order="' + (colGroup[col.colIndex].sort || "") + '" />';
                         }
                         return _SS;
-                    }(), col.label || "&nbsp;", '</span>');
+                    }(), getFieldValue.call(this, col), '</span>');
 
                     if (!U.isNothing(col.colIndex)) {
                         if (cfg.enableFilter) {
@@ -3927,13 +4050,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
 
         if (cfg.asidePanelWidth > 0) {
-            repaintHeader(this.$.panel["aside-header"], this.asideColGroup, asideHeaderData);
+            repaintHeader.call(this, this.$.panel["aside-header"], this.asideColGroup, asideHeaderData);
         }
-
         if (cfg.frozenColumnIndex > 0) {
-            repaintHeader(this.$.panel["left-header"], this.leftHeaderColGroup, leftHeaderData);
+            repaintHeader.call(this, this.$.panel["left-header"], this.leftHeaderColGroup, leftHeaderData);
         }
-        this.xvar.scrollContentWidth = repaintHeader(this.$.panel["header-scroll"], this.headerColGroup, headerData);
+        this.xvar.scrollContentWidth = repaintHeader.call(this, this.$.panel["header-scroll"], this.headerColGroup, headerData);
 
         if (cfg.rightSum) {}
     };
@@ -3994,6 +4116,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         }
         return this;
+    };
+
+    var select = function select(_options) {
+        GRID.data.select.call(this, dindex, _options && _options.selected);
+        GRID.body.updateRowState.call(this, ["selected"], dindex);
     };
 
     GRID.header = {
@@ -4542,6 +4669,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 _panel_width = self.$["panel"]["body"].width(),
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth;
+
+            if (isNaN(_content_height) || isNaN(_content_width)) {
+                return false;
+            }
 
             var newLeft, newTop;
             var _top_is_end = false;

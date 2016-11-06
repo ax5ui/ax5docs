@@ -249,6 +249,21 @@
         });
     };
 
+    var updateRowStateAll = function (_states, _data) {
+        var self = this;
+        var cfg = this.config;
+
+        var processor = {
+            "selected": function (_dindex) {
+                GRID.body.repaint.call(this, true);
+            }
+        };
+        _states.forEach(function (_state) {
+            if (!processor[_state]) throw 'invaild state name';
+            processor[_state].call(self, _data);
+        });
+    };
+
     var init = function () {
         var self = this;
 
@@ -303,7 +318,7 @@
                     }
 
                     GRID.data.select.call(self, _column.dindex, undefined, {
-                        internalCall : true
+                        internalCall: true
                     });
                     updateRowState.call(self, ["selected"], _column.dindex);
                 },
@@ -505,6 +520,11 @@
 
     var getFieldValue = function (_list, _item, _index, _col, _value) {
         var _key = _col.key;
+        var tagsToReplace = {
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+
         if (_key === "__d-index__") {
             return _index + 1;
         }
@@ -550,14 +570,18 @@
                     return GRID.formatter[_col.formatter].call(that);
                 }
             } else {
-                var returnValue = "&nbsp;";
+                var returnValue = "";
+
                 if (typeof _value !== "undefined") {
                     returnValue = _value;
                 } else {
                     _value = GRID.data.getValue.call(this, _index, _key);
-                    if (typeof _value !== "undefined") returnValue = _value;
+                    if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
-                return returnValue;
+
+                return (typeof returnValue === "number") ? returnValue: returnValue.replace(/[<>]/g, function (tag) {
+                    return tagsToReplace[tag] || tag;
+                });
             }
         }
     };
@@ -793,7 +817,6 @@
                                 '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
 
                         })(cellHeight), (isGroupingRow) ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
-
                         SS.push('</td>');
                     }
                     SS.push('<td ',
@@ -811,7 +834,8 @@
             if (isScrolled) {
                 _elTarget.css({paddingTop: (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight});
             }
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
+
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -907,7 +931,7 @@
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -1107,7 +1131,7 @@
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
         var replaceGroupTr = function (_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
@@ -1197,7 +1221,7 @@
                             'style="height: ' + (cfg.body.columnHeight) + 'px;min-height: 1px;" ',
                             '></td>');
                     }
-                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
                 }
             }
         };
@@ -1346,7 +1370,7 @@
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
         var replaceGroupTr = function (_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
@@ -1436,7 +1460,7 @@
                             'style="height: ' + (cfg.body.columnHeight) + 'px;min-height: 1px;" ',
                             '></td>');
                     }
-                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
                 }
             }
         };
@@ -1517,7 +1541,8 @@
                     '></td>');
             }
 
-            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            //_elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 
 
@@ -1618,8 +1643,8 @@
                     break;
                 }
 
-                if(!focusedColumn) return false;
-                
+                if (!focusedColumn) return false;
+
                 originalColumn = this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex];
                 columnSelect.focusClear.call(this);
                 columnSelect.clear.call(this);
@@ -1703,7 +1728,7 @@
                     focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
                     break;
                 }
-                if(!focusedColumn) return false;
+                if (!focusedColumn) return false;
 
                 originalColumn = this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex];
 
@@ -1927,7 +1952,6 @@
                         }
 
                         GRID.data.setValue.call(self, dindex, col.key, newValue);
-
                         updateRowState.call(self, ["cellChecked"], dindex, {
                             key: col.key, rowIndex: rowIndex, colIndex: colIndex,
                             editorConfig: col.editor.config, checked: checked
@@ -1953,12 +1977,17 @@
             }
             if (this.isInlineEditing) {
 
+                var originalValue = GRID.data.getValue.call(self, dindex, col.key);
                 var initValue = (function (__value, __editor) {
+                    if(U.isNothing(__value)){
+                        __value = U.isNothing(originalValue) ? "" : originalValue;
+                    }
+
                     if (__editor.type == "money") {
                         return U.number(__value, {"money": true});
                     }
                     else {
-                        return __value || "";
+                        return __value;
                     }
                 }).call(this, _initValue, editor);
 
@@ -2000,7 +2029,7 @@
                     return U.number(__value);
                 }
                 else {
-                    return document.createElement( 'a' ).appendChild(document.createTextNode( __value ) ).parentNode.innerHTML;
+                    return __value;
                 }
             }).call(this, editorValue, column.editor);
 
@@ -2066,11 +2095,11 @@
 
                             var col = this.colGroup[_column.colIndex];
 
-                            if(GRID.inlineEditor[col.editor.type].editMode === "inline") {
-                                if(_options && _options.moveFocus){
+                            if (GRID.inlineEditor[col.editor.type].editMode === "inline") {
+                                if (_options && _options.moveFocus) {
 
                                 }
-                                else{
+                                else {
                                     if (column.editor && column.editor.type == "checkbox") {
 
                                         value = GRID.data.getValue.call(this, dindex, column.key);
@@ -2114,6 +2143,7 @@
         repaintCell: repaintCell,
         repaintRow: repaintRow,
         updateRowState: updateRowState,
+        updateRowStateAll: updateRowStateAll,
         scrollTo: scrollTo,
         blur: blur,
         moveFocus: moveFocus,

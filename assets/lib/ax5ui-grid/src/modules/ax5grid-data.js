@@ -327,32 +327,34 @@
     };
 
     var setValue = function (_dindex, _key, _value) {
-        
+        var originalValue = getValue.call(this, _dindex, _key);
         this.needToPaintSum = true;
-        if (/[\.\[\]]/.test(_key)) {
-            try {
+
+        if (originalValue !== _value) {
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    this.list[_dindex][this.config.columnKeys.modified] = true;
+                    (Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;")).call(this.list[_dindex], _value);
+                } catch (e) {
+
+                }
+            } else {
                 this.list[_dindex][this.config.columnKeys.modified] = true;
-                (Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;")).call(this.list[_dindex], _value);
-            } catch (e) {
-
+                this.list[_dindex][_key] = _value;
             }
-        } else {
-            this.list[_dindex][this.config.columnKeys.modified] = true;
-            this.list[_dindex][_key] = _value;
-        }
-        
-        console.log(this.list[_dindex][_key], _value);
 
-        if (this.onDataChanged) {
-            this.onDataChanged.call({
-                self: this,
-                list: this.list,
-                dindex: _dindex,
-                item: this.list[_dindex],
-                key: _key,
-                value: _value
-            });
+            if (this.onDataChanged) {
+                this.onDataChanged.call({
+                    self: this,
+                    list: this.list,
+                    dindex: _dindex,
+                    item: this.list[_dindex],
+                    key: _key,
+                    value: _value
+                });
+            }
         }
+
         return true;
     };
 
@@ -400,6 +402,36 @@
         }
 
         return this.list[_dindex][cfg.columnKeys.selected];
+    };
+
+    var selectAll = function (_selected, _options) {
+        var cfg = this.config;
+
+        var dindex = this.list.length;
+        if (typeof _selected === "undefined") {
+            while (dindex--) {
+                if (this.list[dindex].__isGrouping) continue;
+                if(this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]){
+                    this.selectedDataIndexs.push(dindex);
+                }
+            }
+        }else{
+            while (dindex--) {
+                if (this.list[dindex].__isGrouping) continue;
+                if(this.list[dindex][cfg.columnKeys.selected] = _selected) {
+                    this.selectedDataIndexs.push(dindex);
+                }
+            }
+        }
+
+        if (this.onDataChanged && _options && _options.internalCall) {
+            this.onDataChanged.call({
+                self: this,
+                list: this.list
+            });
+        }
+
+        return this.list;
     };
 
     var sort = function (_sortInfo, _list) {
@@ -451,6 +483,7 @@
         getValue: getValue,
         clearSelect: clearSelect,
         select: select,
+        selectAll: selectAll,
         add: add,
         remove: remove,
         deleteRow: deleteRow,
