@@ -76,7 +76,8 @@
                 columnKeys: {
                     selected: '__selected__',
                     modified: '__modified__',
-                    deleted: '__deleted__'
+                    deleted: '__deleted__',
+                    disableSelection: '__disable_selection__'
                 }
             };
             this.xvar = {
@@ -1360,8 +1361,17 @@
                 return this;
             };
 
+            /**
+             * @method ax5grid.exportExcel
+             * @param {String} _fileName
+             * @returns {ax5grid|String}
+             * @example
+             * ```js
+             * firstGrid.exportExcel("grid-to-excel.xls");
+             * console.log(firstGrid.exportExcel());
+             * ```
+             */
             this.exportExcel = function (_fileName) {
-
                 var table = [];
                 table.push('<table border="1">');
                 table.push(GRID.header.getExcelString.call(this));

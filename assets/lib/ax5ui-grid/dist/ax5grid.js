@@ -79,7 +79,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 columnKeys: {
                     selected: '__selected__',
                     modified: '__modified__',
-                    deleted: '__deleted__'
+                    deleted: '__deleted__',
+                    disableSelection: '__disable_selection__'
                 }
             };
             this.xvar = {
@@ -1340,8 +1341,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return this;
             };
 
+            /**
+             * @method ax5grid.exportExcel
+             * @param {String} _fileName
+             * @returns {ax5grid|String}
+             * @example
+             * ```js
+             * firstGrid.exportExcel("grid-to-excel.xls");
+             * console.log(firstGrid.exportExcel());
+             * ```
+             */
             this.exportExcel = function (_fileName) {
-
                 var table = [];
                 table.push('<table border="1">');
                 table.push(GRID.header.getExcelString.call(this));
@@ -1616,7 +1626,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this;
 
         this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            var panelName, attr, row, col, dindex, rowIndex, colIndex;
+            var panelName, attr, row, col, dindex, rowIndex, colIndex, disableSelection;
             var targetClick = {
                 "default": function _default(_column) {
                     var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
@@ -1660,6 +1670,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 },
                 "rowSelector": function rowSelector(_column) {
+                    if (self.list[_column.dindex][self.config.columnKeys.disableSelection]) {
+                        return false;
+                    }
 
                     if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.dindex) {
                         GRID.body.updateRowState.call(self, ["selectedClear"]);
@@ -2096,7 +2109,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
 
-                    SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '">');
+                    SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
                     for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                         col = rowTable.rows[tri].cols[ci];
                         cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
@@ -3780,6 +3793,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var cfg = this.config;
 
         if (this.list[_dindex].__isGrouping) return false;
+        if (this.list[_dindex][cfg.columnKeys.disableSelection]) return false;
 
         if (typeof _selected === "undefined") {
             if (this.list[_dindex][cfg.columnKeys.selected] = !this.list[_dindex][cfg.columnKeys.selected]) {
@@ -3817,6 +3831,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         continue;
                     }
                 }
+                if (this.list[dindex][cfg.columnKeys.disableSelection]) continue;
+
                 if (this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -3829,6 +3845,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         continue;
                     }
                 }
+                if (this.list[dindex][cfg.columnKeys.disableSelection]) continue;
+
                 if (this.list[dindex][cfg.columnKeys.selected] = _selected) {
                     this.selectedDataIndexs.push(dindex);
                 }

@@ -70,7 +70,12 @@
 
                         var list = [];
                         for (var a = 0, l = 100; a < l; a++) {
-                            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
+                            if (a === 0) {
+                                // disable selection
+                                list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value", __disable_selection__: true});
+                            } else {
+                                list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
+                            }
                         }
                         firstGrid.setData(list);
                     });

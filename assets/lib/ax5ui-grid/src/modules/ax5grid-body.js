@@ -268,7 +268,7 @@
         var self = this;
 
         this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            var panelName, attr, row, col, dindex, rowIndex, colIndex;
+            var panelName, attr, row, col, dindex, rowIndex, colIndex, disableSelection;
             var targetClick = {
                 "default": function (_column) {
                     var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
@@ -311,6 +311,9 @@
                     }
                 },
                 "rowSelector": function (_column) {
+                    if(self.list[_column.dindex][self.config.columnKeys.disableSelection]){
+                        return false;
+                    }
 
                     if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.dindex) {
                         GRID.body.updateRowState.call(self, ["selectedClear"]);
@@ -761,7 +764,9 @@
                     SS.push('<tr class="tr-' + (di % 4) + '"',
                         (isGroupingRow) ? ' data-ax5grid-grouping-tr="true"' : '',
                         ' data-ax5grid-tr-data-index="' + di + '"',
-                        ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '">');
+                        ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"',
+                        ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"',
+                        '>');
                     for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                         col = rowTable.rows[tri].cols[ci];
                         cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
