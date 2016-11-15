@@ -42,7 +42,9 @@
                                     url: "modal-iframe-content.html",
                                     param: "callBack=modalCallBack"
                                 },
-                                fullScreen: true
+                                fullScreen: function () {
+                                    return ($(window).width() < 600);
+                                }
                             }, function () {
 
                             });
