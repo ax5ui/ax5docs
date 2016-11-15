@@ -148,7 +148,8 @@
             <pre class="prettyprint linenums lang-html">&lt;div id="build-target">&lt;/div></pre><div id="build-target"></div>
 
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-
+    // Overriding ax5.info.months
+    ax5.info.months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월"];
     // Overriding ax5.info.weekNames
     ax5.info.weekNames = [
         {label: "일"},
@@ -189,7 +190,9 @@
         });
 
     });
-&lt;/script></pre><script type="text/javascript">// Overriding ax5.info.weekNames
+&lt;/script></pre><script type="text/javascript">// Overriding ax5.info.months
+    ax5.info.months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월"];
+    // Overriding ax5.info.weekNames
     ax5.info.weekNames = [
         {label: "일"},
         {label: "월"},

@@ -158,6 +158,7 @@
 <li><a href="#ax5grid.select">.select(_selectObject, _options)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.clearSelect">.clearSelect()</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.selectAll">.selectAll(_options)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
+<li><a href="#ax5grid.exportExcel">.exportExcel(_fileName)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code> | <code>String</code></li>
 </ul>
 </li>
 </ul>
@@ -967,6 +968,27 @@ firstGrid.selectAll({filter: function(){
 firstGrid.selectAll({selected: true, filter: function(){
      return this[&quot;b&quot;] == &quot;A01&quot;;
 });
+</code></pre>
+<p><a name="ax5grid.exportExcel"></a></p>
+<h3>ax5grid.exportExcel(_fileName) ⇒ <code><a href="#ax5grid">ax5grid</a></code> | <code>String</code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_fileName</td>
+<td><code>String</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>firstGrid.exportExcel(&quot;grid-to-excel.xls&quot;);
+console.log(firstGrid.exportExcel());
 </code></pre>
 
     
