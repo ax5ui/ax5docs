@@ -27,6 +27,7 @@
         var i = 0, l = _list.length;
         var returnList = [];
         var appendIndex = 0;
+        var dataRealRowCount;
 
         if (this.config.body.grouping) {
             var groupingKeys = U.map(this.bodyGrouping.by, function () {
@@ -71,6 +72,7 @@
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
                         }
+                        dataRealRowCount = _list[i]["__index"] = i;
                         returnList.push(_list[i]);
                         appendIndex++;
                     }
@@ -82,14 +84,20 @@
                 if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
                     this.deletedList.push(_list[i]);
                 } else if (_list[i]) {
+
                     if (_list[i][this.config.columnKeys.selected]) {
                         this.selectedDataIndexs.push(i);
                     }
+                    // __index변수를 추가하여 lineNumber 에 출력합니다. (body getFieldValue 에서 출력함)
+                    dataRealRowCount = _list[i]["__index"] = i;
                     returnList.push(_list[i]);
                 }
             }
         }
 
+        // 원본 데이터의 갯수
+        // grouping은 제외하고 수집됨.
+        this.xvar.dataRealRowCount = dataRealRowCount + 1;
         return returnList;
     };
 
@@ -406,19 +414,29 @@
 
     var selectAll = function (_selected, _options) {
         var cfg = this.config;
-
+        
         var dindex = this.list.length;
         if (typeof _selected === "undefined") {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
-                if(this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]){
+                if (_options && _options.filter) {
+                    if (_options.filter.call(this.list[dindex]) !== true) {
+                        continue;
+                    } 
+                }
+                if (this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]) {
                     this.selectedDataIndexs.push(dindex);
                 }
             }
-        }else{
+        } else {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
-                if(this.list[dindex][cfg.columnKeys.selected] = _selected) {
+                if (_options && _options.filter) {
+                    if (_options.filter.call(this.list[dindex]) !== true) {
+                        continue;
+                    }
+                }
+                if (this.list[dindex][cfg.columnKeys.selected] = _selected) {
                     this.selectedDataIndexs.push(dindex);
                 }
             }
@@ -438,6 +456,18 @@
         var self = this;
         var list = _list || this.list;
         var sortInfoArray = [];
+        var getKeyValue = function(_item, _key, _value){
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    _value = (Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";")).call(_item);
+                } catch (e) {
+
+                }
+            } else {
+                _value = _item[_key];
+            }
+            return _value;
+        };
 
         for (var k in _sortInfo) {
             sortInfoArray[_sortInfo[k].seq] = {key: k, order: _sortInfo[k].orderBy};
@@ -447,10 +477,12 @@
         });
 
         var i = 0, l = sortInfoArray.length, _a_val, _b_val;
+
         list.sort(function (_a, _b) {
             for (i = 0; i < l; i++) {
-                _a_val = _a[sortInfoArray[i].key];
-                _b_val = _b[sortInfoArray[i].key];
+                _a_val = getKeyValue(_a, sortInfoArray[i].key);
+                _b_val = getKeyValue(_b, sortInfoArray[i].key);
+
                 if (typeof _a_val !== typeof _b_val) {
                     _a_val = '' + _a_val;
                     _b_val = '' + _b_val;

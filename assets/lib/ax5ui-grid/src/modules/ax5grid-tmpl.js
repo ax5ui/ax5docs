@@ -84,8 +84,9 @@
 
 
     var page_status = function(){
-        return `<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}</span>`;
+        return `<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>`;
     };
+
 
     GRID.tmpl = {
         "main": main,

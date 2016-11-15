@@ -247,11 +247,11 @@
                 resetColGroupWidth = function () {
                     /// !! 그리드 target의 크기가 변경되면 이 함수를 호출하려 this.colGroup의 _width 값을 재 계산 하여야 함. [tom]
                     var CT_WIDTH = this.$["container"]["root"].width() - (function () {
-                        var width = 0;
-                        if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
-                        if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
-                        return width;
-                    })();
+                            var width = 0;
+                            if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
+                            if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                            return width;
+                        })();
                     var totalWidth = 0;
                     var computedWidth;
                     var autoWidthColgroupIndexs = [];
@@ -923,7 +923,7 @@
                             GRID.body.inlineEdit.keydown.call(this, "RETURN");
                         }
                     },
-                    "TAB": function (_e) {           
+                    "TAB": function (_e) {
 
                         var activeEditLength = 0;
                         for (var columnKey in this.inlineEditing) {
@@ -1308,12 +1308,10 @@
                     var dindex = _selectObject;
 
                     if (!this.config.multipleSelect) {
-                        GRID.body.updateRowState.call(this, ["selectedClear"]);
-                        GRID.data.clearSelect.call(this);
+                        this.clearSelect();
                     } else {
                         if (_options && _options.selectedClear) {
-                            GRID.body.updateRowState.call(this, ["selectedClear"]);
-                            GRID.data.clearSelect.call(this);
+                            this.clearSelect();
                         }
                     }
 
@@ -1324,20 +1322,59 @@
             };
 
             /**
+             * @method ax5grid.clearSelect
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.clearSelect();
+             * ```
+             */
+            this.clearSelect = function () {
+                GRID.body.updateRowState.call(this, ["selectedClear"]);
+                GRID.data.clearSelect.call(this);
+                return this;
+            };
+
+            /**
              * @method ax5grid.selectAll
              * @param {Object} _options
              * @param {Boolean} _options.selected
+             * @param {Function} _options.filter
              * @returns {ax5grid}
              * @example
              * ```js
              * firstGrid.selectAll();
              * firstGrid.selectAll({selected: true});
              * firstGrid.selectAll({selected: false});
+             * firstGrid.selectAll({filter: function(){
+             *      return this["b"] == "A01";
+             * });
+             * firstGrid.selectAll({selected: true, filter: function(){
+             *      return this["b"] == "A01";
+             * });
              * ```
              */
-            this.selectAll = function(_options){
-                GRID.data.selectAll.call(this, _options && _options.selected);
+            this.selectAll = function (_options) {
+                GRID.data.selectAll.call(this, _options && _options.selected, _options);
                 GRID.body.updateRowStateAll.call(this, ["selected"]);
+                return this;
+            };
+
+            this.exportExcel = function (_fileName) {
+
+                var table = [];
+                table.push('<table border="1">');
+                table.push(GRID.header.getExcelString.call(this));
+                table.push(GRID.body.getExcelString.call(this));
+                table.push('</table>');
+
+                if (typeof _fileName === "undefined") {
+                    return table.join('');
+                }
+                else {
+                    GRID.excel.export.call(this, [table.join('')], _fileName);
+                }
+
                 return this;
             };
 
@@ -1357,6 +1394,7 @@
     GRID = ax5.ui.grid;
 })();
 
+// todo : excel export
 // todo : merge cells
 // todo : filter
 // todo : body menu

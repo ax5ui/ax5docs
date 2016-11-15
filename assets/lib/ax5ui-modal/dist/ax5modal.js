@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "modal",
-        version: "1.3.23"
+        version: "1.3.31"
     }, function () {
         /**
          * @class ax5modal
@@ -414,6 +414,27 @@
 
                     setTimeout(function () {
                         if (this.activeModal) {
+
+                            // 프레임 제거
+                            if (opts.iframe) {
+                                var $iframe = this.$["iframe"]; // iframe jQuery Object
+                                if ($iframe) {
+                                    var iframeObject = $iframe.get(0),
+                                        idoc = iframeObject.contentDocument ? iframeObject.contentDocument : iframeObject.contentWindow.document;
+
+                                    try {
+                                        $(idoc.body).children().each(function () {
+                                            $(this).remove();
+                                        });
+                                    } catch (e) {}
+                                    idoc.innerHTML = "";
+                                    $iframe.attr('src', 'about:blank').remove();
+
+                                    // force garbarge collection for IE only
+                                    window.CollectGarbage && window.CollectGarbage();
+                                }
+                            }
+
                             this.activeModal.remove();
                             this.activeModal = null;
                         }
@@ -608,6 +629,7 @@
 
     MODAL = ax5.ui.modal;
 })();
+
 // ax5.ui.modal.tmpl
 (function () {
     var MODAL = ax5.ui.modal;

@@ -156,6 +156,7 @@
 <li><a href="#ax5grid.getColumnSortInfo">.getColumnSortInfo()</a> ⇒ <code>Object</code></li>
 <li><a href="#ax5grid.setColumnSort">.setColumnSort(_sortInfo)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.select">.select(_selectObject, _options)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
+<li><a href="#ax5grid.clearSelect">.clearSelect()</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.selectAll">.selectAll(_options)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 </ul>
 </li>
@@ -925,6 +926,12 @@ ax5Grid.deleteRow(&quot;selected&quot;);
 firstGrid.select(0, {selected: true});
 firstGrid.select(0, {selected: false});
 </code></pre>
+<p><a name="ax5grid.clearSelect"></a></p>
+<h3>ax5grid.clearSelect() ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code><br>
+<strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>firstGrid.clearSelect();
+</code></pre>
 <p><a name="ax5grid.selectAll"></a></p>
 <h3>ax5grid.selectAll(_options) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
@@ -944,12 +951,22 @@ firstGrid.select(0, {selected: false});
 <td>_options.selected</td>
 <td><code>Boolean</code></td>
 </tr>
+<tr>
+<td>_options.filter</td>
+<td><code>function</code></td>
+</tr>
 </tbody>
 </table>
 <p><strong>Example</strong></p>
 <pre class="prettyprint linenums lang-js"><code>firstGrid.selectAll();
 firstGrid.selectAll({selected: true});
 firstGrid.selectAll({selected: false});
+firstGrid.selectAll({filter: function(){
+     return this[&quot;b&quot;] == &quot;A01&quot;;
+});
+firstGrid.selectAll({selected: true, filter: function(){
+     return this[&quot;b&quot;] == &quot;A01&quot;;
+});
 </code></pre>
 
     

@@ -526,7 +526,7 @@
         };
 
         if (_key === "__d-index__") {
-            return _index + 1;
+            return (typeof _item["__index"] !== "undefined") ? _item["__index"] + 1 : "";
         }
         else if (_key === "__d-checkbox__") {
             return '<div class="checkBox"></div>';
@@ -569,7 +569,8 @@
                 } else {
                     return GRID.formatter[_col.formatter].call(that);
                 }
-            } else {
+            }
+            else {
                 var returnValue = "";
 
                 if (typeof _value !== "undefined") {
@@ -604,10 +605,10 @@
             return value;
         }
         else if (_key === "__d-index__") {
-            return _index + 1;
+            return '';
         }
         else if (_key === "__d-checkbox__") {
-            return '&nbsp;';
+            return '';
         }
         else {
             if (_col.collector) {
@@ -625,7 +626,7 @@
                 if (_col.formatter) {
                     that.value = value;
                     if (U.isFunction(_col.formatter)) {
-                        return _col.collector.call(that);
+                        return _col.formatter.call(that);
                     } else {
                         return GRID.formatter[_col.formatter].call(that);
                     }
@@ -2137,6 +2138,88 @@
         }
     };
 
+    var getExcelString = function(){
+        var cfg = this.config;
+        var list = this.list;
+        var bodyRowData = this.bodyRowData;
+        var footSumData = this.footSumData;
+        var bodyGroupingData = this.bodyGroupingData;
+
+        // body-scroll 의 포지션에 의존적이므로..
+        var getBody = function (_colGroup, _bodyRow, _groupRow, _list) {
+            var SS = [];
+            var di, dl;
+            var tri, trl;
+            var ci, cl;
+            var col;
+
+            //SS.push('<table border="1">');
+            for (di = 0, dl = _list.length; di < dl; di++) {
+                var isGroupingRow = false;
+                var rowTable;
+
+                if (_groupRow && "__isGrouping" in _list[di]) {
+                    rowTable = _groupRow;
+                    isGroupingRow = true;
+                } else {
+                    rowTable = _bodyRow;
+                }
+
+                for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
+                    SS.push('<tr>');
+                    for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
+                        col = rowTable.rows[tri].cols[ci];
+
+                        SS.push('<td ',
+                            'colspan="' + col.colspan + '" ',
+                            'rowspan="' + col.rowspan + '" ',
+                            '>', (isGroupingRow) ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</td>');
+                    }
+                    SS.push('</tr>');
+                }
+            }
+            //SS.push('</table>');
+            return SS.join('');
+        };
+        var getSum = function (_colGroup, _bodyRow, _list) {
+            var SS = [];
+            var tri, trl;
+            var ci, cl;
+            var col;
+
+            //SS.push('<table border="1">');
+            for (tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                SS.push('<tr>');
+                for (ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                    col = _bodyRow.rows[tri].cols[ci];
+                    SS.push('<td ',
+                        'colspan="' + col.colspan + '" ',
+                        'rowspan="' + col.rowspan + '" ',
+                        '>', getSumFieldValue.call(this, _list, col), '</td>');
+                }
+                SS.push('</tr>');
+            }
+
+            //SS.push('</table>');
+
+            return SS.join('');
+        };
+
+        var po = [];
+        po.push( getBody.call(this, this.headerColGroup, bodyRowData, bodyGroupingData, list) );
+        if (cfg.footSum) {
+            // 바닥 요약
+            po.push( getSum.call(this, this.headerColGroup, footSumData, list) );
+        }
+
+        // right
+        if (cfg.rightSum) {
+            // todo : right 표현 정리
+        }
+
+        return po.join('');
+    };
+
     GRID.body = {
         init: init,
         repaint: repaint,
@@ -2147,6 +2230,7 @@
         scrollTo: scrollTo,
         blur: blur,
         moveFocus: moveFocus,
-        inlineEdit: inlineEdit
+        inlineEdit: inlineEdit,
+        getExcelString: getExcelString
     };
 })();

@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.23"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -1288,12 +1288,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var dindex = _selectObject;
 
                     if (!this.config.multipleSelect) {
-                        GRID.body.updateRowState.call(this, ["selectedClear"]);
-                        GRID.data.clearSelect.call(this);
+                        this.clearSelect();
                     } else {
                         if (_options && _options.selectedClear) {
-                            GRID.body.updateRowState.call(this, ["selectedClear"]);
-                            GRID.data.clearSelect.call(this);
+                            this.clearSelect();
                         }
                     }
 
@@ -1304,20 +1302,58 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
 
             /**
+             * @method ax5grid.clearSelect
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.clearSelect();
+             * ```
+             */
+            this.clearSelect = function () {
+                GRID.body.updateRowState.call(this, ["selectedClear"]);
+                GRID.data.clearSelect.call(this);
+                return this;
+            };
+
+            /**
              * @method ax5grid.selectAll
              * @param {Object} _options
              * @param {Boolean} _options.selected
+             * @param {Function} _options.filter
              * @returns {ax5grid}
              * @example
              * ```js
              * firstGrid.selectAll();
              * firstGrid.selectAll({selected: true});
              * firstGrid.selectAll({selected: false});
+             * firstGrid.selectAll({filter: function(){
+             *      return this["b"] == "A01";
+             * });
+             * firstGrid.selectAll({selected: true, filter: function(){
+             *      return this["b"] == "A01";
+             * });
              * ```
              */
             this.selectAll = function (_options) {
-                GRID.data.selectAll.call(this, _options && _options.selected);
+                GRID.data.selectAll.call(this, _options && _options.selected, _options);
                 GRID.body.updateRowStateAll.call(this, ["selected"]);
+                return this;
+            };
+
+            this.exportExcel = function (_fileName) {
+
+                var table = [];
+                table.push('<table border="1">');
+                table.push(GRID.header.getExcelString.call(this));
+                table.push(GRID.body.getExcelString.call(this));
+                table.push('</table>');
+
+                if (typeof _fileName === "undefined") {
+                    return table.join('');
+                } else {
+                    GRID.excel.export.call(this, [table.join('')], _fileName);
+                }
+
                 return this;
             };
 
@@ -1337,6 +1373,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     GRID = ax5.ui.grid;
 })();
 
+// todo : excel export
 // todo : merge cells
 // todo : filter
 // todo : body menu
@@ -1832,7 +1869,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
 
         if (_key === "__d-index__") {
-            return _index + 1;
+            return typeof _item["__index"] !== "undefined" ? _item["__index"] + 1 : "";
         } else if (_key === "__d-checkbox__") {
             return '<div class="checkBox"></div>';
         } else {
@@ -1910,9 +1947,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             _item[_col.colIndex] = value;
             return value;
         } else if (_key === "__d-index__") {
-            return _index + 1;
+            return '';
         } else if (_key === "__d-checkbox__") {
-            return '&nbsp;';
+            return '';
         } else {
             if (_col.collector) {
                 that = {
@@ -1929,7 +1966,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_col.formatter) {
                     that.value = value;
                     if (U.isFunction(_col.formatter)) {
-                        return _col.collector.call(that);
+                        return _col.formatter.call(that);
                     } else {
                         return GRID.formatter[_col.formatter].call(that);
                     }
@@ -3262,6 +3299,82 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
+    var getExcelString = function getExcelString() {
+        var cfg = this.config;
+        var list = this.list;
+        var bodyRowData = this.bodyRowData;
+        var footSumData = this.footSumData;
+        var bodyGroupingData = this.bodyGroupingData;
+
+        // body-scroll 의 포지션에 의존적이므로..
+        var getBody = function getBody(_colGroup, _bodyRow, _groupRow, _list) {
+            var SS = [];
+            var di, dl;
+            var tri, trl;
+            var ci, cl;
+            var col;
+
+            //SS.push('<table border="1">');
+            for (di = 0, dl = _list.length; di < dl; di++) {
+                var isGroupingRow = false;
+                var rowTable;
+
+                if (_groupRow && "__isGrouping" in _list[di]) {
+                    rowTable = _groupRow;
+                    isGroupingRow = true;
+                } else {
+                    rowTable = _bodyRow;
+                }
+
+                for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
+                    SS.push('<tr>');
+                    for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
+                        col = rowTable.rows[tri].cols[ci];
+
+                        SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</td>');
+                    }
+                    SS.push('</tr>');
+                }
+            }
+            //SS.push('</table>');
+            return SS.join('');
+        };
+        var getSum = function getSum(_colGroup, _bodyRow, _list) {
+            var SS = [];
+            var tri, trl;
+            var ci, cl;
+            var col;
+
+            //SS.push('<table border="1">');
+            for (tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                SS.push('<tr>');
+                for (ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                    col = _bodyRow.rows[tri].cols[ci];
+                    SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', getSumFieldValue.call(this, _list, col), '</td>');
+                }
+                SS.push('</tr>');
+            }
+
+            //SS.push('</table>');
+
+            return SS.join('');
+        };
+
+        var po = [];
+        po.push(getBody.call(this, this.headerColGroup, bodyRowData, bodyGroupingData, list));
+        if (cfg.footSum) {
+            // 바닥 요약
+            po.push(getSum.call(this, this.headerColGroup, footSumData, list));
+        }
+
+        // right
+        if (cfg.rightSum) {
+            // todo : right 표현 정리
+        }
+
+        return po.join('');
+    };
+
     GRID.body = {
         init: init,
         repaint: repaint,
@@ -3272,7 +3385,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         scrollTo: scrollTo,
         blur: blur,
         moveFocus: moveFocus,
-        inlineEdit: inlineEdit
+        inlineEdit: inlineEdit,
+        getExcelString: getExcelString
     };
 })();
 
@@ -3338,6 +3452,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             l = _list.length;
         var returnList = [];
         var appendIndex = 0;
+        var dataRealRowCount;
 
         if (this.config.body.grouping) {
             var groupingKeys = U.map(this.bodyGrouping.by, function () {
@@ -3386,6 +3501,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
                         }
+                        dataRealRowCount = _list[i]["__index"] = i;
                         returnList.push(_list[i]);
                         appendIndex++;
                     }
@@ -3396,14 +3512,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
                     this.deletedList.push(_list[i]);
                 } else if (_list[i]) {
+
                     if (_list[i][this.config.columnKeys.selected]) {
                         this.selectedDataIndexs.push(i);
                     }
+                    // __index변수를 추가하여 lineNumber 에 출력합니다. (body getFieldValue 에서 출력함)
+                    dataRealRowCount = _list[i]["__index"] = i;
                     returnList.push(_list[i]);
                 }
             }
         }
 
+        // 원본 데이터의 갯수
+        // grouping은 제외하고 수집됨.
+        this.xvar.dataRealRowCount = dataRealRowCount + 1;
         return returnList;
     };
 
@@ -3690,6 +3812,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (typeof _selected === "undefined") {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
+                if (_options && _options.filter) {
+                    if (_options.filter.call(this.list[dindex]) !== true) {
+                        continue;
+                    }
+                }
                 if (this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -3697,6 +3824,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         } else {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
+                if (_options && _options.filter) {
+                    if (_options.filter.call(this.list[dindex]) !== true) {
+                        continue;
+                    }
+                }
                 if (this.list[dindex][cfg.columnKeys.selected] = _selected) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -3717,6 +3849,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this;
         var list = _list || this.list;
         var sortInfoArray = [];
+        var getKeyValue = function getKeyValue(_item, _key, _value) {
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    _value = Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";").call(_item);
+                } catch (e) {}
+            } else {
+                _value = _item[_key];
+            }
+            return _value;
+        };
 
         for (var k in _sortInfo) {
             sortInfoArray[_sortInfo[k].seq] = { key: k, order: _sortInfo[k].orderBy };
@@ -3729,10 +3871,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             l = sortInfoArray.length,
             _a_val,
             _b_val;
+
         list.sort(function (_a, _b) {
             for (i = 0; i < l; i++) {
-                _a_val = _a[sortInfoArray[i].key];
-                _b_val = _b[sortInfoArray[i].key];
+                _a_val = getKeyValue(_a, sortInfoArray[i].key);
+                _b_val = getKeyValue(_b, sortInfoArray[i].key);
+
                 if ((typeof _a_val === "undefined" ? "undefined" : _typeof(_a_val)) !== (typeof _b_val === "undefined" ? "undefined" : _typeof(_b_val))) {
                     _a_val = '' + _a_val;
                     _b_val = '' + _b_val;
@@ -3772,6 +3916,95 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         sort: sort,
         initData: initData,
         clearGroupingData: clearGroupingData
+    };
+})();
+/*
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
+// ax5.ui.grid.excel
+(function () {
+
+    var GRID = ax5.ui.grid;
+    var U = ax5.util;
+
+    var base64 = function base64(s) {
+        return window.btoa(unescape(encodeURIComponent(s)));
+    };
+    var uri = "data:application/vnd.ms-excel;base64,";
+
+    var getExcelTmpl = function getExcelTmpl() {
+        return "\uFEFF<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">\n<meta http-equiv=\"content-type\" content=\"application/vnd.ms-excel; charset=UTF-8\">\n<head>\n<!--[if gte mso 9]>\n<xml>\n    <x:ExcelWorkbook>\n        <x:ExcelWorksheets>\n            {{#worksheet}}\n            <x:ExcelWorksheet>\n                <x:Name>{{name}}</x:Name>\n                <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>\n            </x:ExcelWorksheet>\n            {{/worksheet}}\n        </x:ExcelWorksheets>\n    </x:ExcelWorkbook>\n</xml>\n<![endif]-->\n</head>\n<body>\n{{#tables}}{{{body}}}{{/tables}}\n</body>\n</html>\n";
+    };
+
+    var tableToExcel = function tableToExcel(table, fileName) {
+        var link, a, output;
+        var tables = [].concat(table);
+
+        output = ax5.mustache.render(getExcelTmpl(), {
+            worksheet: function () {
+                var arr = [];
+                tables.forEach(function (t, ti) {
+                    arr.push({ name: "Sheet" + (ti + 1) });
+                });
+                return arr;
+            }(),
+            tables: function () {
+                var arr = [];
+                tables.forEach(function (t, ti) {
+                    arr.push({ body: t });
+                });
+                return arr;
+            }()
+        });
+
+        var isChrome = navigator.userAgent.indexOf("Chrome") > -1;
+        var isSafari = !isChrome && navigator.userAgent.indexOf("Safari") > -1;
+
+        var isIE = /*@cc_on!@*/false || !!document.documentMode; // this works with IE10 and IE11 both :)
+        if (isIE) {
+            if (typeof Blob !== "undefined") {
+                //use blobs if we can
+                //convert to array
+                var blob1 = new Blob([output], { type: "text/html" });
+                window.navigator.msSaveBlob(blob1, fileName);
+            } else {
+                //otherwise use the iframe and save
+                //requires a blank iframe on page called txtArea1
+                var $iframe = jQuery('<iframe id="' + this.id + '-excel-export" style="display:none"></iframe>');
+                jQuery(document.body).append($iframe);
+                var iframe = window[this.id + '-excel-export'];
+                iframe.document.open("text/html", "replace");
+                iframe.document.write(output);
+                iframe.document.close();
+                iframe.focus();
+                iframe.document.execCommand("SaveAs", true, fileName);
+                $iframe.remove();
+            }
+        } else if (isSafari) {
+            // 사파리는 지원이 안되므로 그냥 테이블을 클립보드에 복사처리
+            //tables
+            var blankWindow = window.open('about:blank', this.id + '-excel-export', 'width=600,height=400');
+            blankWindow.document.write(output);
+            blankWindow = null;
+        } else {
+            link = uri + base64(output);
+            a = document.createElement("a");
+            a.download = fileName;
+            a.href = link;
+
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        return true;
+    };
+
+    GRID.excel = {
+        export: tableToExcel
     };
 })();
 // ax5.ui.grid.formatter
@@ -3865,7 +4098,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 self.selectAll({ selected: selected });
             } else {
                 if (key && col) {
-                    console.log(key, col);
                     if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
                         if (!col.sortFixed) toggleSort.call(self, col.key);
                     }
@@ -4123,12 +4355,37 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         GRID.body.updateRowState.call(this, ["selected"], dindex);
     };
 
+    var getExcelString = function getExcelString() {
+        var cfg = this.config;
+        var colGroup = this.colGroup;
+        var headerData = this.headerData;
+
+        var getHeader = function getHeader(_colGroup, _bodyRow) {
+            var SS = [];
+            //SS.push('<table border="1">');
+            for (var tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                SS.push('<tr>');
+                for (var ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                    var col = _bodyRow.rows[tri].cols[ci];
+                    SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', getFieldValue.call(this, col), '</td>');
+                }
+                SS.push('</tr>');
+            }
+            //SS.push('</table>');
+
+            return SS.join('');
+        };
+
+        return getHeader.call(this, colGroup, headerData);
+    };
+
     GRID.header = {
         init: init,
         repaint: repaint,
         scrollTo: scrollTo,
         toggleSort: toggleSort,
-        applySortStatus: applySortStatus
+        applySortStatus: applySortStatus,
+        getExcelString: getExcelString
     };
 })();
 // ax5.ui.grid.inlineEditor
@@ -4432,7 +4689,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.$["page"]["status"].html(GRID.tmpl.get("page_status", {
             fromRowIndex: U.number(fromRowIndex + 1, { "money": true }),
             toRowIndex: U.number(toRowIndex, { "money": true }),
-            totalElements: U.number(totalElements, { "money": true })
+            totalElements: U.number(totalElements, { "money": true }),
+            dataRowCount: totalElements !== this.xvar.dataRealRowCount ? this.xvar.dataRealRowCount : false
         }));
     };
 
@@ -4527,6 +4785,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var scrollBarMover = {
         "click": function click(track, bar, type, e) {
 
+            // 마우스 무브 완료 타임과 클릭타임 차이가 20 보다 작으면 클릭이벤트 막기.
+            if (new Date().getTime() - GRID.scroller.moveout_timer < 20) {
+                return false;
+            }
+
             var self = this,
                 trackOffset = track.offset(),
                 barBox = {
@@ -4584,7 +4847,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
             GRID.body.scrollTo.call(self, scrollPositon);
         },
-        "on": function on(track, bar, type) {
+        "on": function on(track, bar, type, e) {
             var self = this,
                 barOffset = bar.position(),
                 barBox = {
@@ -4656,6 +4919,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
         },
         "off": function off() {
+
+            GRID.scroller.moveout_timer = new Date().getTime();
+
             jQuery(document.body).unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId).unbind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId).unbind("mouseleave.ax5grid-" + this.instanceId);
 
             jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
@@ -4786,33 +5052,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size - (margin + 1), left: margin / 2 });
         this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size - (margin + 1), top: margin / 2 });
 
-        this.$["scroller"]["vertical-bar"].bind(GRID.util.ENM["mousedown"], function (e) {
+        this.$["scroller"]["vertical-bar"].on(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
-            scrollBarMover.on.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical");
-        }.bind(this)).bind("dragstart", function (e) {
+            scrollBarMover.on.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
+        }.bind(this)).on("dragstart", function (e) {
             U.stopEvent(e);
             return false;
         });
-        this.$["scroller"]["vertical"].bind("click", function (e) {
-            if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
+
+        this.$["scroller"]["vertical"].on("click", function (e) {
+            if (e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
                 scrollBarMover.click.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
             }
         }.bind(this));
 
-        this.$["scroller"]["horizontal-bar"].bind(GRID.util.ENM["mousedown"], function (e) {
+        this.$["scroller"]["horizontal-bar"].on(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
-            scrollBarMover.on.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal");
-        }.bind(this)).bind("dragstart", function (e) {
+            scrollBarMover.on.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
+        }.bind(this)).on("dragstart", function (e) {
             U.stopEvent(e);
             return false;
         });
-        this.$["scroller"]["horizontal"].bind("click", function (e) {
-            if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
+
+        this.$["scroller"]["horizontal"].on("click", function (e) {
+            if (e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
                 scrollBarMover.click.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
             }
         }.bind(this));
 
-        this.$["container"]["body"].bind('mousewheel DOMMouseScroll', function (e) {
+        this.$["container"]["body"].on('mousewheel DOMMouseScroll', function (e) {
             var E = e.originalEvent;
             var delta = { x: 0, y: 0 };
             if (E.detail) {
@@ -4894,6 +5162,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     GRID.scroller = {
+        // 타이머
+        moveout_timer: new Date().getTime(),
         init: init,
         resize: resize
     };
@@ -4911,7 +5181,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var page_status = function page_status() {
-        return "<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}</span>";
+        return "<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>";
     };
 
     GRID.tmpl = {
