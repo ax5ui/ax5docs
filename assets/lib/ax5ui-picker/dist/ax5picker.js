@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "picker",
-        version: "1.3.33"
+        version: "1.3.40"
     }, function () {
         /**
          * @class ax5picker
@@ -238,6 +238,7 @@
                     };
 
                     // picker css(width, left, top) & direction 결정
+
                     if (!item.direction || item.direction === "" || item.direction === "auto") {
                         // set direction
                         pickerDirection = "top";
