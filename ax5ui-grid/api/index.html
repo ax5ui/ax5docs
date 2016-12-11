@@ -149,6 +149,7 @@
 <li><a href="#ax5grid.removeRow">.removeRow([_dindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.updateRow">.updateRow(_row, _dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.deleteRow">.deleteRow(_dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
+<li><a href="#ax5grid.setValue">.setValue(_dindex, _key, _value)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.addColumn">.addColumn(_column, [_cindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.removeCloumn">.removeCloumn([_cindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.updateColumn">.updateColumn(_column, _cindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
@@ -165,7 +166,8 @@
 <p><a name="ax5grid.setConfig"></a></p>
 <h3>ax5grid.setConfig(_config) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
 <p>Preferences of grid UI</p>
-<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code><br>
+<strong>Parem</strong>: <code>Function</code> _config.columns[].editor.disabled - disable editor</p>
 <table>
 <thead>
 <tr>
@@ -746,6 +748,30 @@ ax5Grid.removeRow(1);
 ax5Grid.deleteRow(&quot;last&quot;);
 ax5Grid.deleteRow(1);
 ax5Grid.deleteRow(&quot;selected&quot;);
+</code></pre>
+<p><a name="ax5grid.setValue"></a></p>
+<h3>ax5grid.setValue(_dindex, _key, _value) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_dindex</td>
+</tr>
+<tr>
+<td>_key</td>
+</tr>
+<tr>
+<td>_value</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>ax5Grid.setValue(0, &quot;price&quot;, 100);
 </code></pre>
 <p><a name="ax5grid.addColumn"></a></p>
 <h3>ax5grid.addColumn(_column, [_cindex]) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>

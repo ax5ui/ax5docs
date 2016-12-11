@@ -748,6 +748,20 @@ $(document.body).click(function(){
     debounceFn(new Date());
 });
 </code></pre>
+<h2>ax5.util.string</h2>
+<p><code>ax5.util.string(String).format([args]);</code><br>
+<code>ax5.util.string(String).escape();</code><br>
+<code>ax5.util.string(String).unescape();</code><br>
+<code>ax5.util.string(String).encode();</code><br>
+<code>ax5.util.string(String).decode();</code><br>
+<code>ax5.util.string(String).left(pos);</code><br>
+<code>ax5.util.string(String).right(pos);</code><br>
+<code>ax5.util.string(String).camelCase();</code><br>
+<code>ax5.util.string(String).snakeCase();</code></p>
+<pre class="prettyprint linenums lang-js"><code>ax5.util.string(&quot;{0} is dead, but {1} is alive! {0} {2}&quot;).format(&quot;ASP&quot;, &quot;ASP.NET&quot;);
+ax5.util.string(&quot;{0} is dead, but {1} is alive! {0} {2}&quot;).format([&quot;ASP&quot;, &quot;ASP.NET&quot;]);
+ax5.util.stinrg(&quot;{0} counts&quot;).format(100);
+</code></pre>
 
 
     
