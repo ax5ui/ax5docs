@@ -210,7 +210,8 @@ gulp.task('import-ax5ui-file', function () {
                 '!../ax5ui-kernel/src/' + k + '/**/node_modules/**/*',
                 '../ax5ui-kernel/src/' + k + '/**/src/**/*',
                 '../ax5ui-kernel/src/' + k + '/**/dist/**/*',
-                '../ax5ui-kernel/src/' + k + '/**/*.json'
+                '../ax5ui-kernel/src/' + k + '/**/*.json',
+                '../ax5ui-kernel/src/' + k + '/**/*.md'
             ], {base: "../ax5ui-kernel/src"})
                 .pipe(gulp.dest(PATHS.assets.src + '/lib'));
         }
