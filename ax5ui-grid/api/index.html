@@ -160,6 +160,7 @@
 <li><a href="#ax5grid.clearSelect">.clearSelect()</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.selectAll">.selectAll(_options)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.exportExcel">.exportExcel(_fileName)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code> | <code>String</code></li>
+<li><a href="#ax5grid.focus">.focus(_pos)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 </ul>
 </li>
 </ul>
@@ -952,6 +953,7 @@ ax5Grid.deleteRow(&quot;selected&quot;);
 <pre class="prettyprint linenums lang-js"><code>firstGrid.select(0);
 firstGrid.select(0, {selected: true});
 firstGrid.select(0, {selected: false});
+firstGrid.select(0, {selectedClear: true});
 </code></pre>
 <p><a name="ax5grid.clearSelect"></a></p>
 <h3>ax5grid.clearSelect() ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
@@ -1016,6 +1018,27 @@ firstGrid.selectAll({selected: true, filter: function(){
 <pre class="prettyprint linenums lang-js"><code>firstGrid.exportExcel(&quot;grid-to-excel.xls&quot;);
 console.log(firstGrid.exportExcel());
 </code></pre>
+<p><a name="ax5grid.focus"></a></p>
+<h3>ax5grid.focus(_pos) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_pos</td>
+<td><code>String</code> | <code>Number</code></td>
+<td>UP, DOWN, LEFT, RIGHT, HOME, END</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code></code></pre>
 
     
                     </div>

@@ -87,6 +87,7 @@
                 width: 300,
                 height: 400,
                 closeToEsc: true,
+                disableDrag: false,
                 animateTime: 250
             };
             this.activeModal = null;
@@ -137,7 +138,7 @@
 
                     // 파트수집
                     this.$ = {
-                        "root": this.activeModal.find('[data-modal-els="root"]'),
+                        "root": this.activeModal,
                         "header": this.activeModal.find('[data-modal-els="header"]'),
                         "body": this.activeModal.find('[data-modal-els="body"]')
                     };
@@ -211,7 +212,7 @@
                                 }
                             });
 
-                            if (!isButton) {
+                            if (!isButton && opts.disableDrag != true) {
                                 self.mousePosition = getMousePosition(e);
                                 moveModal.on.call(self);
                             }
@@ -443,7 +444,7 @@
                                 if ($iframe) {
                                     var iframeObject = $iframe.get(0),
                                         idoc = (iframeObject.contentDocument) ? iframeObject.contentDocument : iframeObject.contentWindow.document;
- 
+
                                     try {
                                         $(idoc.body).children().each(function () {
                                             $(this).remove();
