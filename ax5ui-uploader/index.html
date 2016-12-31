@@ -185,7 +185,100 @@ https://cdn.rawgit.com/ax5ui/ax5ui-uploader/master/dist/ax5uploader.js
 https://cdn.rawgit.com/ax5ui/ax5ui-uploader/master/dist/ax5uploader.min.js
 </code></pre>
 <h3>Basic Usage</h3>
-<pre class="prettyprint linenums lang-js"><code>
+<pre class="prettyprint linenums lang-html"><code>&lt;div data-ax5uploader=&quot;upload1&quot;&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;param1&quot; value=&quot;value1&quot;/&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;param2&quot; value=&quot;value2&quot;/&gt;
+    &lt;button data-ax5uploader-button=&quot;selector&quot; class=&quot;btn btn-primary&quot;&gt;파일선택 (*/*)&lt;/button&gt;
+    &lt;div data-uploaded-box=&quot;upload1&quot; data-ax5uploader-uploaded-box=&quot;inline&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre class="prettyprint linenums lang-js"><code>$(function () {
+    var upload1 = new ax5.ui.uploader();
+    upload1.setConfig({
+        //debug: true,
+        target: $('[data-ax5uploader=&quot;upload1&quot;]'),
+        form: {
+            action: &quot;api/fileUpload.php&quot;,
+            fileName: &quot;fileData&quot;
+        },
+        multiple: true,
+        manualUpload: false,
+        direction: &quot;left&quot;,
+        progressBox: true,
+        dropZone: $('[data-uploaded-box=&quot;upload1&quot;]'),
+        uploadedBox: {
+            target: $('[data-uploaded-box=&quot;upload1&quot;]'),
+            icon: {
+                &quot;download&quot;: '&lt;i class=&quot;fa fa-download&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;',
+                &quot;delete&quot;: '&lt;i class=&quot;fa fa-minus-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;'
+            },
+            columnKeys: {
+                name: &quot;name&quot;,
+                type: &quot;type&quot;,
+                size: &quot;fileSize&quot;,
+                uploadedName: &quot;uploadedName&quot;,
+                uploadedPath: &quot;uploadedPath&quot;,
+                downloadPath: &quot;downloadPath&quot;,
+                previewPath: &quot;previewPath&quot;,
+                thumbnail: &quot;thumbnail&quot;
+            },
+            lang: {
+                supportedHTML5_emptyListMsg: '&lt;div class=&quot;text-center&quot;&gt;Drop files here or click to upload.&lt;/div&gt;',
+                emptyListMsg: '&lt;div class=&quot;text-center&quot;&gt;Empty of List.&lt;/div&gt;'
+            },
+            onchange: function () {
+
+            },
+            onclick: function () {
+                // console.log(this.cellType);
+                var fileIndex = this.fileIndex;
+                var file = this.uploadedFiles[fileIndex];
+                switch (this.cellType) {
+                    case &quot;delete&quot;:
+                        dialog.confirm({
+                            title: &quot;AX5UI&quot;,
+                            msg: &quot;정말 삭제 하시겠습니까?&quot;
+                        }, function () {
+                            if (this.key == &quot;ok&quot;) {
+                                $.ajax({
+                                    method: &quot;post&quot;,
+                                    url: &quot;api/fileDelete.php&quot;,
+                                    data: {
+                                        uploadedPath: file.uploadedPath,
+                                        saveName: file.saveName
+                                    },
+                                    success: function (res) {
+                                        upload1.removeFile(fileIndex);
+                                    }
+                                });
+                            }
+                        });
+                        break;
+
+                    case &quot;download&quot;:
+                        window.open(file.uploadedPath + &quot;/&quot; + file.saveName, &quot;_blank&quot;, &quot;width=600, height=600&quot;);
+                        break;
+                }
+            }
+        },
+        onprogress: function () {
+
+        },
+        onuploaded: function () {
+
+        },
+        onuploadComplete: function () {
+
+        }
+    });
+
+    $.ajax({
+        url: &quot;api/fileListLoad.php&quot;,
+        success: function (res) {
+            upload1.setUploadedFiles(res);
+        }
+    });
+});
 </code></pre>
 <hr>
 <h3>Preview</h3>
