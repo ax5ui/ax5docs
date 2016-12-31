@@ -119,6 +119,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-binder",
         doc_src: "_src_/ax5ui-binder",
         doc_dest: "ax5ui-binder"
+    },
+    "ax5ui-uploader": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-uploader",
+        doc_src: "_src_/ax5ui-uploader",
+        doc_dest: "ax5ui-uploader"
     }
 };
 
