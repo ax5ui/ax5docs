@@ -139,39 +139,253 @@
 <ul>
 <li><a href="#ax5uploader">ax5uploader</a>
 <ul>
+<li><a href="#ax5uploader.setConfig">.setConfig(_config)</a> ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></li>
 <li><a href="#ax5uploader.send">.send()</a> ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></li>
 <li><a href="#ax5uploader.abort">.abort()</a> ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></li>
-<li><a href="#ax5uploader.setUploadedFile">.setUploadedFile(files)</a> ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></li>
+<li><a href="#ax5uploader.setUploadedFiles">.setUploadedFiles(_files)</a> ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></li>
 <li><a href="#ax5uploader.removeFile">.removeFile(_index)</a> ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></li>
 <li><a href="#ax5uploader.removeFileAll">.removeFileAll()</a> ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></li>
 </ul>
 </li>
 </ul>
-<p><a name="ax5uploader.send"></a></p>
-<h3>ax5uploader.send() ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
-<p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code><br>
-<a name="ax5uploader.abort"></a></p>
-<h3>ax5uploader.abort() ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
-<p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code><br>
-<a name="ax5uploader.setUploadedFile"></a></p>
-<h3>ax5uploader.setUploadedFile(files) ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
+<p><a name="ax5uploader.setConfig"></a></p>
+<h3>ax5uploader.setConfig(_config) ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
+<p>Preferences of uploader UI</p>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code></p>
 <table>
 <thead>
 <tr>
 <th>Param</th>
 <th>Type</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>files</td>
-<td><code>Array</code></td>
+<td>_config</td>
+<td><code>Object</code></td>
+<td></td>
+<td>클래스 속성값</td>
+</tr>
+<tr>
+<td>_config.target</td>
+<td><code>Element</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>_config.form</td>
+<td><code>Object</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>_config.form.action</td>
+<td><code>String</code></td>
+<td></td>
+<td>upload URL</td>
+</tr>
+<tr>
+<td>_config.form.fileName</td>
+<td><code>String</code></td>
+<td></td>
+<td>The name key of the upload file</td>
+</tr>
+<tr>
+<td>[_config.multiple]</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>Whether multiple files. In a browser where fileApi is not supported (eg IE9), it only works with false.</td>
+</tr>
+<tr>
+<td>[_config.manualUpload]</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>Whether to automatically upload when a file is selected.</td>
+</tr>
+<tr>
+<td>[_config.progressBox]</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>Whether to use progressBox</td>
+</tr>
+<tr>
+<td>[_config.progressBoxDirection]</td>
+<td><code>String</code></td>
+<td><code>auto</code></td>
+<td>ProgressBox display direction</td>
+</tr>
+<tr>
+<td>[_config.dropZone]</td>
+<td><code>Element</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox]</td>
+<td><code>Object</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.target]</td>
+<td><code>Element</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.icon]</td>
+<td><code>Element</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.columnKeys]</td>
+<td><code>Object</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.columnKeys.name]</td>
+<td><code>String</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.columnKeys.type]</td>
+<td><code>String</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.columnKeys.size]</td>
+<td><code>String</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.columnKeys.uploadedName]</td>
+<td><code>String</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.columnKeys.downloadPath]</td>
+<td><code>String</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.lang]</td>
+<td><code>Object</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.lang.supportedHTML5_emptyListMsg]</td>
+<td><code>String</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.lang.emptyListMsg]</td>
+<td><code>String</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.onchange]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.uploadedBox.onclick]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.validateSelectedFiles]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.onprogress]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.onuploaded]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.onuploadComplete]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>
+</code></pre>
+<p><a name="ax5uploader.send"></a></p>
+<h3>ax5uploader.send() ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code><br>
+<a name="ax5uploader.abort"></a></p>
+<h3>ax5uploader.abort() ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code><br>
+<a name="ax5uploader.setUploadedFiles"></a></p>
+<h3>ax5uploader.setUploadedFiles(_files) ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_files</td>
+<td><code>Array</code></td>
+<td>JSON formatting can all be overridden in columnKeys.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>var upload1 = new ax5.ui.uploader();
+upload1.setConfig({
+ ...
+});
+
+
+$.ajax({
+    url: &quot;api/fileListLoad.php&quot;,
+    success: function (res) {
+        // res JSON format
+        // [{
+        // &quot;name&quot;: &quot;barcode-scan-ani.gif&quot;,
+        // &quot;saveName&quot;: &quot;barcode-scan-ani.gif&quot;,
+        // &quot;type&quot;: &quot;file&quot;,
+        // &quot;fileSize&quot;: &quot;3891664&quot;,
+        // &quot;uploadedPath&quot;: &quot;/ax5ui-uploader/test/api/files&quot;,
+        // &quot;thumbUrl&quot;: &quot;&quot;
+        // }]
+        upload1.setUploadedFiles(res);
+    }
+});
+</code></pre>
 <p><a name="ax5uploader.removeFile"></a></p>
 <h3>ax5uploader.removeFile(_index) ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
+<p>Removes the object corresponding to the index passed to the argument from uploadedFiles.</p>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code></p>
 <table>
 <thead>
@@ -187,9 +401,17 @@
 </tr>
 </tbody>
 </table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>// The actual file is not deleted
+upload1.removeFile(fileIndex);
+</code></pre>
 <p><a name="ax5uploader.removeFileAll"></a></p>
 <h3>ax5uploader.removeFileAll() ⇒ <code><a href="#ax5uploader">ax5uploader</a></code></h3>
-<p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code></p>
+<p>Empty uploadedFiles</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5uploader">ax5uploader</a></code><br>
+<strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>
+</code></pre>
 
     
                     </div>
