@@ -188,7 +188,7 @@ for (var k in PATHS) {
             return function () {
                 return gulp.src(PATHS[k].doc_src + '/**/*.html')
                     .pipe(changed(PATHS[k].doc_dest, {extension: '.html', hasChanged: changed.compareSha1Digest}))
-                    .pipe(plumber({errorHandler: errorAlert}))
+                    //.pipe(plumber({errorHandler: errorAlert}))
                     .pipe(marko_ax5({
                         projectName: k,
                         layoutPath: PATHS.assets.src + '/_layouts/index.marko',

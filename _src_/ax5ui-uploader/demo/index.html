@@ -59,13 +59,13 @@
             </div>
 
 
-
             HTML(code)
             <ax5docs-html run="true">
                 <div class="DH20"></div>
 
                 <div data-ax5uploader="upload1">
-                    <button data-ax5uploader-button="selector" class="btn btn-primary">Select File (*/*)</button> (Upload Max fileSize 20MB)
+                    <button data-ax5uploader-button="selector" class="btn btn-primary">Select File (*/*)</button>
+                    (Upload Max fileSize 20MB)
                     <div data-uploaded-box="upload1" data-ax5uploader-uploaded-box="inline"></div>
                 </div>
 
@@ -99,7 +99,10 @@
                             manualUpload: false,
                             progressBox: true,
                             progressBoxDirection: "left",
-                            dropZone: $('[data-uploaded-box="upload1"]'),
+                            dropZone: {
+                                target: $('[data-uploaded-box="upload1"]')
+                            },
+
                             uploadedBox: {
                                 target: $('[data-uploaded-box="upload1"]'),
                                 icon: {
@@ -162,7 +165,7 @@
                             validateSelectedFiles: function () {
                                 console.log(this);
                                 // 10개 이상 업로드 되지 않도록 제한.
-                                if(this.uploadedFiles.length + this.selectedFiles.length > 10){
+                                if (this.uploadedFiles.length + this.selectedFiles.length > 10) {
                                     alert("You can not upload more than 10 files.");
                                     return false;
                                 }

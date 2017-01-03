@@ -18,8 +18,11 @@
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-uploader/dist/ax5uploader.css"/>
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-dialog/dist/ax5dialog.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css"/>
+
         <script type="text/javascript" src="../../assets/lib/ax5ui-uploader/dist/ax5uploader.js"></script>
         <script type="text/javascript" src="../../assets/lib/ax5ui-dialog/dist/ax5dialog.js"></script>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.min.js"></script>
         <script src="https://cdn.rawgit.com/thomasJang/jquery-direct/master/dist/jquery-direct.min.js"></script>
     </layout-put>
     <layout-put into="body">
@@ -33,10 +36,13 @@
                 ```html
                 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-dialog/master/dist/ax5dialog.css"/>
                 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-uploader/master/dist/ax5uploader.css"/>
+                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css"/>
+
                 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
                 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
                 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-dialog/master/dist/ax5dialog.js"></script>
                 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-uploader/master/dist/ax5uploader.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
                 <script src="https://cdn.rawgit.com/thomasJang/jquery-direct/master/dist/jquery-direct.min.js"></script>
                 ```
             </ax5docs-md>
@@ -44,13 +50,29 @@
 
             HTML(code)
             <ax5docs-html run="true">
+                <div style="position: fixed;left:0;top:0;width:100%;height:100%;background: #000;z-index: 1000;display: none;opacity: 0.5;" id="dragover"></div>
+
                 <div class="DH20"></div>
 
                 <div data-ax5uploader="upload1">
-                    <button data-ax5uploader-button="selector" class="btn btn-primary">Select File (*/*)</button> (Upload Max fileSize 20MB)
+                    <button data-ax5uploader-button="selector" class="btn btn-primary">Select File (*/*)</button>
+                    (Upload Max fileSize 20MB)
                 </div>
 
+                <div class="DH10"></div>
 
+                <div data-ax5grid="first-grid" data-ax5grid-config="{
+                    header: {align: 'center'},
+                    showLineNumber: false,
+                    showRowSelector: true,
+                    multipleSelect: false,
+                    lineNumberColumnWidth: 40,
+                    rowSelectorColumnWidth: 27
+                }" style="height: 150px;"></div>
+
+                <div style="padding: 10px 0;" data-btn-wrap="">
+                    <button class="btn btn-default btn-sm" data-upload-btn="removeFile">removeFile</button>
+                </div>
 
             </ax5docs-html>
 
@@ -60,11 +82,45 @@
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     $(function () {
+                        var dragover = $("#dragover");
                         var apiServer = "${data.apiUrl}";
                         var dialog = new ax5.ui.dialog({
                             title: "AX5UI"
                         });
                         var upload1 = new ax5.ui.uploader();
+                        var firstGrid = new ax5.ui.grid({
+                            target: $('[data-ax5grid="first-grid"]'),
+                            columns: [
+                                {key: "fileName", label: "fileName", width: 200},
+                                {
+                                    key: "fileSize", label: "fileSize", align: "right", formatter: function () {
+                                    return ax5.util.number(this.value, {byte: true});
+                                }
+                                },
+                                {key: "ext", label: "ext"},
+                                {
+                                    key: "createdAt", label: "createdAt", width: 140, formatter: function () {
+                                    return ax5.util.date(this.value, {"return": "yyyy/MM/dd hh:mm:ss"});
+                                }
+                                }
+                            ],
+                            body: {
+                                onClick: function () {
+                                    location.href = apiServer + "/api/v1/ax5uploader/download?id=" + this.item.id;
+                                }
+                            }
+                        });
+                        var getFileList = function () {
+                            // 파일 목록 가져오기
+                            $.ajax({
+                                method: "GET",
+                                url: apiServer + "/api/v1/ax5uploader",
+                                success: function (res) {
+                                    upload1.setUploadedFiles(res);
+                                    firstGrid.setData(upload1.uploadedFiles);
+                                }
+                            });
+                        };
 
                         upload1.setConfig({
                             //debug: true,
@@ -74,13 +130,36 @@
                                 fileName: "file"
                             },
                             multiple: true,
-                            manualUpload: false,
-                            progressBox: true,
-                            progressBoxDirection: "left",
+                            dropZone: {
+                                target: $(document.body),
+                                onclick: function () {
+                                    // 사용을 원하는 경우 구현
+                                    return;
+                                    if (!this.self.selectFile()) {
+                                        console.log("파일 선택 지원 안됨");
+                                    }
+                                },
+                                ondragover: function () {
+                                    //this.self.\$dropZone.addClass("dragover");
+
+                                    dragover.show();
+                                    dragover.on("dragleave", function () {
+                                        dragover.hide();
+                                    });
+                                },
+                                ondragout: function () {
+                                    //this.self.\$dropZone.removeClass("dragover");
+                                    //$("#dragover").hide();
+
+                                },
+                                ondrop: function () {
+                                    dragover.hide();
+                                }
+                            },
                             validateSelectedFiles: function () {
                                 console.log(this);
                                 // 10개 이상 업로드 되지 않도록 제한.
-                                if(this.uploadedFiles.length + this.selectedFiles.length > 10){
+                                if (this.uploadedFiles.length + this.selectedFiles.length > 10) {
                                     alert("You can not upload more than 10 files.");
                                     return false;
                                 }
@@ -98,21 +177,46 @@
 
                             },
                             onuploadComplete: function () {
-
+                                firstGrid.setData(this.self.uploadedFiles);
                             }
                         });
 
-                        // 파일 목록 가져오기
-                        $.ajax({
-                            method: "GET",
-                            url: apiServer + "/api/v1/ax5uploader",
-                            success: function (res) {
+                        getFileList();
 
-                                console.log(res);
-                                // upload1.setUploadedFiles(res);
+                        // 컨트롤 버튼 이벤트 제어
+                        $('[data-btn-wrap]').clickAttr(this, "data-upload-btn", {
+                            "removeFile": function () {
+
+                                var deleteFiles = firstGrid.getList("selected");
+                                if(deleteFiles.length == 0){
+                                    alert("No list selected.");
+                                    return;
+                                }
+
+                                dialog.confirm({
+                                    title: "AX5UI",
+                                    msg: "Are you sure you want to delete it?"
+                                }, function () {
+                                    if (this.key == "ok") {
+                                        $.ajax({
+                                            contentType: "application/json",
+                                            method: "post",
+                                            url: apiServer + "/api/v1/ax5uploader/delete",
+                                            data: JSON.stringify(deleteFiles),
+                                            success: function (res) {
+                                                if (res.error) {
+                                                    alert(res.error.message);
+                                                    return;
+                                                }
+
+                                                getFileList();
+                                            }
+                                        });
+
+                                    }
+                                });
                             }
                         });
-
                     });
                 </script>
             </ax5docs-js>
