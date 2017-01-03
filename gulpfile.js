@@ -12,7 +12,7 @@ var babel = require('gulp-babel');
 var argv = require('yargs').argv; // for args parsing
 var spawn = require('child_process').spawn;
 
-var API_URL = "http://localhost:8080";
+var API_URL = "http://api-demo.ax5.io";
 var KERNEL_PATH = '../ax5ui-kernel/';
 var PATHS = {
     kernel: KERNEL_PATH,
