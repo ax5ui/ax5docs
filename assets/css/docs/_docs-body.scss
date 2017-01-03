@@ -150,6 +150,18 @@
     p {
         margin: 1em auto;
     }
+
+    blockquote {
+        padding: 0 10px;
+        font-size: 15px;
+        p {
+            margin: 10px;
+        }
+    }
+
+    .lang-kor {
+        color: #888;
+    }
 }
 
 &.sub-page {

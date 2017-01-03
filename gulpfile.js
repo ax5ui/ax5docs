@@ -12,6 +12,7 @@ var babel = require('gulp-babel');
 var argv = require('yargs').argv; // for args parsing
 var spawn = require('child_process').spawn;
 
+var API_URL = "http://localhost:8080";
 var KERNEL_PATH = '../ax5ui-kernel/';
 var PATHS = {
     kernel: KERNEL_PATH,
@@ -134,6 +135,25 @@ function errorAlert(error) {
     this.emit("end"); //End function
 }
 
+
+gulp.task('default', function () {
+    var process;
+
+    gulp.watch(PATHS.assets.src + '/_layouts/root.marko', spawnChildren);
+    gulp.watch(PATHS.assets.src + '/_layouts/index.marko', spawnChildren);
+    gulp.watch(PATHS.assets.src + '/_layouts/modal.marko', spawnChildren);
+    gulp.watch(PATHS.assets.src + '/components/**/*.js', spawnChildren);
+    spawnChildren();
+
+    function spawnChildren(e) {
+        // kill previous spawned process
+        if(process) { process.kill(); }
+
+        // `spawn` a child `gulp` process linked to the parent `stdio`
+        process = spawn('gulp', ['docs:all', 'watching'], {stdio: 'inherit'});
+    }
+});
+
 /**
  * SASS
  */
@@ -155,7 +175,8 @@ gulp.task('AX5UI-docs', function () {
             projectName: "ax5ui",
             layoutPath: PATHS.assets.src + '/_layouts/root.marko',
             layoutModalPath: PATHS.assets.src + '/_layouts/modal.marko',
-            kernelPath: PATHS.kernel
+            kernelPath: PATHS.kernel,
+            apiUrl: API_URL
         }))
         .pipe(gulp.dest(PATHS['ax5docs'].doc_dest));
 });
@@ -172,7 +193,8 @@ for (var k in PATHS) {
                         projectName: k,
                         layoutPath: PATHS.assets.src + '/_layouts/index.marko',
                         layoutModalPath: PATHS.assets.src + '/_layouts/modal.marko',
-                        kernelPath: PATHS.kernel
+                        kernelPath: PATHS.kernel,
+                        apiUrl: API_URL
                     }))
                     .pipe(gulp.dest(PATHS[k].doc_dest));
             }
@@ -239,23 +261,5 @@ gulp.task('watching', function () {
             //console.log(k);
             gulp.watch([PATHS[k].doc_src + '/**/*.html', PATHS[k].root + '/**/*.md'], [k + '-docs']);
         }
-    }
-});
-
-gulp.task('default', function () {
-    var process;
-
-    gulp.watch(PATHS.assets.src + '/_layouts/root.marko', spawnChildren);
-    gulp.watch(PATHS.assets.src + '/_layouts/index.marko', spawnChildren);
-    gulp.watch(PATHS.assets.src + '/_layouts/modal.marko', spawnChildren);
-    gulp.watch(PATHS.assets.src + '/components/**/*.js', spawnChildren);
-    spawnChildren();
-
-    function spawnChildren(e) {
-        // kill previous spawned process
-        if(process) { process.kill(); }
-
-        // `spawn` a child `gulp` process linked to the parent `stdio`
-        process = spawn('gulp', ['docs:all', 'watching'], {stdio: 'inherit'});
     }
 });
