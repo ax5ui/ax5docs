@@ -172,6 +172,10 @@
                             onprogress: function () {
 
                             },
+                            onuploaderror: function () {
+                                console.log(this.error);
+                                dialog.alert(this.error.message);
+                            },
                             onuploaded: function () {
 
                             },

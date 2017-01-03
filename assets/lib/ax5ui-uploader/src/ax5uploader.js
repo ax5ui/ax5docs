@@ -222,7 +222,6 @@
                             }
                         });
 
-
                     this.$dropZone.get(0).addEventListener('dragover', function (e) {
                         U.stopEvent(e);
                         self.$dropZone.addClass("dragover");
@@ -430,6 +429,13 @@
 
                             if (res.error) {
                                 if (cfg.debug) console.log(res.error);
+                                if (U.isFunction(cfg.onuploaderror)) {
+                                    cfg.onuploaderror.call({
+                                        self: this,
+                                        error: res.error
+                                    }, res);
+                                }
+                                self.send();
                                 return false;
                             }
 
@@ -672,9 +678,10 @@
              * @param {Function} [_config.uploadedBox.onchange]
              * @param {Function} [_config.uploadedBox.onclick]
              * @param {Function} [_config.validateSelectedFiles]
-             * @param {Function} [_config.onprogress]
-             * @param {Function} [_config.onuploaded]
-             * @param {Function} [_config.onuploadComplete]
+             * @param {Function} [_config.onprogress] - return loaded, total
+             * @param {Function} [_config.onuploaded] - return self
+             * @param {Function} [_config.onuploaderror] - return self, error
+             * @param {Function} [_config.onuploadComplete] - return self
              * @returns {ax5uploader}
              * @example
              * ```js

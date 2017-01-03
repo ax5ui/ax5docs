@@ -70,7 +70,7 @@
                         <ul class="nav navbar-nav" id="docs-menu-print-target">
                             
                             
-                                <li class='active'><a href="/ax5ui-uploader/demo/custom-upload-dropzone.html">Demo</a></li><li ><a href="/ax5ui-uploader/api/index.html">API</a></li>
+                                <li class='active'><a href="/ax5ui-uploader/demo/index.html">Demo</a></li><li ><a href="/ax5ui-uploader/api/index.html">API</a></li>
                             
                         </ul>
 
@@ -137,7 +137,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li  class='active'><a href="/ax5ui-uploader/demo/custom-upload-dropzone.html">Basic Uploader</a></li><li  class='active'><a href="/ax5ui-uploader/demo/index.html">Basic Uploader</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-uploader/demo/index.html">Basic Uploader</a></li><li ><a href="/ax5ui-uploader/demo/custom-upload-dropzone.html">Custom BOX</a></li></ul>
     
                             </div>
                         </div>
@@ -295,6 +295,10 @@ UI요소를 별도로 정의해야 한다면 setConfig메소드에서 uploadedBo
             onprogress: function () {
 
             },
+            onuploaderror: function () {
+                console.log(this.error);
+                dialog.alert(this.error.message);
+            },
             onuploaded: function () {
 
             },
@@ -445,6 +449,10 @@ UI요소를 별도로 정의해야 한다면 setConfig메소드에서 uploadedBo
             },
             onprogress: function () {
 
+            },
+            onuploaderror: function () {
+                console.log(this.error);
+                dialog.alert(this.error.message);
             },
             onuploaded: function () {
 

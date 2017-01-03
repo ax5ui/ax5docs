@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="Basic Uploader" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="custom" title="Custom BOX" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -41,24 +41,6 @@
                 ```
             </ax5docs-md>
 
-            <ax5docs-md>
-                It is not easy to attach multi-file upload components with minimal changes to the existing page layout.
-                ax5ui-uploader is designed to control the UI within the component by placing button, uploaded-box, etc. in the element with [data-ax5uploader] attribute.
-                Other UI elements (uploaded-box, dropzone, etc.) can be declared as separate elements.
-                If you need to define the UI element separately, you can configure the UI to express the upload status on a separate element by using onprogress instead of uploadedBox and dropZone keys in the setConfig method.
-            </ax5docs-md>
-
-            <div class="lang-kor">
-                <ax5docs-md>
-                    기존에 개발된 페이지 레이아웃의 변화를 최소화 하면서 멀티파일 업로드 컴포넌트를 붙이는 것은 쉽지 않은 일입니다.
-                    ax5ui-uploader에서는 [data-ax5uploader] 속성을 가진 엘리먼트 안에 button, uploaded-box 등 을 두어 콤포넌트 안에 UI를 제어 할 수 있게 설계 하였습니다.
-                    버튼을 제외한 나머지 UI요소들(uploaded-box, dropzone등)은 사용자가 별도의 엘리먼트를 선언할 수 도 있습니다.
-                    UI요소를 별도로 정의해야 한다면 setConfig메소드에서 uploadedBox, dropZone의 키를 부여 하지 않고 onprogress등을 이용하여 별도의 엘리먼트에 업로드 상태를 표현하는 UI를 구성할 수 있습니다.
-
-                </ax5docs-md>
-            </div>
-
-
 
             HTML(code)
             <ax5docs-html run="true">
@@ -66,14 +48,10 @@
 
                 <div data-ax5uploader="upload1">
                     <button data-ax5uploader-button="selector" class="btn btn-primary">Select File (*/*)</button> (Upload Max fileSize 20MB)
-                    <div data-uploaded-box="upload1" data-ax5uploader-uploaded-box="inline"></div>
                 </div>
 
-                <div style="padding: 0;" data-btn-wrap="">
-                    <h3>control</h3>
-                    <button class="btn btn-default" data-upload-btn="getUploadedFiles">getUploadedFiles</button>
-                    <button class="btn btn-default" data-upload-btn="removeFileAll">removeFileAll</button>
-                </div>
+
+
             </ax5docs-html>
 
             <div class="DH30"></div>
@@ -99,66 +77,6 @@
                             manualUpload: false,
                             progressBox: true,
                             progressBoxDirection: "left",
-                            dropZone: $('[data-uploaded-box="upload1"]'),
-                            uploadedBox: {
-                                target: $('[data-uploaded-box="upload1"]'),
-                                icon: {
-                                    "download": '<i class="fa fa-download" aria-hidden="true"></i>',
-                                    "delete": '<i class="fa fa-minus-circle" aria-hidden="true"></i>'
-                                },
-                                columnKeys: {
-                                    name: "fileName",
-                                    type: "ext",
-                                    size: "fileSize",
-                                    uploadedName: "saveName",
-                                    uploadedPath: "",
-                                    downloadPath: "",
-                                    previewPath: "",
-                                    thumbnail: ""
-                                },
-                                lang: {
-                                    supportedHTML5_emptyListMsg: '<div class="text-center" style="padding-top: 30px;">Drop files here or click to upload.</div>',
-                                    emptyListMsg: '<div class="text-center" style="padding-top: 30px;">Empty of List.</div>'
-                                },
-                                onchange: function () {
-
-                                },
-                                onclick: function () {
-                                    // console.log(this.cellType);
-                                    var fileIndex = this.fileIndex;
-                                    var file = this.uploadedFiles[fileIndex];
-                                    switch (this.cellType) {
-                                        case "delete":
-                                            dialog.confirm({
-                                                title: "AX5UI",
-                                                msg: "Are you sure you want to delete it?"
-                                            }, function () {
-                                                if (this.key == "ok") {
-                                                    $.ajax({
-                                                        contentType: "application/json",
-                                                        method: "post",
-                                                        url: apiServer + "/api/v1/ax5uploader/delete",
-                                                        data: JSON.stringify([{
-                                                            id: file.id
-                                                        }]),
-                                                        success: function (res) {
-                                                            if (res.error) {
-                                                                alert(res.error.message);
-                                                                return;
-                                                            }
-                                                            upload1.removeFile(fileIndex);
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                            break;
-
-                                        case "download":
-                                            location.href = apiServer + "/api/v1/ax5uploader/download?id=" + file.id;
-                                            break;
-                                    }
-                                }
-                            },
                             validateSelectedFiles: function () {
                                 console.log(this);
                                 // 10개 이상 업로드 되지 않도록 제한.
@@ -171,6 +89,10 @@
                             },
                             onprogress: function () {
 
+                            },
+                            onuploaderror: function () {
+                                console.log(this.error);
+                                dialog.alert(this.error.message);
                             },
                             onuploaded: function () {
 
@@ -187,85 +109,13 @@
                             success: function (res) {
 
                                 console.log(res);
-                                upload1.setUploadedFiles(res);
+                                // upload1.setUploadedFiles(res);
                             }
                         });
 
-                        // 컨트롤 버튼 이벤트 제어
-                        $('[data-btn-wrap]').clickAttr(this, "data-upload-btn", {
-                            "getUploadedFiles": function () {
-                                var files = ax5.util.deepCopy(upload1.uploadedFiles);
-                                console.log(files);
-                                dialog.alert(JSON.stringify(files));
-                            },
-                            "removeFileAll": function () {
-
-                                dialog.confirm({
-                                    title: "AX5UI",
-                                    msg: "Are you sure you want to delete it?"
-                                }, function () {
-
-                                    if (this.key == "ok") {
-
-                                        var deleteFiles = [];
-                                        upload1.uploadedFiles.forEach(function (f) {
-                                            deleteFiles.push({id: f.id});
-                                        });
-
-                                        $.ajax({
-                                            contentType: "application/json",
-                                            method: "post",
-                                            url: apiServer + "/api/v1/ax5uploader/delete",
-                                            data: JSON.stringify(deleteFiles),
-                                            success: function (res) {
-                                                if (res.error) {
-                                                    alert(res.error.message);
-                                                    return;
-                                                }
-
-                                                upload1.removeFileAll();
-                                            }
-                                        });
-
-                                    }
-                                });
-                            }
-                        });
                     });
                 </script>
             </ax5docs-js>
-
-            <ax5docs-md>
-
-            </ax5docs-md>
-
-            <div class="docs-callout docs-callout-primary">
-                <h4>ax5uploader API</h4>
-
-                <p>
-                    We have created a separate project AX5UI APIS for the UI components that can upload the files to the server and check whether the UI works.
-                    You can check the actual code from <code>https://github.com/ax5ui/apis</code>
-                    Among the APIs, the following APIs are related to file uploading.
-                </p>
-                <p>
-                    The API is intended to handle only requests sent from ax5.io. Download the API test source and start the server.
-                </p>
-
-                <ul>
-                    <li>
-                        <b>[POST]/api/v1/ax5uploader</b> : Upload the file.
-                    </li>
-                    <li>
-                        <b>[GET]/api/v1/ax5uploader</b> : View uploaded file list.
-                    </li>
-                    <li>
-                        <b>[POST]/api/v1/ax5uploader/delete</b> : Delete some uploaded files.
-                    </li>
-                    <li>
-                        <b>[GET]/api/v1/ax5uploader/download</b> : Download one uploaded file.
-                    </li>
-                </ul>
-            </div>
 
         </section>
 
