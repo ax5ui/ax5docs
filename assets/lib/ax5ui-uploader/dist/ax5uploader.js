@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "uploader",
-        version: "${VERSION}"
+        version: "1.3.67"
     }, function () {
 
         var ax5uploader = function ax5uploader() {
@@ -192,13 +192,16 @@
                     var timer = void 0;
 
                     this.$dropZone.parent().on("click", "[data-ax5uploader-dropzone]", function (e) {
-                        if (this == e.target) {
-                            if (U.isFunction(cfg.dropZone.onclick)) {
-                                cfg.dropZone.onclick.call({
-                                    self: self
-                                });
-                            } else {
-                                self.$inputFile.trigger("click");
+                        var $target = jQuery(e.target);
+                        if ($target.parents('[data-ax5uploader-uploaded-item]').length == 0 && !$target.attr('data-ax5uploader-uploaded-item')) {
+                            if (this == e.target || $.contains(this, e.target)) {
+                                if (U.isFunction(cfg.dropZone.onclick)) {
+                                    cfg.dropZone.onclick.call({
+                                        self: self
+                                    });
+                                } else {
+                                    self.$inputFile.trigger("click");
+                                }
                             }
                         }
                     });
@@ -600,6 +603,10 @@
                     lang: cfg.uploadedBox.lang,
                     supportFileApi: !!ax5.info.supportFileApi
                 }, cfg.uploadedBox.columnKeys));
+                this.$uploadedBox.find("img").on("error", function () {
+                    //this.src = "";
+                    $(this).parent().addClass("no-image");
+                });
             }.bind(this);
 
             var bound_attachFileTag = function () {
@@ -643,6 +650,7 @@
              * @param {String} _config.form.action - upload URL
              * @param {String} _config.form.fileName - The name key of the upload file
              * @param {Boolean} [_config.multiple=false] - Whether multiple files. In a browser where fileApi is not supported (eg IE9), it only works with false.
+             * @param {String} [_config.accept=""] - accept mimeType (http://www.w3schools.com/TAgs/att_input_accept.asp)
              * @param {Boolean} [_config.manualUpload=false] - Whether to automatically upload when a file is selected.
              * @param {Boolean} [_config.progressBox=true] - Whether to use progressBox
              * @param {String} [_config.progressBoxDirection=auto] - ProgressBox display direction
@@ -917,7 +925,7 @@
     };
 
     var upoadedBox = function upoadedBox(columnKeys) {
-        return "\n{{#uploadedFiles}}<div data-ax5uploader-uploaded-item=\"{{@i}}\">\n    <div class=\"uploaded-item-holder\">\n        <div class=\"uploaded-item-cell\" data-uploaded-item-cell=\"download\">{{{icon.download}}}</div>\n        <div class=\"uploaded-item-cell\" data-uploaded-item-cell=\"filename\">{{" + columnKeys.name + "}}</div>\n        <div class=\"uploaded-item-cell\" data-uploaded-item-cell=\"filesize\">({{#@fn_get_byte}}{{" + columnKeys.size + "}}{{/@fn_get_byte}})</div>\n        <div class=\"uploaded-item-cell\" data-uploaded-item-cell=\"delete\">{{{icon.delete}}}</div>\n    </div>\n</div>{{/uploadedFiles}}\n{{^uploadedFiles}}\n{{#supportFileApi}}{{{lang.supportedHTML5_emptyListMsg}}}{{/supportFileApi}}\n{{^supportFileApi}}{{{lang.emptyListMsg}}}{{/supportFileApi}}\n{{/uploadedFiles}}\n";
+        return "\n{{#uploadedFiles}}<div data-ax5uploader-uploaded-item=\"{{@i}}\">\n    <div class=\"uploaded-item-preview\">\n        {{#" + columnKeys.thumbnail + "}}<img src=\"" + columnKeys.apiServerUrl + "{{" + columnKeys.thumbnail + "}}\">{{/" + columnKeys.thumbnail + "}}\n    </div>\n    <div class=\"uploaded-item-holder\">\n        <div class=\"uploaded-item-cell\" data-uploaded-item-cell=\"download\">{{{icon.download}}}</div>\n        <div class=\"uploaded-item-cell\" data-uploaded-item-cell=\"filename\">{{" + columnKeys.name + "}}</div>\n        <div class=\"uploaded-item-cell\" data-uploaded-item-cell=\"filesize\">({{#@fn_get_byte}}{{" + columnKeys.size + "}}{{/@fn_get_byte}})</div>\n        <div class=\"uploaded-item-cell\" data-uploaded-item-cell=\"delete\">{{{icon.delete}}}</div>\n    </div>\n</div>{{/uploadedFiles}}\n{{^uploadedFiles}}\n{{#supportFileApi}}{{{lang.supportedHTML5_emptyListMsg}}}{{/supportFileApi}}\n{{^supportFileApi}}{{{lang.emptyListMsg}}}{{/supportFileApi}}\n{{/uploadedFiles}}\n";
     };
 
     UPLOADER.tmpl = {

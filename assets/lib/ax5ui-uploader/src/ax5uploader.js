@@ -208,13 +208,16 @@
 
                     this.$dropZone.parent()
                         .on("click", "[data-ax5uploader-dropzone]", function (e) {
-                            if (this == e.target) {
-                                if(U.isFunction(cfg.dropZone.onclick)) {
-                                    cfg.dropZone.onclick.call({
-                                        self: self
-                                    });
-                                }else{
-                                    self.$inputFile.trigger("click");
+                            let $target = jQuery(e.target);
+                            if($target.parents('[data-ax5uploader-uploaded-item]').length == 0 && !$target.attr('data-ax5uploader-uploaded-item')) {
+                                if (this == e.target || $.contains(this, e.target)) {
+                                    if (U.isFunction(cfg.dropZone.onclick)) {
+                                        cfg.dropZone.onclick.call({
+                                            self: self
+                                        });
+                                    } else {
+                                        self.$inputFile.trigger("click");
+                                    }
                                 }
                             }
                         });
@@ -633,6 +636,11 @@
                         supportFileApi: !!ax5.info.supportFileApi
                     }, cfg.uploadedBox.columnKeys)
                 );
+                this.$uploadedBox.find("img").on("error", function () {
+                   //this.src = "";
+                   $(this).parent().addClass("no-image");
+                });
+                
             }).bind(this);
 
             let bound_attachFileTag = (function () {
@@ -679,6 +687,7 @@
              * @param {String} _config.form.action - upload URL
              * @param {String} _config.form.fileName - The name key of the upload file
              * @param {Boolean} [_config.multiple=false] - Whether multiple files. In a browser where fileApi is not supported (eg IE9), it only works with false.
+             * @param {String} [_config.accept=""] - accept mimeType (http://www.w3schools.com/TAgs/att_input_accept.asp)
              * @param {Boolean} [_config.manualUpload=false] - Whether to automatically upload when a file is selected.
              * @param {Boolean} [_config.progressBox=true] - Whether to use progressBox
              * @param {String} [_config.progressBoxDirection=auto] - ProgressBox display direction

@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="1" id="basic" title="Basic Uploader" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="thumbnail" title="Thumbnail Uploader" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -66,7 +66,7 @@
                 <div data-ax5uploader="upload1">
                     <button data-ax5uploader-button="selector" class="btn btn-primary">Select File (*/*)</button>
                     (Upload Max fileSize 20MB)
-                    <div data-uploaded-box="upload1" data-ax5uploader-uploaded-box="inline"></div>
+                    <div data-uploaded-box="upload1" data-ax5uploader-uploaded-box="thumbnail"></div>
                 </div>
 
                 <div style="padding: 0;" data-btn-wrap="">
@@ -107,14 +107,12 @@
                                     "delete": '<i class="fa fa-minus-circle" aria-hidden="true"></i>'
                                 },
                                 columnKeys: {
+                                    apiServerUrl: "http://api-demo.ax5.io",
                                     name: "fileName",
                                     type: "ext",
                                     size: "fileSize",
                                     uploadedName: "saveName",
-                                    uploadedPath: "",
-                                    downloadPath: "",
-                                    previewPath: "",
-                                    thumbnail: ""
+                                    thumbnail: "thumbnail"
                                 },
                                 lang: {
                                     supportedHTML5_emptyListMsg: '<div class="text-center" style="padding-top: 30px;">Drop files here or click to upload.</div>',

@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-uploader : Custom BOX</title>
+    <title>ax5ui / ax5ui-uploader : Thumbnail Uploader</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -41,11 +41,8 @@
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-uploader/dist/ax5uploader.css">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-dialog/dist/ax5dialog.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css">
-
         <script type="text/javascript" src="../../assets/lib/ax5ui-uploader/dist/ax5uploader.js"></script>
         <script type="text/javascript" src="../../assets/lib/ax5ui-dialog/dist/ax5dialog.js"></script>
-        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.min.js"></script>
         <script src="https://cdn.rawgit.com/thomasJang/jquery-direct/master/dist/jquery-direct.min.js"></script>
     
 </head>
@@ -140,7 +137,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-uploader/demo/index.html">Basic Uploader</a></li><li ><a href="/ax5ui-uploader/demo/thumbnail.html">Thumbnail Uploader</a></li><li  class='active'><a href="/ax5ui-uploader/demo/custom-upload-dropzone.html">Custom BOX</a></li></ul>
+        <ul><li ><a href="/ax5ui-uploader/demo/index.html">Basic Uploader</a></li><li  class='active'><a href="/ax5ui-uploader/demo/thumbnail.html">Thumbnail Uploader</a></li><li ><a href="/ax5ui-uploader/demo/custom-upload-dropzone.html">Custom BOX</a></li></ul>
     
                             </div>
                         </div>
@@ -150,65 +147,58 @@
 
         
         <section class="ax5docs-section">
-            <h1>Custom BOX</h1>
+            <h1>Thumbnail Uploader</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-dialog/master/dist/ax5dialog.css&quot;&gt;
 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-uploader/master/dist/ax5uploader.css&quot;&gt;
-&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css&quot;&gt;
-
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-dialog/master/dist/ax5dialog.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-uploader/master/dist/ax5uploader.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.rawgit.com/thomasJang/jquery-direct/master/dist/jquery-direct.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 
 
+            <p>It is not easy to attach multi-file upload components with minimal changes to the existing page layout.
+ax5ui-uploader is designed to control the UI within the component by placing button, uploaded-box, etc. in the element with [data-ax5uploader] attribute.
+Other UI elements (uploaded-box, dropzone, etc.) can be declared as separate elements.
+If you need to define the UI element separately, you can configure the UI to express the upload status on a separate element by using onprogress instead of uploadedBox and dropZone keys in the setConfig method.</p>
+
+
+            <div class="lang-kor">
+                <p>기존에 개발된 페이지 레이아웃의 변화를 최소화 하면서 멀티파일 업로드 컴포넌트를 붙이는 것은 쉽지 않은 일입니다.
+ax5ui-uploader에서는 [data-ax5uploader] 속성을 가진 엘리먼트 안에 button, uploaded-box 등 을 두어 콤포넌트 안에 UI를 제어 할 수 있게 설계 하였습니다.
+버튼을 제외한 나머지 UI요소들(uploaded-box, dropzone등)은 사용자가 별도의 엘리먼트를 선언할 수 도 있습니다.
+UI요소를 별도로 정의해야 한다면 setConfig메소드에서 uploadedBox, dropZone의 키를 부여 하지 않고 onprogress등을 이용하여 별도의 엘리먼트에 업로드 상태를 표현하는 UI를 구성할 수 있습니다.</p>
+
+            </div>
+
 
             HTML(code)
-            <pre class="prettyprint linenums lang-html">&lt;div style="position: fixed;left:0;top:0;width:100%;height:100%;background: #ccc;z-index: 1000;display: none;opacity: 0.8;text-align: center;color: #000;" id="dragover">
-    &lt;table width="100%" height="100%">
-        &lt;tr>
-            &lt;td valign="middle" align="center">&lt;h1>Drop the file here.&lt;/h1>&lt;/td>
-        &lt;/tr>
-    &lt;/table>
-&lt;/div>
-
-&lt;div class="DH20">&lt;/div>
+            <pre class="prettyprint linenums lang-html">&lt;div class="DH20">&lt;/div>
 
 &lt;div data-ax5uploader="upload1">
     &lt;button data-ax5uploader-button="selector" class="btn btn-primary">Select File (*/*)&lt;/button>
     (Upload Max fileSize 20MB)
+    &lt;div data-uploaded-box="upload1" data-ax5uploader-uploaded-box="thumbnail">&lt;/div>
 &lt;/div>
 
-&lt;div class="DH10">&lt;/div>
-
-&lt;div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    header: {align: &#39;center&#39;},&#10;                    showLineNumber: false,&#10;                    showRowSelector: true,&#10;                    multipleSelect: false,&#10;                    lineNumberColumnWidth: 40,&#10;                    rowSelectorColumnWidth: 27&#10;                }" style="height: 150px;">&lt;/div>
-
-&lt;div style="padding: 10px 0;" data-btn-wrap>
-    &lt;button class="btn btn-default btn-sm" data-upload-btn="removeFile">removeFile&lt;/button>
-&lt;/div></pre><div style="position: fixed;left:0;top:0;width:100%;height:100%;background: #ccc;z-index: 1000;display: none;opacity: 0.8;text-align: center;color: #000;" id="dragover">
-    <table width="100%" height="100%">
-        <tr>
-            <td valign="middle" align="center"><h1>Drop the file here.</h1></td>
-        </tr>
-    </table>
-</div>
-
-<div class="DH20"></div>
+&lt;div style="padding: 0;" data-btn-wrap>
+    &lt;h3>control&lt;/h3>
+    &lt;button class="btn btn-default" data-upload-btn="getUploadedFiles">getUploadedFiles&lt;/button>
+    &lt;button class="btn btn-default" data-upload-btn="removeFileAll">removeFileAll&lt;/button>
+&lt;/div></pre><div class="DH20"></div>
 
 <div data-ax5uploader="upload1">
     <button data-ax5uploader-button="selector" class="btn btn-primary">Select File (*/*)</button>
     (Upload Max fileSize 20MB)
+    <div data-uploaded-box="upload1" data-ax5uploader-uploaded-box="thumbnail"></div>
 </div>
 
-<div class="DH10"></div>
-
-<div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    header: {align: &#39;center&#39;},&#10;                    showLineNumber: false,&#10;                    showRowSelector: true,&#10;                    multipleSelect: false,&#10;                    lineNumberColumnWidth: 40,&#10;                    rowSelectorColumnWidth: 27&#10;                }" style="height: 150px;"></div>
-
-<div style="padding: 10px 0;" data-btn-wrap>
-    <button class="btn btn-default btn-sm" data-upload-btn="removeFile">removeFile</button>
+<div style="padding: 0;" data-btn-wrap>
+    <h3>control</h3>
+    <button class="btn btn-default" data-upload-btn="getUploadedFiles">getUploadedFiles</button>
+    <button class="btn btn-default" data-upload-btn="removeFileAll">removeFileAll</button>
 </div>
 
             <div class="DH30"></div>
@@ -217,15 +207,9 @@
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     $(function () {
         var API_SERVER = "http://api-demo.ax5.io";
-
-        var DRAGOVER = $("#dragover");
-
-        /// dialog
         var DIALOG = new ax5.ui.dialog({
             title: "AX5UI"
         });
-
-        /// upload
         var UPLOAD = new ax5.ui.uploader({
             //debug: true,
             target: $('[data-ax5uploader="upload1"]'),
@@ -234,27 +218,69 @@
                 fileName: "file"
             },
             multiple: true,
+            manualUpload: false,
+            progressBox: true,
+            progressBoxDirection: "left",
             dropZone: {
-                target: $(document.body),
+                target: $('[data-uploaded-box="upload1"]')
+            },
+            uploadedBox: {
+                target: $('[data-uploaded-box="upload1"]'),
+                icon: {
+                    "download": '&lt;i class="fa fa-download" aria-hidden="true">&lt;/i>',
+                    "delete": '&lt;i class="fa fa-minus-circle" aria-hidden="true">&lt;/i>'
+                },
+                columnKeys: {
+                    apiServerUrl: "http://api-demo.ax5.io",
+                    name: "fileName",
+                    type: "ext",
+                    size: "fileSize",
+                    uploadedName: "saveName",
+                    thumbnail: "thumbnail"
+                },
+                lang: {
+                    supportedHTML5_emptyListMsg: '&lt;div class="text-center" style="padding-top: 30px;">Drop files here or click to upload.&lt;/div>',
+                    emptyListMsg: '&lt;div class="text-center" style="padding-top: 30px;">Empty of List.&lt;/div>'
+                },
+                onchange: function () {
+
+                },
                 onclick: function () {
-                    // 사용을 원하는 경우 구현
-                    return;
-                    if (!this.self.selectFile()) {
-                        console.log("파일 선택 지원 안됨");
+                    // console.log(this.cellType);
+                    var fileIndex = this.fileIndex;
+                    var file = this.uploadedFiles[fileIndex];
+                    switch (this.cellType) {
+                        case "delete":
+                            DIALOG.confirm({
+                                title: "AX5UI",
+                                msg: "Are you sure you want to delete it?"
+                            }, function () {
+                                if (this.key == "ok") {
+                                    $.ajax({
+                                        contentType: "application/json",
+                                        method: "post",
+                                        url: API_SERVER + "/api/v1/ax5uploader/delete",
+                                        data: JSON.stringify([{
+                                            id: file.id
+                                        }]),
+                                        success: function (res) {
+                                            if (res.error) {
+                                                alert(res.error.message);
+                                                return;
+                                            }
+                                            UPLOAD.removeFile(fileIndex);
+                                        }
+                                    });
+                                }
+                            });
+                            break;
+
+                        case "download":
+                            if (file.download) {
+                                location.href = API_SERVER + file.download;
+                            }
+                            break;
                     }
-                },
-                ondragover: function () {
-                    //this.self.$dropZone.addClass("dragover");
-                    DRAGOVER.show();
-                    DRAGOVER.on("dragleave", function () {
-                        DRAGOVER.hide();
-                    });
-                },
-                ondragout: function () {
-                    //this.self.$dropZone.removeClass("dragover");
-                },
-                ondrop: function () {
-                    DRAGOVER.hide();
                 }
             },
             validateSelectedFiles: function () {
@@ -264,122 +290,81 @@
                     alert("You can not upload more than 10 files.");
                     return false;
                 }
+
                 return true;
+            },
+            onprogress: function () {
+
             },
             onuploaderror: function () {
                 console.log(this.error);
-                dialog.alert(this.error.message);
+                DIALOG.alert(this.error.message);
+            },
+            onuploaded: function () {
+
             },
             onuploadComplete: function () {
-                ACTIONS["UPDATE_uploaded"](this.self.uploadedFiles);
+
             }
         });
 
-        /// grid
-        var GRID = new ax5.ui.grid({
-            target: $('[data-ax5grid="first-grid"]'),
-            columns: [
-                {key: "fileName", label: "fileName", width: 200},
-                {key: "fileSize", label: "fileSize", align: "right", formatter: function () {
-                    return ax5.util.number(this.value, {byte: true});
-                }},
-                {key: "ext", label: "ext", align: "center", width: 60},
-                {key: "createdAt", label: "createdAt", align: "center", width: 140, formatter: function () {
-                    return ax5.util.date(this.value, {"return": "yyyy/MM/dd hh:mm:ss"});
-                }},
-                {key: "download", label: "down", width: 60, align: "center", formatter: function () {
-                    return '&lt;i class="fa fa-download" aria-hidden="true">&lt;/i>'
-                }}
-            ],
-            body: {
-                onClick: function () {
-                    if(this.column.key == "download" && this.item.download){
-                        location.href = API_SERVER + this.item.download;
-                    }
-                }
+        // 파일 목록 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5uploader",
+            success: function (res) {
+
+                console.log(res);
+                UPLOAD.setUploadedFiles(res);
             }
         });
 
-        /// ACTIONS
-        var ACTIONS = {
-            "INIT": function () {
-                // 컨트롤 버튼 이벤트 제어
-                uploadView.initView();
+        // 컨트롤 버튼 이벤트 제어
+        $('[data-btn-wrap]').clickAttr(this, "data-upload-btn", {
+            "getUploadedFiles": function () {
+                var files = ax5.util.deepCopy(UPLOAD.uploadedFiles);
+                console.log(files);
+                DIALOG.alert(JSON.stringify(files));
             },
-            "GET_grid": function (data) {
-                return GRID.getList(data);
-            },
-            "GET_uploaded": function () {
-                // 업로드 파일 가져오기
-                $.ajax({
-                    method: "GET",
-                    url: API_SERVER + "/api/v1/ax5uploader",
-                    success: function (res) {
-                        uploadView.setData(res);
-                    }
-                });
-            },
-            "DELETE_files": function (data) {
-                $.ajax({
-                    contentType: "application/json",
-                    method: "post",
-                    url: API_SERVER + "/api/v1/ax5uploader/delete",
-                    data: JSON.stringify(data),
-                    success: function (res) {
-                        if (res.error) {
-                            alert(res.error.message);
-                            return;
-                        }
-                        ACTIONS["GET_uploaded"]();
-                    }
-                });
-            },
-            "UPDATE_uploaded": function (data) {
-                GRID.setData(data);
-            }
-        };
+            "removeFileAll": function () {
 
-        /// uploadView
-        var uploadView = {
-            initView: function () {
-                $('[data-btn-wrap]').clickAttr(this, "data-upload-btn", {
-                    "removeFile": function () {
-                        var deleteFiles = ACTIONS["GET_grid"]("selected");
-                        if (deleteFiles.length == 0) {
-                            alert("No list selected.");
-                            return;
-                        }
-                        DIALOG.confirm({
-                            title: "AX5UI",
-                            msg: "Are you sure you want to delete it?"
-                        }, function () {
-                            if (this.key == "ok") {
-                                ACTIONS["DELETE_files"](deleteFiles);
+                DIALOG.confirm({
+                    title: "AX5UI",
+                    msg: "Are you sure you want to delete it?"
+                }, function () {
+
+                    if (this.key == "ok") {
+
+                        var deleteFiles = [];
+                        UPLOAD.uploadedFiles.forEach(function (f) {
+                            deleteFiles.push({id: f.id});
+                        });
+
+                        $.ajax({
+                            contentType: "application/json",
+                            method: "post",
+                            url: API_SERVER + "/api/v1/ax5uploader/delete",
+                            data: JSON.stringify(deleteFiles),
+                            success: function (res) {
+                                if (res.error) {
+                                    alert(res.error.message);
+                                    return;
+                                }
+
+                                UPLOAD.removeFileAll();
                             }
                         });
+
                     }
                 });
-            },
-            setData: function (data) {
-                UPLOAD.setUploadedFiles(data);
-                GRID.setData(UPLOAD.uploadedFiles);
             }
-        };
-
-        ACTIONS["INIT"]();
-        ACTIONS["GET_uploaded"]();
+        });
     });
 &lt;/script></pre><script type="text/javascript">$(function () {
         var API_SERVER = "http://api-demo.ax5.io";
-
-        var DRAGOVER = $("#dragover");
-
-        /// dialog
         var DIALOG = new ax5.ui.dialog({
             title: "AX5UI"
         });
-
-        /// upload
         var UPLOAD = new ax5.ui.uploader({
             //debug: true,
             target: $('[data-ax5uploader="upload1"]'),
@@ -388,27 +373,69 @@
                 fileName: "file"
             },
             multiple: true,
+            manualUpload: false,
+            progressBox: true,
+            progressBoxDirection: "left",
             dropZone: {
-                target: $(document.body),
+                target: $('[data-uploaded-box="upload1"]')
+            },
+            uploadedBox: {
+                target: $('[data-uploaded-box="upload1"]'),
+                icon: {
+                    "download": '<i class="fa fa-download" aria-hidden="true"></i>',
+                    "delete": '<i class="fa fa-minus-circle" aria-hidden="true"></i>'
+                },
+                columnKeys: {
+                    apiServerUrl: "http://api-demo.ax5.io",
+                    name: "fileName",
+                    type: "ext",
+                    size: "fileSize",
+                    uploadedName: "saveName",
+                    thumbnail: "thumbnail"
+                },
+                lang: {
+                    supportedHTML5_emptyListMsg: '<div class="text-center" style="padding-top: 30px;">Drop files here or click to upload.</div>',
+                    emptyListMsg: '<div class="text-center" style="padding-top: 30px;">Empty of List.</div>'
+                },
+                onchange: function () {
+
+                },
                 onclick: function () {
-                    // 사용을 원하는 경우 구현
-                    return;
-                    if (!this.self.selectFile()) {
-                        console.log("파일 선택 지원 안됨");
+                    // console.log(this.cellType);
+                    var fileIndex = this.fileIndex;
+                    var file = this.uploadedFiles[fileIndex];
+                    switch (this.cellType) {
+                        case "delete":
+                            DIALOG.confirm({
+                                title: "AX5UI",
+                                msg: "Are you sure you want to delete it?"
+                            }, function () {
+                                if (this.key == "ok") {
+                                    $.ajax({
+                                        contentType: "application/json",
+                                        method: "post",
+                                        url: API_SERVER + "/api/v1/ax5uploader/delete",
+                                        data: JSON.stringify([{
+                                            id: file.id
+                                        }]),
+                                        success: function (res) {
+                                            if (res.error) {
+                                                alert(res.error.message);
+                                                return;
+                                            }
+                                            UPLOAD.removeFile(fileIndex);
+                                        }
+                                    });
+                                }
+                            });
+                            break;
+
+                        case "download":
+                            if (file.download) {
+                                location.href = API_SERVER + file.download;
+                            }
+                            break;
                     }
-                },
-                ondragover: function () {
-                    //this.self.$dropZone.addClass("dragover");
-                    DRAGOVER.show();
-                    DRAGOVER.on("dragleave", function () {
-                        DRAGOVER.hide();
-                    });
-                },
-                ondragout: function () {
-                    //this.self.$dropZone.removeClass("dragover");
-                },
-                ondrop: function () {
-                    DRAGOVER.hide();
                 }
             },
             validateSelectedFiles: function () {
@@ -418,112 +445,107 @@
                     alert("You can not upload more than 10 files.");
                     return false;
                 }
+
                 return true;
+            },
+            onprogress: function () {
+
             },
             onuploaderror: function () {
                 console.log(this.error);
-                dialog.alert(this.error.message);
+                DIALOG.alert(this.error.message);
+            },
+            onuploaded: function () {
+
             },
             onuploadComplete: function () {
-                ACTIONS["UPDATE_uploaded"](this.self.uploadedFiles);
+
             }
         });
 
-        /// grid
-        var GRID = new ax5.ui.grid({
-            target: $('[data-ax5grid="first-grid"]'),
-            columns: [
-                {key: "fileName", label: "fileName", width: 200},
-                {key: "fileSize", label: "fileSize", align: "right", formatter: function () {
-                    return ax5.util.number(this.value, {byte: true});
-                }},
-                {key: "ext", label: "ext", align: "center", width: 60},
-                {key: "createdAt", label: "createdAt", align: "center", width: 140, formatter: function () {
-                    return ax5.util.date(this.value, {"return": "yyyy/MM/dd hh:mm:ss"});
-                }},
-                {key: "download", label: "down", width: 60, align: "center", formatter: function () {
-                    return '<i class="fa fa-download" aria-hidden="true"></i>'
-                }}
-            ],
-            body: {
-                onClick: function () {
-                    if(this.column.key == "download" && this.item.download){
-                        location.href = API_SERVER + this.item.download;
-                    }
-                }
+        // 파일 목록 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5uploader",
+            success: function (res) {
+
+                console.log(res);
+                UPLOAD.setUploadedFiles(res);
             }
         });
 
-        /// ACTIONS
-        var ACTIONS = {
-            "INIT": function () {
-                // 컨트롤 버튼 이벤트 제어
-                uploadView.initView();
+        // 컨트롤 버튼 이벤트 제어
+        $('[data-btn-wrap]').clickAttr(this, "data-upload-btn", {
+            "getUploadedFiles": function () {
+                var files = ax5.util.deepCopy(UPLOAD.uploadedFiles);
+                console.log(files);
+                DIALOG.alert(JSON.stringify(files));
             },
-            "GET_grid": function (data) {
-                return GRID.getList(data);
-            },
-            "GET_uploaded": function () {
-                // 업로드 파일 가져오기
-                $.ajax({
-                    method: "GET",
-                    url: API_SERVER + "/api/v1/ax5uploader",
-                    success: function (res) {
-                        uploadView.setData(res);
-                    }
-                });
-            },
-            "DELETE_files": function (data) {
-                $.ajax({
-                    contentType: "application/json",
-                    method: "post",
-                    url: API_SERVER + "/api/v1/ax5uploader/delete",
-                    data: JSON.stringify(data),
-                    success: function (res) {
-                        if (res.error) {
-                            alert(res.error.message);
-                            return;
-                        }
-                        ACTIONS["GET_uploaded"]();
-                    }
-                });
-            },
-            "UPDATE_uploaded": function (data) {
-                GRID.setData(data);
-            }
-        };
+            "removeFileAll": function () {
 
-        /// uploadView
-        var uploadView = {
-            initView: function () {
-                $('[data-btn-wrap]').clickAttr(this, "data-upload-btn", {
-                    "removeFile": function () {
-                        var deleteFiles = ACTIONS["GET_grid"]("selected");
-                        if (deleteFiles.length == 0) {
-                            alert("No list selected.");
-                            return;
-                        }
-                        DIALOG.confirm({
-                            title: "AX5UI",
-                            msg: "Are you sure you want to delete it?"
-                        }, function () {
-                            if (this.key == "ok") {
-                                ACTIONS["DELETE_files"](deleteFiles);
+                DIALOG.confirm({
+                    title: "AX5UI",
+                    msg: "Are you sure you want to delete it?"
+                }, function () {
+
+                    if (this.key == "ok") {
+
+                        var deleteFiles = [];
+                        UPLOAD.uploadedFiles.forEach(function (f) {
+                            deleteFiles.push({id: f.id});
+                        });
+
+                        $.ajax({
+                            contentType: "application/json",
+                            method: "post",
+                            url: API_SERVER + "/api/v1/ax5uploader/delete",
+                            data: JSON.stringify(deleteFiles),
+                            success: function (res) {
+                                if (res.error) {
+                                    alert(res.error.message);
+                                    return;
+                                }
+
+                                UPLOAD.removeFileAll();
                             }
                         });
+
                     }
                 });
-            },
-            setData: function (data) {
-                UPLOAD.setUploadedFiles(data);
-                GRID.setData(UPLOAD.uploadedFiles);
             }
-        };
-
-        ACTIONS["INIT"]();
-        ACTIONS["GET_uploaded"]();
+        });
     });
 </script></script>
+
+            
+
+            <div class="docs-callout docs-callout-primary">
+                <h4>ax5uploader API</h4>
+
+                <p>
+                    We have created a separate project AX5UI APIS for the UI components that can upload the files to the server and check whether the UI works.
+                    You can check the actual code from <code>https://github.com/ax5ui/apis</code>
+                    Among the APIs, the following APIs are related to file uploading.
+                </p>
+                <p>
+                    The API is intended to handle only requests sent from ax5.io. Download the API test source and start the server.
+                </p>
+
+                <ul>
+                    <li>
+                        <b>[POST]/api/v1/ax5uploader</b> : Upload the file.
+                    </li>
+                    <li>
+                        <b>[GET]/api/v1/ax5uploader</b> : View uploaded file list.
+                    </li>
+                    <li>
+                        <b>[POST]/api/v1/ax5uploader/delete</b> : Delete some uploaded files.
+                    </li>
+                    <li>
+                        <b>[GET]/api/v1/ax5uploader/download</b> : Download one uploaded file.
+                    </li>
+                </ul>
+            </div>
 
         </section>
 

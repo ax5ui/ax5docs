@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="custom" title="Custom BOX" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="3" id="custom" title="Custom BOX" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -50,7 +50,13 @@
 
             HTML(code)
             <ax5docs-html run="true">
-                <div style="position: fixed;left:0;top:0;width:100%;height:100%;background: #000;z-index: 1000;display: none;opacity: 0.5;" id="dragover"></div>
+                <div style="position: fixed;left:0;top:0;width:100%;height:100%;background: #ccc;z-index: 1000;display: none;opacity: 0.8;text-align: center;color: #000;" id="dragover">
+                    <table width="100%" height="100%">
+                        <tr>
+                            <td valign="middle" align="center"><h1>Drop the file here.</h1></td>
+                        </tr>
+                    </table>
+                </div>
 
                 <div class="DH20"></div>
 
@@ -82,51 +88,21 @@
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     $(function () {
-                        var dragover = $("#dragover");
-                        var apiServer = "${data.apiUrl}";
-                        var dialog = new ax5.ui.dialog({
+                        var API_SERVER = "${data.apiUrl}";
+
+                        var DRAGOVER = $("#dragover");
+
+                        /// dialog
+                        var DIALOG = new ax5.ui.dialog({
                             title: "AX5UI"
                         });
-                        var upload1 = new ax5.ui.uploader();
-                        var firstGrid = new ax5.ui.grid({
-                            target: $('[data-ax5grid="first-grid"]'),
-                            columns: [
-                                {key: "fileName", label: "fileName", width: 200},
-                                {
-                                    key: "fileSize", label: "fileSize", align: "right", formatter: function () {
-                                    return ax5.util.number(this.value, {byte: true});
-                                }
-                                },
-                                {key: "ext", label: "ext"},
-                                {
-                                    key: "createdAt", label: "createdAt", width: 140, formatter: function () {
-                                    return ax5.util.date(this.value, {"return": "yyyy/MM/dd hh:mm:ss"});
-                                }
-                                }
-                            ],
-                            body: {
-                                onClick: function () {
-                                    location.href = apiServer + "/api/v1/ax5uploader/download?id=" + this.item.id;
-                                }
-                            }
-                        });
-                        var getFileList = function () {
-                            // 파일 목록 가져오기
-                            $.ajax({
-                                method: "GET",
-                                url: apiServer + "/api/v1/ax5uploader",
-                                success: function (res) {
-                                    upload1.setUploadedFiles(res);
-                                    firstGrid.setData(upload1.uploadedFiles);
-                                }
-                            });
-                        };
 
-                        upload1.setConfig({
+                        /// upload
+                        var UPLOAD = new ax5.ui.uploader({
                             //debug: true,
                             target: $('[data-ax5uploader="upload1"]'),
                             form: {
-                                action: apiServer + "/api/v1/ax5uploader",
+                                action: API_SERVER + "/api/v1/ax5uploader",
                                 fileName: "file"
                             },
                             multiple: true,
@@ -141,19 +117,16 @@
                                 },
                                 ondragover: function () {
                                     //this.self.\$dropZone.addClass("dragover");
-
-                                    dragover.show();
-                                    dragover.on("dragleave", function () {
-                                        dragover.hide();
+                                    DRAGOVER.show();
+                                    DRAGOVER.on("dragleave", function () {
+                                        DRAGOVER.hide();
                                     });
                                 },
                                 ondragout: function () {
                                     //this.self.\$dropZone.removeClass("dragover");
-                                    //$("#dragover").hide();
-
                                 },
                                 ondrop: function () {
-                                    dragover.hide();
+                                    DRAGOVER.hide();
                                 }
                             },
                             validateSelectedFiles: function () {
@@ -163,60 +136,110 @@
                                     alert("You can not upload more than 10 files.");
                                     return false;
                                 }
-
                                 return true;
-                            },
-                            onprogress: function () {
-
                             },
                             onuploaderror: function () {
                                 console.log(this.error);
                                 dialog.alert(this.error.message);
                             },
-                            onuploaded: function () {
-
-                            },
                             onuploadComplete: function () {
-                                firstGrid.setData(this.self.uploadedFiles);
+                                ACTIONS["UPDATE_uploaded"](this.self.uploadedFiles);
                             }
                         });
 
-                        getFileList();
-
-                        // 컨트롤 버튼 이벤트 제어
-                        $('[data-btn-wrap]').clickAttr(this, "data-upload-btn", {
-                            "removeFile": function () {
-
-                                var deleteFiles = firstGrid.getList("selected");
-                                if(deleteFiles.length == 0){
-                                    alert("No list selected.");
-                                    return;
+                        /// grid
+                        var GRID = new ax5.ui.grid({
+                            target: $('[data-ax5grid="first-grid"]'),
+                            columns: [
+                                {key: "fileName", label: "fileName", width: 200},
+                                {key: "fileSize", label: "fileSize", align: "right", formatter: function () {
+                                    return ax5.util.number(this.value, {byte: true});
+                                }},
+                                {key: "ext", label: "ext", align: "center", width: 60},
+                                {key: "createdAt", label: "createdAt", align: "center", width: 140, formatter: function () {
+                                    return ax5.util.date(this.value, {"return": "yyyy/MM/dd hh:mm:ss"});
+                                }},
+                                {key: "download", label: "down", width: 60, align: "center", formatter: function () {
+                                    return '<i class="fa fa-download" aria-hidden="true"></i>'
+                                }}
+                            ],
+                            body: {
+                                onClick: function () {
+                                    if(this.column.key == "download" && this.item.download){
+                                        location.href = API_SERVER + this.item.download;
+                                    }
                                 }
+                            }
+                        });
 
-                                dialog.confirm({
-                                    title: "AX5UI",
-                                    msg: "Are you sure you want to delete it?"
-                                }, function () {
-                                    if (this.key == "ok") {
-                                        $.ajax({
-                                            contentType: "application/json",
-                                            method: "post",
-                                            url: apiServer + "/api/v1/ax5uploader/delete",
-                                            data: JSON.stringify(deleteFiles),
-                                            success: function (res) {
-                                                if (res.error) {
-                                                    alert(res.error.message);
-                                                    return;
-                                                }
-
-                                                getFileList();
-                                            }
-                                        });
-
+                        /// ACTIONS
+                        var ACTIONS = {
+                            "INIT": function () {
+                                // 컨트롤 버튼 이벤트 제어
+                                uploadView.initView();
+                            },
+                            "GET_grid": function (data) {
+                                return GRID.getList(data);
+                            },
+                            "GET_uploaded": function () {
+                                // 업로드 파일 가져오기
+                                $.ajax({
+                                    method: "GET",
+                                    url: API_SERVER + "/api/v1/ax5uploader",
+                                    success: function (res) {
+                                        uploadView.setData(res);
                                     }
                                 });
+                            },
+                            "DELETE_files": function (data) {
+                                $.ajax({
+                                    contentType: "application/json",
+                                    method: "post",
+                                    url: API_SERVER + "/api/v1/ax5uploader/delete",
+                                    data: JSON.stringify(data),
+                                    success: function (res) {
+                                        if (res.error) {
+                                            alert(res.error.message);
+                                            return;
+                                        }
+                                        ACTIONS["GET_uploaded"]();
+                                    }
+                                });
+                            },
+                            "UPDATE_uploaded": function (data) {
+                                GRID.setData(data);
                             }
-                        });
+                        };
+
+                        /// uploadView
+                        var uploadView = {
+                            initView: function () {
+                                $('[data-btn-wrap]').clickAttr(this, "data-upload-btn", {
+                                    "removeFile": function () {
+                                        var deleteFiles = ACTIONS["GET_grid"]("selected");
+                                        if (deleteFiles.length == 0) {
+                                            alert("No list selected.");
+                                            return;
+                                        }
+                                        DIALOG.confirm({
+                                            title: "AX5UI",
+                                            msg: "Are you sure you want to delete it?"
+                                        }, function () {
+                                            if (this.key == "ok") {
+                                                ACTIONS["DELETE_files"](deleteFiles);
+                                            }
+                                        });
+                                    }
+                                });
+                            },
+                            setData: function (data) {
+                                UPLOAD.setUploadedFiles(data);
+                                GRID.setData(UPLOAD.uploadedFiles);
+                            }
+                        };
+
+                        ACTIONS["INIT"]();
+                        ACTIONS["GET_uploaded"]();
                     });
                 </script>
             </ax5docs-js>

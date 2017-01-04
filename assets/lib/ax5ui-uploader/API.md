@@ -28,6 +28,7 @@ Preferences of uploader UI
 | _config.form.action | <code>String</code> |  | upload URL |
 | _config.form.fileName | <code>String</code> |  | The name key of the upload file |
 | [_config.multiple] | <code>Boolean</code> | <code>false</code> | Whether multiple files. In a browser where fileApi is not supported (eg IE9), it only works with false. |
+| [_config.accept] | <code>String</code> | <code>&quot;&quot;</code> | accept mimeType (http://www.w3schools.com/TAgs/att_input_accept.asp) |
 | [_config.manualUpload] | <code>Boolean</code> | <code>false</code> | Whether to automatically upload when a file is selected. |
 | [_config.progressBox] | <code>Boolean</code> | <code>true</code> | Whether to use progressBox |
 | [_config.progressBoxDirection] | <code>String</code> | <code>auto</code> | ProgressBox display direction |
