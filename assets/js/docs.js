@@ -157,6 +157,7 @@ $(document.body).ready(function () {
             "docs-inline-menu": $("#docs-inline-menu"),
             "docs-menu": $("#docs-menu"),
             "docs-menu-parent": $("#docs-menu").parent(),
+            "docs-menu-scroll": $("#docs-menu").find(".docs-menu-scroll"),
             "docs-navbar-collapse": $("#docs-navbar-collapse")
         }
     })();
@@ -217,6 +218,9 @@ $(document.body).ready(function () {
             } else if (fn_docs.menu.viewType == 1) {
                 fn_docs.menu.target.css({height: windowHeight});
             }
+        } else {
+
+            fn_docs._jos["docs-menu-scroll"].scrollLeft(fn_docs._jos["docs-menu-scroll"].find("li.active").position().left);
         }
 
         /// windowScrollTop 위치에 맞게 메뉴 하이라이트

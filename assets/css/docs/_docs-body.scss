@@ -450,12 +450,17 @@
                                     display: table-cell;
                                     //margin-right: 20px;
                                     padding: 10px;
+                                    a{
+                                        font-size: 14px;
+                                    }
                                 }
                             }
                         }
                         &.fixed {
+                            position: relative;
                             padding: 0px 0px;
                             //padding-top: 0;
+
                             width: 100%;
                             background: #fff;
                             border-bottom: 1px solid #ccc;
