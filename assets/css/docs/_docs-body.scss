@@ -16,6 +16,12 @@
         margin: 2em 0;
         padding-bottom: 30px;
         border-bottom: 1px solid #ECEFF7;
+
+        @media screen and (max-width: $break-mobilewide-width) {
+            img {
+                max-width: 100%;
+            }
+        }
     }
 
     .docs-menu {
@@ -450,7 +456,7 @@
                                     display: table-cell;
                                     //margin-right: 20px;
                                     padding: 10px;
-                                    a{
+                                    a {
                                         font-size: 14px;
                                     }
                                 }
