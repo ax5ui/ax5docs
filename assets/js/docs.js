@@ -219,8 +219,9 @@ $(document.body).ready(function () {
                 fn_docs.menu.target.css({height: windowHeight});
             }
         } else {
-
-            fn_docs._jos["docs-menu-scroll"].scrollLeft(fn_docs._jos["docs-menu-scroll"].find("li.active").position().left);
+            if(fn_docs._jos["docs-menu-scroll"].find("li.active").get(0)) {
+                fn_docs._jos["docs-menu-scroll"].scrollLeft(fn_docs._jos["docs-menu-scroll"].find("li.active").position().left);
+            }
         }
 
         /// windowScrollTop 위치에 맞게 메뉴 하이라이트
