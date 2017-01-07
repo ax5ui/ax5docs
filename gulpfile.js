@@ -221,7 +221,8 @@ gulp.task('docs:all', function () {
                     projectName: k,
                     layoutPath: PATHS.assets.src + '/_layouts/index.marko',
                     layoutModalPath: PATHS.assets.src + '/_layouts/modal.marko',
-                    kernelPath: PATHS.kernel
+                    kernelPath: PATHS.kernel,
+                    apiUrl: API_URL
                 }))
                 .pipe(plumber({errorHandler: errorAlert}))
                 .pipe(gulp.dest(PATHS[k].doc_dest));
