@@ -1,8 +1,8 @@
 // ax5.ui.grid.body
 (function () {
 
-    let GRID = ax5.ui.grid;
-    let U = ax5.util;
+    let GRID = ax5.ui.grid,
+        U = ax5.util;
 
     let columnSelect = {
         focusClear: function () {
@@ -242,6 +242,7 @@
                         .attr("data-ax5grid-checked", '' + _data.checked);
                 }
             };
+
         _states.forEach(function (_state) {
             if (!processor[_state]) throw 'invaild state name';
             processor[_state].call(self, _dindex, _data);
@@ -267,7 +268,8 @@
         let self = this;
 
         this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            let panelName, attr, row, col, dindex, rowIndex, colIndex, disableSelection,
+            let panelName, attr,
+                row, col, dindex, rowIndex, colIndex, disableSelection,
                 targetClick = {
                     "default": function (_column) {
                         var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
@@ -356,15 +358,14 @@
                     "default": function (_column) {
 
                         if (this.isInlineEditing) {
-                            for (var columnKey in this.inlineEditing) {
+                            for (let columnKey in this.inlineEditing) {
                                 if (columnKey == _column.dindex + "_" + _column.colIndex + "_" + _column.rowIndex) {
                                     return this;
                                 }
                             }
                         }
 
-                        var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
-                        var value = "";
+                        let column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex], value = "";
                         if (column) {
                             if (!self.list[dindex].__isGrouping) {
                                 value = GRID.data.getValue.call(self, dindex, column.key);
@@ -400,16 +401,18 @@
                 });
             }
         });
-        this.$["container"]["body"].on("mouseover", "tr", function () {
-            return; // 사용안함. 나중을 위해 그냥 두자
-            let dindex = this.getAttribute("data-ax5grid-tr-data-index"),
-                i = self.$.livePanelKeys.length;
-            while (i--) {
-                if (typeof self.xvar.dataHoveredIndex !== "undefined") self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + self.xvar.dataHoveredIndex + '"]').removeClass("hover");
-                self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + dindex + '"]').addClass("hover");
-            }
-            self.xvar.dataHoveredIndex = dindex;
-        });
+
+        /* 사용안함. 나중을 위해 그냥 두자
+         this.$["container"]["body"].on("mouseover", "tr", function () {
+         let dindex = this.getAttribute("data-ax5grid-tr-data-index"),
+         i = self.$.livePanelKeys.length;
+         while (i--) {
+         if (typeof self.xvar.dataHoveredIndex !== "undefined") self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + self.xvar.dataHoveredIndex + '"]').removeClass("hover");
+         self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + dindex + '"]').addClass("hover");
+         }
+         self.xvar.dataHoveredIndex = dindex;
+         });
+         */
         this.$["container"]["body"]
             .on("mousedown", '[data-ax5grid-column-attr="default"]', function (e) {
                 if (self.xvar.touchmoved) return false;
@@ -434,6 +437,7 @@
     let resetFrozenColumn = function () {
         let cfg = this.config,
             dividedBodyRowObj = GRID.util.divideTableByFrozenColumnIndex(this.bodyRowTable, this.xvar.frozenColumnIndex);
+
         this.asideBodyRowData = (function (dataTable) {
             let data = {rows: []};
             for (let i = 0, l = dataTable.rows.length; i < l; i++) {
@@ -719,6 +723,15 @@
         this.$.livePanelKeys = [];
 
         // 그리드 바디 영역 페인트 함수
+        /**
+         * @param _elTargetKey
+         * @param _colGroup
+         * @param _bodyRow
+         * @param _groupRow
+         * @param _list
+         * @param [_scrollConfig]
+         * @returns {boolean}
+         */
         let repaintBody = function (_elTargetKey, _colGroup, _bodyRow, _groupRow, _list, _scrollConfig) {
             let _elTarget = this.$.panel[_elTargetKey];
 
@@ -858,6 +871,15 @@
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
+
+        /**
+         * @param _elTargetKey
+         * @param _colGroup
+         * @param _bodyRow
+         * @param _list
+         * @param [_scrollConfig]
+         * @returns {boolean}
+         */
         let repaintSum = function (_elTargetKey, _colGroup, _bodyRow, _list, _scrollConfig) {
             let _elTarget = this.$.panel[_elTargetKey];
 
@@ -950,6 +972,88 @@
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
+
+        /**
+         * @param _elTargetKey
+         * @param _colGroup
+         * @param _bodyRow
+         * @param _list
+         * @param [_scrollConfig]
+         * @returns {boolean}
+         */
+        let mergeCellsBody = function (_elTargetKey, _colGroup, _bodyRow, _list, _scrollConfig) {
+            // todo : merge 대상중에 예외처리 대상 제외하기. (checkbox 빼주자). 또? // editor 가 있으면 머지 하면 안됨.
+            let tblRowMaps = [];
+            let _elTarget = this.$.panel[_elTargetKey];
+            let token = {}, hasMergeTd;
+            //console.log(_elTarget);
+
+            // 테이블의 td들을 수잡하여 저장해두고 스크립트로 반복하여 정리.
+            let tableTrs = _elTarget.find("tr");
+            for (let ri = 0, rl = tableTrs.length; ri < rl; ri++) {
+                let tableTrTds, trMaps;
+
+                if (!tableTrs[ri].getAttribute("data-ax5grid-grouping-tr")) {
+                    tableTrTds = tableTrs[ri].childNodes;
+                    trMaps = [];
+                    for (let ci = 0, cl = tableTrTds.length; ci < cl; ci++) {
+                        let tdObj = {
+                            "$": jQuery(tableTrTds[ci])
+                        };
+
+                        if (tdObj["$"].attr("data-ax5grid-column-col") != "null") {
+                            tdObj.dindex = tdObj["$"].attr("data-ax5grid-data-index");
+                            tdObj.tri = tdObj["$"].attr("data-ax5grid-column-row");
+                            tdObj.ci = tdObj["$"].attr("data-ax5grid-column-col");
+                            tdObj.rowIndex = tdObj["$"].attr("data-ax5grid-column-rowIndex");
+                            tdObj.colIndex = tdObj["$"].attr("data-ax5grid-column-colIndex");
+                            tdObj.rowspan = tdObj["$"].attr("rowspan");
+                            tdObj.text = tdObj["$"].text();
+                            trMaps.push(tdObj);
+                        }
+
+                        tdObj = null;
+                    }
+                    tblRowMaps.push(trMaps);
+                }
+
+            }
+
+            // 두줄이상 일 때 의미가 있으니.
+            if (tblRowMaps.length > 1) {
+                hasMergeTd = false;
+                for (let ri = 0, rl = tblRowMaps.length; ri < rl; ri++) {
+                    for (let ci = 0, cl = tblRowMaps[ri].length; ci < cl; ci++) {
+                        // 앞줄과 값이 같다면.
+                        if (token[ci] && token[ci].text == tblRowMaps[ri][ci].text) {
+                            tblRowMaps[ri][ci].rowspan = 0;
+                            tblRowMaps[token[ci].ri][ci].rowspan++;
+                            hasMergeTd = true;
+                        } else {
+                            token[ci] = {
+                                ri: ri,
+                                ci: ci,
+                                text: tblRowMaps[ri][ci].text
+                            };
+                        }
+                    }
+                }
+
+                // rowspan을 다 구했으면 적용합니다.
+                if (hasMergeTd) {
+                    for (let ri = 0, rl = tblRowMaps.length; ri < rl; ri++) {
+                        for (let ci = 0, cl = tblRowMaps[ri].length; ci < cl; ci++) {
+                            if (tblRowMaps[ri][ci].rowspan == 0) {
+                                tblRowMaps[ri][ci]["$"].remove();
+                            } else {
+                                tblRowMaps[ri][ci]["$"].attr("rowspan", tblRowMaps[ri][ci].rowspan);
+                            }
+                        }
+                    }
+                }
+            }
+
+        };
         let scrollConfig = {
             paintStartRowIndex: paintStartRowIndex,
             paintRowCount: paintRowCount,
@@ -970,7 +1074,6 @@
                 //repaintSum.call(this, "bottom-aside-body", this.asideColGroup, asideBodyRowData, null, list);
             }
         }
-
         // left
         if (this.xvar.frozenColumnIndex > 0) {
             if (this.xvar.frozenRowIndex > 0) {
@@ -985,7 +1088,6 @@
                 repaintSum.call(this, "bottom-left-body", this.leftHeaderColGroup, leftFootSumData, list);
             }
         }
-
         // body
         if (this.xvar.frozenRowIndex > 0) {
             // 상단 행고정
@@ -994,15 +1096,31 @@
 
         repaintBody.call(this, "body-scroll", this.headerColGroup, bodyRowData, bodyGroupingData, list, scrollConfig);
 
+        // 바닥 요약
         if (cfg.footSum && this.needToPaintSum) {
-            // 바닥 요약
             repaintSum.call(this, "bottom-body-scroll", this.headerColGroup, footSumData, list, scrollConfig);
         }
-
-        //todo : repaintBody 에서 footSum 데이터 예외처리
         // right
         if (cfg.rightSum) {
             // todo : right 표현 정리
+        }
+
+        /// mergeCells
+        if (cfg.body.mergeCells && this.list.length) {
+            // left
+            if (this.xvar.frozenColumnIndex > 0) {
+                if (this.xvar.frozenRowIndex > 0) { // 상단 행고정
+                    // console.log(this.leftHeaderColGroup, leftBodyRowData);
+                    mergeCellsBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, list.slice(0, this.xvar.frozenRowIndex));
+                }
+                mergeCellsBody.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, scrollConfig);
+            }
+
+            // body
+            if (this.xvar.frozenRowIndex > 0) { // 상단 행고정
+                mergeCellsBody.call(this, "top-body-scroll", this.headerColGroup, bodyRowData, list.slice(0, this.xvar.frozenRowIndex));
+            }
+            mergeCellsBody.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, scrollConfig);
         }
 
         this.xvar.paintStartRowIndex = paintStartRowIndex;
@@ -1276,37 +1394,33 @@
         }
     };
 
-    var repaintRow = function (_dindex) {
-        var self = this,
+    let repaintRow = function (_dindex) {
+        let self = this,
             cfg = this.config,
             list = this.list;
         /// ~~~~~~
 
-        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
-        var asideBodyRowData = this.asideBodyRowData;
-        var leftBodyRowData = this.leftBodyRowData;
-        var bodyRowData = this.bodyRowData;
-        var leftFootSumData = this.leftFootSumData;
-        var footSumData = this.footSumData;
-        var asideBodyGroupingData = this.asideBodyGroupingData;
-        var leftBodyGroupingData = this.leftBodyGroupingData;
-        var bodyGroupingData = this.bodyGroupingData;
-        var bodyAlign = cfg.body.align;
-        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1;
-        var scrollConfig = {
-            paintStartRowIndex: paintStartRowIndex,
-            paintRowCount: paintRowCount,
-            bodyTrHeight: this.xvar.bodyTrHeight
-        };
+        let paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex,
+            asideBodyRowData = this.asideBodyRowData,
+            leftBodyRowData = this.leftBodyRowData,
+            bodyRowData = this.bodyRowData,
+            leftFootSumData = this.leftFootSumData,
+            footSumData = this.footSumData,
+            asideBodyGroupingData = this.asideBodyGroupingData,
+            leftBodyGroupingData = this.leftBodyGroupingData,
+            bodyGroupingData = this.bodyGroupingData,
+            bodyAlign = cfg.body.align,
+            paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1,
+            scrollConfig = {
+                paintStartRowIndex: paintStartRowIndex,
+                paintRowCount: paintRowCount,
+                bodyTrHeight: this.xvar.bodyTrHeight
+            };
 
-        var repaintSum = function (_elTargetKey, _colGroup, _bodyRow, _list) {
-            var _elTarget = this.$.panel[_elTargetKey];
-
-            var SS = [];
-            var cgi, cgl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
+        let repaintSum = function (_elTargetKey, _colGroup, _bodyRow, _list) {
+            let _elTarget = this.$.panel[_elTargetKey],
+                SS = [],
+                cgi, cgl, tri, trl, ci, cl, col, cellHeight, colAlign;
 
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
@@ -1389,16 +1503,13 @@
             _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
-        var replaceGroupTr = function (_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
-            var _elTarget = this.$.panel[_elTargetKey];
-            var SS = [];
-            var cgi, cgl;
-            var di, dl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
+        let replaceGroupTr = function (_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
+            let _elTarget = this.$.panel[_elTargetKey],
+                SS = [],
+                di, dl, tri, trl, ci, cl, col, cellHeight, colAlign;
+
             for (di = _scrollConfig.paintStartRowIndex, dl = (function () {
-                var len;
+                let len;
                 len = _list.length;
                 if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
                     len = _scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex;
@@ -1406,7 +1517,7 @@
                 return len;
             })(); di < dl; di++) {
                 if (_groupRow && "__isGrouping" in _list[di]) {
-                    var rowTable = _groupRow;
+                    let rowTable = _groupRow;
                     SS = [];
                     for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
                         for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
@@ -1423,7 +1534,7 @@
                                 'data-ax5grid-column-colIndex="' + col.colIndex + '" ',
                                 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ',
                                 (function (_focusedColumn, _selectedColumn) {
-                                    var attrs = "";
+                                    let attrs = "";
                                     if (_focusedColumn) {
                                         attrs += 'data-ax5grid-column-focused="true" ';
                                     }
@@ -1435,7 +1546,7 @@
                                 'colspan="' + col.colspan + '" ',
                                 'rowspan="' + col.rowspan + '" ',
                                 'class="' + (function (_col) {
-                                    var tdCSS_class = "";
+                                    let tdCSS_class = "";
                                     if (_col.styleClass) {
                                         if (U.isFunction(_col.styleClass)) {
                                             tdCSS_class += _col.styleClass.call({
@@ -1455,7 +1566,7 @@
                                 'style="height: ' + cellHeight + 'px;min-height: 1px;">');
 
                             SS.push((function (_cellHeight) {
-                                var lineHeight = (cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth);
+                                let lineHeight = (cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth);
                                 if (!col.multiLine) {
                                     _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
                                 }
@@ -1480,15 +1591,11 @@
                 }
             }
         };
-        var replaceTr = function (_elTargetKey, _colGroup, _bodyRow, _list, di) {
-            var _elTarget = this.$.panel[_elTargetKey];
-            var SS = [];
-            var cgi, cgl;
-            var di, dl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
-            var rowTable = _bodyRow;
+        let replaceTr = function (_elTargetKey, _colGroup, _bodyRow, _list, di) {
+            let _elTarget = this.$.panel[_elTargetKey],
+                SS = [],
+                tri, trl, ci, cl, col, cellHeight, colAlign, rowTable = _bodyRow;
+
             for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
                 for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                     col = rowTable.rows[tri].cols[ci];
@@ -1504,7 +1611,7 @@
                         'data-ax5grid-column-colIndex="' + col.colIndex + '" ',
                         'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ',
                         (function (_focusedColumn, _selectedColumn) {
-                            var attrs = "";
+                            let attrs = "";
                             if (_focusedColumn) {
                                 attrs += 'data-ax5grid-column-focused="true" ';
                             }
@@ -1516,7 +1623,7 @@
                         'colspan="' + col.colspan + '" ',
                         'rowspan="' + col.rowspan + '" ',
                         'class="' + (function (_col) {
-                            var tdCSS_class = "";
+                            let tdCSS_class = "";
                             if (_col.styleClass) {
                                 if (U.isFunction(_col.styleClass)) {
                                     tdCSS_class += _col.styleClass.call({
@@ -1536,7 +1643,7 @@
                         'style="height: ' + cellHeight + 'px;min-height: 1px;">');
 
                     SS.push((function (_cellHeight) {
-                        var lineHeight = (cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth);
+                        let lineHeight = (cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth);
                         if (!col.multiLine) {
                             _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
                         }
@@ -1557,17 +1664,14 @@
                     '></td>');
             }
 
-            //_elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
             _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
-
 
         // left
         if (this.xvar.frozenColumnIndex > 0) {
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
                 replaceTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
-
             }
             replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
         }
@@ -1587,7 +1691,6 @@
                 if (this.xvar.frozenRowIndex > 0) {
                     // 상단 행고정
                     replaceGroupTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
-
                 }
                 replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
             }
@@ -1597,7 +1700,6 @@
                 // 상단 행고정
                 replaceGroupTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
             }
-
             replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
         }
 
@@ -1614,8 +1716,8 @@
         }
     };
 
-    var scrollTo = function (css, noRepaint) {
-        var cfg = this.config;
+    let scrollTo = function (css, noRepaint) {
+        let cfg = this.config;
 
         if (this.isInlineEditing) {
             for (var key in this.inlineEditing) {
@@ -1648,7 +1750,7 @@
         }
     };
 
-    var blur = function () {
+    let blur = function () {
         columnSelect.focusClear.call(this);
         columnSelect.clear.call(this);
         if (this.isInlineEditing) {
@@ -1924,7 +2026,7 @@
         }
     };
 
-    var inlineEdit = {
+    let inlineEdit = {
         active: function (_focusedColumn, _e, _initValue) {
             var self = this,
                 dindex, colIndex, rowIndex, panelName, colspan,
@@ -2255,3 +2357,8 @@
         getExcelString: getExcelString
     };
 })();
+
+
+/**
+ * todo : mergeCells - false, true, "key", ["key1", "key2"]
+ */

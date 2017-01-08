@@ -1,0 +1,285 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="list" title="Support Array" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-binder/dist/ax5binder.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-toast/dist/ax5toast.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-toast/dist/ax5toast.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- binder -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # ${data.metadata.title}
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-binder/master/dist/ax5binder.min.js"></script>
+                ```
+            </ax5docs-md>
+
+            HTML
+            <ax5docs-html run="true">
+                <form class="" name="binder-form" onsubmit="return false;" style="border: 1px solid #ccc;padding: 10px;border-radius: 10px;">
+
+                    <h3>Familys &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" id="ax-btn-list-add">ADD</button>
+                    </h3>
+
+                    <table class="table table-bordered">
+                        <colgroup>
+                            <col width="60"/>
+                            <col width="150"/>
+                            <col width="100"/>
+                            <col width="100"/>
+                            <col width="100"/>
+                            <col/>
+                            <col width="100"/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <td></td>
+                            <td>A</td>
+                            <td>B</td>
+                            <td>C</td>
+                            <td>D</td>
+                            <td>E</td>
+                            <td>F</td>
+                        </tr>
+                        </thead>
+                        <tbody data-ax-repeat="list">
+                        <script type="text/html">
+                            <tr>
+                                <td align="center">
+
+                                    {{@i}}
+
+                                    {{#@first}}
+                                    <button class="btn btn-default btn-sm" type="button" data-ax-repeat-click="add">+</button>
+                                    {{/@first}}
+                                    {{^@first}}
+                                    <button class="btn btn-default btn-sm" type="button" data-ax-repeat-click="remove">-</button>
+                                    {{/@first}}
+                                </td>
+                                <td>
+                                    <input type="text" name="input-text" id="name-{{@i}}" data-ax-item-path="name" data-ax-validate="required"
+                                           class="form-control W60"/>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="radio-{{@i}}" data-ax-item-path="sex" value="M"/>
+                                        Male
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="radio" name="radio-{{@i}}" data-ax-item-path="sex" value="F"/>
+                                        Female
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                                               value="sport"/>
+                                        sport
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                                               value="movie"/>
+                                        movie
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                                               value="music"/>
+                                        music
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                                               value="play"/>
+                                        play
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                                               value="work"/>
+                                        work
+                                    </label>
+                                </td>
+                                <td>
+                                    <select name="select" data-ax-item-path="character" class="form-control">
+                                        <option value="wild">wild</option>
+                                        <option value="shiny">shiny</option>
+                                        <option value="nice">nice</option>
+                                    </select>
+
+
+                                    <input data-ax-item-path="qty" data-update-qty="{{@i}}" class="form-control"/>
+                                    <input data-ax-item-path="cost" data-update-qty="{{@i}}" class="form-control"/>
+                                    <span data-ax-item-path="price"></span>
+
+                                </td>
+                                <td>
+                                    {{#child}}
+                                    {{^__DELETED__}}
+                                    <input type="text" name="text" data-ax-item-path="child[{{@i}}].name" value=""
+                                           class="form-control input-sm" style="display: inline-block;width: 70px;"/>
+
+                                    {{#@first}}
+                                    <button class="btn btn-primary btn-sm" type="button" data-ax-repeat-child="child"
+                                            data-ax-repeat-child-c-index="{{@i}}" data-ax-repeat-click="add">+
+                                    </button>
+                                    {{/@first}}
+                                    {{^@first}}
+                                    <button class="btn btn-primary btn-sm" type="button" data-ax-repeat-child="child"
+                                            data-ax-repeat-child-c-index="{{@i}}" data-ax-repeat-click="remove">-
+                                    </button>
+                                    {{/@first}}
+
+                                    {{/__DELETED__}}
+                                    {{/child}}
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="checkbox" data-ax-item-path="useYn" value="Y"/>
+                                        Y/N
+                                    </label>
+                                </td>
+                            </tr>
+                        </script>
+                        </tbody>
+                    </table>
+                </form>
+
+
+                <div style="padding: 10px;">
+                    <button class="btn btn-default" data-btn="get-model">get model</button>
+                </div>
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(function () {
+                        var myToast = new ax5.ui.toast();
+
+
+                        var formView = {
+                            model: new ax5.ui.binder(),
+                            initView: function () {
+                                var _this = this;
+
+                                this.model.setModel({
+                                    list: [
+                                        {
+                                            name: "thomas",
+                                            tel: "010-8881-9000",
+                                            email: "tom@axisj.com",
+                                            sex: "M",
+                                            //character: "wild",
+                                            //hobby: ["movie", "play"],
+                                            description: "",
+                                            child: [{name: "값1"}, {name: "값2"}],
+                                            qty: 10,
+                                            cost: 100
+                                        },
+                                        {
+                                            name: "thomas",
+                                            tel: "010-8881-9000",
+                                            email: "tom@axisj.com",
+                                            sex: "M",
+                                            //            character: "shiny",
+                                            //hobby: ["movie", "play"],
+                                            description: "",
+                                            child: [{name: "값1"}, {name: "값2"}],
+                                            qty: 20,
+                                            cost: 100
+                                        }
+                                    ]
+                                }, $(document["binder-form"]));
+
+                                /**
+                                 * this.model.onclick(objectPath, callback);
+                                 */
+                                this.model.onClick("list", function () {
+                                    // console.log(this);
+                                    var child_key = this.jquery.attr("data-ax-repeat-child"), child_index = this.jquery.attr("data-ax-repeat-child-c-index");
+                                    if (child_key) {
+                                        if (this.value == "add") {
+                                            _this.model.childAdd(this.repeat_path, this.item_index, child_key, {name: ""});
+                                        } else {
+                                            _this.model.childRemove(this.repeat_path, this.item_index, child_key, child_index);
+                                        }
+                                    } else if (this.value == "add") {
+                                        _this.addToList();
+                                    } else {
+                                        _this.remove(this.repeat_path, this.item_index);
+                                    }
+                                });
+
+                                $("#ax-btn-list-add").click(function () {
+                                    _this.addToList();
+                                });
+                            },
+                            addToList: function () {
+                                this.model.add("list", {name: "name:" + this.model.model.list.length, child: [{name: ""}]});
+                            },
+                            remove: function (repeat_path, item_index) {
+                                this.model.remove(repeat_path, item_index);
+                                //_this.print_json();
+                            },
+                            update: function (repeat_path, item_index, item) {
+                                /**
+                                 * repeat_item update
+                                 */
+                                this.model.update(repeat_path, item_index, item);
+                            }
+                        };
+
+                        formView.initView();
+
+                        $('[data-btn]').click(function () {
+                            var act = this.getAttribute("data-btn");
+                            switch (act) {
+                                case "get-model":
+                                    var data = formView.model.get();
+                                    console.log(data);
+                                    myToast.confirm(JSON.stringify(data));
+                                    break;
+                            }
+                        });
+                    });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>

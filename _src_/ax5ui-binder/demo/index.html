@@ -114,7 +114,7 @@
                                 case "get-model":
                                     var data = myModel.get();
                                     console.log(data);
-                                    myToast.push(JSON.stringify(data));
+                                    myToast.confirm(JSON.stringify(data));
                                     break;
                             }
                         });

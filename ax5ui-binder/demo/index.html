@@ -136,7 +136,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li  class='active'><a href="/ax5ui-binder/demo/index.html">basic</a></li></ul>
+        <ul><li  class='active'><a href="/ax5ui-binder/demo/index.html">basic</a></li><li ><a href="/ax5ui-binder/demo/list.html">Support Array</a></li></ul>
     
                             </div>
                         </div>
@@ -268,7 +268,7 @@
                 case "get-model":
                     var data = myModel.get();
                     console.log(data);
-                    myToast.push(JSON.stringify(data));
+                    myToast.confirm(JSON.stringify(data));
                     break;
             }
         });
@@ -302,7 +302,7 @@
                 case "get-model":
                     var data = myModel.get();
                     console.log(data);
-                    myToast.push(JSON.stringify(data));
+                    myToast.confirm(JSON.stringify(data));
                     break;
             }
         });
