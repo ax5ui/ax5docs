@@ -1019,22 +1019,48 @@
 
             }
 
+
             // 두줄이상 일 때 의미가 있으니.
             if (tblRowMaps.length > 1) {
                 hasMergeTd = false;
                 for (let ri = 0, rl = tblRowMaps.length; ri < rl; ri++) {
+                    let prevTokenColIndexs = [];
                     for (let ci = 0, cl = tblRowMaps[ri].length; ci < cl; ci++) {
-                        // 앞줄과 값이 같다면.
-                        if (token[ci] && token[ci].text == tblRowMaps[ri][ci].text) {
-                            tblRowMaps[ri][ci].rowspan = 0;
-                            tblRowMaps[token[ci].ri][ci].rowspan++;
-                            hasMergeTd = true;
-                        } else {
-                            token[ci] = {
-                                ri: ri,
-                                ci: ci,
-                                text: tblRowMaps[ri][ci].text
-                            };
+                        // 적용 하려는 컬럼에 editor 속성이 없다면 머지 대상입니다.
+                        if (!_colGroup[ci].editor && (() => {
+                                if (U.isArray(cfg.body.mergeCells)) {
+                                    return ax5.util.search(cfg.body.mergeCells, _colGroup[ci].key) > -1;
+                                } else {
+                                    return true;
+                                }
+                            })()) {
+
+                            // 앞줄과 값이 같다면.
+                            if (token[ci] && (() => {
+                                    if (prevTokenColIndexs.length > 0) {
+                                        let hasFalse = true;
+                                        prevTokenColIndexs.forEach(function (ti) {
+                                            if (tblRowMaps[ri - 1][ti].text != tblRowMaps[ri][ti].text) {
+                                                hasFalse = false;
+                                            }
+                                        });
+                                        return hasFalse;
+                                    } else {
+                                        return true;
+                                    }
+                                })() && token[ci].text == tblRowMaps[ri][ci].text) {
+                                tblRowMaps[ri][ci].rowspan = 0;
+                                tblRowMaps[token[ci].ri][ci].rowspan++;
+                                hasMergeTd = true;
+                            } else {
+                                token[ci] = {
+                                    ri: ri,
+                                    ci: ci,
+                                    text: tblRowMaps[ri][ci].text
+                                };
+                            }
+
+                            prevTokenColIndexs.push(ci);
                         }
                     }
                 }
@@ -1045,8 +1071,10 @@
                         for (let ci = 0, cl = tblRowMaps[ri].length; ci < cl; ci++) {
                             if (tblRowMaps[ri][ci].rowspan == 0) {
                                 tblRowMaps[ri][ci]["$"].remove();
-                            } else {
-                                tblRowMaps[ri][ci]["$"].attr("rowspan", tblRowMaps[ri][ci].rowspan);
+                            } else if (tblRowMaps[ri][ci].rowspan > 1) {
+                                tblRowMaps[ri][ci]["$"]
+                                    .attr("rowspan", tblRowMaps[ri][ci].rowspan)
+                                    .addClass("merged");
                             }
                         }
                     }
@@ -1508,6 +1536,13 @@
                 SS = [],
                 di, dl, tri, trl, ci, cl, col, cellHeight, colAlign;
 
+            if (typeof _scrollConfig === "undefined" || typeof _scrollConfig['paintStartRowIndex'] === "undefined") {
+                _scrollConfig = {
+                    paintStartRowIndex: 0,
+                    paintRowCount: _list.length
+                };
+            }
+
             for (di = _scrollConfig.paintStartRowIndex, dl = (function () {
                 let len;
                 len = _list.length;
@@ -1669,38 +1704,43 @@
 
         // left
         if (this.xvar.frozenColumnIndex > 0) {
-            if (this.xvar.frozenRowIndex > 0) {
+            if (this.xvar.frozenRowIndex > _dindex) {
                 // 상단 행고정
-                replaceTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
+                replaceTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, list.slice(0, this.xvar.frozenRowIndex), _dindex);
+            } else {
+                replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
             }
-            replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
+
         }
 
         // body
-        if (this.xvar.frozenRowIndex > 0) {
+        if (this.xvar.frozenRowIndex > _dindex) {
             // 상단 행고정
-            replaceTr.call(this, "top-body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
+            replaceTr.call(this, "top-body-scroll", this.headerColGroup, bodyRowData, list.slice(0, this.xvar.frozenRowIndex), _dindex);
+        } else {
+            replaceTr.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
         }
 
-        replaceTr.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
 
         // body.grouping tr 다시 그리기..
         if (cfg.body.grouping) {
             // left
             if (this.xvar.frozenColumnIndex > 0) {
-                if (this.xvar.frozenRowIndex > 0) {
+                if (this.xvar.frozenRowIndex > _dindex) {
                     // 상단 행고정
                     replaceGroupTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                } else {
+                    replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
                 }
-                replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
             }
 
             // body
-            if (this.xvar.frozenRowIndex > 0) {
+            if (this.xvar.frozenRowIndex > _dindex) {
                 // 상단 행고정
                 replaceGroupTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+            } else {
+                replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
             }
-            replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
         }
 
         if (this.xvar.frozenColumnIndex > 0) {
@@ -2026,8 +2066,8 @@
         }
     };
 
-    let inlineEdit = {
-        active: function (_focusedColumn, _e, _initValue) {
+    const inlineEdit = {
+        active(_focusedColumn, _e, _initValue) {
             var self = this,
                 dindex, colIndex, rowIndex, panelName, colspan,
                 col, editor;
@@ -2103,19 +2143,19 @@
             }
             if (this.isInlineEditing) {
 
-                var originalValue = GRID.data.getValue.call(self, dindex, col.key);
-                var initValue = (function (__value, __editor) {
-                    if (U.isNothing(__value)) {
-                        __value = U.isNothing(originalValue) ? "" : originalValue;
-                    }
+                let originalValue = GRID.data.getValue.call(self, dindex, col.key),
+                    initValue = (function (__value, __editor) {
+                        if (U.isNothing(__value)) {
+                            __value = U.isNothing(originalValue) ? "" : originalValue;
+                        }
 
-                    if (__editor.type == "money") {
-                        return U.number(__value, {"money": true});
-                    }
-                    else {
-                        return __value;
-                    }
-                }).call(this, _initValue, editor);
+                        if (__editor.type == "money") {
+                            return U.number(__value, {"money": true});
+                        }
+                        else {
+                            return __value;
+                        }
+                    }).call(this, _initValue, editor);
 
                 this.inlineEditing[key].$inlineEditorCell = this.$["panel"][panelName]
                     .find('[data-ax5grid-tr-data-index="' + dindex + '"]')
@@ -2127,43 +2167,41 @@
                 return true;
             }
         },
-        deActive: function (_msg, _key, _value) {
+        deActive(_msg, _key, _value) {
             // console.log(this.inlineEditing.column.dindex, this.inlineEditing.$inlineEditor.val());
             if (!this.inlineEditing[_key]) return this;
 
-            var panelName = this.inlineEditing[_key].panelName;
-            var dindex = this.inlineEditing[_key].column.dindex;
-            var rowIndex = this.inlineEditing[_key].column.rowIndex;
-            var colIndex = this.inlineEditing[_key].column.colIndex;
-
-            var column = this.bodyRowMap[this.inlineEditing[_key].column.rowIndex + "_" + this.inlineEditing[_key].column.colIndex];
-            var editorValue = (function ($inlineEditor) {
-                if (typeof _value === "undefined") {
-                    if ($inlineEditor.get(0).tagName == "SELECT" || $inlineEditor.get(0).tagName == "INPUT" || $inlineEditor.get(0).tagName == "TEXTAREA") {
-                        return $inlineEditor.val();
+            let panelName = this.inlineEditing[_key].panelName,
+                dindex = this.inlineEditing[_key].column.dindex,
+                rowIndex = this.inlineEditing[_key].column.rowIndex,
+                colIndex = this.inlineEditing[_key].column.colIndex,
+                column = this.bodyRowMap[this.inlineEditing[_key].column.rowIndex + "_" + this.inlineEditing[_key].column.colIndex],
+                editorValue = (function ($inlineEditor) {
+                    if (typeof _value === "undefined") {
+                        if ($inlineEditor.get(0).tagName == "SELECT" || $inlineEditor.get(0).tagName == "INPUT" || $inlineEditor.get(0).tagName == "TEXTAREA") {
+                            return $inlineEditor.val();
+                        } else {
+                            _msg = "CANCEL";
+                            return false;
+                        }
                     } else {
-                        _msg = "CANCEL";
-                        return false;
+                        return _value;
                     }
-                } else {
-                    return _value;
-                }
-            })(this.inlineEditing[_key].$inlineEditor);
+                })(this.inlineEditing[_key].$inlineEditor),
+                newValue = (function (__value, __editor) {
+                    if (__editor.type == "money") {
+                        return U.number(__value);
+                    }
+                    else {
+                        return __value;
+                    }
+                }).call(this, editorValue, column.editor);
 
-            var newValue = (function (__value, __editor) {
-                if (__editor.type == "money") {
-                    return U.number(__value);
-                }
-                else {
-                    return __value;
-                }
-            }).call(this, editorValue, column.editor);
-
-            var action = {
-                "CANCEL": function (_dindex, _column, _newValue) {
+            let action = {
+                "CANCEL"(_dindex, _column, _newValue) {
                     action["__clear"].call(this);
                 },
-                "RETURN": function (_dindex, _column, _newValue) {
+                "RETURN"(_dindex, _column, _newValue) {
                     if (GRID.data.setValue.call(this, _dindex, _column.key, _newValue)) {
                         action["__clear"].call(this);
                         GRID.body.repaintCell.call(this, panelName, dindex, rowIndex, colIndex, _newValue);
@@ -2171,9 +2209,9 @@
                         action["__clear"].call(this);
                     }
                 },
-                "__clear": function () {
+                "__clear"() {
                     this.isInlineEditing = false;
-                    var bindedAx5ui = this.inlineEditing[_key].$inlineEditor.data("binded-ax5ui");
+                    let bindedAx5ui = this.inlineEditing[_key].$inlineEditor.data("binded-ax5ui");
                     if (bindedAx5ui == "ax5picker") {
                         this.inlineEditing[_key].$inlineEditor.ax5picker("close");
                     } else if (bindedAx5ui == "ax5select") {
@@ -2194,14 +2232,14 @@
                 action["__clear"].call(this);
             }
         },
-        keydown: function (key, columnKey, _options) {
-            var processor = {
-                "ESC": function () {
+        keydown(key, columnKey, _options) {
+            let processor = {
+                "ESC"() {
                     for (var columnKey in this.inlineEditing) {
                         inlineEdit.deActive.call(this, "CANCEL", columnKey);
                     }
                 },
-                "RETURN": function () {
+                "RETURN"() {
                     if (this.isInlineEditing) {
                         if (this.inlineEditing[columnKey] && this.inlineEditing[columnKey].useReturnToSave) { // todo : 네이밍 검증 할 필요있음.
                             inlineEdit.deActive.call(this, "RETURN", columnKey);
@@ -2209,28 +2247,28 @@
                     } else {
 
                         for (var k in this.focusedColumn) {
-                            var _column = this.focusedColumn[k];
-                            var column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
-                            var dindex = _column.dindex;
-                            var value = "";
+                            let _column = this.focusedColumn[k],
+                                column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
+                                dindex = _column.dindex,
+                                value = "",
+                                col = this.colGroup[_column.colIndex];
+                            ;
+
                             if (column) {
                                 if (!this.list[dindex].__isGrouping) {
                                     value = GRID.data.getValue.call(this, dindex, column.key);
                                 }
                             }
 
-                            var col = this.colGroup[_column.colIndex];
-
-                            if (GRID.inlineEditor[col.editor.type].editMode === "inline") {
+                            if (col.editor && GRID.inlineEditor[col.editor.type].editMode === "inline") {
                                 if (_options && _options.moveFocus) {
 
                                 }
                                 else {
                                     if (column.editor && column.editor.type == "checkbox") {
-
                                         value = GRID.data.getValue.call(this, dindex, column.key);
 
-                                        var checked, newValue;
+                                        let checked, newValue;
                                         if (column.editor.config && column.editor.config.trueValue) {
                                             if (checked = !(value == column.editor.config.trueValue)) {
                                                 newValue = column.editor.config.trueValue;
@@ -2246,7 +2284,6 @@
                                             key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
                                             editorConfig: column.editor.config, checked: checked
                                         });
-
                                     }
                                 }
                             } else {

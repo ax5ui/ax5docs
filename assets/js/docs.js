@@ -219,7 +219,7 @@ $(document.body).ready(function () {
                 fn_docs.menu.target.css({height: windowHeight});
             }
         } else {
-            if(fn_docs._jos["docs-menu-scroll"].find("li.active").get(0)) {
+            if (fn_docs._jos["docs-menu-scroll"].find("li.active").get(0)) {
                 fn_docs._jos["docs-menu-scroll"].scrollLeft(fn_docs._jos["docs-menu-scroll"].find("li.active").position().left);
             }
         }
@@ -227,6 +227,25 @@ $(document.body).ready(function () {
         /// windowScrollTop 위치에 맞게 메뉴 하이라이트
         if (fn_docs.menu.scrollType === "inline") {
             fn_docs.menu.setFocus(windowScrollTop);
+        }
+    });
+
+    $('[data-ax5ui-plugins]').on("click", "[data-href]", function () {
+        var href = this.getAttribute("data-href");
+
+        var hrefs = ax5.info.urlUtil().pathname.split("/");
+        hrefs[1] = href.replace("/", "");
+
+        if(href == "/ax5core"){
+            location.href = href;
+            return;
+        }
+
+        if (hrefs[2] == "" || hrefs[2] == "demo" || hrefs[2] == "api") {
+            hrefs.pop();
+            location.href = hrefs.join("/");
+        }else{
+            location.href = href;
         }
     });
 

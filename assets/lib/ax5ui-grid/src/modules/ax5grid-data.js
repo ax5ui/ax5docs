@@ -1,16 +1,15 @@
 // ax5.ui.grid.layout
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    let GRID = ax5.ui.grid,
+        U = ax5.util;
 
-    var init = function () {
+    let init = function () {
 
     };
 
-    var clearGroupingData = function (_list) {
-        var i = 0, l = _list.length;
-        var returnList = [];
+    let clearGroupingData = function (_list) {
+        let i = 0, l = _list.length, returnList = [];
         for (; i < l; i++) {
             if (_list[i] && !_list[i]["__isGrouping"]) {
                 if (_list[i][this.config.columnKeys.selected]) {
@@ -199,6 +198,8 @@
                 this.sortInfo,
                 list
             );
+        } else {
+            list = initData.call(this, list);
         }
 
         this.list = list;
@@ -467,7 +468,8 @@
             if (/[\.\[\]]/.test(_key)) {
                 try {
                     _value = (Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";")).call(_item);
-                } catch (e) { }
+                } catch (e) {
+                }
             } else {
                 _value = _item[_key];
             }
@@ -528,5 +530,4 @@
         initData: initData,
         clearGroupingData: clearGroupingData
     };
-
 })();

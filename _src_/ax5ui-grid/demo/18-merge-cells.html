@@ -1,0 +1,122 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="19" id="merge-cells" title="Merge Cells" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- grid -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # ${data.metadata.title}
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css"/>
+
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
+                ```
+            </ax5docs-md>
+
+            HTML
+            <ax5docs-html run="true">
+                <div style="position: relative;height:400px;" id="grid-parent">
+                    <div data-ax5grid="first-grid" data-ax5grid-config='{
+                    showLineNumber: true,
+                    showRowSelector: true,
+                    sortable: true,
+                    header: {align:"center"}
+                    }' style="height: 100%;"></div>
+                </div>
+            </ax5docs-html>
+
+
+            <ax5docs-md>
+                Declare `mergeCells` as a property of the body and declare its value as true or key array.
+                When the `mergeCells` attribute is activated, it merges when the cell value of the previous row among the cells in the body region of the grid is the same as the cell value of the current row.
+            </ax5docs-md>
+
+            <div class="lang-kor">
+                <ax5docs-md>
+                    바디의 속성으로 `mergeCells`를 선언하고 그것의 값을 true 또는 Key Array로 선언합니다.
+                    `mergeCells` 속성이 활성화 되면 그리드의 바디영역안에 셀들중 이전 행의 셀 값이 현재 행의 셀 값과 같은 경우 머지 하여 줍니다.
+                </ax5docs-md>
+            </div>
+
+            <ax5docs-md>
+                ```js
+                body: {
+                    mergeCells: ["a", "b", "userType"]
+                }
+
+                body: {
+                    mergeCells: true // all
+                }
+                ```
+            </ax5docs-md>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        var firstGrid = new ax5.ui.grid({
+                            target: $('[data-ax5grid="first-grid"]'),
+                            columns: [
+                                {key: "a", label: "field A", align: "center"},
+                                {key: "b", label: "field  B", align: "center"},
+                                {key: "price", label: "price", align: "center"},
+                                {key: "amount", label: "amount", align: "center"},
+                                {key: "saleDt", label: "saleDate", align: "center"},
+                                {key: "customer", label: "Customer", align: "center"},
+                                {key: "userType", label: "User Type", align: "center"}
+                            ],
+                            body:{
+                                mergeCells: ["a", "b", "userType"]
+                            }
+                        });
+
+                        var sampleData = [
+                            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+                            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+                            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+                            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+                            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+                            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+                            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+                            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+                            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"},
+                            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+                            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+                            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
+                        ];
+
+                        firstGrid.setData(sampleData);
+                    });
+                </script>
+            </ax5docs-js>
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>

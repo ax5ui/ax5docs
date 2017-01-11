@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-calendar : Event</title>
+    <title>ax5ui / ax5ui-grid : Merge Cells</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -38,12 +38,9 @@
 
     
     
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-toast/dist/ax5toast.css">
-        <script type="text/javascript" src="../../assets/lib/ax5ui-toast/dist/ax5toast.min.js"></script>
-
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css">
-        <script type="text/javascript" src="../../assets/lib/ax5ui-calendar/dist/ax5calendar.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css">
+        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.js"></script>
     
 </head>
 <body>
@@ -56,8 +53,8 @@
                     <div class="navbar-header">
 						<span class="navbar-brand">
 							<a href="/"><i class="axc-ax5ui"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i></a>
-							<a href="/ax5ui-calendar">
-							<span class="small">/ ax5ui-calendar</span></a>
+							<a href="/ax5ui-grid">
+							<span class="small">/ ax5ui-grid</span></a>
 						</span>
                         <a class="visible-xs-inline-block mobile-menu" id="mobile-menu">
                             <i class="axc-menu"></i>
@@ -70,13 +67,13 @@
                         <ul class="nav navbar-nav" id="docs-menu-print-target">
                             
                             
-                                <li class='active'><a href="/ax5ui-calendar/demo/index.html">Demo</a></li><li ><a href="/ax5ui-calendar/api/index.html">API</a></li>
+                                <li class='active'><a href="/ax5ui-grid/demo/index.html">Demo</a></li><li ><a href="/ax5ui-grid/api/index.html">API</a></li>
                             
                         </ul>
 
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href="https://github.com/ax5ui/ax5ui-calendar">
+                                <a href="https://github.com/ax5ui/ax5ui-grid">
                                     <i class="axc-github"></i>
                                     Star
                                     <span class="gh-count" id="started-count">.</span>
@@ -124,7 +121,7 @@
         <div class="contents">
     <div class="style-sub-visual">
         <div class="title">Demostration</div>
-        <div class="description">Introduces the basic use of ax5ui-calendar UI.</div>
+        <div class="description">Introduces the basic use of ax5ui-grid UI.</div>
     </div>
 </div>
     
@@ -137,7 +134,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-calendar/demo/index.html">Basic Calendar</a></li><li ><a href="/ax5ui-calendar/demo/control.html">Control Calendar</a></li><li ><a href="/ax5ui-calendar/demo/mode.html">Change Calendar mode</a></li><li ><a href="/ax5ui-calendar/demo/dimensions.html">Calendar Dimensions</a></li><li ><a href="/ax5ui-calendar/demo/select.html">Date Select</a></li><li ><a href="/ax5ui-calendar/demo/selectable.html">Selectable</a></li><li ><a href="/ax5ui-calendar/demo/marker.html">Marker</a></li><li ><a href="/ax5ui-calendar/demo/lang.html">Language</a></li><li  class='active'><a href="/ax5ui-calendar/demo/event.html">Event</a></li><li ><a href="/ax5ui-calendar/demo/period.html">Period</a></li><li ><a href="/ax5ui-calendar/demo/startOfWeek.html">StartOfWeek</a></li></ul>
+        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/1-formatter.html">Formatter</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li ><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li ><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/9-column-aru.html">Column Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/10-footsum.html">Foot Summary</a></li><li ><a href="/ax5ui-grid/demo/11-collector.html">Collector</a></li><li ><a href="/ax5ui-grid/demo/12-body-grouping.html">Body Grouping</a></li><li ><a href="/ax5ui-grid/demo/13-inline-edit.html">Inline edit</a></li><li ><a href="/ax5ui-grid/demo/14-paging.html">Paging</a></li><li ><a href="/ax5ui-grid/demo/15-excel-export.html">Excel Export</a></li><li ><a href="/ax5ui-grid/demo/16-cell-update.html">Cell update</a></li><li ><a href="/ax5ui-grid/demo/17-inline-edit-disable.html">Inline edit disable</a></li><li  class='active'><a href="/ax5ui-grid/demo/18-merge-cells.html">Merge Cells</a></li></ul>
     
                             </div>
                         </div>
@@ -145,52 +142,116 @@
                     <div class="col-md-9">
                         
 
+        
         <section class="ax5docs-section">
-            <h1>Event</h1>
-            <p>html</p>
+            <h1>Merge Cells</h1>
+<p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
+<pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css&quot;&gt;
 
-            <pre class="prettyprint linenums lang-html">&lt;div id="calendar-target-01" style="width:300px;border:1px solid #888;padding: 10px;margin: 10px;">&lt;/div></pre><div id="calendar-target-01" style="width:300px;border:1px solid #888;padding: 10px;margin: 10px;"></div>
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
 
+
+            HTML
+            <pre class="prettyprint linenums lang-html">&lt;div style="position: relative;height:400px;" id="grid-parent">
+    &lt;div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;">&lt;/div>
+&lt;/div></pre><div style="position: relative;height:400px;" id="grid-parent">
+    <div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;"></div>
+</div>
+
+
+            <p>Declare <code>mergeCells</code> as a property of the body and declare its value as true or key array.
+When the <code>mergeCells</code> attribute is activated, it merges when the cell value of the previous row among the cells in the body region of the grid is the same as the cell value of the current row.</p>
+
+
+            <div class="lang-kor">
+                <p>바디의 속성으로 <code>mergeCells</code>를 선언하고 그것의 값을 true 또는 Key Array로 선언합니다.
+<code>mergeCells</code> 속성이 활성화 되면 그리드의 바디영역안에 셀들중 이전 행의 셀 값이 현재 행의 셀 값과 같은 경우 머지 하여 줍니다.</p>
+
+            </div>
+
+            <pre class="prettyprint linenums lang-js"><code>body: {
+    mergeCells: [&quot;a&quot;, &quot;b&quot;, &quot;userType&quot;]
+}
+
+body: {
+    mergeCells: true // all
+}
+</code></pre>
+
+
+            <div class="DH10"></div>
+            JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     $(document.body).ready(function () {
-        var toast = new ax5.ui.toast({
-            containerPosition: "top-right"
-        });
-        var today = new Date();
-        new ax5.ui.calendar({
-            target: document.getElementById("calendar-target-01"),
-            control: {
-                left: '&lt;i class="fa fa-chevron-left">&lt;/i>',
-                right: '&lt;i class="fa fa-chevron-right">&lt;/i>'
-            },
-            onClick: function () {
-                toast.push(this.date);
-            },
-            onStateChanged: function () {
-                toast.push(this.action);
-                //console.log(this);
+        var firstGrid = new ax5.ui.grid({
+            target: $('[data-ax5grid="first-grid"]'),
+            columns: [
+                {key: "a", label: "field A", align: "center"},
+                {key: "b", label: "field  B", align: "center"},
+                {key: "price", label: "price", align: "center"},
+                {key: "amount", label: "amount", align: "center"},
+                {key: "saleDt", label: "saleDate", align: "center"},
+                {key: "customer", label: "Customer", align: "center"},
+                {key: "userType", label: "User Type", align: "center"}
+            ],
+            body:{
+                mergeCells: ["a", "b", "userType"]
             }
         });
+
+        var sampleData = [
+            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
+        ];
+
+        firstGrid.setData(sampleData);
     });
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
-        var toast = new ax5.ui.toast({
-            containerPosition: "top-right"
-        });
-        var today = new Date();
-        new ax5.ui.calendar({
-            target: document.getElementById("calendar-target-01"),
-            control: {
-                left: '<i class="fa fa-chevron-left"></i>',
-                right: '<i class="fa fa-chevron-right"></i>'
-            },
-            onClick: function () {
-                toast.push(this.date);
-            },
-            onStateChanged: function () {
-                toast.push(this.action);
-                //console.log(this);
+        var firstGrid = new ax5.ui.grid({
+            target: $('[data-ax5grid="first-grid"]'),
+            columns: [
+                {key: "a", label: "field A", align: "center"},
+                {key: "b", label: "field  B", align: "center"},
+                {key: "price", label: "price", align: "center"},
+                {key: "amount", label: "amount", align: "center"},
+                {key: "saleDt", label: "saleDate", align: "center"},
+                {key: "customer", label: "Customer", align: "center"},
+                {key: "userType", label: "User Type", align: "center"}
+            ],
+            body:{
+                mergeCells: ["a", "b", "userType"]
             }
         });
+
+        var sampleData = [
+            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
+        ];
+
+        firstGrid.setData(sampleData);
     });
 </script></script>
         </section>
@@ -269,7 +330,7 @@ ga('send', 'pageview');
 
         $.ajax({
             method: "GET",
-            url: "https://api.github.com/repos/ax5ui/ax5ui-calendar",
+            url: "https://api.github.com/repos/ax5ui/ax5ui-grid",
             success: function (data) {
                 $("#started-count").html(ax5.util.number(data.stargazers_count, {'money': true}));
                 ax5.util.setCookie('stargazers_count', data.stargazers_count);
