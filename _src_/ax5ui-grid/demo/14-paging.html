@@ -203,7 +203,7 @@
 
                             var list = [];
                             for (var i = 0, l = 100; i < l; i++) {
-                                list.push(sampleData[(Math.floor(Math.random() * sampleData.length))]);
+                                list.push($.extend({}, sampleData[(Math.floor(Math.random() * sampleData.length))]));
                             }
 
                             this.target.setData({
