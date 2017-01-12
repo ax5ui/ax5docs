@@ -53,11 +53,17 @@
             </ax5docs-html>
 
             <ax5docs-md>
-                Excel Export는 IE, Chrome, Firefox 등의 브라우저에서 파일 다운로드되는 것을 테스트 하였고,
+                Excel Export has tested downloading files from browsers such as IE, Chrome, Firefox,
+                The Safari browser does not control file downloading, so it outputs the table in a new window. Copy the output table and use it.
+                `FirstGrid.exportExcel("grid-to-excel.xls");`, the file is downloaded and the Table String is returned if there is no argument.
+                Pass the returned string to the server to generate Excel.
+                How to create an Excel file on the server is to search. If you are having difficulty resolving, please contact us at https://www.facebook.com/groups/axboot/.
+
+                _Excel Export는 IE, Chrome, Firefox 등의 브라우저에서 파일 다운로드되는 것을 테스트 하였고,
                 Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창으로 테이블을 출력합니다. 출력된 테이블을 복사하여 사용하시면 됩니다.
                 `firstGrid.exportExcel("grid-to-excel.xls");` 처럼 저장하고 싶은 파일명을 인자로 전달하면 파일이 다운로드 되고 인자가 없으면 Table String이 리턴됩니다.
                 리턴된 문자열을 서버로 전달하여 엑셀을 생성 하세요.
-                서버에서 엑셀 파일을 생성하는 방법은 검색으로 찾으시면 되겠습니다. 해결이 어려우시면 (https://www.facebook.com/groups/axboot/) 에서 문의 하세요.
+                서버에서 엑셀 파일을 생성하는 방법은 검색으로 찾으시면 되겠습니다. 해결이 어려우시면 (https://www.facebook.com/groups/axboot/) 에서 문의 하세요._
             </ax5docs-md>
 
             <div class="DH10"></div>

@@ -25,10 +25,13 @@
         <section class="ax5docs-section">
             <ax5docs-md>
                 # Formatter
+                A formatter is a property of a column that outputs a column by replacing the value to be output with a predefined function name or a return value of a user-defined function.
+                It contains predefined functions in the `ax5.ui.grid.formatter` object. The default defined formatter function is `money`.
+                If you want to extend `formatter`, before you run the grid. Add the following code.
 
-                formatter는 컬럼의 출력 될 값을 미리 정의된 함수명 또는 사용자가 직접 정의한 함수의 리턴값으로 대체하여 출력하는 컬럼의 속성을 말합니다.
+                _formatter는 컬럼의 출력 될 값을 미리 정의된 함수명 또는 사용자가 직접 정의한 함수의 리턴값으로 대체하여 출력하는 컬럼의 속성을 말합니다.
                 `ax5.ui.grid.formatter` 오브젝트 안에 미리 정의된 함수들이 담겨 있습니다. 기본 정의된 formatter함수는 `money`입니다.
-                사용자가 `formatter`를 확장하고 싶다면, 그리드 실행전에. 다음의 코드를 추가 하시면 됩니다.
+                사용자가 `formatter`를 확장하고 싶다면, 그리드 실행전에. 다음의 코드를 추가 하시면 됩니다._
 
                 ```js
                 // capital formatter 추가
@@ -38,7 +41,8 @@
                 }
                 ```
                 ### formatter this
-                formatter 함수에 this는 다음과 같습니다. 최종 return 의 값을 사용 하므로 자유롭게 프로그래밍 할 수 있습니다.
+                In the formatter function, this is: You can freely program because you use the last value returned.
+
                 ```
                 {key: "c", value: 3000, index: 5, item: Object, list: Array[6]}
                 ```

@@ -51,8 +51,12 @@
             <div class="DH10"></div>
 
             <ax5docs-md>
-                footSum은 2차원 배열입니다. 그리드 맨 아래 영역에 출력될 summary가 여러줄 일때는 고려해 2차원 배열로 설계 하였습니다.
-                footSum은 label만 선언하여 문자열을 출력하는 컬럼과 key, collector를 선언하여 연산된 결과를 출력하는 컬럼 끝으로 빈 공백을 추가할 수 있는 `{}`컬럼이 있습니다.
+                FootSum is a two-dimensional array. It is designed as a two-dimensional array considering that the summary to be printed in the bottom area of the grid is several lines.
+                The footSum has a column that lists only the label and a `{}` column that allows you to add a blank space at the end of the column that outputs the result of declaring the key and collector, as well as outputting the string.
+
+                _footSum은 2차원 배열입니다. 그리드 맨 아래 영역에 출력될 summary가 여러줄 일때는 고려해 2차원 배열로 설계 하였습니다.
+                footSum은 label만 선언하여 문자열을 출력하는 컬럼과 key, collector를 선언하여 연산된 결과를 출력하는 컬럼 끝으로 빈 공백을 추가할 수 있는 `{}`컬럼이 있습니다._
+
                 ```js
                 footSum: [
                     [
@@ -62,8 +66,9 @@
                     ]
                 ]
                 ```
-                key, collector를 선언하여 연산된 결과를 출력하는 컬럼은 연산된 결과 값을 출력전에 만약 formatter가 있다면 formatter를 통과하여 값을 출력하게 됩니다.
+                The columns that output the computed result by declaring the key and collector are output by checking the formatter when outputting the computed result.
 
+                _key, collector를 선언하여 연산된 결과를 출력하는 컬럼은 연산된 결과 값을 출력할 때 formatter여부를 확인하여 출력됩니다._
             </ax5docs-md>
 
             JS

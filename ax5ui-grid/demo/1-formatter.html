@@ -145,9 +145,12 @@
         
         <section class="ax5docs-section">
             <h1>Formatter</h1>
-<p>formatter는 컬럼의 출력 될 값을 미리 정의된 함수명 또는 사용자가 직접 정의한 함수의 리턴값으로 대체하여 출력하는 컬럼의 속성을 말합니다.
+<p>A formatter is a property of a column that outputs a column by replacing the value to be output with a predefined function name or a return value of a user-defined function.
+It contains predefined functions in the <code>ax5.ui.grid.formatter</code> object. The default defined formatter function is <code>money</code>.
+If you want to extend <code>formatter</code>, before you run the grid. Add the following code.</p>
+<p><em>formatter는 컬럼의 출력 될 값을 미리 정의된 함수명 또는 사용자가 직접 정의한 함수의 리턴값으로 대체하여 출력하는 컬럼의 속성을 말합니다.
 <code>ax5.ui.grid.formatter</code> 오브젝트 안에 미리 정의된 함수들이 담겨 있습니다. 기본 정의된 formatter함수는 <code>money</code>입니다.
-사용자가 <code>formatter</code>를 확장하고 싶다면, 그리드 실행전에. 다음의 코드를 추가 하시면 됩니다.</p>
+사용자가 <code>formatter</code>를 확장하고 싶다면, 그리드 실행전에. 다음의 코드를 추가 하시면 됩니다.</em></p>
 <pre class="prettyprint linenums lang-js"><code>// capital formatter 추가
 ax5.ui.grid.formatter[&quot;capital&quot;] = function(){
     // console.log(this);
@@ -155,7 +158,7 @@ ax5.ui.grid.formatter[&quot;capital&quot;] = function(){
 }
 </code></pre>
 <h3>formatter this</h3>
-<p>formatter 함수에 this는 다음과 같습니다. 최종 return 의 값을 사용 하므로 자유롭게 프로그래밍 할 수 있습니다.</p>
+<p>In the formatter function, this is: You can freely program because you use the last value returned.</p>
 <pre><code>{key: &quot;c&quot;, value: 3000, index: 5, item: Object, list: Array[6]}
 </code></pre>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
