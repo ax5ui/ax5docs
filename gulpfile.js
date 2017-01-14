@@ -168,7 +168,7 @@ gulp.task('docs-scss', function () {
  * ax5docs templete render
  */
 gulp.task('AX5UI-docs', function () {
-    return gulp.src(PATHS['ax5docs'].doc_src + '/*.html')``
+    return gulp.src(PATHS['ax5docs'].doc_src + '/*.html')
         .pipe(changed(PATHS['ax5docs'].doc_dest, {extension: '.html', hasChanged: changed.compareSha1Digest}))
         .pipe(plumber({errorHandler: errorAlert}))
         .pipe(marko_ax5({

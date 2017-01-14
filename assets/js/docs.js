@@ -219,6 +219,8 @@ $(document.body).ready(function () {
                 fn_docs.menu.target.css({height: windowHeight});
             }
         } else {
+
+            fn_docs.menu.target.css({height: "auto"});
             if (fn_docs._jos["docs-menu-scroll"].find("li.active").get(0)) {
                 fn_docs._jos["docs-menu-scroll"].scrollLeft(fn_docs._jos["docs-menu-scroll"].find("li.active").position().left);
             }
