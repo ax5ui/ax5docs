@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="8" id="picker-keyboard" title="Picker Keyboard" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="5" id="picker-date-calendar" title="Picker Date(calendar)" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -14,23 +14,29 @@
     <layout-put into="head-js">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-picker/dist/ax5picker.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css"/>
         <script type="text/javascript" src="../../assets/lib/ax5ui-picker/dist/ax5picker.js"></script>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-calendar/dist/ax5calendar.min.js"></script>
     </layout-put>
     <layout-put into="body">
+
 
         <!-- doc-js Basic Alert -->
         <section class="ax5docs-section">
             <ax5docs-md>
-                # Picker Keyboard
+                # ${data.metadata.title}
 
                 **Paste the following code into the `head` section of your site's HTML.**
 
                 ```html
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+                <link rel="stylesheet" href="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/dist/ax5calendar.css"/>
                 <link rel="stylesheet" href="https://cdn.rawgit.com/ax5ui/ax5ui-picker/dist/ax5picker.css"/>
 
                 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
                 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/dist/ax5calendar.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-formatter/dist/ax5formatter.min.js"></script>
                 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.min.js"></script>
                 ```
 
@@ -40,9 +46,19 @@
 
             <ax5docs-html run="true">
                 <div class="row">
-                    <div class="col-md-6">
-                        <label>Keyboard</label>
-                        <input type="text" data-ax5picker="keyboard" class="form-control" placeholder="" />
+                    <div class="col-md-4">
+                        <label>Select Year</label>
+                        <div class="input-group" data-ax5picker="basic">
+                            <input type="text" class="form-control" data-picker-date="year" placeholder="yyyy"/>
+                            <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Month Year</label>
+                        <div class="input-group" data-ax5picker="basic">
+                            <input type="text" class="form-control" data-picker-date="month" placeholder="yyyy-mm"/>
+                            <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                        </div>
                     </div>
                 </div>
             </ax5docs-html>
@@ -52,26 +68,35 @@
                     var picker = new ax5.ui.picker();
 
                     $(document.body).ready(function () {
+
+                        // Select Year
                         picker.bind({
-                            target: $('[data-ax5picker="keyboard"]'),
-                            direction: "auto",
+                            target: $('[data-picker-date="year"]'),
                             content: {
-                                width: 550,
-                                margin: 10,
-                                type: 'keyboard',
+                                type: 'date',
                                 config: {
-                                    btnWrapStyle: "padding:2px;",
-                                    btnStyle: "width: 35px;",
-                                    btnTheme: "primary",
-                                    specialBtnWrapStyle: "padding:2px;",
-                                    specialBtnStyle: "",
-                                    specialBtnTheme: " "
+                                    mode: "year", selectMode: "year"
+                                },
+                                formatter: {
+                                    pattern: 'date(year)'
                                 }
-                            },
-                            onStateChanged: function () {
-                                //console.log(this);
                             }
                         });
+
+                        // Select Month
+                        picker.bind({
+                            target: $('[data-picker-date="month"]'),
+                            content: {
+                                type: 'date',
+                                config: {
+                                    mode: "year", selectMode: "month"
+                                },
+                                formatter: {
+                                    pattern: 'date(month)'
+                                }
+                            }
+                        });
+
                     });
                 </script>
             </ax5docs-js>

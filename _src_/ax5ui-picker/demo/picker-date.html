@@ -21,7 +21,6 @@
     </layout-put>
     <layout-put into="body">
 
-
         <!-- doc-js Basic Alert -->
         <section class="ax5docs-section">
             <ax5docs-md>
@@ -43,9 +42,7 @@
 
                 Required file picker to use the plug-in is a "jQuery, ax5core, ax5 picker".
                 If you want to use UI such as the picker calendar will ax5ui-calendar needs.
-
             </ax5docs-md>
-
 
             <ax5docs-html run="true">
                 <div class="row">
@@ -62,9 +59,7 @@
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     var picker = new ax5.ui.picker();
-
                     $(document.body).ready(function () {
-
                         picker.bind({
                             target: $('[data-ax5picker="basic"]'),
                             direction: "top",
@@ -93,11 +88,9 @@
 
                             }
                         });
-
                     });
                 </script>
             </ax5docs-js>
-
 
         </section>
 

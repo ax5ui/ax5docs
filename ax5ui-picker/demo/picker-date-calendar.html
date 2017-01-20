@@ -15,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-picker : Picker jQuery bind</title>
+    <title>ax5ui / ax5ui-picker : Picker Date(calendar)</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -138,7 +138,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-picker/demo/index.html">Picker Basic</a></li><li ><a href="/ax5ui-picker/demo/picker-date.html">Picker Date</a></li><li ><a href="/ax5ui-picker/demo/picker-multidate.html">Picker Multi Date</a></li><li ><a href="/ax5ui-picker/demo/picker-date-btns.html">Picker Buttons</a></li><li ><a href="/ax5ui-picker/demo/picker-date-calendar.html">Picker Date(calendar)</a></li><li ><a href="/ax5ui-picker/demo/picker-secure-num.html">Picker Secure-num</a></li><li  class='active'><a href="/ax5ui-picker/demo/picker-jquery-bind.html">Picker jQuery bind</a></li><li ><a href="/ax5ui-picker/demo/picker-keyboard.html">Picker Keyboard</a></li><li ><a href="/ax5ui-picker/demo/picker-numpad.html">Picker Numpad</a></li></ul>
+        <ul><li ><a href="/ax5ui-picker/demo/index.html">Picker Basic</a></li><li ><a href="/ax5ui-picker/demo/picker-date.html">Picker Date</a></li><li ><a href="/ax5ui-picker/demo/picker-multidate.html">Picker Multi Date</a></li><li ><a href="/ax5ui-picker/demo/picker-date-btns.html">Picker Buttons</a></li><li  class='active'><a href="/ax5ui-picker/demo/picker-date-calendar.html">Picker Date(calendar)</a></li><li ><a href="/ax5ui-picker/demo/picker-secure-num.html">Picker Secure-num</a></li><li ><a href="/ax5ui-picker/demo/picker-jquery-bind.html">Picker jQuery bind</a></li><li ><a href="/ax5ui-picker/demo/picker-keyboard.html">Picker Keyboard</a></li><li ><a href="/ax5ui-picker/demo/picker-numpad.html">Picker Numpad</a></li></ul>
     
                             </div>
                         </div>
@@ -149,7 +149,7 @@
 
         
         <section class="ax5docs-section">
-            <h1>Picker (jQuery bind)</h1>
+            <h1>Picker Date(calendar)</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css&quot;&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-calendar/dist/ax5calendar.css&quot;&gt;
@@ -158,6 +158,7 @@
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-calendar/dist/ax5calendar.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-formatter/dist/ax5formatter.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 <p>Required file picker to use the plug-in is a “jQuery, ax5core, ax5 picker”.
@@ -165,39 +166,103 @@ If you want to use UI such as the picker calendar will ax5ui-calendar needs.</p>
 
 
             <pre class="prettyprint linenums lang-html">&lt;div class="row">
-    &lt;div class="col-md-6">
-        &lt;label>Date&lt;/label>
+    &lt;div class="col-md-4">
+        &lt;label>Select Year&lt;/label>
         &lt;div class="input-group" data-ax5picker="basic">
-            &lt;input type="text" class="form-control" placeholder="yyyy/mm/dd">
+            &lt;input type="text" class="form-control" data-picker-date="year" placeholder="yyyy">
+            &lt;span class="input-group-addon">&lt;i class="fa fa-calendar-o">&lt;/i>&lt;/span>
+        &lt;/div>
+    &lt;/div>
+    &lt;div class="col-md-4">
+        &lt;label>Month Year&lt;/label>
+        &lt;div class="input-group" data-ax5picker="basic">
+            &lt;input type="text" class="form-control" data-picker-date="month" placeholder="yyyy-mm">
             &lt;span class="input-group-addon">&lt;i class="fa fa-calendar-o">&lt;/i>&lt;/span>
         &lt;/div>
     &lt;/div>
 &lt;/div></pre><div class="row">
-    <div class="col-md-6">
-        <label>Date</label>
+    <div class="col-md-4">
+        <label>Select Year</label>
         <div class="input-group" data-ax5picker="basic">
-            <input type="text" class="form-control" placeholder="yyyy/mm/dd">
+            <input type="text" class="form-control" data-picker-date="year" placeholder="yyyy">
+            <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label>Month Year</label>
+        <div class="input-group" data-ax5picker="basic">
+            <input type="text" class="form-control" data-picker-date="month" placeholder="yyyy-mm">
             <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
         </div>
     </div>
 </div>
 
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
+    var picker = new ax5.ui.picker();
+
     $(document.body).ready(function () {
-        $('[data-ax5picker="basic"]').ax5picker({
-            direction: "top",
+
+        // Select Year
+        picker.bind({
+            target: $('[data-picker-date="year"]'),
             content: {
-                type: 'date'
+                type: 'date',
+                config: {
+                    mode: "year", selectMode: "year"
+                },
+                formatter: {
+                    pattern: 'date(year)'
+                }
             }
         });
+
+        // Select Month
+        picker.bind({
+            target: $('[data-picker-date="month"]'),
+            content: {
+                type: 'date',
+                config: {
+                    mode: "year", selectMode: "month"
+                },
+                formatter: {
+                    pattern: 'date(month)'
+                }
+            }
+        });
+
     });
-&lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
-        $('[data-ax5picker="basic"]').ax5picker({
-            direction: "top",
+&lt;/script></pre><script type="text/javascript">var picker = new ax5.ui.picker();
+
+    $(document.body).ready(function () {
+
+        // Select Year
+        picker.bind({
+            target: $('[data-picker-date="year"]'),
             content: {
-                type: 'date'
+                type: 'date',
+                config: {
+                    mode: "year", selectMode: "year"
+                },
+                formatter: {
+                    pattern: 'date(year)'
+                }
             }
         });
+
+        // Select Month
+        picker.bind({
+            target: $('[data-picker-date="month"]'),
+            content: {
+                type: 'date',
+                config: {
+                    mode: "year", selectMode: "month"
+                },
+                formatter: {
+                    pattern: 'date(month)'
+                }
+            }
+        });
+
     });
 </script></script>
 
