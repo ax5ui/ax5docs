@@ -1,0 +1,74 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="5" id="tab-panel" title="tabPanel" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-layout/dist/ax5layout.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-layout/dist/ax5layout.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- select -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Tab Panel
+            </ax5docs-md>
+
+            HTML
+            <ax5docs-html run="true">
+
+                <div data-ax5layout="ax1" data-config='{layout:"tab-panel"}' style="height:300px;">
+                    <div data-tab-panel='{label: "Live Status", active: "false"}' style="background: #ffaba1;">
+                        <div style="padding: 10px;">
+                            Live Status Tab content
+                        </div>
+                    </div>
+                    <div data-tab-panel='{label: "Social Network", active: "true"}' style="background: #8fcc95;">
+                        <div style="padding: 10px;">
+                            Social Network
+                        </div>
+                    </div>
+                    <div data-tab-panel='{label: "Social Network", active: "false"}' style="background: #82aecc;">
+                        <div style="padding: 10px;">
+                            Open Network
+                        </div>
+                    </div>
+                </div>
+
+            </ax5docs-html>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                $(document.body).ready(function(){
+                    $('[data-ax5layout]').ax5layout();
+                });
+                </script>
+            </ax5docs-js>
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+        </section>
+
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>
