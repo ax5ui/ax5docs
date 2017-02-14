@@ -147,6 +147,9 @@
                         this.$["iframe-form"] = this.activeModal.find('[data-modal-els="iframe-form"]');
                         this.$["iframe-loading"] = this.activeModal.find('[data-modal-els="iframe-loading"]');
                     }
+                    else{
+                        this.$["body-frame"] = this.activeModal.find('[data-modal-els="body-frame"]');
+                    }
 
                     //- position 정렬
                     this.align();
@@ -182,7 +185,7 @@
                         this.$["iframe-form"].submit();
                     }
 
-                    if (callback) callback.call(that);
+                    if (callback) callback.call(that, that);
 
                     if (!this.watingModal) {
                         onStateChanged.call(this, opts, that);

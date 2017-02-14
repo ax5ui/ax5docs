@@ -42,6 +42,11 @@
             this.config = {
                 theme: 'default',
                 animateTime: 250,
+                debounceTime: 250,
+                appendDebouncer: null,
+                appendDebounceTimes: 0,
+                appendProgressIcon: '...',
+                appendProgress: false,
 
                 // 틀고정 속성
                 frozenColumnIndex: 0,
@@ -212,7 +217,7 @@
                         }
                     };
 
-                    this.$["container"]["root"].css({height: this.config.height});
+                    this.$["container"]["root"].css({height: this.config.height || this.config._height});
 
                     return this;
                 },
@@ -321,6 +326,11 @@
                 },
                 alignGrid = function (_isFirst) {
                     // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하는 아규먼트
+
+                    if (!this.config.height) {
+                        this.$["container"]["root"].css({height: this.config._height = this.$target.height()});
+                    }
+
                     let CT_WIDTH = this.$["container"]["root"].width(),
                         CT_HEIGHT = this.$["container"]["root"].height(),
                         CT_INNER_WIDTH = CT_WIDTH,
@@ -726,7 +736,7 @@
                 let grid = this.config = cfg;
 
                 if (!this.config.height) {
-                    this.config.height = this.$target.height();
+                    this.config._height = this.$target.height();
                 }
 
                 if (!this.id) this.id = this.$target.data("data-ax5grid-id");
@@ -1078,6 +1088,25 @@
                 GRID.body.repaint.call(this, "reset");
                 GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
                 GRID.scroller.resize.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.appendToList
+             * @param _list
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * ax5Grid.appendToList([{},{},{}]);
+             * ax5Grid.appendToList([{},{},{}]);
+             * ```
+             */
+            this.appendToList = function (_list) {
+                GRID.data.append.call(this, _list, (function () {
+                    alignGrid.call(this);
+                    GRID.body.repaint.call(this);
+                    GRID.scroller.resize.call(this);
+                }).bind(this));
                 return this;
             };
 
@@ -1471,6 +1500,20 @@
                     }
                 }
                 return this;
+            };
+
+            /**
+             * @method ax5grid.destroy
+             * @returns {null}
+             */
+            this.destroy = function () {
+                const instanceId = this.instanceId;
+                this.$target.empty();
+                this.list = [];
+                UI.grid_instance = ax5.util.filter(UI.grid_instance, function () {
+                    return this.instanceId != instanceId;
+                });
+                return null;
             };
 
             // 클래스 생성자

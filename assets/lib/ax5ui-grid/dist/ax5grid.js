@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "${VERSION}"
+        version: "1.3.91"
     }, function () {
         /**
          * @class ax5grid
@@ -46,6 +46,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.config = {
                 theme: 'default',
                 animateTime: 250,
+                debounceTime: 250,
+                appendDebouncer: null,
+                appendDebounceTimes: 0,
+                appendProgressIcon: '...',
+                appendProgress: false,
 
                 // 틀고정 속성
                 frozenColumnIndex: 0,
@@ -215,7 +220,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 };
 
-                this.$["container"]["root"].css({ height: this.config.height });
+                this.$["container"]["root"].css({ height: this.config.height || this.config._height });
 
                 return this;
             },
@@ -327,6 +332,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
                 alignGrid = function alignGrid(_isFirst) {
                 // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하는 아규먼트
+
+                if (!this.config.height) {
+                    this.$["container"]["root"].css({ height: this.config._height = this.$target.height() });
+                }
+
                 var CT_WIDTH = this.$["container"]["root"].width(),
                     CT_HEIGHT = this.$["container"]["root"].height(),
                     CT_INNER_WIDTH = CT_WIDTH,
@@ -719,7 +729,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var grid = this.config = cfg;
 
                 if (!this.config.height) {
-                    this.config.height = this.$target.height();
+                    this.config._height = this.$target.height();
                 }
 
                 if (!this.id) this.id = this.$target.data("data-ax5grid-id");
@@ -1069,6 +1079,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 GRID.body.repaint.call(this, "reset");
                 GRID.body.moveFocus.call(this, this.config.body.grouping ? "START" : "END");
                 GRID.scroller.resize.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.appendToList
+             * @param _list
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * ax5Grid.appendToList([{},{},{}]);
+             * ax5Grid.appendToList([{},{},{}]);
+             * ```
+             */
+            this.appendToList = function (_list) {
+                GRID.data.append.call(this, _list, function () {
+                    alignGrid.call(this);
+                    GRID.body.repaint.call(this);
+                    GRID.scroller.resize.call(this);
+                }.bind(this));
                 return this;
             };
 
@@ -1463,6 +1492,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 }
                 return this;
+            };
+
+            /**
+             * @method ax5grid.destroy
+             * @returns {null}
+             */
+            this.destroy = function () {
+                var instanceId = this.instanceId;
+                this.$target.empty();
+                this.list = [];
+                UI.grid_instance = ax5.util.filter(UI.grid_instance, function () {
+                    return this.instanceId != instanceId;
+                });
+                return null;
             };
 
             // 클래스 생성자
@@ -3983,7 +4026,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (this.config.body.grouping) {
             list = initData.call(this, sort.call(this, this.sortInfo, list));
         } else if (_options && _options.sort && Object.keys(this.sortInfo).length) {
-            list = sort.call(this, this.sortInfo, list);
+            list = initData.call(this, sort.call(this, this.sortInfo, list));
         } else {
             list = initData.call(this, list);
         }
@@ -4277,6 +4320,48 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
+    var append = function append(_list, _callback) {
+        var self = this;
+        this.list = this.list.concat([].concat(_list));
+
+        this.appendProgress = true;
+        GRID.page.statusUpdate.call(this);
+
+        if (this.appendDebouncer) {
+            if (self.appendDebounceTimes < this.config.debounceTime / 10) {
+                clearTimeout(this.appendDebouncer);
+                self.appendDebounceTimes++;
+            } else {
+                self.appendDebounceTimes = 0;
+                appendIdle.call(self);
+                _callback();
+                return false;
+            }
+        }
+
+        this.appendDebouncer = setTimeout(function () {
+            self.appendDebounceTimes = 0;
+            appendIdle.call(self);
+            _callback();
+        }, this.config.debounceTime);
+
+        // todo : append bounce animation
+    };
+
+    var appendIdle = function appendIdle() {
+        this.appendProgress = false;
+        if (this.config.body.grouping) {
+            this.list = initData.call(this, sort.call(this, this.sortInfo, this.list));
+        } else {
+            this.list = initData.call(this, this.list);
+        }
+
+        this.needToPaintSum = true;
+        this.xvar.frozenRowIndex = this.config.frozenRowIndex > this.list.length ? this.list.length : this.config.frozenRowIndex;
+        this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        GRID.page.navigationUpdate.call(this);
+    };
+
     GRID.data = {
         init: init,
         set: set,
@@ -4293,7 +4378,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         update: update,
         sort: sort,
         initData: initData,
-        clearGroupingData: clearGroupingData
+        clearGroupingData: clearGroupingData,
+        append: append
     };
 })();
 /*
@@ -5080,7 +5166,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             fromRowIndex: U.number(fromRowIndex + 1, { "money": true }),
             toRowIndex: U.number(toRowIndex, { "money": true }),
             totalElements: U.number(totalElements, { "money": true }),
-            dataRowCount: totalElements !== this.xvar.dataRealRowCount ? U.number(this.xvar.dataRealRowCount, { "money": true }) : false
+            dataRowCount: totalElements !== this.xvar.dataRealRowCount ? U.number(this.xvar.dataRealRowCount, { "money": true }) : false,
+            progress: this.appendProgress ? this.config.appendProgressIcon : ""
         }));
     };
 
@@ -5578,7 +5665,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var page_status = function page_status() {
-        return "<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>";
+        return "<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>";
     };
 
     GRID.tmpl = {

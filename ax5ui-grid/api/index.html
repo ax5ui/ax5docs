@@ -144,6 +144,7 @@
 <li><a href="#ax5grid.getList">.getList(_type)</a> ⇒ <code>Array</code></li>
 <li><a href="#ax5grid.setHeight">.setHeight(_height)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.addRow">.addRow(_row, [_dindex], [_options])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
+<li><a href="#ax5grid.appendToList">.appendToList(_list)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.removeRow">.removeRow([_dindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.updateRow">.updateRow(_row, _dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.deleteRow">.deleteRow(_dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
@@ -290,6 +291,12 @@
 <td><code>Object</code></td>
 <td></td>
 <td></td>
+</tr>
+<tr>
+<td>[_config.body.mergeCells]</td>
+<td><code>String</code> | <code>Array</code></td>
+<td><code>false</code></td>
+<td>-</td>
 </tr>
 <tr>
 <td>[_config.body.align]</td>
@@ -678,6 +685,25 @@ ax5Grid.getList(&quot;deleted&quot;);
 </table>
 <p><strong>Example</strong></p>
 <pre class="prettyprint linenums lang-js"><code>ax5Grid.addRow($.extend({}, {...}), &quot;first&quot;);
+</code></pre>
+<p><a name="ax5grid.appendToList"></a></p>
+<h3>ax5grid.appendToList(_list) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_list</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>ax5Grid.appendToList([{},{},{}]);
+ax5Grid.appendToList([{},{},{}]);
 </code></pre>
 <p><a name="ax5grid.removeRow"></a></p>
 <h3>ax5grid.removeRow([_dindex]) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
