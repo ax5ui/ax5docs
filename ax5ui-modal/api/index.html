@@ -129,156 +129,217 @@
                 <div class="row">
                     <div class="col-md-12">
                         
-        <h1>Basic Usage</h1>
-<blockquote>
-<p>Modal UI, hold does not exceed the current page, you can use in order to process a simple user input and information. In some cases, by the other page so as to output in the modal, it can also handle the task of more diverse forms.</p>
-</blockquote>
-<p>How to initialize the properties of the UI, there are two.
-You can pass the property values of the UI to <code>setConfig</code>.
-Using the <code>new</code> you can pass when you initialize the UI.</p>
-<h2>setConfig()</h2>
-<p><code>setConfig([options, callInit=true])</code></p>
-<pre class="prettyprint linenums lang-js"><code>var myModal = new ax5.ui.modal();
-myModal.set_config({
-    width: &quot;Number&quot;,
-    height: &quot;Number&quot;,
-    position: {
-        left: &quot;left|center|right|Number&quot;, 
-        top: &quot;top|middle|bottom|Number&quot;, 
-        margin: &quot;Number&quot;
-    },
-    iframeLoadingMsg: &quot;&quot;,
-    iframe: {
-        method: &quot;get|post&quot;, 
-        url: &quot;String&quot;, 
-        param: &quot;paramString|Object&quot;
-    },
-    closeToEsc: &quot;Boolean&quot;,
-    onStateChanged: &quot;Function&quot;,
-    animateTime: &quot;Number&quot;,
-    zIndex: &quot;Number&quot;,
-    absolute: false,
-    fullScreen: &quot;Boolean&quot;,
-    header: {
-        title: &quot;&quot;,
-        btns: {
-            close: {
-                label: '&lt;i class=&quot;fa fa-times-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function(){
-                    myModal.close();
-                }
-            }
-        }
-    }
-});
+        <p><a name="ax5modal"></a></p>
+<h2>ax5modal</h2>
+<p><strong>Kind</strong>: global class<br>
+<strong>Author:</strong> <a href="mailto:tom@axisj.com">tom@axisj.com</a></p>
+<ul>
+<li><a href="#ax5modal">ax5modal</a>
+<ul>
+<li><a href="#ax5modal.setConfig">.setConfig(config)</a> ⇒ <code><a href="#ax5modal">ax5modal</a></code></li>
+<li><a href="#ax5modal.open">.open()</a> ⇒ <code><a href="#ax5modal">ax5modal</a></code></li>
+<li><a href="#ax5modal.close">.close()</a> ⇒ <code><a href="#ax5modal">ax5modal</a></code></li>
+<li><a href="#ax5modal.minimize">.minimize()</a> ⇒ <code><a href="#ax5modal">ax5modal</a></code></li>
+<li><a href="#ax5modal.restore">.restore()</a> ⇒ <code><a href="#ax5modal">ax5modal</a></code></li>
+<li><a href="#ax5modal.css">.css(css)</a> ⇒ <code><a href="#ax5modal">ax5modal</a></code></li>
+<li><a href="#ax5modal.setModalConfig">.setModalConfig(_config)</a> ⇒ <code>ax5.ui.ax5modal</code></li>
+<li><a href="#ax5modal.align">.align(position, e)</a> ⇒ <code><a href="#ax5modal">ax5modal</a></code></li>
+</ul>
+</li>
+</ul>
+<p><a name="ax5modal.setConfig"></a></p>
+<h3>ax5modal.setConfig(config) ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
+<p>Preferences of modal UI</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>config</td>
+<td><code>Object</code></td>
+<td></td>
+<td>클래스 속성값</td>
+</tr>
+<tr>
+<td>[config.zIndex]</td>
+<td><code>Number</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.position]</td>
+<td><code>Object</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.position.left]</td>
+<td><code>String</code></td>
+<td><code>&quot;center&quot;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.position.top]</td>
+<td><code>String</code></td>
+<td><code>&quot;middle&quot;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.position.margin]</td>
+<td><code>Number</code></td>
+<td><code>10</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.minimizePosition]</td>
+<td><code>String</code></td>
+<td><code>&quot;bottom-right&quot;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.width]</td>
+<td><code>Number</code></td>
+<td><code>300</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.height]</td>
+<td><code>Number</code></td>
+<td><code>400</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.closeToEsc]</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.absolute]</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.disableDrag]</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.disableResize]</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.animateTime]</td>
+<td><code>Number</code></td>
+<td><code>250</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.fullScreen]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.onStateChanged]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.onResize]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code></code></pre>
+<p><a name="ax5modal.open"></a></p>
+<h3>ax5modal.open() ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
+<p>open the modal</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code><br>
+<strong>Example</strong></p>
+<pre><code>my_modal.open();
 </code></pre>
-<h3>width</h3>
-<p>Type: <code>Number</code> [default: 300]</p>
-<p>Modal width</p>
-<h3>height</h3>
-<p>Type: <code>Number</code> [default: 400]</p>
-<p>Modal height</p>
-<h3>position</h3>
-<p>Type: <code>Object</code></p>
-<p><strong>default</strong></p>
-<pre class="prettyprint linenums lang-json"><code>{
-    left: &quot;center&quot;, // left|center|right|Number
-    top: &quot;middle&quot;, // top|middle|bottom|Number
-    margin: 10
-}
+<p><a name="ax5modal.close"></a></p>
+<h3>ax5modal.close() ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
+<p>close the modal</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code><br>
+<strong>Example</strong></p>
+<pre><code>my_modal.close();
 </code></pre>
-<h3>iframe</h3>
-<p>Type: <code>Object</code></p>
-<p><strong>default</strong></p>
-<pre class="prettyprint linenums lang-json"><code>{
-    method: &quot;get&quot;, // get|post
-    url: &quot;&quot;, // iframe src url
-    param: &quot;&quot; // parameter
-}
-</code></pre>
-<h3>closeToEsc</h3>
-<p>Type: <code>Boolean</code></p>
-<h3>onStateChanged</h3>
-<p>Type: <code>Function</code></p>
-<p>onStateChanged function is executed when the modal of the state is changed,
-this.state state value is passed to this time onStateChanged function.</p>
-<h3>animateTime</h3>
-<p>Type: <code>Number</code> [default : 300]</p>
-<h3>zIndex</h3>
-<p>Type: <code>Number</code></p>
-<h3>absolute</h3>
-<p>Type: <code>Boolean</code> [default=false]</p>
-<h3>fullScreen</h3>
-<p>Type: <code>Boolean</code></p>
-<pre class="prettyprint linenums lang-json"><code>fullScreen : true
-</code></pre>
-<h3>header</h3>
-<p>Type: `Object’</p>
-<pre class="prettyprint linenums lang-json"><code>{
-    title:&quot;MODAL TITLE&quot;,
-    btns: {
-        minimize: {
-            label: '&lt;i class=&quot;fa fa-minus-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function(){
-                modal.minimize();
-            }
-        },
-        maximize: {
-            label: '&lt;i class=&quot;fa fa-plus-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function(){
-                modal.maximize();
-            }
-        },
-        close: {
-            label: '&lt;i class=&quot;fa fa-times-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function(){
-                modal.close();
-            }
-        }
-    }
-}
-</code></pre>
-<hr>
-<h2>open()</h2>
-<p><code>open(Options[, callback])</code></p>
-<p>it is possible to redefine all of the options that can be used in setConfig.</p>
-<pre class="prettyprint linenums lang-js"><code>modal.open();
-modal.open({
-    width: 500,
-    height: 500
-});
-modal.open({}, function(){
-    console.log(this);
-});
-</code></pre>
-<hr>
-<h2>css()</h2>
-<p><code>css(Object)</code></p>
-<pre class="prettyprint linenums lang-js"><code>modal.css({
-    width: 400,
-    height: 600
-});
-</code></pre>
-<hr>
-<h2>align()</h2>
-<p><code>align(Object)</code></p>
-<pre class="prettyprint linenums lang-js"><code>modal.align({left:&quot;center&quot;, top:&quot;middle&quot;});
-modal.align({left:&quot;left&quot;, top:&quot;top&quot;, margin: 20});
-</code></pre>
-<hr>
-<h2>close()</h2>
-<p><code>close()</code></p>
-<hr>
-<h2>minimize()</h2>
-<p><code>minimize()</code></p>
-<hr>
-<h2>maximize()</h2>
-<p><code>maximize()</code></p>
-<hr>
-<h2>onStateChanged</h2>
-<p>Type: <code>Function</code></p>
-<p><code>onStateChanged</code> function can be defined in setConfig method or new ax5.ui.modal initialization method.
-However, you can us to define an event function after initialization, if necessary</p>
-<pre class="prettyprint linenums lang-js"><code>modal.onStateChanged = function(){
-    console.log(this);
-}
-</code></pre>
+<p><a name="ax5modal.minimize"></a></p>
+<h3>ax5modal.minimize() ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code><br>
+<a name="ax5modal.restore"></a></p>
+<h3>ax5modal.restore() ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code><br>
+<a name="ax5modal.css"></a></p>
+<h3>ax5modal.css(css) ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
+<p>setCSS</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>css</td>
+<td><code>Object</code></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5modal.setModalConfig"></a></p>
+<h3>ax5modal.setModalConfig(_config) ⇒ <code>ax5.ui.ax5modal</code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_config</td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5modal.align"></a></p>
+<h3>ax5modal.align(position, e) ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>position</td>
+</tr>
+<tr>
+<td>e</td>
+</tr>
+</tbody>
+</table>
 
     
                     </div>

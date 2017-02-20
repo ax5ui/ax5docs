@@ -129,204 +129,211 @@
                 <div class="row">
                     <div class="col-md-12">
                         
-        <h1>Basic Usage</h1>
-<blockquote>
-<p>It is a dropdown UI. It supports multi-selection, based on a html select tag</p>
-</blockquote>
-<h2>setConfig()</h2>
-<p><code>setConfig(config)</code></p>
-<p>How to initialize the properties of the UI, there are two.
-You can pass the property values of the UI to <code>setConfig</code>.
-Using the <code>new</code> you can pass when you initialize the UI.</p>
-<pre class="prettyprint linenums lang-js"><code>var select = new ax5.ui.select({
-  theme: 'default',
-  animateTime: 250,
-  lang: {
-      emptyOfSelected: '',
-      multipleLabel: '&quot;{{label}}&quot;외 {{length}}건'
-  },
-  columnKeys: {
-      optionValue: 'value',
-      optionText: 'text',
-      optionSelected: 'selected'
-  }
+        <p><a name="ax5select"></a></p>
+<h2>ax5select</h2>
+<p><strong>Kind</strong>: global class<br>
+<strong>Author:</strong> <a href="mailto:tom@axisj.com">tom@axisj.com</a></p>
+<ul>
+<li><a href="#ax5select">ax5select</a>
+<ul>
+<li><a href="#ax5select.setConfig">.setConfig(config)</a> ⇒ <code><a href="#ax5select">ax5select</a></code></li>
+<li><a href="#ax5select.bind">.bind(item)</a> ⇒ <code><a href="#ax5select">ax5select</a></code></li>
+<li><a href="#ax5select.open">.open(boundID, [tryCount])</a> ⇒ <code><a href="#ax5select">ax5select</a></code></li>
+<li><a href="#ax5select.update">.update(item)</a> ⇒ <code><a href="#ax5select">ax5select</a></code></li>
+<li><a href="#ax5select.setOptions">.setOptions(boundID, options)</a> ⇒ <code><a href="#ax5select">ax5select</a></code></li>
+<li><a href="#ax5select.val">.val(boundID, [value], [selected])</a> ⇒ <code><a href="#ax5select">ax5select</a></code></li>
+<li><a href="#ax5select.close">.close()</a> ⇒ <code><a href="#ax5select">ax5select</a></code></li>
+</ul>
+</li>
+</ul>
+<p><a name="ax5select.setConfig"></a></p>
+<h3>ax5select.setConfig(config) ⇒ <code><a href="#ax5select">ax5select</a></code></h3>
+<p>Preferences of select UI</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5select">ax5select</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>config</td>
+<td><code>Object</code></td>
+<td>클래스 속성값</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>var options = [];
+for (var i = 0; i &lt; 20; i++) {
+    options.push({value: i, text: &quot;optionText&quot; + i});
+}
+var mySelect = new ax5.ui.select({
+    theme: &quot;danger&quot;
 });
-// or
-select.setConfig({
-  theme: 'default',
-  animateTime: 250,
-  lang: {
-      noSelected: '',
-      noOptions: 'no options',
-      loading: 'now loading..',
-      multipleLabel: '&quot;{{label}}&quot;외 {{length}}건'
-  },
-  columnKeys: {
-      optionValue: 'value',
-      optionText: 'text',
-      optionSelected: 'selected'
-  }
-});
-</code></pre>
-<h3>theme</h3>
-<p>Type: <code>String</code></p>
-<h3>animateTime</h3>
-<p>Type: <code>Number</code></p>
-<h3>lang</h3>
-<p>Type: <code>Object</code></p>
-<h3>columnKeys</h3>
-<p>Type: <code>Object</code>
-This is used to define the internal name of the key. The object of the options</p>
-<pre class="prettyprint linenums lang-js"><code>var options = [
-  {id:1, text:&quot;text&quot;}
-];
-
-var select = new ax5.ui.select({
-  columnKeys: {
-    optionValue: 'id',
-    optionText: 'text',
-  }
-});
-</code></pre>
-<hr>
-<h2>bind()</h2>
-<p><code>bind(Options)</code></p>
-<pre class="prettyprint linenums lang-html"><code>&lt;div class=&quot;form-group&quot;&gt;
-    &lt;div data-ax5select=&quot;select1&quot; data-ax5select-config='{}'&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre class="prettyprint linenums lang-js"><code>var select = new ax5.ui.select();
-
-select.bind({
-  target: $('[data-ax5select=&quot;select1&quot;]'),
-  options: [
-    {value: &quot;optionValue1&quot;, text: &quot;optionText1&quot;},
-    {value: &quot;optionValue2&quot;, text: &quot;optionText2&quot;}
-  ]
-});
-</code></pre>
-<h3>id</h3>
-<p>Type: <code>String</code></p>
-<p>select unique id</p>
-<h3>theme</h3>
-<p>Type: <code>String</code></p>
-<h3>multiple</h3>
-<p>Type: <code>Boolean</code></p>
-<h3>target</h3>
-<p>Type: <code>Dom Element | jQuery Object</code></p>
-<p>element that are the target of the select, element must have “data-ax5select” attribute</p>
-<h3>options</h3>
-<p>Type: <code>Array</code></p>
-<h3>onStateChanged</h3>
-<p>Type: <code>Function</code></p>
-<p><code>onStateChanged</code> function can be defined in setConfig method or new ax5.ui.select initialization method.
-However, you can us to define an event function after initialization, if necessary</p>
-<pre class="prettyprint linenums lang-js"><code>var select = new ax5.ui.select({
-    onStateChanged: function(){
+mySelect.bind({
+    theme: &quot;primary&quot;,
+    target: $('[data-ax5select=&quot;select1&quot;]'),
+    options: options,
+    onChange: function () {
+        console.log(this);
+    },
+    onClose: function () {
+        console.log(this);
+    },
+    onStateChanged: function () {
         console.log(this);
     }
 });
+</code></pre>
+<p><a name="ax5select.bind"></a></p>
+<h3>ax5select.bind(item) ⇒ <code><a href="#ax5select">ax5select</a></code></h3>
+<p>bind select</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5select">ax5select</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>item</td>
+<td><code>Object</code></td>
+</tr>
+<tr>
+<td>[<a href="http://item.id">item.id</a>]</td>
+<td><code>String</code></td>
+</tr>
+<tr>
+<td>[item.theme]</td>
+<td><code>String</code></td>
+</tr>
+<tr>
+<td>[item.multiple]</td>
+<td><code>Boolean</code></td>
+</tr>
+<tr>
+<td>item.target</td>
+<td><code>Element</code></td>
+</tr>
+<tr>
+<td>item.options</td>
+<td><code>Array.&lt;Object&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>var mySelect = new ax5.ui.select();
+mySelect.bind({
+ columnKeys: {
+     optionValue: &quot;value&quot;,
+     optionText: &quot;text&quot;
+ },
+ target: $('[data-ax5select=&quot;select1&quot;]'),
+ options: [
+     {value: &quot;&quot;, text: &quot;&quot;}
+ ],
+ onChange: function(){
 
-select.onStateChanged = function(){
-    console.log(this);
-}
-</code></pre>
-<h3>reset</h3>
-<p>Type: <code>String</code></p>
-<p>multiple selected clear icon</p>
-<pre class="prettyprint linenums lang-js"><code>select.bind({
-  target: $('[data-ax5select=&quot;select1&quot;]'),
-  reset:&quot;&lt;i class=\&quot;fa fa-trash\&quot;&gt;&lt;/i&gt;&quot;,
-  options: [
-    {value: &quot;optionValue1&quot;, text: &quot;optionText1&quot;},
-    {value: &quot;optionValue2&quot;, text: &quot;optionText2&quot;}
-  ]
+ },
+ onClose: function(){
+
+ },
+ onStateChanged: function(){
+
+ }
 });
 </code></pre>
-<h3>onExpand</h3>
-<p>Type: <code>Function</code></p>
-<pre class="prettyprint linenums lang-js"><code>select.bind({
-  target: $('[data-ax5select=&quot;select1&quot;]'),
-  lang: {
-      loading: '&lt;i class=&quot;fa fa-spinner fa-pulse&quot;&gt;&lt;/i&gt;'
-  },
-  onExpand: function (callback) {
-      setTimeout(function () {
-        callback({
-            options: [
-                {value: &quot;V0&quot;, text: &quot;callback Text 0&quot;},
-                {value: &quot;V1&quot;, text: &quot;callback Text 1&quot;},
-                {value: &quot;V2&quot;, text: &quot;callback Text 2&quot;},
-                {value: &quot;V3&quot;, text: &quot;callback Text 3&quot;}
-            ]
-        });
-      }, 300);
-  }
-});
-</code></pre>
-<h2>open()</h2>
-<p><code>open(boundID)</code></p>
-<h3>boundID</h3>
-<p>Type: <code>String|Number|Element</code></p>
-<pre class="prettyprint linenums lang-js"><code>var el = $('[data-ax5select=&quot;select1&quot;]').get(0);
-mySelect.open(el);
-mySelect.open($('[data-ax5select=&quot;select1&quot;]'));
-mySelect.open(0);
-</code></pre>
-<h2>update()</h2>
-<p><code>update(Options)</code></p>
-<pre class="prettyprint linenums lang-js"><code>mySelect.update({
-  target: $('[data-ax5select=&quot;select1&quot;]'),
-  options: [...]
-});
-</code></pre>
-<h2>val()</h2>
-<p><code>val(boundID[, value, selected])</code></p>
-<pre class="prettyprint linenums lang-js"><code>mySelect.val($('[data-ax5select=&quot;select1&quot;]'), &quot;optionValue2&quot;); // setValue
-mySelect.val($('[data-ax5select=&quot;select1&quot;]')); // getValue
-</code></pre>
-<h2>close()</h2>
-<p><code>close()</code></p>
-<h2>enable()</h2>
-<p><code>enable(boundID)</code></p>
-<pre class="prettyprint linenums lang-js"><code>mySelect.enable($('[data-ax5select=&quot;select1&quot;]'));
-</code></pre>
-<h2>disable()</h2>
-<p><code>disable(boundID)</code></p>
-<pre class="prettyprint linenums lang-js"><code>mySelect.disable($('[data-ax5select=&quot;select1&quot;]'));
-</code></pre>
-<hr>
-<h1>jQuery extends</h1>
-<h2>ax5select</h2>
-<p><code>ax5select(options)</code></p>
-<pre class="prettyprint linenums lang-js"><code>$('[data-ax5select]').ax5select({
-    options: options
-});
-</code></pre>
-<h3>open</h3>
-<p><code>ax5select(&quot;open&quot;)</code></p>
-<pre class="prettyprint linenums lang-js"><code>$('[data-ax5select]').ax5select(&quot;open&quot;);
-</code></pre>
-<h3>close</h3>
-<p><code>ax5select(&quot;close&quot;)</code></p>
-<pre class="prettyprint linenums lang-js"><code>$('[data-ax5select]').ax5select(&quot;close&quot;);
-</code></pre>
-<h3>setValue</h3>
-<p><code>ax5select(&quot;setValue&quot;)</code></p>
-<pre class="prettyprint linenums lang-js"><code>$('[data-ax5select]').ax5select(&quot;setValue&quot;, &quot;optionValue2&quot;);
-</code></pre>
-<h3>getValue</h3>
-<p><code>ax5select(&quot;getValue&quot;)</code></p>
-<pre class="prettyprint linenums lang-js"><code>$('[data-ax5select]').ax5select(&quot;getValue&quot;);
-</code></pre>
-<h3>enable</h3>
-<p><code>ax5select(&quot;enable&quot;)</code></p>
-<pre class="prettyprint linenums lang-js"><code>$('[data-ax5select]').ax5select(&quot;enable&quot;);
-</code></pre>
-<h3>disable</h3>
-<p><code>ax5select(&quot;disable&quot;)</code></p>
-<pre class="prettyprint linenums lang-js"><code>$('[data-ax5select]').ax5select(&quot;disable&quot;);
-</code></pre>
+<p><a name="ax5select.open"></a></p>
+<h3>ax5select.open(boundID, [tryCount]) ⇒ <code><a href="#ax5select">ax5select</a></code></h3>
+<p>open the optionBox of select</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5select">ax5select</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boundID</td>
+<td><code>String</code> | <code>Number</code> | <code>Element</code></td>
+</tr>
+<tr>
+<td>[tryCount]</td>
+<td><code>Number</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5select.update"></a></p>
+<h3>ax5select.update(item) ⇒ <code><a href="#ax5select">ax5select</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5select">ax5select</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>item</td>
+<td><code>Object</code> | <code>String</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5select.setOptions"></a></p>
+<h3>ax5select.setOptions(boundID, options) ⇒ <code><a href="#ax5select">ax5select</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5select">ax5select</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boundID</td>
+</tr>
+<tr>
+<td>options</td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5select.val"></a></p>
+<h3>ax5select.val(boundID, [value], [selected]) ⇒ <code><a href="#ax5select">ax5select</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5select">ax5select</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boundID</td>
+<td><code>String</code> | <code>Number</code> | <code>Element</code></td>
+</tr>
+<tr>
+<td>[value]</td>
+<td><code>String</code> | <code>Object</code> | <code>Array</code></td>
+</tr>
+<tr>
+<td>[selected]</td>
+<td><code>Boolean</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5select.close"></a></p>
+<h3>ax5select.close() ⇒ <code><a href="#ax5select">ax5select</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5select">ax5select</a></code></p>
 
     
                     </div>
