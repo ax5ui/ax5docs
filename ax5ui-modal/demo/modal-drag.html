@@ -103,6 +103,7 @@
     <li><a style="cursor: pointer;" data-href="/ax5ui-binder">ax5ui-binder</a></li>
     <li><a style="cursor: pointer;" data-href="/ax5ui-grid">ax5ui-grid</a></li>
     <li><a style="cursor: pointer;" data-href="/ax5ui-uploader">ax5ui-uploader</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-docker">ax5ui-docker</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="https://www.axisj.com">axisj.com</a></li>
 </ul>
@@ -171,9 +172,9 @@
                             modal.minimize();
                         }
                     },
-                    maximize: {
+                    restore: {
                         label: '&lt;i class="fa fa-plus-circle" aria-hidden="true">&lt;/i>', onClick: function(){
-                            modal.maximize();
+                            modal.restore();
                         }
                     },
                     close: {
@@ -214,9 +215,9 @@
                             modal.minimize();
                         }
                     },
-                    maximize: {
+                    restore: {
                         label: '<i class="fa fa-plus-circle" aria-hidden="true"></i>', onClick: function(){
-                            modal.maximize();
+                            modal.restore();
                         }
                     },
                     close: {

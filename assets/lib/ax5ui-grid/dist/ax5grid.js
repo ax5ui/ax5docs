@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.96"
+        version: "1.3.123"
     }, function () {
         /**
          * @class ax5grid
@@ -331,7 +331,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
                 alignGrid = function alignGrid(_isFirst) {
-                // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하는 아규먼트
+                // 대상이 크기가 컬럼의 최소 크기 보다 작업 금지
+                if (Math.min(this.$target.innerWidth(), this.$target.innerHeight()) < 5) {
+                    return false;
+                }
 
                 if (!this.config.height) {
                     this.$["container"]["root"].css({ height: this.config._height = this.$target.height() });
@@ -555,6 +558,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 scrollerDisplayProcess.call(this, this.$["scroller"]["corner"], verticalScrollerWidth, horizontalScrollerHeight, "corner");
 
                 panelDisplayProcess.call(this, this.$["container"]["page"], "", "", "page");
+
+                return true;
             },
                 sortColumns = function sortColumns(_sortInfo) {
                 GRID.header.repaint.call(this);
@@ -606,6 +611,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number} [_config.header.columnPadding=3]
              * @param {Number} [_config.header.columnBorderWidth=1]
              * @param {Object} [_config.body]
+             * @param {Function} [_config.onClick]
+             * @param {Function} [_config.onDBLClick]
              * @param {String|Array} [_config.body.mergeCells=false] -
              * @param {String} [_config.body.align]
              * @param {Number} [_config.body.columnHeight=25]
@@ -695,12 +702,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              *         return this;
              *     },
              *     setData: function (_pageNo) {
-             *
              *         firstGrid.setData(sampleData);
-             *
              *         return this;
              *     }
              * };
+             *
+             * // onClick, onDBLClick, onDataChanged
+             * firstGrid.setConfig({
+             *      target: $('[data-ax5grid="first-grid"]'),
+             *      columns: [...],
+             *      body: {
+             *          onClick: function(){
+             *              console.log(this);
+             *          },
+             *          onDBLClick: function(){
+             *              console.log(this);
+             *              // If the column does not have an editor attribute, an event is raised.
+             *          },
+             *          onDataChanged: function(){
+             *              console.log(this);
+             *              // If change Data
+             *          }
+             *      }
+             * });
              * ```
              */
             this.init = function (_config) {
@@ -853,8 +877,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @returns {ax5grid}
              */
             this.align = function () {
-                alignGrid.call(this);
-                GRID.scroller.resize.call(this);
+                if (alignGrid.call(this)) {
+                    GRID.scroller.resize.call(this);
+                }
                 return this;
             };
 
@@ -1707,9 +1732,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             cfg = this.config,
             processor = {
             "selected": function selected(_dindex) {
-                var i = this.$.livePanelKeys.length;
-                while (i--) {
-                    this.$.panel[this.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').attr("data-ax5grid-selected", this.list[_dindex][cfg.columnKeys.selected]);
+                if (this.list[_dindex]) {
+                    var i = this.$.livePanelKeys.length;
+                    while (i--) {
+                        this.$.panel[this.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').attr("data-ax5grid-selected", this.list[_dindex][cfg.columnKeys.selected]);
+                    }
                 }
             },
             "selectedClear": function selectedClear() {
@@ -1863,11 +1890,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 dindex = void 0,
                 rowIndex = void 0,
                 colIndex = void 0,
-                targetClick = {
+                targetDBLClick = {
                 "default": function _default(_column) {
-
-                    if (this.isInlineEditing) {
-                        for (var columnKey in this.inlineEditing) {
+                    if (self.isInlineEditing) {
+                        for (var columnKey in self.inlineEditing) {
                             if (columnKey == _column.dindex + "_" + _column.colIndex + "_" + _column.rowIndex) {
                                 return this;
                             }
@@ -1881,7 +1907,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             value = GRID.data.getValue.call(self, dindex, column.key);
                         }
                     }
-                    GRID.body.inlineEdit.active.call(self, self.focusedColumn, e, value);
+
+                    var editor = self.colGroup[_column.colIndex].editor;
+                    if (U.isObject(editor)) {
+                        GRID.body.inlineEdit.active.call(self, self.focusedColumn, e, value);
+                    } else {
+                        // 더블클릭 실행
+                        if (self.config.body.onDBLClick) {
+                            var that = {
+                                self: self,
+                                page: self.page,
+                                list: self.list,
+                                item: self.list[_column.dindex],
+                                dindex: _column.dindex,
+                                rowIndex: _column.rowIndex,
+                                colIndex: _column.colIndex,
+                                column: column,
+                                value: self.list[_column.dindex][column.key]
+                            };
+                            self.config.body.onDBLClick.call(that);
+                        }
+                    }
                 },
                 "rowSelector": function rowSelector(_column) {},
                 "lineNumber": function lineNumber(_column) {}
@@ -1895,8 +1941,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             colIndex = Number(this.getAttribute("data-ax5grid-column-colIndex"));
             dindex = Number(this.getAttribute("data-ax5grid-data-index"));
 
-            if (attr in targetClick) {
-                targetClick[attr]({
+            if (attr in targetDBLClick) {
+                targetDBLClick[attr]({
                     panelName: panelName,
                     attr: attr,
                     row: row,
@@ -2042,7 +2088,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (_key === "__d-index__") {
             return typeof _item["__index"] !== "undefined" ? _item["__index"] + 1 : "";
         } else if (_key === "__d-checkbox__") {
-            return '<div class="checkBox"></div>';
+            return "<div class=\"checkBox\" style=\"max-height: " + (_col.width - 10) + "px;min-height: " + (_col.width - 10) + "px;\"></div>";
         } else {
             if (_col.editor && function (_editor) {
                 if (_editor.type in GRID.inlineEditor) {
@@ -2091,7 +2137,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
 
-                return typeof returnValue === "number" ? returnValue : returnValue.replace(/[<>]/g, function (tag) {
+                // 키값이 Boolean일때 오류 발생하여 수정.
+                return typeof returnValue !== "string" ? returnValue : returnValue.replace(/[<>]/g, function (tag) {
                     return tagsToReplace[tag] || tag;
                 });
             }
@@ -4195,6 +4242,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var select = function select(_dindex, _selected, _options) {
         var cfg = this.config;
 
+        if (!this.list[_dindex]) return false;
         if (this.list[_dindex].__isGrouping) return false;
         if (this.list[_dindex][cfg.columnKeys.disableSelection]) return false;
 
@@ -5531,8 +5579,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this,
             margin = this.config.scroller.trackPadding;
 
-        this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size - (margin + 1), left: margin / 2 });
-        this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size - (margin + 1), top: margin / 2 });
+        if (margin == 0) {
+            this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size, left: -1 });
+            this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size, top: -1 });
+        } else {
+            this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size - (margin + 1), left: margin / 2 });
+            this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size - (margin + 1), top: margin / 2 });
+        }
 
         this.$["scroller"]["vertical-bar"].on(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);

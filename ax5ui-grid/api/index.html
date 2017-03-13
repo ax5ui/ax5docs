@@ -95,6 +95,7 @@
     <li><a style="cursor: pointer;" data-href="/ax5ui-binder">ax5ui-binder</a></li>
     <li><a style="cursor: pointer;" data-href="/ax5ui-grid">ax5ui-grid</a></li>
     <li><a style="cursor: pointer;" data-href="/ax5ui-uploader">ax5ui-uploader</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-docker">ax5ui-docker</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="https://www.axisj.com">axisj.com</a></li>
 </ul>
@@ -290,6 +291,18 @@
 <tr>
 <td>[_config.body]</td>
 <td><code>Object</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.onClick]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.onDBLClick]</td>
+<td><code>function</code></td>
 <td></td>
 <td></td>
 </tr>
@@ -536,12 +549,28 @@ var gridView = {
         return this;
     },
     setData: function (_pageNo) {
-
         firstGrid.setData(sampleData);
-
         return this;
     }
 };
+
+// onClick, onDBLClick, onDataChanged
+firstGrid.setConfig({
+     target: $('[data-ax5grid=&quot;first-grid&quot;]'),
+     columns: [...],
+     body: {
+         onClick: function(){
+             console.log(this);
+         },
+         onDBLClick: function(){
+             console.log(this);
+             // 
+         },
+         onDataChanged: function(){
+             console.log(this);
+         }
+     }
+});
 </code></pre>
 <p><a name="ax5grid.align"></a></p>
 <h3>ax5grid.align() ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>

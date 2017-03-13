@@ -1,0 +1,477 @@
+
+
+
+    
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
+    <title>ax5ui / ax5ui-docker : API</title>
+
+    
+    <script src="../../assets/lib/jquery/jquery.min.js"></script>
+
+    <script src="../../assets/lib/prettify/prettify.js"></script>
+    <script src="../../assets/lib/prettify/lang-css.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../assets/lib/prettify/skins/github.css">
+
+    <script type="text/javascript">
+        $(document.body).ready(function () {
+            if (window["prettyPrint"]) window["prettyPrint"]();
+        });
+    </script>
+
+    <script src="../../assets/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="../../assets/lib/ax5core/dist/ax5core.min.js"></script>
+
+    
+    <link rel="stylesheet" type="text/css" href="../../assets/css/docs.css">
+    <script src="../../assets/js/docs.js"></script>
+
+    
+    
+</head>
+<body>
+<div class="docs sub-page  ">
+    <div class="docs-header">
+        <div class="docs-header-tool" id="docs-header-tool">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    
+                    <div class="navbar-header">
+						<span class="navbar-brand">
+							<a href="/"><i class="axc-ax5ui"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i></a>
+							<a href="/ax5ui-docker">
+							<span class="small">/ ax5ui-docker</span></a>
+						</span>
+                        <a class="visible-xs-inline-block mobile-menu" id="mobile-menu">
+                            <i class="axc-menu"></i>
+                        </a>
+                    </div>
+
+                    
+                    <div class="collapse navbar-collapse" id="docs-navbar-collapse">
+
+                        <ul class="nav navbar-nav" id="docs-menu-print-target">
+                            
+                            
+                                <li ><a href="/ax5ui-docker/demo/index.html">Demo</a></li><li class='active'><a href="/ax5ui-docker/api/index.html">API</a></li>
+                            
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="https://github.com/ax5ui/ax5ui-docker">
+                                    <i class="axc-github"></i>
+                                    Star
+                                    <span class="gh-count" id="started-count">.</span>
+                                </a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">AX5UI <span class="caret"></span></a>
+                                <ul class="dropdown-menu" data-ax5ui-plugins="">
+    <li><a href="/">AX5UI</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a style="cursor: pointer;" data-href="/ax5core">ax5core</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-mask">ax5ui-mask</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-dialog">ax5ui-dialog</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-toast">ax5ui-toast</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-modal">ax5ui-modal</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-calendar">ax5ui-calendar</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-picker">ax5ui-picker</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-formatter">ax5ui-formatter</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-menu">ax5ui-menu</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-media-viewer">ax5ui-media-viewer</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-select">ax5ui-select</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-layout">ax5ui-layout</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-combobox">ax5ui-combobox</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-autocomplete">ax5ui-autocomplete</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-binder">ax5ui-binder</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-grid">ax5ui-grid</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-uploader">ax5ui-uploader</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-docker">ax5ui-docker</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="https://www.axisj.com">axisj.com</a></li>
+</ul>
+                            </li>
+                        </ul>
+
+                    </div>
+                    
+
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="docs-visual">
+        <div class="pattern"></div>
+        
+
+        <div class="contents">
+            <div class="style-sub-visual">
+                <div class="title">API</div>
+                <div class="description">
+                </div>
+            </div>
+        </div>
+
+    
+    </div>
+    <div class="docs-body" id="docs-body">
+        <div class="wrapper">
+            
+                <div class="row">
+                    <div class="col-md-12">
+                        
+        <p><a name="ax5docker"></a></p>
+<h2>ax5docker</h2>
+<p><strong>Kind</strong>: global class<br>
+<strong>Author:</strong> <a href="mailto:tom@axisj.com">tom@axisj.com</a></p>
+<ul>
+<li><a href="#ax5docker">ax5docker</a>
+<ul>
+<li><a href="#ax5docker.config">.config</a> : <code>Object</code></li>
+<li><a href="#ax5docker.xvar">.xvar</a> : <code>Object</code></li>
+<li><a href="#ax5docker.menu">.menu</a> : <code>Object</code></li>
+<li><a href="#ax5docker.panels">.panels</a> : <code>Array</code></li>
+<li><a href="#ax5docker.panelId">.panelId</a> : <code>Number</code></li>
+<li><a href="#ax5docker.modules">.modules</a> : <code>Object</code></li>
+<li><a href="#ax5docker.setConfig">.setConfig(config)</a></li>
+<li><a href="#ax5docker.setPanels">.setPanels()</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
+<li><a href="#ax5docker.addModule">.addModule(modules)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
+<li><a href="#ax5docker.repaint">.repaint()</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
+<li><a href="#ax5docker.addPanel">.addPanel(_addPath, _addType, _panel, _panelIndex)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
+<li><a href="#ax5docker.removePanel">.removePanel(clickedLabel)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
+<li><a href="#ax5docker.appendPanel">.appendPanel(_panel, _appendPath, _appendType)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
+<li><a href="#ax5docker.align">.align()</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
+</ul>
+</li>
+</ul>
+<p><a name="ax5docker.config"></a></p>
+<h3>ax5docker.config : <code>Object</code></h3>
+<p><strong>Kind</strong>: static property of <code><a href="#ax5docker">ax5docker</a></code><br>
+<a name="ax5docker.xvar"></a></p>
+<h3>ax5docker.xvar : <code>Object</code></h3>
+<p><strong>Kind</strong>: static property of <code><a href="#ax5docker">ax5docker</a></code><br>
+<a name="ax5docker.menu"></a></p>
+<h3>ax5docker.menu : <code>Object</code></h3>
+<p><strong>Kind</strong>: static property of <code><a href="#ax5docker">ax5docker</a></code><br>
+<a name="ax5docker.panels"></a></p>
+<h3>ax5docker.panels : <code>Array</code></h3>
+<p><strong>Kind</strong>: static property of <code><a href="#ax5docker">ax5docker</a></code><br>
+<a name="ax5docker.panelId"></a></p>
+<h3>ax5docker.panelId : <code>Number</code></h3>
+<p><strong>Kind</strong>: static property of <code><a href="#ax5docker">ax5docker</a></code><br>
+<a name="ax5docker.modules"></a></p>
+<h3>ax5docker.modules : <code>Object</code></h3>
+<p><strong>Kind</strong>: static property of <code><a href="#ax5docker">ax5docker</a></code><br>
+<a name="ax5docker.setConfig"></a></p>
+<h3>ax5docker.setConfig(config)</h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>config</td>
+<td><code>Object</code></td>
+<td></td>
+</tr>
+<tr>
+<td>config.target</td>
+<td><code>Element</code></td>
+<td></td>
+</tr>
+<tr>
+<td>config.panels</td>
+<td><code>Array</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.icons]</td>
+<td><code>Object</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.icons.close]</td>
+<td><code>String</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.icons.more]</td>
+<td><code>String</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.disableClosePanel]</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td>[config.disableDragPanel]</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td>[config.control]</td>
+<td><code>Object</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.control.before]</td>
+<td><code>function</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.control.after]</td>
+<td><code>function</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.menu]</td>
+<td><code>Object</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.menu.theme]</td>
+<td><code>String</code></td>
+<td><code>&quot;default&quot;</code></td>
+</tr>
+<tr>
+<td>[config.menu.position]</td>
+<td><code>String</code></td>
+<td><code>&quot;absolute&quot;</code></td>
+</tr>
+<tr>
+<td>[config.menu.icons]</td>
+<td><code>Object</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.menu.icons.arrow]</td>
+<td><code>String</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[config.resizeDebounceTime]</td>
+<td><code>Number</code></td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td>[config.panelDebounceTime]</td>
+<td><code>Number</code></td>
+<td><code>300</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>var myDocker = new ax5.ui.docker();
+myDocker.setConfig({
+     target: $('[data-ax5docker=&quot;docker1&quot;]'),
+     panels: [
+         {
+             type: &quot;panel&quot;,
+             name: &quot;panel name&quot;,
+             moduleName: &quot;content&quot;,
+             moduleState:{
+                 data: &quot;data1&quot;
+             }
+         }
+     ]
+});
+</code></pre>
+<p><a name="ax5docker.setPanels"></a></p>
+<h3>ax5docker.setPanels() ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code><br>
+<a name="ax5docker.addModule"></a></p>
+<h3>ax5docker.addModule(modules) ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>modules</td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5docker.repaint"></a></p>
+<h3>ax5docker.repaint() ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<p>repaint panels of docker</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code><br>
+<a name="ax5docker.addPanel"></a></p>
+<h3>ax5docker.addPanel(_addPath, _addType, _panel, _panelIndex) ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_addPath</td>
+<td><code>String</code></td>
+<td>Position path to add panel</td>
+</tr>
+<tr>
+<td>_addType</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>_panel</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>_panelIndex</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>myDocker.addPanel('0.1', 'stack', {type:'panel', name:'addPanel', moduleName: 'content'});
+
+</code></pre>
+<p><a name="ax5docker.removePanel"></a></p>
+<h3>ax5docker.removePanel(clickedLabel) ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<p>패널 삭제하기</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clickedLabel</td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5docker.appendPanel"></a></p>
+<h3>ax5docker.appendPanel(_panel, _appendPath, _appendType) ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_panel</td>
+</tr>
+<tr>
+<td>_appendPath</td>
+</tr>
+<tr>
+<td>_appendType</td>
+</tr>
+</tbody>
+</table>
+<p><a name="ax5docker.align"></a></p>
+<h3>ax5docker.align() ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>
+
+    
+                    </div>
+                </div>
+            
+        </div>
+    </div>
+    <div class="docs-foot" id="docs-foot">
+        <div class="background-type background-type-0">
+            <div class="wrapper row">
+
+                <div class="col-md-6">
+                    <h3>
+                        <a href="/">
+                            <i class="icon-axisj"></i> AX5UI Package</a>
+                    </h3>
+                    <p>
+                        'AX5UI' can be used with Bootstrap theme. The development of the distribution of the various UI plug-in.
+                        When you click the link to move to AX5UI index page.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h3>
+                        <a href="https://github.com/axboot">
+                            <i class="icon-github"></i> Get AXBoot</a>
+                    </h3>
+                    <p>
+                        AXBoot makes it easy to build web applications with Java &amp; HTML5
+                        Repeatable and noise development process are resolved by AXBoot.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        <div class="background-type background-type-1">
+            <div class="wrapper">
+                <dl class="dl-horizontal">
+                    <dt>Code licensed</dt>
+                    <dd>MIT</dd>
+                    <dt>Mantained by</dt>
+                    <dd>Thomas Jang, Brant and Team AXISJ</dd>
+                    <dt>Templete design by</dt>
+                    <dd>Jorwrney Kim</dd>
+
+                    <dt>Copyright</dt>
+                    <dd>Opensource Group AXISJ -
+                        <a href="https://www.axisj.com">www.axisj.com</a></dd>
+
+                    <dt>DNS</dt>
+                    <dd>
+                        <a href="http://www.dnsever.com" target="dnsever">DNSEver</a>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-56252826-3', 'auto');
+ga('send', 'pageview');
+</script>
+<script type="text/javascript">
+    $(document.body).ready(function () {
+        if (ax5.util.getCookie('stargazers_count')) {
+            $("#started-count").html(ax5.util.number(ax5.util.getCookie('stargazers_count'), {'money': true}));
+        }
+
+        $.ajax({
+            method: "GET",
+            url: "https://api.github.com/repos/ax5ui/ax5ui-docker",
+            success: function (data) {
+                $("#started-count").html(ax5.util.number(data.stargazers_count, {'money': true}));
+                ax5.util.setCookie('stargazers_count', data.stargazers_count);
+            }
+        });
+    });
+</script>
+</body>
+</html>

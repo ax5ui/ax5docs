@@ -95,6 +95,7 @@
     <li><a style="cursor: pointer;" data-href="/ax5ui-binder">ax5ui-binder</a></li>
     <li><a style="cursor: pointer;" data-href="/ax5ui-grid">ax5ui-grid</a></li>
     <li><a style="cursor: pointer;" data-href="/ax5ui-uploader">ax5ui-uploader</a></li>
+    <li><a style="cursor: pointer;" data-href="/ax5ui-docker">ax5ui-docker</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="https://www.axisj.com">axisj.com</a></li>
 </ul>
@@ -255,7 +256,7 @@
 <td>[config.onStateChanged]</td>
 <td><code>function</code></td>
 <td></td>
-<td></td>
+<td><code>onStateChanged</code> function can be defined in setConfig method or new ax5.ui.modal initialization method. However, you can us to define an event function after initialization, if necessary</td>
 </tr>
 <tr>
 <td>[config.onResize]</td>
@@ -266,13 +267,62 @@
 </tbody>
 </table>
 <p><strong>Example</strong></p>
-<pre><code></code></pre>
+<pre class="prettyprint linenums lang-js"><code>var modal = new ax5.ui.modal({
+    iframeLoadingMsg: '&lt;i class=&quot;fa fa-spinner fa-5x fa-spin&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;',
+    header: {
+        title: &quot;MODAL TITLE&quot;,
+        btns: {
+            minimize: {
+                label: '&lt;i class=&quot;fa fa-minus-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function () {
+                    modal.minimize();
+                }
+            },
+            maximize: {
+                label: '&lt;i class=&quot;fa fa-plus-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function () {
+                    modal.maximize();
+                }
+            },
+            close: {
+                label: '&lt;i class=&quot;fa fa-times-circle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;', onClick: function () {
+                    modal.close();
+                }
+            }
+        }
+    }
+});
+
+modal.open({
+    width: 800,
+    height: 600,
+    fullScreen: function(){
+        return ($(window).width() &lt; 600);
+    },
+    iframe: {
+        method: &quot;get&quot;,
+        url: &quot;http://chequer-app:2017/html/login.html&quot;,
+        param: &quot;callback=modalCallback&quot;
+    },
+    onStateChanged: function(){
+         console.log(this);
+    },
+    onResize: function(){
+         console.log(this);
+    }
+});
+</code></pre>
 <p><a name="ax5modal.open"></a></p>
 <h3>ax5modal.open() ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
 <p>open the modal</p>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5modal">ax5modal</a></code><br>
 <strong>Example</strong></p>
-<pre><code>my_modal.open();
+<pre><code>modal.open();
+modal.open({
+ width: 500,
+ height: 500
+});
+moaal.open({}, function(){
+ console.log(this);
+});
 </code></pre>
 <p><a name="ax5modal.close"></a></p>
 <h3>ax5modal.close() ⇒ <code><a href="#ax5modal">ax5modal</a></code></h3>
@@ -340,6 +390,10 @@
 </tr>
 </tbody>
 </table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>modal.align({left:&quot;center&quot;, top:&quot;middle&quot;});
+modal.align({left:&quot;left&quot;, top:&quot;top&quot;, margin: 20});
+</code></pre>
 
     
                     </div>

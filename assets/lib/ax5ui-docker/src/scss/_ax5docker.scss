@@ -1,0 +1,476 @@
+@mixin default-flex-box() {
+    position: relative;
+    @include display(flex);
+    @include flex(1);
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+@mixin ax5docker-pane($direction: top) {
+    @if ($direction == "bottom") {
+        padding-top: 0;
+        padding-bottom: $ax5docker-tab-height - 1;
+    } @else {
+        padding-top: $ax5docker-tab-height - 1;
+        padding-bottom: 0;
+    }
+    ul[data-ax5docker-pane-tabs] {
+        @include default-flex-box();
+        //@include flex(none);
+
+        position: absolute;
+        left: 0;
+
+        padding: 0;
+        margin: 0;
+        width: 100%;
+
+        @if ($direction == "bottom") {
+            top: auto;
+            bottom: 0;
+        } @else {
+            top: 0;
+            bottom: auto;
+        }
+
+        overflow-x: auto;
+        overflow-y: visible;
+        background: $ax5docker-tab-bg;
+        list-style: none;
+        height: $ax5docker-tab-height;
+        -webkit-user-select: none;
+        z-index: 10;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        li {
+            position: relative;
+            display: inline-block;
+            list-style: none;
+            //margin-top: -1px;
+
+            min-width: 6em;
+            height: $ax5docker-tab-height;
+
+            @if ($direction == "bottom") {
+                border-top: 1px solid $ax5docker-border-color;
+                border-bottom: 0 none;
+                border-top: 0 none;
+            } @else {
+                border-top: 0 none;
+                border-bottom: 1px solid $ax5docker-border-color;
+            }
+
+            -webkit-user-drag: element;
+            -webkit-user-select: none;
+
+            @include transition(max-width 0.25s ease-in-out);
+
+            .title {
+                text-align: center;
+                margin: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                background: $ax5docker-tab-item-bg;
+                border: 1px solid $ax5docker-border-color;
+
+                height: $ax5docker-tab-height;
+                line-height: $ax5docker-tab-height - 2;
+                //padding: 0 $ax5docker-tab-height / 1.5;
+                padding: 0 0.5em;
+
+                @if ($direction == "bottom") {
+                    border-top-left-radius: 0;
+                    border-top-right-radius: 0;
+                    border-bottom-left-radius: $ax5docker-tab-item-radius;
+                    border-bottom-right-radius: $ax5docker-tab-item-radius;
+                } @else {
+                    border-top-left-radius: $ax5docker-tab-item-radius;
+                    border-top-right-radius: $ax5docker-tab-item-radius;
+                    border-bottom-left-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+
+            }
+            .close-icon {
+                position: absolute;
+                top: ($ax5docker-tab-height - ($ax5docker-tab-height / 1.5)) / 2;
+                right: ($ax5docker-tab-height - ($ax5docker-tab-height / 1.5)) / 2;
+                z-index: 2;
+                width: $ax5docker-tab-height / 1.5;
+                height: $ax5docker-tab-height / 1.5;
+                line-height: $ax5docker-tab-height / 1.5;
+                overflow: hidden;
+                font-size: $ax5docker-tab-height / 2;
+                text-align: center;
+                border-radius: 3px;
+                @include transform(scale(0));
+                @include transition(transform 0.08s);
+                background: #fff;
+                color: #000;
+                &:hover {
+                    background: #000;
+                    color: #fff;
+                }
+                * {
+                    height: $ax5docker-tab-height / 1.5;
+                    line-height: $ax5docker-tab-height / 1.5;
+                }
+            }
+
+            &.active {
+                .title {
+                    //background: $ax5docker-tab-active-item-bg;
+                    background: $ax5docker-tab-active-item-bg;
+                    @if ($direction == "bottom") {
+                        height: $ax5docker-tab-height;
+                        line-height: $ax5docker-tab-height;
+                        border-top: 0 none;
+                    } @else {
+                        height: $ax5docker-tab-height + 1;
+                        line-height: $ax5docker-tab-height - 2;
+                    }
+                }
+            }
+            &:hover {
+                .close-icon {
+                    @include transform(scale(1));
+                }
+            }
+
+            &:last-child {
+
+            }
+
+            $dropper-arrow-size: 4px;
+            &[data-dropper] {
+                &:before {
+                    //transition: all 0.3s;
+                    content: ' ';
+                    position: absolute;
+                    display: block;
+                    background: $ax5docker-tab-item-dropper-color;
+                    opacity: 1.0;
+                }
+                &:after {
+                    position: absolute;
+                    content: '';
+                    width: 0px;
+                    height: 0px;
+                    display: inline-block;
+                }
+            }
+            &[data-dropper="left"] {
+                &:before {
+                    right: auto;
+                    left: -1px;
+                    top: 0;
+                    height: 100%;
+                    width: $ax5docker-tab-item-dropper-width;
+                }
+                &:after {
+                    right: auto;
+                    left: $ax5docker-tab-item-dropper-width - 1;
+                    top: calc(50% - #{$dropper-arrow-size});
+                    border-left: $dropper-arrow-size solid $ax5docker-tab-item-dropper-color;
+                    border-top: $dropper-arrow-size solid transparent;
+                    border-bottom: $dropper-arrow-size solid transparent;
+                    background: transparent;
+                    opacity: 1;
+                }
+            }
+            &[data-dropper="right"] {
+                &:before {
+                    left: auto;
+                    right: 0;
+                    top: 0;
+                    height: 100%;
+                    width: $ax5docker-tab-item-dropper-width;
+                }
+                &:after {
+                    left: auto;
+                    right: $ax5docker-tab-item-dropper-width;
+                    top: calc(50% - #{$dropper-arrow-size});
+                    border-right: $dropper-arrow-size solid $ax5docker-tab-item-dropper-color;
+                    border-top: $dropper-arrow-size solid transparent;
+                    border-bottom: $dropper-arrow-size solid transparent;
+                    background: transparent;
+                    opacity: 1;
+                }
+            }
+        }
+        li.pane-tab-margin{
+            content: ' ';
+            position: relative;
+            display: inline-block;
+            list-style: none;
+            width: $ax5docker-tab-margin;
+            min-width: $ax5docker-tab-margin;
+
+            @if ($direction == "bottom") {
+                border-top: 1px solid $ax5docker-border-color;
+                border-bottom: 0 none;
+            } @else {
+                border-top: 0 none;
+                border-bottom: 1px solid $ax5docker-border-color;
+            }
+        }
+        &:before{
+            content: ' ';
+            position: absolute;
+
+            @if ($direction == "bottom") {
+                bottom: auto;
+                top:0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background: $ax5docker-border-color;
+            } @else {
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background: $ax5docker-border-color;
+            }
+        }
+        &:after {
+            content: ' ';
+            position: relative;
+            display: inline-block;
+            list-style: none;
+            min-width: $ax5docker-tab-height;
+            height: $ax5docker-tab-height;
+
+            @if ($direction == "bottom") {
+                border-top: 1px solid $ax5docker-border-color;
+                border-bottom: 0 none;
+            } @else {
+                border-top: 0 none;
+                border-bottom: 1px solid $ax5docker-border-color;
+            }
+        }
+        &[data-dropper] {
+            &:after {
+                content: ' ';
+                position: relative;
+                display: inline-block;
+                list-style: none;
+                min-width: 6em;
+                background: $ax5docker-tab-item-bg;
+                border: 1px dashed $ax5docker-tab-item-dropper-color;
+                //opacity: 0.1;
+            }
+        }
+    }
+    [data-ax5docker-pane-tabs-more] {
+        position: absolute;
+        min-width: $ax5docker-tab-height;
+        height: $ax5docker-tab-height;
+        line-height: $ax5docker-tab-height;
+        text-align: center;
+        background: $ax5docker-tab-active-item-bg;
+        border-left: 1px solid $ax5docker-border-color;
+        border-right: 1px solid $ax5docker-border-color;
+
+        cursor: pointer;
+        display: none;
+        z-index: 11;
+
+        @if ($direction == "bottom") {
+            right: 0;
+            top: auto;
+            bottom: 0;
+            border-top: 0 none;
+            border-bottom: 1px solid $ax5docker-border-color;
+        } @else {
+            right: 0;
+            top: 0;
+            border-top: 1px solid $ax5docker-border-color;
+            border-bottom: 0 none;
+        }
+    }
+    [data-ax5docker-pane-item-views] {
+        z-index: 5;
+        @include default-flex-box();
+
+        border: 1px solid $ax5docker-border-color;
+
+        [data-ax5docker-pane-item] {
+            display: none;
+            background: $ax5docker-pane-item-bg;
+            position: relative;
+            &.active {
+                display: flex;
+                @include flex(1);
+            }
+
+            &[data-dropper] {
+                &:after {
+                    transition: all 0.3s;
+                    content: ' ';
+                    position: absolute;
+                    display: block;
+                    background: #000000;
+                    opacity: 0.1;
+                    z-index: 100;
+                }
+            }
+            &[data-dropper="left"] {
+                &:after {
+                    left: 0;
+                    top: 0;
+                    height: 100%;
+                    width: 50%;
+                }
+            }
+            &[data-dropper="right"] {
+                &:after {
+                    left: 50%;
+                    top: 0;
+                    height: 100%;
+                    width: 50%;
+                }
+            }
+            &[data-dropper="top"] {
+                &:after {
+                    left: 0;
+                    top: 0;
+                    height: 50%;
+                    width: 100%;
+                }
+            }
+            &[data-dropper="bottom"] {
+                &:after {
+                    left: 0;
+                    top: 50%;
+                    height: 50%;
+                    width: 100%;
+                }
+            }
+            &[data-dropper="center"] {
+                &:after {
+                    left: 0;
+                    top: 0;
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+@include keyframes(ax-docker-popup) {
+    0% {
+        @include transform(scale(1, 0));
+    }
+    100% {
+        @include transform(scale(1, 1));
+    }
+}
+
+[data-ax5docker] {
+    @include default-flex-box();
+    * {
+        box-sizing: border-box;
+    }
+
+    [data-ax5docker-panes] {
+        @include default-flex-box();
+
+        [data-ax5docker-pane] {
+            @include default-flex-box();
+            @include flex-direction(column);
+            @include ax5docker-pane();
+
+            &.tabs-scrolled {
+                [data-ax5docker-pane-tabs-more] {
+                    display: block;
+                    @include animation(ax-docker-popup $ax5docker-easing-time-open $ease-in-out-cubic);
+                    transform-origin: 0 100%;
+                }
+            }
+            &[data-ax5docker-label-direction="bottom"] {
+                @include ax5docker-pane("bottom");
+                &.tabs-scrolled {
+                    [data-ax5docker-pane-tabs-more] {
+                        display: block;
+                        @include animation(ax-docker-popup $ax5docker-easing-time-open $ease-in-out-cubic);
+                        transform-origin: 0 100%;
+                    }
+                }
+            }
+        }
+        [data-ax5docker-resize-handle] {
+            position: relative;
+            width: initial;
+            height: initial;
+            background: $ax5docker-tab-bg;
+            &:before {
+                content: "";
+                position: absolute;
+                z-index: 20;
+            }
+        }
+
+        [data-ax5docker-pane-axis] {
+            @include default-flex-box();
+            &[data-ax5docker-pane-axis="row"] {
+                @include flex-direction(row);
+                > [data-ax5docker-resize-handle] {
+                    width: 2px;
+                    height: 100%;
+                    &:before {
+                        width: 8px;
+                        left: -4px;
+                        top: 0;
+                        bottom: 0;
+                        cursor: col-resize;
+                    }
+                }
+
+                [data-ax5docker-pane] {
+                    &:not(:last-child) {
+                        [data-ax5docker-pane-item-views] {
+                            //border-right: 1px solid $ax5docker-border-color;
+                        }
+                    }
+                }
+            }
+            &[data-ax5docker-pane-axis="column"] {
+                @include flex-direction(column);
+                > [data-ax5docker-resize-handle] {
+                    height: 2px;
+                    width: 100%;
+                    &:before {
+                        height: 8px;
+                        top: -4px;
+                        left: 0;
+                        right: 0;
+                        cursor: row-resize;
+                    }
+                }
+
+                [data-ax5docker-pane] {
+                    &:not(:last-child) {
+                        [data-ax5docker-pane-item-views] {
+                            //border-bottom: 1px solid $ax5docker-border-color;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    [data-ax5docker-drager] {
+        display: block;
+        position: absolute;
+        background: #000;
+        opacity: 0.5;
+    }
+}

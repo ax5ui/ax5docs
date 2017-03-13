@@ -325,7 +325,10 @@
                     }
                 },
                 alignGrid = function (_isFirst) {
-                    // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하는 아규먼트
+                    // 대상이 크기가 컬럼의 최소 크기 보다 작업 금지
+                    if (Math.min(this.$target.innerWidth(), this.$target.innerHeight()) < 5) {
+                        return false;
+                    }
 
                     if (!this.config.height) {
                         this.$["container"]["root"].css({height: this.config._height = this.$target.height()});
@@ -550,6 +553,8 @@
                     scrollerDisplayProcess.call(this, this.$["scroller"]["corner"], verticalScrollerWidth, horizontalScrollerHeight, "corner");
 
                     panelDisplayProcess.call(this, this.$["container"]["page"], "", "", "page");
+
+                    return true;
                 },
                 sortColumns = function (_sortInfo) {
                     GRID.header.repaint.call(this);
@@ -613,6 +618,8 @@
              * @param {Number} [_config.header.columnPadding=3]
              * @param {Number} [_config.header.columnBorderWidth=1]
              * @param {Object} [_config.body]
+             * @param {Function} [_config.onClick]
+             * @param {Function} [_config.onDBLClick]
              * @param {String|Array} [_config.body.mergeCells=false] -
              * @param {String} [_config.body.align]
              * @param {Number} [_config.body.columnHeight=25]
@@ -702,12 +709,29 @@
              *         return this;
              *     },
              *     setData: function (_pageNo) {
-             *
              *         firstGrid.setData(sampleData);
-             *
              *         return this;
              *     }
              * };
+             *
+             * // onClick, onDBLClick, onDataChanged
+             * firstGrid.setConfig({
+             *      target: $('[data-ax5grid="first-grid"]'),
+             *      columns: [...],
+             *      body: {
+             *          onClick: function(){
+             *              console.log(this);
+             *          },
+             *          onDBLClick: function(){
+             *              console.log(this);
+             *              // If the column does not have an editor attribute, an event is raised.
+             *          },
+             *          onDataChanged: function(){
+             *              console.log(this);
+             *              // If change Data
+             *          }
+             *      }
+             * });
              * ```
              */
             this.init = function (_config) {
@@ -866,8 +890,9 @@
              * @returns {ax5grid}
              */
             this.align = function () {
-                alignGrid.call(this);
-                GRID.scroller.resize.call(this);
+                if (alignGrid.call(this)) {
+                    GRID.scroller.resize.call(this);
+                }
                 return this;
             };
 
