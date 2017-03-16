@@ -51,7 +51,7 @@
 							<span class="small">/ ax5ui-grid</span></a>
 						</span>
                         <a class="visible-xs-inline-block mobile-menu" id="mobile-menu">
-                            <i class="axc-menu"></i>
+                            <i class="axc-ellipsis"></i>
                         </a>
                     </div>
 
@@ -168,8 +168,7 @@
 <p><a name="ax5grid.setConfig"></a></p>
 <h3>ax5grid.setConfig(_config) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
 <p>Preferences of grid UI</p>
-<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code><br>
-<strong>Parem</strong>: <code>Function</code> _config.columns[].editor.disabled - disable editor</p>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
 <table>
 <thead>
 <tr>
@@ -492,6 +491,18 @@
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td>_config.columns[].editor.disabled</td>
+<td><code>function</code></td>
+<td></td>
+<td>disable editor</td>
+</tr>
+<tr>
+<td>[_config.columns[].multiLine]</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <p><strong>Example</strong></p>
@@ -564,10 +575,11 @@ firstGrid.setConfig({
          },
          onDBLClick: function(){
              console.log(this);
-             // 
+             // If the column does not have an editor attribute, an event is raised.
          },
          onDataChanged: function(){
              console.log(this);
+             // If change Data
          }
      }
 });
