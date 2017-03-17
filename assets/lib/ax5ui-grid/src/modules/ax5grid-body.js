@@ -1903,7 +1903,7 @@
 
                 focusedColumn.panelName = nPanelInfo.panelName;
 
-                // 포커스 컬럼의 위치에 따라 스크롤 처리.
+                // 포커스 컬럼의 위치에 따라 스크롤 처리.ㅊㅇ
                 (function () {
                     if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
                         if (focusedColumn.dindex <= this.xvar.paintStartRowIndex) {
@@ -2356,7 +2356,7 @@
         }
     };
 
-    let getExcelString = function () {
+    const getExcelString = function () {
         let cfg = this.config,
             list = this.list,
             bodyRowData = this.bodyRowTable,

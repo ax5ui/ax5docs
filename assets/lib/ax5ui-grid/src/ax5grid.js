@@ -651,7 +651,8 @@
              * @param {String} _config.columns[].editor.type - text,number,money,date
              * @param {Object} _config.columns[].editor.config
              * @param {Array} _config.columns[].editor.updateWith
-             * @parem {Function} _config.columns[].editor.disabled - disable editor
+             * @param {Function} _config.columns[].editor.disabled - disable editor
+             * @param {Boolean} [_config.columns[].multiLine=false]
              * @returns {ax5grid}
              * @example
              * ```js
@@ -946,6 +947,9 @@
                         }
                         if (activeEditLength == 0) {
                             GRID.body.inlineEdit.keydown.call(this, "RETURN");
+                            U.stopEvent(_e);
+                        } else {
+
                         }
                     },
                     "TAB": function (_e) {

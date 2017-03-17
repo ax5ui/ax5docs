@@ -644,7 +644,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {String} _config.columns[].editor.type - text,number,money,date
              * @param {Object} _config.columns[].editor.config
              * @param {Array} _config.columns[].editor.updateWith
-             * @parem {Function} _config.columns[].editor.disabled - disable editor
+             * @param {Function} _config.columns[].editor.disabled - disable editor
+             * @param {Boolean} [_config.columns[].multiLine=false]
              * @returns {ax5grid}
              * @example
              * ```js
@@ -933,7 +934,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                         if (activeEditLength == 0) {
                             GRID.body.inlineEdit.keydown.call(this, "RETURN");
-                        }
+                            U.stopEvent(_e);
+                        } else {}
                     },
                     "TAB": function TAB(_e) {
 
@@ -3335,7 +3337,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 focusedColumn.panelName = nPanelInfo.panelName;
 
-                // 포커스 컬럼의 위치에 따라 스크롤 처리.
+                // 포커스 컬럼의 위치에 따라 스크롤 처리.ㅊㅇ
                 (function () {
                     if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
                         if (focusedColumn.dindex <= this.xvar.paintStartRowIndex) {

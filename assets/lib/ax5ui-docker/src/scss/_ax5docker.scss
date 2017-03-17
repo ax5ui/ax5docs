@@ -70,6 +70,18 @@
 
             @include transition(max-width 0.25s ease-in-out);
 
+            .label-icon{
+                display: none;
+                position: absolute;
+                top: ($ax5docker-tab-height - ($ax5docker-tab-height / 2)) / 2;
+                left: ($ax5docker-tab-height - ($ax5docker-tab-height / 2)) / 2;
+                z-index: 2;
+                width: $ax5docker-tab-height / 2;
+                height: $ax5docker-tab-height / 2;
+                border-radius: 50%;
+                background: $ax5docker-border-color;
+                border: 1px solid $ax5docker-border-color;
+            }
             .title {
                 text-align: center;
                 margin: 0;
@@ -123,6 +135,14 @@
                 }
             }
 
+            &.hasLabelColor{
+                .label-icon{
+                    display: block;
+                }
+                .title{
+                    padding: 0 0.5em 0 ($ax5docker-tab-height / 1.1);
+                }
+            }
             &.active {
                 .title {
                     //background: $ax5docker-tab-active-item-bg;

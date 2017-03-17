@@ -329,6 +329,9 @@
                             $dom = jQuery(DOCKER.tmpl.get.call(this, "stack-panel", {
                                 id: self.instanceId,
                                 name: myself.name,
+                                hasLabelColor: !U.isNothing(myself.color),
+                                color: myself.color,
+                                borderColor: myself.borderColor,
                                 panelPath: myself.panelPath,
                                 icons: cfg.icons,
                                 labelDirection: myself.labelDirection || cfg.labelDirection,
@@ -360,6 +363,9 @@
                                 id: self.instanceId,
                                 pIndex: pIndex,
                                 name: myself.name,
+                                hasLabelColor: !U.isNothing(myself.color),
+                                color: myself.color,
+                                borderColor: myself.borderColor,
                                 panelPath: myself.panelPath,
                                 icons: cfg.icons,
                                 disableClosePanel: cfg.disableClosePanel,
@@ -384,6 +390,9 @@
                                 $dom = jQuery(DOCKER.tmpl.get.call(this, "stack-panel", {
                                     id: self.instanceId,
                                     name: myself.name,
+                                    hasLabelColor: !U.isNothing(myself.color),
+                                    color: myself.color,
+                                    borderColor: myself.borderColor,
                                     panelPath: myself.panelPath,
                                     flexGrow: myself.flexGrow,
                                     icons: cfg.icons,
@@ -978,7 +987,14 @@
                  * @method ax5docker.setConfig
                  * @param {Object} config
                  * @param {Element} config.target
-                 * @param {Array} config.panels
+                 * @param {Object[]} config.panels
+                 * @param {String} config.panels[].type - panel, stack, row, column
+                 * @param {String} config.panels[].name
+                 * @param {String} [config.panels[].color]
+                 * @param {String} [config.panels[].borderColor]
+                 * @param {String} config.panels[].moduleName
+                 * @param {Object} config.panels[].moduleState
+                 * @param {Object[]} config.panels[].panels
                  * @param {Object} [config.icons]
                  * @param {String} [config.icons.close]
                  * @param {String} [config.icons.more]
@@ -1003,6 +1019,8 @@
                  *          {
                  *              type: "panel",
                  *              name: "panel name",
+                 *              color: "#ff3300",
+                 *              borderColor: "#000000",
                  *              moduleName: "content",
                  *              moduleState:{
                  *                  data: "data1"

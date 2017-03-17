@@ -37,7 +37,6 @@
 Preferences of grid UI
 
 **Kind**: static method of <code>[ax5grid](#ax5grid)</code>  
-**Parem**: <code>Function</code> _config.columns[].editor.disabled - disable editor  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -93,6 +92,8 @@ Preferences of grid UI
 | _config.columns[].editor.type | <code>String</code> |  | text,number,money,date |
 | _config.columns[].editor.config | <code>Object</code> |  |  |
 | _config.columns[].editor.updateWith | <code>Array</code> |  |  |
+| _config.columns[].editor.disabled | <code>function</code> |  | disable editor |
+| [_config.columns[].multiLine] | <code>Boolean</code> | <code>false</code> |  |
 
 **Example**  
 ```js
@@ -165,10 +166,11 @@ firstGrid.setConfig({
          },
          onDBLClick: function(){
              console.log(this);
-             // 
+             // If the column does not have an editor attribute, an event is raised.
          },
          onDataChanged: function(){
              console.log(this);
+             // If change Data
          }
      }
 });
