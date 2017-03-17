@@ -67,6 +67,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 remoteSort: false,
 
                 header: {
+                    display: true,
                     align: false,
                     columnHeight: 26,
                     columnPadding: 3,
@@ -369,7 +370,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     footSumHeight = function (bodyTrHeight) {
                     return this.footSumColumns.length * bodyTrHeight;
                 }.call(this, this.xvar.bodyTrHeight),
-                    headerHeight = this.headerTable.rows.length * cfg.header.columnHeight,
+                    headerHeight = cfg.header.display ? this.headerTable.rows.length * cfg.header.columnHeight : 0,
                     pageHeight = cfg.page.display ? cfg.page.height : 0;
 
                 (function () {
@@ -482,7 +483,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return this;
                     }
 
-                    panel.css(css);
+                    panel.show().css(css);
                     return this;
                 };
                 var scrollerDisplayProcess = function scrollerDisplayProcess(panel, scrollerWidth, scrollerHeight, containerType) {
@@ -4722,7 +4723,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
 
         if (_key === "__checkbox_header__") {
-            return '<div class="checkBox"></div>';
+            return "<div class=\"checkBox\" style=\"max-height: " + (_col.width - 10) + "px;min-height: " + (_col.width - 10) + "px;\"></div>";
         } else {
             return _col.label || "&nbsp;";
         }

@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="18" id="merge-cells" title="Merge Cells" desc=""/>
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="19" id="header-page-display" title="Control Display(header/page)" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -26,6 +26,7 @@
             <ax5docs-md>
                 # ${data.metadata.title}
 
+
                 **Paste the following code into the `head` section of your site's HTML.**
                 ```html
                 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css"/>
@@ -38,7 +39,7 @@
 
             HTML
             <ax5docs-html run="true">
-                <div style="position: relative;height:400px;" id="grid-parent">
+                <div style="position: relative;height:300px;" id="grid-parent">
                     <div data-ax5grid="first-grid" data-ax5grid-config='{
                     showLineNumber: true,
                     showRowSelector: true,
@@ -46,27 +47,15 @@
                     header: {align:"center"}
                     }' style="height: 100%;"></div>
                 </div>
+                <div style="padding: 10px;">
+                    <button class="btn btn-default" data-grid-control="toggle-header">show/hide header</button>
+                    <button class="btn btn-default" data-grid-control="toggle-page">show/hide page</button>
+                </div>
             </ax5docs-html>
 
 
             <ax5docs-md>
-                Declare `mergeCells` as a property of the body and declare its value as true or key array.
-                When the `mergeCells` attribute is activated, it merges when the cell value of the previous row among the cells in the body region of the grid is the same as the cell value of the current row.
 
-                _바디의 속성으로 `mergeCells`를 선언하고 그것의 값을 true 또는 Key Array로 선언합니다.
-                `mergeCells` 속성이 활성화 되면 그리드의 바디영역안에 셀들중 이전 행의 셀 값이 현재 행의 셀 값과 같은 경우 머지 하여 줍니다._
-            </ax5docs-md>
-
-            <ax5docs-md>
-                ```js
-                body: {
-                    mergeCells: ["a", "b", "userType"]
-                }
-
-                body: {
-                    mergeCells: true // all
-                }
-                ```
             </ax5docs-md>
 
             <div class="DH10"></div>
@@ -76,6 +65,12 @@
                     $(document.body).ready(function () {
                         var firstGrid = new ax5.ui.grid({
                             target: $('[data-ax5grid="first-grid"]'),
+                            frozenColumnIndex: 3,
+                            frozenRowIndex: 2,
+                            header: {
+                                display: false,
+                                columnHeight: 40
+                            },
                             columns: [
                                 {key: "a", label: "field A", align: "center"},
                                 {key: "b", label: "field  B", align: "center"},
@@ -85,8 +80,11 @@
                                 {key: "customer", label: "Customer", align: "center"},
                                 {key: "userType", label: "User Type", align: "center"}
                             ],
-                            body:{
-                                mergeCells: ["a", "b", "userType"]
+                            body: {
+                                columnHeight: 40
+                            },
+                            page: {
+                                display: false
                             }
                         });
 
@@ -106,6 +104,29 @@
                         ];
 
                         firstGrid.setData(sampleData);
+
+                        $('[data-grid-control]').click(function () {
+                            switch (this.getAttribute("data-grid-control")) {
+                                case "toggle-header":
+                                    firstGrid
+                                        .setConfig({
+                                            header: {
+                                                display: !firstGrid.config.header.display
+                                            }
+                                        }, false)
+                                        .align();
+                                    break;
+                                case "toggle-page":
+                                    firstGrid
+                                        .setConfig({
+                                            page: {
+                                                display: !firstGrid.config.page.display
+                                            }
+                                        }, false)
+                                        .align();
+                                    break;
+                            }
+                        });
                     });
                 </script>
             </ax5docs-js>
