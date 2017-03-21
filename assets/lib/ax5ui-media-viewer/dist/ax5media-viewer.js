@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "mediaViewer",
-        version: "1.3.131"
+        version: "1.3.135"
     }, function () {
         /**
          * @class ax5mediaViewer
