@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-grid : Excel Export</title>
+    <title>ax5ui / ax5ui-grid : Control Display(header/page)</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -135,7 +135,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/1-formatter.html">Formatter</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li ><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li ><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/9-column-aru.html">Column Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/10-footsum.html">Foot Summary</a></li><li ><a href="/ax5ui-grid/demo/11-collector.html">Collector</a></li><li ><a href="/ax5ui-grid/demo/12-body-grouping.html">Body Grouping</a></li><li ><a href="/ax5ui-grid/demo/13-inline-edit.html">Inline edit</a></li><li ><a href="/ax5ui-grid/demo/14-paging.html">Paging</a></li><li  class='active'><a href="/ax5ui-grid/demo/15-excel-export.html">Excel Export</a></li><li ><a href="/ax5ui-grid/demo/16-cell-update.html">Cell update</a></li><li ><a href="/ax5ui-grid/demo/17-inline-edit-disable.html">Inline edit disable</a></li><li ><a href="/ax5ui-grid/demo/18-merge-cells.html">Merge Cells</a></li><li ><a href="/ax5ui-grid/demo/19-header-page-display.html">Control Display(header/page)</a></li></ul>
+        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/1-formatter.html">Formatter</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li ><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li ><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/9-column-aru.html">Column Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/10-footsum.html">Foot Summary</a></li><li ><a href="/ax5ui-grid/demo/11-collector.html">Collector</a></li><li ><a href="/ax5ui-grid/demo/12-body-grouping.html">Body Grouping</a></li><li ><a href="/ax5ui-grid/demo/13-inline-edit.html">Inline edit</a></li><li ><a href="/ax5ui-grid/demo/14-paging.html">Paging</a></li><li ><a href="/ax5ui-grid/demo/15-excel-export.html">Excel Export</a></li><li ><a href="/ax5ui-grid/demo/16-cell-update.html">Cell update</a></li><li ><a href="/ax5ui-grid/demo/17-inline-edit-disable.html">Inline edit disable</a></li><li ><a href="/ax5ui-grid/demo/18-merge-cells.html">Merge Cells</a></li><li  class='active'><a href="/ax5ui-grid/demo/19-header-page-display.html">Control Display(header/page)</a></li></ul>
     
                             </div>
                         </div>
@@ -145,43 +145,33 @@
 
         
         <section class="ax5docs-section">
-            <h1>Excel Export</h1>
+            <h1>Control Display(header/page)</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css&quot;&gt;
 
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 
 
             HTML
-            <pre class="prettyprint linenums lang-html">&lt;div style="position: relative;height:400px;" id="grid-parent">
+            <pre class="prettyprint linenums lang-html">&lt;div style="position: relative;height:300px;" id="grid-parent">
     &lt;div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;">&lt;/div>
 &lt;/div>
-
 &lt;div style="padding: 10px;">
-    &lt;button class="btn btn-default" data-grid-control="excel-export">Excel Export&lt;/button>
-    &lt;button class="btn btn-default" data-grid-control="excel-string">get Excel String&lt;/button>
-&lt;/div></pre><div style="position: relative;height:400px;" id="grid-parent">
+    &lt;button class="btn btn-default" data-grid-control="toggle-header">show/hide header&lt;/button>
+    &lt;button class="btn btn-default" data-grid-control="toggle-page">show/hide page&lt;/button>
+&lt;/div></pre><div style="position: relative;height:300px;" id="grid-parent">
     <div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;"></div>
 </div>
-
 <div style="padding: 10px;">
-    <button class="btn btn-default" data-grid-control="excel-export">Excel Export</button>
-    <button class="btn btn-default" data-grid-control="excel-string">get Excel String</button>
+    <button class="btn btn-default" data-grid-control="toggle-header">show/hide header</button>
+    <button class="btn btn-default" data-grid-control="toggle-page">show/hide page</button>
 </div>
 
-            <p>Excel Export has tested downloading files from browsers such as IE, Chrome, Firefox,
-The Safari browser does not control file downloading, so it outputs the table in a new window. Copy the output table and use it.
-<code>FirstGrid.exportExcel(&quot;grid-to-excel.xls&quot;);</code>, the file is downloaded and the Table String is returned if there is no argument.
-Pass the returned string to the server to generate Excel.
-How to create an Excel file on the server is to search. If you are having difficulty resolving, please contact us at <a href="https://www.facebook.com/groups/axboot/">https://www.facebook.com/groups/axboot/</a>.</p>
-<p><em>Excel Export는 IE, Chrome, Firefox 등의 브라우저에서 파일 다운로드되는 것을 테스트 하였고,
-Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창으로 테이블을 출력합니다. 출력된 테이블을 복사하여 사용하시면 됩니다.
-<code>firstGrid.exportExcel(&quot;grid-to-excel.xls&quot;);</code> 처럼 저장하고 싶은 파일명을 인자로 전달하면 파일이 다운로드 되고 인자가 없으면 Table String이 리턴됩니다.
-리턴된 문자열을 서버로 전달하여 엑셀을 생성 하세요.
-서버에서 엑셀 파일을 생성하는 방법은 검색으로 찾으시면 되겠습니다. 해결이 어려우시면 (<a href="https://www.facebook.com/groups/axboot/">https://www.facebook.com/groups/axboot/</a>) 에서 문의 하세요.</em></p>
 
+            
 
             <div class="DH10"></div>
             JS
@@ -189,80 +179,39 @@ Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창�
     $(document.body).ready(function () {
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
+            frozenColumnIndex: 3,
+            frozenRowIndex: 2,
+            header: {
+                display: false,
+                columnHeight: 40
+            },
             columns: [
-                {
-                    key: "a",
-                    label: "field A",
-                    width: 80,
-                    styleClass: function () {
-                        return "ABC";
-                    },
-                    enableFilter: true,
-                    align: "center"
-                },
+                {key: "a", label: "field A", align: "center"},
                 {key: "b", label: "field  B", align: "center"},
-                {
-                    key: undefined, label: "field C", columns: [
-                    {key: "price", label: "price", formatter: "money", align: "right"},
-                    {key: "amount", label: "amount", formatter: "money", align: "right"},
-                    {
-                        key: "cost", label: "cost", align: "right", formatter: function () {
-                        return ax5.util.number(this.item.price * this.item.amount, {"money": true});
-                    }
-                    }
-                ]
-                },
-                {key: "saleDt", label: "saleDt", align: "center"},
-                {key: "customer", label: "customer"},
-                {key: "userType", label: "userType"}
+                {key: "price", label: "price", align: "center"},
+                {key: "amount", label: "amount", align: "center"},
+                {key: "saleDt", label: "saleDate", align: "center"},
+                {key: "customer", label: "Customer", align: "center"},
+                {key: "userType", label: "User Type", align: "center"}
             ],
             body: {
-                grouping: {
-                    by: ["a"],
-                    columns: [
-                        {
-                            label: function () {
-                                return this.groupBy.labels.join(", ") + " SUM";
-                            }, colspan: 2, align: "center"
-                        },
-                        {key: "price", collector: "avg", formatter: "money", align: "right"},
-                        {key: "amount", collector: "sum", formatter: "money", align: "right"},
-                        {
-                            key: "cost", collector: function () {
-                            var value = 0;
-                            this.list.forEach(function (n) {
-                                if (!n.__isGrouping) value += (n.price * n.amount);
-                            });
-                            return ax5.util.number(value, {"money": 1});
-                        }, align: "right"
-                        }
-                    ]
-                }
+                columnHeight: 40
             },
-            footSum: [
-                [
-                    {label: "SUMMARY", colspan: 2, align: "center"},
-                    {key: "price", collector: "avg", formatter: "money", align: "right"},
-                    {key: "amount", collector: "sum", formatter: "money", align: "right"},
-                    {
-                        key: "cost", collector: function () {
-                        var value = 0;
-                        this.list.forEach(function (n) {
-                            if (!n.__isGrouping) value += (n.price * n.amount);
-                        });
-                        return ax5.util.number(value, {"money": 1});
-                    }, align: "right"
-                    }
-                ]]
+            page: {
+                display: false
+            }
         });
 
         var sampleData = [
-            {a: "0011", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
-            {a: "0011", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
-            {a: "0011", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
             {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
             {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
             {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"},
             {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
             {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
             {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
@@ -270,14 +219,25 @@ Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창�
 
         firstGrid.setData(sampleData);
 
-        // grid control button
         $('[data-grid-control]').click(function () {
             switch (this.getAttribute("data-grid-control")) {
-                case "excel-export":
-                    firstGrid.exportExcel("grid-to-excel.xls");
+                case "toggle-header":
+                    firstGrid
+                        .setConfig({
+                            header: {
+                                display: !firstGrid.config.header.display
+                            }
+                        }, false)
+                        .align();
                     break;
-                case "excel-string":
-                    console.log(firstGrid.exportExcel());
+                case "toggle-page":
+                    firstGrid
+                        .setConfig({
+                            page: {
+                                display: !firstGrid.config.page.display
+                            }
+                        }, false)
+                        .align();
                     break;
             }
         });
@@ -285,80 +245,39 @@ Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창�
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
+            frozenColumnIndex: 3,
+            frozenRowIndex: 2,
+            header: {
+                display: false,
+                columnHeight: 40
+            },
             columns: [
-                {
-                    key: "a",
-                    label: "field A",
-                    width: 80,
-                    styleClass: function () {
-                        return "ABC";
-                    },
-                    enableFilter: true,
-                    align: "center"
-                },
+                {key: "a", label: "field A", align: "center"},
                 {key: "b", label: "field  B", align: "center"},
-                {
-                    key: undefined, label: "field C", columns: [
-                    {key: "price", label: "price", formatter: "money", align: "right"},
-                    {key: "amount", label: "amount", formatter: "money", align: "right"},
-                    {
-                        key: "cost", label: "cost", align: "right", formatter: function () {
-                        return ax5.util.number(this.item.price * this.item.amount, {"money": true});
-                    }
-                    }
-                ]
-                },
-                {key: "saleDt", label: "saleDt", align: "center"},
-                {key: "customer", label: "customer"},
-                {key: "userType", label: "userType"}
+                {key: "price", label: "price", align: "center"},
+                {key: "amount", label: "amount", align: "center"},
+                {key: "saleDt", label: "saleDate", align: "center"},
+                {key: "customer", label: "Customer", align: "center"},
+                {key: "userType", label: "User Type", align: "center"}
             ],
             body: {
-                grouping: {
-                    by: ["a"],
-                    columns: [
-                        {
-                            label: function () {
-                                return this.groupBy.labels.join(", ") + " SUM";
-                            }, colspan: 2, align: "center"
-                        },
-                        {key: "price", collector: "avg", formatter: "money", align: "right"},
-                        {key: "amount", collector: "sum", formatter: "money", align: "right"},
-                        {
-                            key: "cost", collector: function () {
-                            var value = 0;
-                            this.list.forEach(function (n) {
-                                if (!n.__isGrouping) value += (n.price * n.amount);
-                            });
-                            return ax5.util.number(value, {"money": 1});
-                        }, align: "right"
-                        }
-                    ]
-                }
+                columnHeight: 40
             },
-            footSum: [
-                [
-                    {label: "SUMMARY", colspan: 2, align: "center"},
-                    {key: "price", collector: "avg", formatter: "money", align: "right"},
-                    {key: "amount", collector: "sum", formatter: "money", align: "right"},
-                    {
-                        key: "cost", collector: function () {
-                        var value = 0;
-                        this.list.forEach(function (n) {
-                            if (!n.__isGrouping) value += (n.price * n.amount);
-                        });
-                        return ax5.util.number(value, {"money": 1});
-                    }, align: "right"
-                    }
-                ]]
+            page: {
+                display: false
+            }
         });
 
         var sampleData = [
-            {a: "0011", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
-            {a: "0011", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
-            {a: "0011", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
             {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
             {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
             {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
+            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
+            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
+            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
+            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
+            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"},
             {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
             {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
             {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
@@ -366,14 +285,25 @@ Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창�
 
         firstGrid.setData(sampleData);
 
-        // grid control button
         $('[data-grid-control]').click(function () {
             switch (this.getAttribute("data-grid-control")) {
-                case "excel-export":
-                    firstGrid.exportExcel("grid-to-excel.xls");
+                case "toggle-header":
+                    firstGrid
+                        .setConfig({
+                            header: {
+                                display: !firstGrid.config.header.display
+                            }
+                        }, false)
+                        .align();
                     break;
-                case "excel-string":
-                    console.log(firstGrid.exportExcel());
+                case "toggle-page":
+                    firstGrid
+                        .setConfig({
+                            page: {
+                                display: !firstGrid.config.page.display
+                            }
+                        }, false)
+                        .align();
                     break;
             }
         });
