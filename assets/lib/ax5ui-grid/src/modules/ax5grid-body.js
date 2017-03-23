@@ -722,7 +722,11 @@
         }
 
         /// 출력시작 인덱스
-        let paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+        let paintStartRowIndex = Math.floor(-(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+
+        console.log(this.xvar.scrollContentWidth, -(this.$.panel["body-scroll"].position().left));
+        let paintStartColumnIndex = 0;
+
         if (this.xvar.dataRowCount === list.length && this.xvar.paintStartRowIndex === paintStartRowIndex) return this; // 스크롤 포지션 변경 여부에 따라 프로세스 진행여부 결정
 
         let isFirstPaint = (typeof this.xvar.paintStartRowIndex === "undefined"),
@@ -735,7 +739,8 @@
             leftBodyGroupingData = this.leftBodyGroupingData,
             bodyGroupingData = this.bodyGroupingData,
             bodyAlign = cfg.body.align,
-            paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1;
+            paintRowCount = Math.ceil(this.xvar.bodyHeight / this.xvar.bodyTrHeight) + 1,
+            paintColumnCount = 0;
 
         if (document.addEventListener && ax5.info.supportTouch) {
             paintRowCount = paintRowCount * 2;
@@ -778,6 +783,9 @@
                         return true;
                     }
                 })();
+
+            console.log(_colGroup);
+
 
             if (isScrolled) {
                 SS.push('<div style="font-size:0;line-height:0;height: ' + (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight + 'px;"></div>');
