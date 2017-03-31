@@ -5965,13 +5965,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     colStartIndex = col.colIndex,
                     colEndIndex = col.colIndex + col.colspan;
 
-                if (colStartIndex >= _startColumnIndex && colStartIndex <= _endColumnIndex) {
-                    // 변형없이 추가
-                    tempTable.rows[r].cols.push(col);
-                } else if (colStartIndex < _endColumnIndex && colEndIndex > _startColumnIndex) {
-                    // 앞에서 걸친경우
-                    col.colspan = _startColumnIndex - colStartIndex;
-                    tempTable.rows[r].cols.push(col);
+                if (_startColumnIndex <= colStartIndex || colEndIndex <= _endColumnIndex) {
+                    if (_startColumnIndex <= colStartIndex && colEndIndex <= _endColumnIndex) {
+                        // 변형없이 추가
+                        tempTable.rows[r].cols.push(col);
+                    } else if (_startColumnIndex > colStartIndex && colEndIndex > _startColumnIndex) {
+                        // 앞에서 걸친경우
+                        col.colspan = colEndIndex - _startColumnIndex;
+                        tempTable.rows[r].cols.push(col);
+                    } else if (colEndIndex > _endColumnIndex && colStartIndex <= _endColumnIndex) {
+                        tempTable.rows[r].cols.push(col);
+                    }
                 }
             }
         }
