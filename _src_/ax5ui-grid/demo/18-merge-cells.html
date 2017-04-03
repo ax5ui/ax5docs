@@ -74,6 +74,7 @@
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     $(document.body).ready(function () {
+                        var API_SERVER = "http://api-demo.ax5.io";
                         var firstGrid = new ax5.ui.grid({
                             target: $('[data-ax5grid="first-grid"]'),
                             columns: [
@@ -90,22 +91,14 @@
                             }
                         });
 
-                        var sampleData = [
-                            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
-                            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
-                            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
-                            {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
-                            {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
-                            {a: "A", b: "A03", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
-                            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
-                            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
-                            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"},
-                            {a: "B", b: "B01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
-                            {a: "B", b: "B02", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
-                            {a: "B", b: "B03", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
-                        ];
-
-                        firstGrid.setData(sampleData);
+                        // 그리드 데이터 가져오기
+                        $.ajax({
+                            method: "GET",
+                            url: API_SERVER + "/api/v1/ax5grid/order",
+                            success: function (res) {
+                                firstGrid.setData(res);
+                            }
+                        });
                     });
                 </script>
             </ax5docs-js>
