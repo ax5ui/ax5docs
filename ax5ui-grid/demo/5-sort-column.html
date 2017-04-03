@@ -121,7 +121,7 @@
         
         <div class="contents">
     <div class="style-sub-visual">
-        <div class="title">Demostration</div>
+        <div class="title">Demonstration</div>
         <div class="description">Introduces the basic use of ax5ui-grid UI.</div>
     </div>
 </div>
@@ -161,6 +161,7 @@
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     $(document.body).ready(function () {
+        var API_SERVER = "http://api-demo.ax5.io";
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
             header: {
@@ -180,13 +181,17 @@
             ]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a &lt; l; a++) {
-            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-        }
-        firstGrid.setData(list);
+        // 그리드 데이터 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5grid",
+            success: function (res) {
+                firstGrid.setData(res);
+            }
+        });
     });
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
+        var API_SERVER = "http://api-demo.ax5.io";
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
             header: {
@@ -206,11 +211,14 @@
             ]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a < l; a++) {
-            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-        }
-        firstGrid.setData(list);
+        // 그리드 데이터 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5grid",
+            success: function (res) {
+                firstGrid.setData(res);
+            }
+        });
     });
 </script></script>
 
@@ -227,6 +235,7 @@ In the following example, if sortable: false is applied to a particular column a
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     $(document.body).ready(function () {
+        var API_SERVER = "http://api-demo.ax5.io";
         var secondGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="second-grid"]'),
             header: {
@@ -247,13 +256,17 @@ In the following example, if sortable: false is applied to a particular column a
             ]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a &lt; l; a++) {
-            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-        }
-        secondGrid.setData(list);
+        // 그리드 데이터 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5grid",
+            success: function (res) {
+                secondGrid.setData(res);
+            }
+        });
     });
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
+        var API_SERVER = "http://api-demo.ax5.io";
         var secondGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="second-grid"]'),
             header: {
@@ -274,11 +287,14 @@ In the following example, if sortable: false is applied to a particular column a
             ]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a < l; a++) {
-            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-        }
-        secondGrid.setData(list);
+        // 그리드 데이터 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5grid",
+            success: function (res) {
+                secondGrid.setData(res);
+            }
+        });
     });
 </script></script>
         </section>

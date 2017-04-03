@@ -121,7 +121,7 @@
         
         <div class="contents">
     <div class="style-sub-visual">
-        <div class="title">Demostration</div>
+        <div class="title">Demonstration</div>
         <div class="description">Introduces the basic use of ax5ui-grid UI.</div>
     </div>
 </div>
@@ -160,10 +160,10 @@
             <div class="DH10"></div>
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
+    var API_SERVER = "http://api-demo.ax5.io";
     var firstGrid = new ax5.ui.grid();
 
     $(document.body).ready(function () {
-
         firstGrid.setConfig({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
@@ -178,21 +178,20 @@
             ]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a &lt; l; a++) {
-            if (a === 0) {
-                // disable selection
-                list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value", __disable_selection__: true});
-            } else {
-                list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
+        // 그리드 데이터 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5grid",
+            success: function (res) {
+                res[0].__disable_selection__ = true;
+                firstGrid.setData(res);
             }
-        }
-        firstGrid.setData(list);
+        });
     });
-&lt;/script></pre><script type="text/javascript">var firstGrid = new ax5.ui.grid();
+&lt;/script></pre><script type="text/javascript">var API_SERVER = "http://api-demo.ax5.io";
+    var firstGrid = new ax5.ui.grid();
 
     $(document.body).ready(function () {
-
         firstGrid.setConfig({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
@@ -207,16 +206,15 @@
             ]
         });
 
-        var list = [];
-        for (var a = 0, l = 100; a < l; a++) {
-            if (a === 0) {
-                // disable selection
-                list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value", __disable_selection__: true});
-            } else {
-                list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
+        // 그리드 데이터 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5grid",
+            success: function (res) {
+                res[0].__disable_selection__ = true;
+                firstGrid.setData(res);
             }
-        }
-        firstGrid.setData(list);
+        });
     });
 </script></script>
 

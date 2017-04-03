@@ -52,6 +52,7 @@
             <ax5docs-js run="true">
                 <script type="text/javascript">
                     $(document.body).ready(function () {
+                        var API_SERVER = "http://api-demo.ax5.io";
                         var firstGrid = new ax5.ui.grid({
                             target: $('[data-ax5grid="first-grid"]'),
                             columns: [
@@ -70,11 +71,14 @@
                             ]
                         });
 
-                        var list = [];
-                        for (var a = 0, l = 100; a < l; a++) {
-                            list.push({a: "A value", b: "B value", c: a % 10, d: "D value", e: "E value", f: "F value", g: "G value"});
-                        }
-                        firstGrid.setData(list);
+                        // 그리드 데이터 가져오기
+                        $.ajax({
+                            method: "GET",
+                            url: API_SERVER + "/api/v1/ax5grid",
+                            success: function (res) {
+                                firstGrid.setData(res);
+                            }
+                        });
                     });
                 </script>
             </ax5docs-js>

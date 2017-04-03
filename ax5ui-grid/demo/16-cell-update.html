@@ -121,7 +121,7 @@
         
         <div class="contents">
     <div class="style-sub-visual">
-        <div class="title">Demostration</div>
+        <div class="title">Demonstration</div>
         <div class="description">Introduces the basic use of ax5ui-grid UI.</div>
     </div>
 </div>
@@ -177,6 +177,7 @@
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
     $(document.body).ready(function () {
+        var API_SERVER = "http://api-demo.ax5.io";
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
@@ -204,16 +205,14 @@
             ]
         });
 
-        var sampleData = [
-            {a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
-            {a: "A", b: "A02", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
-            {a: "A", b: "A03", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
-            {a: "B", b: "B01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
-            {a: "B", b: "B02", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
-            {a: "B", b: "B03", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
-        ];
-
-        firstGrid.setData(sampleData);
+        // 그리드 데이터 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5grid/order",
+            success: function (res) {
+                firstGrid.setData(res);
+            }
+        });
 
         $('[data-grid-control]').click(function () {
             switch (this.getAttribute("data-grid-control")) {
@@ -230,6 +229,7 @@
         });
     });
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
+        var API_SERVER = "http://api-demo.ax5.io";
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
@@ -257,16 +257,14 @@
             ]
         });
 
-        var sampleData = [
-            {a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
-            {a: "A", b: "A02", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
-            {a: "A", b: "A03", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", userType: "W"},
-            {a: "B", b: "B01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", userType: "M"},
-            {a: "B", b: "B02", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", userType: "S"},
-            {a: "B", b: "B03", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", userType: "W"}
-        ];
-
-        firstGrid.setData(sampleData);
+        // 그리드 데이터 가져오기
+        $.ajax({
+            method: "GET",
+            url: API_SERVER + "/api/v1/ax5grid/order",
+            success: function (res) {
+                firstGrid.setData(res);
+            }
+        });
 
         $('[data-grid-control]').click(function () {
             switch (this.getAttribute("data-grid-control")) {
