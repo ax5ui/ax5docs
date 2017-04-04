@@ -63,7 +63,7 @@ mask.open();
 ***
 
 ### Preview
-- [See Demonstration](http://ax5.io/ax5ui-mask/demo/index.html)
+- [See Demostration](http://ax5.io/ax5ui-mask/demo/index.html)
 
 If you have any questions, please refer to the following [gitHub](https://github.com/ax5ui/ax5ui-kernel)
 

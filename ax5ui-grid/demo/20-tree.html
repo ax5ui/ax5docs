@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-grid : Inline edit</title>
+    <title>ax5ui / ax5ui-grid : Support Tree</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -39,10 +39,9 @@
     
     
         <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-picker/dist/ax5picker.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css">
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css">
 
         <script src="../../assets/lib/ax5ui-formatter/dist/ax5formatter.min.js"></script>
         <script src="../../assets/lib/ax5ui-calendar/dist/ax5calendar.min.js"></script>
@@ -143,7 +142,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/1-formatter.html">Formatter</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li ><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li ><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/9-column-aru.html">Column Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/10-footsum.html">Foot Summary</a></li><li ><a href="/ax5ui-grid/demo/11-collector.html">Collector</a></li><li ><a href="/ax5ui-grid/demo/12-body-grouping.html">Body Grouping</a></li><li  class='active'><a href="/ax5ui-grid/demo/13-inline-edit.html">Inline edit</a></li><li ><a href="/ax5ui-grid/demo/14-paging.html">Paging</a></li><li ><a href="/ax5ui-grid/demo/15-excel-export.html">Excel Export</a></li><li ><a href="/ax5ui-grid/demo/16-cell-update.html">Cell update</a></li><li ><a href="/ax5ui-grid/demo/17-inline-edit-disable.html">Inline edit disable</a></li><li ><a href="/ax5ui-grid/demo/18-merge-cells.html">Merge Cells</a></li><li ><a href="/ax5ui-grid/demo/19-header-page-display.html">Control Display(header/page)</a></li><li ><a href="/ax5ui-grid/demo/20-tree.html">Support Tree</a></li></ul>
+        <ul><li ><a href="/ax5ui-grid/demo/index.html">Basic</a></li><li ><a href="/ax5ui-grid/demo/1-formatter.html">Formatter</a></li><li ><a href="/ax5ui-grid/demo/2-aside-columns.html">lineNumber, Rowselector</a></li><li ><a href="/ax5ui-grid/demo/3-column-group.html">Column group</a></li><li ><a href="/ax5ui-grid/demo/4-frozen-column-row.html">Frozen Column&Row</a></li><li ><a href="/ax5ui-grid/demo/5-sort-column.html">Sort Column</a></li><li ><a href="/ax5ui-grid/demo/6-column-height.html">Column Height</a></li><li ><a href="/ax5ui-grid/demo/7-grid-height.html">Grid Height</a></li><li ><a href="/ax5ui-grid/demo/8-row-aru.html">Row Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/9-column-aru.html">Column Add&Remove</a></li><li ><a href="/ax5ui-grid/demo/10-footsum.html">Foot Summary</a></li><li ><a href="/ax5ui-grid/demo/11-collector.html">Collector</a></li><li ><a href="/ax5ui-grid/demo/12-body-grouping.html">Body Grouping</a></li><li ><a href="/ax5ui-grid/demo/13-inline-edit.html">Inline edit</a></li><li ><a href="/ax5ui-grid/demo/14-paging.html">Paging</a></li><li ><a href="/ax5ui-grid/demo/15-excel-export.html">Excel Export</a></li><li ><a href="/ax5ui-grid/demo/16-cell-update.html">Cell update</a></li><li ><a href="/ax5ui-grid/demo/17-inline-edit-disable.html">Inline edit disable</a></li><li ><a href="/ax5ui-grid/demo/18-merge-cells.html">Merge Cells</a></li><li ><a href="/ax5ui-grid/demo/19-header-page-display.html">Control Display(header/page)</a></li><li  class='active'><a href="/ax5ui-grid/demo/20-tree.html">Support Tree</a></li></ul>
     
                             </div>
                         </div>
@@ -153,7 +152,7 @@
 
         
         <section class="ax5docs-section">
-            <h1>Inline edit</h1>
+            <h1>Support Tree</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-calendar/master/dist/ax5calendar.css&quot;&gt;
 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.css&quot;&gt;
@@ -171,11 +170,14 @@
 
 
             HTML
-            <pre class="prettyprint linenums lang-html">&lt;div style="position: relative;height:400px;" id="grid-parent">
-    &lt;div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;">&lt;/div>
-&lt;/div></pre><div style="position: relative;height:400px;" id="grid-parent">
-    <div data-ax5grid="first-grid" data-ax5grid-config="{&#10;                    showLineNumber: true,&#10;                    showRowSelector: true,&#10;                    sortable: true,&#10;                    header: {align:&quot;center&quot;}&#10;                    }" style="height: 100%;"></div>
+            <pre class="prettyprint linenums lang-html">&lt;div style="position: relative;height:300px;" id="grid-parent">
+    &lt;div data-ax5grid="first-grid" data-ax5grid-config="{}" style="height: 100%;">&lt;/div>
+&lt;/div></pre><div style="position: relative;height:300px;" id="grid-parent">
+    <div data-ax5grid="first-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
 </div>
+
+
+            
 
             <div class="DH10"></div>
             JS
@@ -184,189 +186,211 @@
         var API_SERVER = "http://api-demo.ax5.io";
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
+            showLineNumber: true,
+            showRowSelector: false,
+            header: {align:'center'},
+            frozenColumnIndex: 3,
+            frozenRowIndex: 2,
             columns: [
                 {
-                    key: "a",
-                    label: "field A",
+                    key: "id",
+                    label: "ID",
                     width: 80,
                     styleClass: function () {
                         return "ABC";
                     },
                     enableFilter: true,
-                    align: "center", editor: {type: "text"}
-                },
-                {key: "b", label: "field  B", align: "center", editor: {type: "text"}},
-                {
-                    key: undefined, label: "field C", columns: [
-                    {key: "price", label: "price", formatter: "money", align: "right", editor: {type: "money", updateWith:['cost']}},
-                    {key: "amount", label: "amount", formatter: "money", align: "right", editor: {type: "money", updateWith:['cost']}},
-                    {
-                        key: "cost", label: "cost", align: "right", formatter: function () {
-                        return ax5.util.number(this.item.price * this.item.amount, {"money": true});
+                    align: "center",
+                    editor: {
+                        type: "text", disabled: function () {
+                            // item, value
+                            return false;
+                        }
                     }
-                    }
-                ]
                 },
-                {key: "saleDt", label: "saleDt", align: "center", editor: {type: "date"}},
-                {key: "customer", label: "customer", editor: {type: "text"}},
+                {key: "name", label: "Name", align: "left", width: 200, treeControl: true},
                 {
-                    key: "userType", label: "userType", editor: {
+                    key: "isChecked", label: "Checkbox", width: 50, sortable: false, align: "center", editor: {
+                    type: "checkbox", config: {height: 17, trueValue: "Y", falseValue: "N"}
+                }
+                },
+                {
+                    key: "saleType", label: "saleType", align: "center", editor: {
                     type: "select", config: {
                         columnKeys: {
                             optionValue: "CD", optionText: "NM"
                         },
                         options: [
-                            {CD: "M", NM: "M: Man"},
-                            {CD: "D", NM: "D: Daughter"},
-                            {CD: "S", NM: "S: Son"},
-                            {CD: "W", NM: "W: Wife"}
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "D", NM: "D: substring"}
                         ]
                     }
+                }
+                },
+                {
+                    key: "saleDt", label: "saleDt", align: "center", editor: {
+                    type: "date", config: {}
+                }
+                },
+                {
+                    key: "customer", label: "Customer", align: "center", editor: {type: "text"}
+                },
+                {
+                    key: "hash", label: "hash", width: 300, align: "left", formatter: function () {
+                    return this.item["__hs__"];
                 }
                 }
             ],
             body: {
-                grouping: {
-                    by: ["a"],
-                    columns: [
-                        {
-                            label: function () {
-                                return this.groupBy.labels.join(", ") + " SUM";
-                            }, colspan: 2, align: "center"
-                        },
-                        {key: "price", collector: "avg", formatter: "money", align: "right"},
-                        {key: "amount", collector: "sum", formatter: "money", align: "right"},
-                        {
-                            key: "cost", collector: function () {
-                            var value = 0;
-                            this.list.forEach(function (n) {
-                                if (!n.__isGrouping) value += (n.price * n.amount);
-                            });
-                            return ax5.util.number(value, {"money": 1});
-                        }, align: "right"
-                        }
-                    ]
-                }
+                columnHeight: 26
             },
-            footSum: [
-                [
-                    {label: "SUMMARY", colspan: 2, align: "center"},
-                    {key: "price", collector: "avg", formatter: "money", align: "right"},
-                    {key: "amount", collector: "sum", formatter: "money", align: "right"},
-                    {
-                        key: "cost", collector: function () {
-                        var value = 0;
-                        this.list.forEach(function (n) {
-                            if (!n.__isGrouping) value += (n.price * n.amount);
-                        });
-                        return ax5.util.number(value, {"money": 1});
-                    }, align: "right"
-                    }
-                ]]
-        });
-
-        // 그리드 데이터 가져오기
-        $.ajax({
-            method: "GET",
-            url: API_SERVER + "/api/v1/ax5grid/order",
-            success: function (res) {
-                firstGrid.setData(res);
+            tree: {
+                use: true,
+                indentWidth: 10,
+                arrowWidth: 15,
+                iconWidth: 18,
+                icons: {
+                    openedArrow: '&lt;i class="fa fa-caret-down" aria-hidden="true">&lt;/i>',
+                    collapsedArrow: '&lt;i class="fa fa-caret-right" aria-hidden="true">&lt;/i>',
+                    groupIcon: '&lt;i class="fa fa-folder-open" aria-hidden="true">&lt;/i>',
+                    collapsedGroupIcon: '&lt;i class="fa fa-folder" aria-hidden="true">&lt;/i>',
+                    itemIcon: '&lt;i class="fa fa-circle" aria-hidden="true">&lt;/i>'
+                },
+                columnKeys: {
+                    parentKey: "pid",
+                    selfKey: "id"
+                }
             }
         });
+
+        var sampleData = [
+            {id: 0, name: "Thomas Jang", price: 1000, amount: null, saleDt: "2016-08-29", customer: "장기영", saleType: "A", isChecked: "Y", __disable_selection__: true},
+            {pid: "0", id: "2", name: "Seowoo", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", saleType: "B", isChecked: "N"},
+            {pid: "0", id: "3", name: "Mondo", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", saleType: "A", isChecked: "N"},
+            {pid: "0", id: "4", name: "Brant", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", saleType: "C", isChecked: "Y"},
+            {pid: "4", id: "5", name: "Tiffany", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", saleType: "A", isChecked: "N"},
+            {pid: "4", id: "6", name: "Edward", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", saleType: "D", isChecked: "Y"},
+            {pid: "4", id: "7", name: "Bill", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "이하종", saleType: "B", isChecked: "N"},
+            {pid: "0", id: "8", name: "Aeei", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "김혜미", saleType: "C", isChecked: "Y"}
+        ];
+        firstGrid.setData(sampleData);
+
     });
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
         var API_SERVER = "http://api-demo.ax5.io";
         var firstGrid = new ax5.ui.grid({
             target: $('[data-ax5grid="first-grid"]'),
+            showLineNumber: true,
+            showRowSelector: false,
+            header: {align:'center'},
+            frozenColumnIndex: 3,
+            frozenRowIndex: 2,
             columns: [
                 {
-                    key: "a",
-                    label: "field A",
+                    key: "id",
+                    label: "ID",
                     width: 80,
                     styleClass: function () {
                         return "ABC";
                     },
                     enableFilter: true,
-                    align: "center", editor: {type: "text"}
-                },
-                {key: "b", label: "field  B", align: "center", editor: {type: "text"}},
-                {
-                    key: undefined, label: "field C", columns: [
-                    {key: "price", label: "price", formatter: "money", align: "right", editor: {type: "money", updateWith:['cost']}},
-                    {key: "amount", label: "amount", formatter: "money", align: "right", editor: {type: "money", updateWith:['cost']}},
-                    {
-                        key: "cost", label: "cost", align: "right", formatter: function () {
-                        return ax5.util.number(this.item.price * this.item.amount, {"money": true});
+                    align: "center",
+                    editor: {
+                        type: "text", disabled: function () {
+                            // item, value
+                            return false;
+                        }
                     }
-                    }
-                ]
                 },
-                {key: "saleDt", label: "saleDt", align: "center", editor: {type: "date"}},
-                {key: "customer", label: "customer", editor: {type: "text"}},
+                {key: "name", label: "Name", align: "left", width: 200, treeControl: true},
                 {
-                    key: "userType", label: "userType", editor: {
+                    key: "isChecked", label: "Checkbox", width: 50, sortable: false, align: "center", editor: {
+                    type: "checkbox", config: {height: 17, trueValue: "Y", falseValue: "N"}
+                }
+                },
+                {
+                    key: "saleType", label: "saleType", align: "center", editor: {
                     type: "select", config: {
                         columnKeys: {
                             optionValue: "CD", optionText: "NM"
                         },
                         options: [
-                            {CD: "M", NM: "M: Man"},
-                            {CD: "D", NM: "D: Daughter"},
-                            {CD: "S", NM: "S: Son"},
-                            {CD: "W", NM: "W: Wife"}
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "D", NM: "D: substring"}
                         ]
                     }
+                }
+                },
+                {
+                    key: "saleDt", label: "saleDt", align: "center", editor: {
+                    type: "date", config: {}
+                }
+                },
+                {
+                    key: "customer", label: "Customer", align: "center", editor: {type: "text"}
+                },
+                {
+                    key: "hash", label: "hash", width: 300, align: "left", formatter: function () {
+                    return this.item["__hs__"];
                 }
                 }
             ],
             body: {
-                grouping: {
-                    by: ["a"],
-                    columns: [
-                        {
-                            label: function () {
-                                return this.groupBy.labels.join(", ") + " SUM";
-                            }, colspan: 2, align: "center"
-                        },
-                        {key: "price", collector: "avg", formatter: "money", align: "right"},
-                        {key: "amount", collector: "sum", formatter: "money", align: "right"},
-                        {
-                            key: "cost", collector: function () {
-                            var value = 0;
-                            this.list.forEach(function (n) {
-                                if (!n.__isGrouping) value += (n.price * n.amount);
-                            });
-                            return ax5.util.number(value, {"money": 1});
-                        }, align: "right"
-                        }
-                    ]
-                }
+                columnHeight: 26
             },
-            footSum: [
-                [
-                    {label: "SUMMARY", colspan: 2, align: "center"},
-                    {key: "price", collector: "avg", formatter: "money", align: "right"},
-                    {key: "amount", collector: "sum", formatter: "money", align: "right"},
-                    {
-                        key: "cost", collector: function () {
-                        var value = 0;
-                        this.list.forEach(function (n) {
-                            if (!n.__isGrouping) value += (n.price * n.amount);
-                        });
-                        return ax5.util.number(value, {"money": 1});
-                    }, align: "right"
-                    }
-                ]]
-        });
-
-        // 그리드 데이터 가져오기
-        $.ajax({
-            method: "GET",
-            url: API_SERVER + "/api/v1/ax5grid/order",
-            success: function (res) {
-                firstGrid.setData(res);
+            tree: {
+                use: true,
+                indentWidth: 10,
+                arrowWidth: 15,
+                iconWidth: 18,
+                icons: {
+                    openedArrow: '<i class="fa fa-caret-down" aria-hidden="true"></i>',
+                    collapsedArrow: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                    groupIcon: '<i class="fa fa-folder-open" aria-hidden="true"></i>',
+                    collapsedGroupIcon: '<i class="fa fa-folder" aria-hidden="true"></i>',
+                    itemIcon: '<i class="fa fa-circle" aria-hidden="true"></i>'
+                },
+                columnKeys: {
+                    parentKey: "pid",
+                    selfKey: "id"
+                }
             }
         });
+
+        var sampleData = [
+            {id: 0, name: "Thomas Jang", price: 1000, amount: null, saleDt: "2016-08-29", customer: "장기영", saleType: "A", isChecked: "Y", __disable_selection__: true},
+            {pid: "0", id: "2", name: "Seowoo", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", saleType: "B", isChecked: "N"},
+            {pid: "0", id: "3", name: "Mondo", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", saleType: "A", isChecked: "N"},
+            {pid: "0", id: "4", name: "Brant", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", saleType: "C", isChecked: "Y"},
+            {pid: "4", id: "5", name: "Tiffany", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", saleType: "A", isChecked: "N"},
+            {pid: "4", id: "6", name: "Edward", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", saleType: "D", isChecked: "Y"},
+            {pid: "4", id: "7", name: "Bill", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "이하종", saleType: "B", isChecked: "N"},
+            {pid: "0", id: "8", name: "Aeei", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "김혜미", saleType: "C", isChecked: "Y"}
+        ];
+        firstGrid.setData(sampleData);
+
     });
 </script></script>
         </section>

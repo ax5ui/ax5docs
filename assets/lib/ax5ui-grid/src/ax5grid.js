@@ -54,6 +54,7 @@
                 showLineNumber: false,
                 showRowSelector: false,
                 multipleSelect: true,
+                virtualScrollY: true,
                 virtualScrollX: true,
                 height: 0,
                 columnMinWidth: 100,
@@ -94,6 +95,30 @@
                     modified: '__modified__',
                     deleted: '__deleted__',
                     disableSelection: '__disable_selection__'
+                },
+                tree: {
+                    use: false,
+                    hashDigit: 8,
+                    indentWidth: 10,
+                    arrowWidth: 15,
+                    iconWidth: 18,
+                    icons: {
+                        openedArrow: '▾',
+                        collapsedArrow: '▸',
+                        groupIcon: '⊚',
+                        collapsedGroupIcon: '⊚',
+                        itemIcon: '⊙'
+                    },
+                    columnKeys: {
+                        parentKey: "pid",
+                        selfKey: "id",
+                        collapse: "collapse",
+                        hidden: "hidden",
+                        parentHash: "__hp__",
+                        selfHash: "__hs__",
+                        children: "__children__",
+                        depth: "__depth__",
+                    }
                 }
             };
             this.xvar = {
@@ -109,6 +134,7 @@
             this.bodyGrouping = {};
 
             this.list = []; // 그리드의 데이터
+            this.proxyList = null; // 그리드 데이터의 대리자
             this.page = {}; // 그리드의 페이지 정보
             this.selectedDataIndexs = [];
             this.deletedList = [];
@@ -117,6 +143,7 @@
             this.selectedColumn = {}; // 그리드 바디의 선택된 셀 정보
             this.isInlineEditing = false;
             this.inlineEditing = {};
+            this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
 
             // header
             this.headerTable = {};
@@ -621,7 +648,8 @@
              * @param {Boolean} [_config.sortable=false]
              * @param {Boolean} [_config.multiSort=false]
              * @param {Function} [_config.remoteSort=false]
-             * @param {Boolean} [_config.virtualScrollX=true]
+             * @param {Boolean} [_config.virtualScrollY=true] - 세로축 가상스크롤 처리여부
+             * @param {Boolean} [_config.virtualScrollX=true] - 가로축 가상스크롤 처리여부
              * @param {Object} [_config.header]
              * @param {String} [_config.header.align]
              * @param {Number} [_config.header.columnHeight=25]
@@ -663,6 +691,27 @@
              * @param {Array} _config.columns[].editor.updateWith
              * @param {Function} _config.columns[].editor.disabled - disable editor
              * @param {Boolean} [_config.columns[].multiLine=false]
+             * @param {Object} [_config.tree]
+             * @param {Boolean} [_config.tree.use=false] - Whether tree-type data is used
+             * @param {Number} [_config.tree.hashDigit=8]
+             * @param {Number} [_config.tree.indentWidth=10]
+             * @param {Number} [_config.tree.arrowWidth=15]
+             * @param {Number} [_config.tree.iconWidth=18]
+             * @param {Object} [_config.tree.icons]
+             * @param {String} [_config.tree.icons.openedArrow='▾']
+             * @param {String} [_config.tree.icons.collapsedArrow='▸']
+             * @param {String} [_config.tree.icons.groupIcon='⊚']
+             * @param {String} [_config.tree.icons.collapsedGroupIcon='⊚']
+             * @param {String} [_config.tree.icons.itemIcon='⊙']
+             * @param {Object} [_config.tree.columnKeys]
+             * @param {String} [_config.tree.columnKeys.parentKey="pid"]
+             * @param {String} [_config.tree.columnKeys.selfKey="id"]
+             * @param {String} [_config.tree.columnKeys.collapse="collapse"]
+             * @param {String} [_config.tree.columnKeys.hidden="hidden"]
+             * @param {String} [_config.tree.columnKeys.parentHash="__hp__"]
+             * @param {String} [_config.tree.columnKeys.selfHash="__hs__"]
+             * @param {String} [_config.tree.columnKeys.children="__children__"]
+             * @param {String} [_config.tree.columnKeys.depth="__depth__"]
              * @returns {ax5grid}
              * @example
              * ```js
@@ -779,6 +828,14 @@
                     //this.id = 'ax5grid-' + ax5.getGuid();
                     this.id = 'ax5grid-' + this.instanceId;
                     this.$target.data("data-ax5grid-id", grid.id);
+                }
+
+
+                GRID.data.init.call(this);
+
+                if (this.config.tree.use) { // 트리라면
+                    this.sortInfo = {};
+                    this.sortInfo[this.config.tree.columnKeys.selfHash] = {orderBy: "asc", seq: 0, fixed: true};
                 }
 
                 ///========
@@ -1065,12 +1122,16 @@
              * ```
              */
             this.setData = function (_data) {
+                let isFirstPaint = (typeof this.xvar.paintStartRowIndex === "undefined");
+
                 GRID.data.set.call(this, _data);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this);
-                GRID.scroller.resize.call(this);
+                if(!isFirstPaint) GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
-                GRID.body.scrollTo.call(this, {top: 0});
+                if(!isFirstPaint) GRID.body.scrollTo.call(this, {top: 0});
+
+                isFirstPaint = null;
                 return this;
             };
 
