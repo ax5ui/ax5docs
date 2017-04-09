@@ -148,6 +148,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.isInlineEditing = false;
             this.inlineEditing = {};
             this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
+            this.contextMenu_instance = null;
 
             // header
             this.headerTable = {};
@@ -297,6 +298,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var width = 0;
                     if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
                     if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                    width += cfg.scroller.size;
                     return width;
                 }(),
                     totalWidth = 0,
@@ -800,6 +802,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.onDataChanged = cfg.body.onDataChanged;
                 // todo event에 대한 추가 정의 필요
 
+                // 컨텐스트 메뉴 (이렇게 하면 setConfig와, myGrid.contextMenu = function(){} 둘다 사용가능해지기 때문에.)
+                this.contextMenu = cfg.contextMenu;
+
                 this.$target = jQuery(cfg.target);
 
                 // target attribute data
@@ -1115,8 +1120,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 GRID.data.set.call(this, _data);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this);
-                if (!isFirstPaint) GRID.scroller.resize.call(this);
+                GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
+
                 if (!isFirstPaint) GRID.body.scrollTo.call(this, { top: 0 });
 
                 isFirstPaint = null;
@@ -2027,6 +2033,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         });
 
+        if (this.contextMenu) {
+            this.$["container"]["body"].on("contextmenu", function (e) {
+                if (!self.contextMenu_instance) {
+                    self.contextMenu_instance = new ax5.ui.menu();
+                }
+
+                self.contextMenu_instance.setConfig(self.contextMenu);
+                self.contextMenu_instance.popup(e);
+
+                U.stopEvent(e.originalEvent);
+            });
+        }
         this.$["container"]["body"].on("mousedown", '[data-ax5grid-column-attr="default"]', function (e) {
             if (self.xvar.touchmoved) return false;
             if (this.getAttribute("data-ax5grid-column-rowIndex")) {
@@ -2343,7 +2361,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         /// 출력시작 인덱스
-        var paintStartRowIndex = !this.config.virtualScrollY ? 0 : Math.floor(-this.$.panel["body-scroll"].position().top / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+        var paintStartRowIndex = !this.config.virtualScrollY ? this.xvar.frozenRowIndex : Math.floor(-this.$.panel["body-scroll"].position().top / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
         if (isNaN(paintStartRowIndex)) return this;
 
         var paintStartColumnIndex = 0,
@@ -4207,42 +4225,48 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 ari = void 0;
             for (; i < l + 1; i++) {
                 gi = 0;
-                if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
-                    this.deletedList.push(_list[i]);
-                } else {
-                    compareString = "";
-                    appendRow = [];
-                    for (; gi < gl; gi++) {
-                        if (_list[i]) {
-                            compareString += "$|$" + _list[i][groupingKeys[gi].key];
-                        }
-                        if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
-                            var appendRowItem = { keys: [], labels: [], list: groupingKeys[gi].list };
-                            for (var ki = 0; ki < gi + 1; ki++) {
-                                appendRowItem.keys.push(groupingKeys[ki].key);
-                                appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+
+                if (_list[i]) {
+                    if (_list[i][this.config.columnKeys.deleted]) {
+                        this.deletedList.push(_list[i]);
+                    } else {
+                        compareString = ""; // 그룹핑 구문검사용
+                        appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
+
+                        // 그룹핑 구문검사
+                        for (; gi < gl; gi++) {
+                            if (_list[i]) {
+                                compareString += "$|$" + _list[i][groupingKeys[gi].key];
                             }
-                            appendRow.push(appendRowItem);
-                            groupingKeys[gi].list = [];
+                            if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
+                                var appendRowItem = { keys: [], labels: [], list: groupingKeys[gi].list };
+                                for (var ki = 0; ki < gi + 1; ki++) {
+                                    appendRowItem.keys.push(groupingKeys[ki].key);
+                                    appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                                }
+                                appendRow.push(appendRowItem);
+                                groupingKeys[gi].list = [];
+                            }
+                            groupingKeys[gi].list.push(_list[i]);
+                            groupingKeys[gi].compareString = compareString;
                         }
-                        groupingKeys[gi].list.push(_list[i]);
-                        groupingKeys[gi].compareString = compareString;
-                    }
 
-                    ari = appendRow.length;
-                    while (ari--) {
-                        returnList.push({ __isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: { keys: appendRow[ari].keys, labels: appendRow[ari].labels } });
-                    }
+                        // 새로 추가해야할 그룹핑 row
+                        ari = appendRow.length;
+                        while (ari--) {
+                            returnList.push({ __isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: { keys: appendRow[ari].keys, labels: appendRow[ari].labels } });
+                        }
+                        //~ 그룹핑 구문 검사 완료
 
-                    if (_list[i]) {
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
                         }
                         _list[i]["__index"] = lineNumber;
                         dataRealRowCount++;
-                        returnList.push(_list[i]);
+
                         appendIndex++;
                         lineNumber++;
+                        returnList.push(_list[i]);
                     }
                 }
             }
@@ -4251,14 +4275,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_list[i]) {
                     if (_list[i][this.config.columnKeys.deleted]) {
                         this.deletedList.push(_list[i]);
-                    } else if (_list[i][this.config.columnKeys.selected]) {
-                        this.selectedDataIndexs.push(i);
+                    } else {
+
+                        if (_list[i][this.config.columnKeys.selected]) {
+                            this.selectedDataIndexs.push(i);
+                        }
+                        _list[i]["__index"] = lineNumber;
+                        dataRealRowCount++;
+                        lineNumber++;
+                        returnList.push(_list[i]);
                     }
-                    // __index변수를 추가하여 lineNumber 에 출력합니다. (body getFieldValue 에서 출력함)
-                    _list[i]["__index"] = lineNumber;
-                    dataRealRowCount++;
-                    lineNumber++;
-                    returnList.push(_list[i]);
                 }
             }
         }

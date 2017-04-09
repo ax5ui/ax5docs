@@ -144,6 +144,7 @@
             this.isInlineEditing = false;
             this.inlineEditing = {};
             this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
+            this.contextMenu_instance = null;
 
             // header
             this.headerTable = {};
@@ -294,6 +295,7 @@
                             let width = 0;
                             if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
                             if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                            width += cfg.scroller.size;
                             return width;
                         })(),
                     totalWidth = 0, computedWidth, autoWidthColgroupIndexs = [],
@@ -808,6 +810,9 @@
                 this.onDataChanged = cfg.body.onDataChanged;
                 // todo event에 대한 추가 정의 필요
 
+                // 컨텐스트 메뉴 (이렇게 하면 setConfig와, myGrid.contextMenu = function(){} 둘다 사용가능해지기 때문에.)
+                this.contextMenu = cfg.contextMenu;
+
                 this.$target = jQuery(cfg.target);
 
                 // target attribute data
@@ -947,7 +952,7 @@
                     if (this.onLoad) {
                         this.onLoad.call({
                             self: this
-                        })
+                        });
                     }
                 }).bind(this));
                 return this;
@@ -1127,9 +1132,10 @@
                 GRID.data.set.call(this, _data);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this);
-                if(!isFirstPaint) GRID.scroller.resize.call(this);
+                GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
-                if(!isFirstPaint) GRID.body.scrollTo.call(this, {top: 0});
+
+                if (!isFirstPaint) GRID.body.scrollTo.call(this, {top: 0});
 
                 isFirstPaint = null;
                 return this;

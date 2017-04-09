@@ -427,6 +427,18 @@
             }
         });
 
+        if (this.contextMenu) {
+            this.$["container"]["body"].on("contextmenu", function (e) {
+                if (!self.contextMenu_instance) {
+                    self.contextMenu_instance = new ax5.ui.menu();
+                }
+
+                self.contextMenu_instance.setConfig(self.contextMenu);
+                self.contextMenu_instance.popup(e);
+
+                U.stopEvent(e.originalEvent);
+            });
+        }
         this.$["container"]["body"]
             .on("mousedown", '[data-ax5grid-column-attr="default"]', function (e) {
                 if (self.xvar.touchmoved) return false;
@@ -757,7 +769,9 @@
         }
 
         /// 출력시작 인덱스
-        let paintStartRowIndex = (!this.config.virtualScrollY) ? 0 : Math.floor(-(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+        let paintStartRowIndex = (!this.config.virtualScrollY) ?
+            this.xvar.frozenRowIndex :
+            Math.floor(-(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
         if (isNaN(paintStartRowIndex)) return this;
 
         let paintStartColumnIndex = 0, paintEndColumnIndex = 0, nopaintLeftColumnsWidth = null, nopaintRightColumnsWidth = null;
@@ -1842,9 +1856,9 @@
                     'style="height: ' + (cfg.body.columnHeight) + 'px;min-height: 1px;" ',
                     '></td>');
             }
-            
+
             console.log('tr[data-ax5grid-tr-data-index="' + di + '"]');
-            
+
             _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 
