@@ -48,6 +48,10 @@
                     </div>
                 </div>
 
+                <div style="padding: 10px;">
+                    <button data-btn="get-active-tab" class="btn btn-primary">getActiveTab</button>
+                </div>
+
             </ax5docs-html>
 
             <div class="DH10"></div>
@@ -56,6 +60,10 @@
                 <script type="text/javascript">
                 $(document.body).ready(function(){
                     $('[data-ax5layout]').ax5layout();
+
+                    $('[data-btn="get-active-tab"]').click(function () {
+                        ax5.util.alert($('[data-ax5layout]').ax5layout("getActiveTab"));
+                    });
                 });
                 </script>
             </ax5docs-js>
