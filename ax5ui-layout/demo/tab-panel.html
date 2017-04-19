@@ -169,6 +169,9 @@
 
 &lt;div style="padding: 10px;">
     &lt;button data-btn="get-active-tab" class="btn btn-primary">getActiveTab&lt;/button>
+    &lt;button data-btn="tab-open-0" class="btn btn-primary">tabOpen(0)&lt;/button>
+    &lt;button data-btn="tab-open-1" class="btn btn-primary">tabOpen(1)&lt;/button>
+    &lt;button data-btn="tab-open-2" class="btn btn-primary">tabOpen(2)&lt;/button>
 &lt;/div></pre><div data-ax5layout="ax1" data-config="{layout:&quot;tab-panel&quot;}" style="height:300px;">
     <div data-tab-panel="{label: &quot;Live Status&quot;, active: &quot;false&quot;}" style="background: #ffaba1;">
         <div style="padding: 10px;">
@@ -189,23 +192,46 @@
 
 <div style="padding: 10px;">
     <button data-btn="get-active-tab" class="btn btn-primary">getActiveTab</button>
+    <button data-btn="tab-open-0" class="btn btn-primary">tabOpen(0)</button>
+    <button data-btn="tab-open-1" class="btn btn-primary">tabOpen(1)</button>
+    <button data-btn="tab-open-2" class="btn btn-primary">tabOpen(2)</button>
 </div>
 
             <div class="DH10"></div>
             JS
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-$(document.body).ready(function(){
-    $('[data-ax5layout]').ax5layout();
+$(function(){
+    var layout$ = $('[data-ax5layout="ax1"]');
+    layout$.ax5layout();
 
     $('[data-btn="get-active-tab"]').click(function () {
-        ax5.util.alert($('[data-ax5layout]').ax5layout("getActiveTab"));
+        ax5.util.alert(layout$.ax5layout("getActiveTab"));
+    });
+    $('[data-btn="tab-open-0"]').click(function () {
+        layout$.ax5layout("tabOpen", 0);
+    });
+    $('[data-btn="tab-open-1"]').click(function () {
+        layout$.ax5layout("tabOpen", 1);
+    });
+    $('[data-btn="tab-open-2"]').click(function () {
+        layout$.ax5layout("tabOpen", 2);
     });
 });
-&lt;/script></pre><script type="text/javascript">$(document.body).ready(function(){
-    $('[data-ax5layout]').ax5layout();
+&lt;/script></pre><script type="text/javascript">$(function(){
+    var layout$ = $('[data-ax5layout="ax1"]');
+    layout$.ax5layout();
 
     $('[data-btn="get-active-tab"]').click(function () {
-        ax5.util.alert($('[data-ax5layout]').ax5layout("getActiveTab"));
+        ax5.util.alert(layout$.ax5layout("getActiveTab"));
+    });
+    $('[data-btn="tab-open-0"]').click(function () {
+        layout$.ax5layout("tabOpen", 0);
+    });
+    $('[data-btn="tab-open-1"]').click(function () {
+        layout$.ax5layout("tabOpen", 1);
+    });
+    $('[data-btn="tab-open-2"]').click(function () {
+        layout$.ax5layout("tabOpen", 2);
     });
 });
 </script></script>
