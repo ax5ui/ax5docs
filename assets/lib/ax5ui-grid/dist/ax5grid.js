@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.4.18"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -87,6 +87,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 page: {
                     height: 25,
                     display: true,
+                    statusDisplay: true,
                     navigationItemCount: 5
                 },
                 scroller: {
@@ -266,9 +267,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 var colGroupMap = {};
                 for (var r = 0, rl = this.headerTable.rows.length; r < rl; r++) {
-                    var row = this.headerTable.rows[r];
-                    for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                        colGroupMap[row.cols[c].colIndex] = jQuery.extend({}, row.cols[c]);
+                    var _row2 = this.headerTable.rows[r];
+                    for (var c = 0, cl = _row2.cols.length; c < cl; c++) {
+                        colGroupMap[_row2.cols[c].colIndex] = jQuery.extend({}, _row2.cols[c]);
                     }
                 }
 
@@ -662,7 +663,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Array} [_config.body.grouping.columns] - list grouping columns
              * @param {Object} [_config.page]
              * @param {Number} [_config.page.height=25]
-             * @param {Boolean} [_config.page.display=true]
+             * @param {Boolean} [_config.page.display=true] - grid page display
+             * @param {Boolean} [_config.page.statusDisplay=true] - grid status display
              * @param {Number} [_config.page.navigationItemCount=5]
              * @param {Object} [_config.scroller]
              * @param {Number} [_config.scroller.size=15]
@@ -4540,8 +4542,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (!U.isNumber(_dindex)) {
                     throw 'invalid argument _dindex';
                 }
-                //
-                list = list.splice(_dindex, [].concat(_row));
+                if (U.isArray(_row)) {
+                    for (var _i = 0, _l = row.length; _i < _l; _i++) {
+                        list.splice(_dindex + _i, 0, _row[_i]);
+                    }
+                } else {
+                    list.splice(_dindex, 0, _row);
+                }
             }
 
             if (this.config.body.grouping) {
@@ -4693,14 +4700,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     i = null;
                 } else {
                     var _selfHash = list[_dindex][treeKeys.selfHash];
-                    var _i = list.length;
-                    while (_i--) {
-                        if (list[_i][treeKeys.selfHash].substr(0, _selfHash.length) !== _selfHash) {
-                            list[_i][keys.deleted] = true;
+                    var _i2 = list.length;
+                    while (_i2--) {
+                        if (list[_i2][treeKeys.selfHash].substr(0, _selfHash.length) !== _selfHash) {
+                            list[_i2][keys.deleted] = true;
                         }
                     }
                     _selfHash = null;
-                    _i = null;
+                    _i2 = null;
                 }
 
                 keys = null;
@@ -5782,11 +5789,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var navigationItemCount = this.config.page.navigationItemCount;
 
             page["@paging"] = function () {
-                var returns = [];
+                var returns = [],
+                    startI = void 0,
+                    endI = void 0;
 
-                var startI = page.currentPage - Math.floor(navigationItemCount / 2);
+                startI = page.currentPage - Math.floor(navigationItemCount / 2);
                 if (startI < 0) startI = 0;
-                var endI = page.currentPage + navigationItemCount;
+                endI = page.currentPage + navigationItemCount;
                 if (endI > page.totalPages) endI = page.totalPages;
 
                 if (endI - startI > navigationItemCount) {
@@ -5810,8 +5819,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             this.$["page"]["navigation"].html(GRID.tmpl.get("page_navigation", page));
             this.$["page"]["navigation"].find("[data-ax5grid-page-move]").on("click", function () {
-                var act = this.getAttribute("data-ax5grid-page-move");
-                onclickPageMove.call(self, act);
+                onclickPageMove.call(self, this.getAttribute("data-ax5grid-page-move"));
             });
         } else {
             this.$["page"]["navigation"].empty();
@@ -5819,10 +5827,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var statusUpdate = function statusUpdate() {
+        if (!this.config.page.statusDisplay) {
+            return;
+        }
+
         var fromRowIndex = this.xvar.paintStartRowIndex;
         var toRowIndex = this.xvar.paintStartRowIndex + this.xvar.paintRowCount - 1;
         //var totalElements = (this.page && this.page.totalElements) ? this.page.totalElements : this.xvar.dataRowCount;
         var totalElements = this.xvar.dataRowCount;
+
         if (toRowIndex > totalElements) {
             toRowIndex = totalElements;
         }
@@ -6375,13 +6388,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             tempTable_r = { rows: [] };
 
         for (var r = 0, rl = _table.rows.length; r < rl; r++) {
-            var row = _table.rows[r];
+            var _row3 = _table.rows[r];
 
             tempTable_l.rows[r] = { cols: [] };
             tempTable_r.rows[r] = { cols: [] };
 
-            for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                var col = jQuery.extend({}, row.cols[c]),
+            for (var c = 0, cl = _row3.cols.length; c < cl; c++) {
+                var col = jQuery.extend({}, _row3.cols[c]),
                     colStartIndex = col.colIndex,
                     colEndIndex = col.colIndex + col.colspan;
 
@@ -6412,7 +6425,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 colEndIndex = null;
             }
 
-            row = null;
+            _row3 = null;
         }
 
         return {
@@ -6425,11 +6438,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         var tempTable = { rows: [] };
         for (var r = 0, rl = _table.rows.length; r < rl; r++) {
-            var row = _table.rows[r];
+            var _row4 = _table.rows[r];
 
             tempTable.rows[r] = { cols: [] };
-            for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                var col = jQuery.extend({}, row.cols[c]),
+            for (var c = 0, cl = _row4.cols.length; c < cl; c++) {
+                var col = jQuery.extend({}, _row4.cols[c]),
                     colStartIndex = col.colIndex,
                     colEndIndex = col.colIndex + col.colspan;
 
@@ -6635,15 +6648,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         (function (table) {
             // set rowspan
             for (var r = 0, rl = table.rows.length; r < rl; r++) {
-                var row = table.rows[r];
-                for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                    var col = row.cols[c];
+                var _row5 = table.rows[r];
+                for (var c = 0, cl = _row5.cols.length; c < cl; c++) {
+                    var col = _row5.cols[c];
                     if (!('columns' in col)) {
                         col.rowspan = rl - r;
                     }
                     col = null;
                 }
-                row = null;
+                _row5 = null;
             }
         })(table);
 
