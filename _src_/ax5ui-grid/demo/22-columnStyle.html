@@ -1,0 +1,188 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="22" id="column-style" title="Column Style" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-picker/dist/ax5picker.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-select/dist/ax5select.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-menu/dist/ax5menu.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-grid/dist/ax5grid.css"/>
+
+        <script src="../../assets/lib/ax5ui-formatter/dist/ax5formatter.min.js"></script>
+        <script src="../../assets/lib/ax5ui-calendar/dist/ax5calendar.min.js"></script>
+        <script src="../../assets/lib/ax5ui-picker/dist/ax5picker.min.js"></script>
+        <script src="../../assets/lib/ax5ui-select/dist/ax5select.min.js"></script>
+        <script src="../../assets/lib/ax5ui-menu/dist/ax5menu.min.js"></script>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-grid/dist/ax5grid.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- grid -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # ${data.metadata.title}
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css"/>
+
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
+                ```
+            </ax5docs-md>
+
+            HTML
+            <ax5docs-html run="true">
+                <style>
+                    .grid-cell-red{
+                        background: #f8d2cb;
+                    }
+                    .grid-cell-blue{
+                        background: #dcf0f8;
+                    }
+                </style>
+                <div style="position: relative;height:250px;" id="grid-parent">
+                    <div data-ax5grid="first-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
+                </div>
+            </ax5docs-html>
+
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+            <div class="DH10"></div>
+            JS
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        var API_SERVER = "http://api-demo.ax5.io";
+                        var firstGrid = new ax5.ui.grid({
+                            target: $('[data-ax5grid="first-grid"]'),
+                            showLineNumber: true,
+                            showRowSelector: false,
+                            header: {align: 'center'},
+                            columns: [
+                                {
+                                    key: "id",
+                                    label: "ID",
+                                    width: 80,
+                                    styleClass: function () {
+                                        return "ABC";
+                                    },
+                                    enableFilter: true,
+                                    align: "center",
+                                    editor: {
+                                        type: "text", disabled: function () {
+                                            // item, value
+                                            return false;
+                                        }
+                                    }
+                                },
+                                {key: "name", label: "Name", align: "left", width: 200},
+                                {
+                                    key: "isChecked", label: "Checkbox", width: 50, sortable: false, align: "center", editor: {
+                                    type: "checkbox", config: {height: 17, trueValue: "Y", falseValue: "N"}
+                                }
+                                },
+                                {
+                                    key: "saleType", label: "saleType", align: "center"
+                                },
+                                {
+                                    key: "saleDt", label: "saleDt", align: "center", editor: {
+                                    type: "date", config: {}
+                                }
+                                },
+                                {
+                                    key: "customer", label: "Customer", align: "center", editor: {type: "text"},
+                                    styleClass: function () {
+                                        return (this.item.saleType === "A") ? "grid-cell-red" : "grid-cell-blue";
+                                    }
+                                }
+                            ],
+                            body: {
+                                columnHeight: 26
+                            },
+                            contextMenu: {
+                                iconWidth: 20,
+                                acceleratorWidth: 100,
+                                itemClickAndClose: false,
+                                icons: {
+                                    'arrow': '<i class="fa fa-caret-right"></i>'
+                                },
+                                items: [
+                                    {type: 1, label: "menu1"},
+                                    {divide: true},
+                                    {
+                                        label: "Tools",
+                                        items: [
+                                            {type: 1, label: "Ping"},
+                                            {type: 1, label: "SSH"},
+                                            {type: 1, label: "Telnet"},
+                                            {type: 1, label: "Winbox"},
+                                            {type: 1, label: "FileZilla Check SWF Hang"},
+                                            {label: "FileZilla IS_FILES"},
+                                            {label: "FileZilla CPU"}
+                                        ]
+                                    },
+                                    {
+                                        label: "Config",
+                                        items: [
+                                            {label: "ssh"},
+                                            {type: 1, label: "ftp"},
+                                            {type: 1, label: "winbox"}
+                                        ]
+                                    }
+                                ],
+                                popupFilter: function (item, param) {
+                                    //console.log(item, param);
+                                    if (param.element) {
+                                        return true;
+                                    } else {
+                                        return item.type == 1;
+                                    }
+                                },
+                                onClick: function (item, param) {
+                                    console.log(item, param);
+                                    firstGrid.contextMenu.close();
+                                    //또는 return true;
+                                }
+                            }
+                        });
+
+                        var sampleData = [
+                            {id: 0, name: "Thomas Jang", price: 1000, amount: null, saleDt: "2016-08-29", customer: "장기영", saleType: "A", isChecked: "Y"},
+                            {id: "2", name: "Seowoo", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", saleType: "B", isChecked: "N"},
+                            {id: "3", name: "Mondo", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", saleType: "A", isChecked: "N"},
+                            {id: "4", name: "Brant", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", saleType: "C", isChecked: "Y"},
+                            {id: "5", name: "Tiffany", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", saleType: "A", isChecked: "N"},
+                            {id: "6", name: "Edward", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", saleType: "D", isChecked: "Y"},
+                            {id: "7", name: "Bill", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "이하종", saleType: "B", isChecked: "N"},
+                            {id: "8", name: "Aeei", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "김혜미", saleType: "C", isChecked: "Y"}
+                        ];
+                        firstGrid.setData(sampleData);
+
+                    });
+                </script>
+            </ax5docs-js>
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>
