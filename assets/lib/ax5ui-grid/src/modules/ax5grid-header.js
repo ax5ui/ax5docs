@@ -244,7 +244,7 @@
                             return tdCSS_class;
                         }).call(this, col) + '" ',
                         'style="height: ' + cellHeight + 'px;min-height: 1px;">');
-
+                    
                     SS.push((function () {
                         var lineHeight = (cfg.header.columnHeight - cfg.header.columnPadding * 2 - cfg.header.columnBorderWidth);
                         return '<span data-ax5grid-cellHolder="" ' +

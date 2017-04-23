@@ -685,6 +685,7 @@
              * @param {String} _config.columns[].label
              * @param {Number} _config.columns[].width
              * @param {(String|Function)} _config.columns[].styleClass
+             * @param {(String|Function)} _config.columns[].headerStyleClass
              * @param {Boolean} _config.columns[].enableFilter
              * @param {Boolean} _config.columns[].sortable
              * @param {String} _config.columns[].align
@@ -1244,12 +1245,36 @@
              * @param {Object} _row
              * @param {Number} _dindex
              * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.updateRow({price: 100, amount: 100, cost: 10000}, 1);
+             * ```
              */
             this.updateRow = function (_row, _dindex) {
                 GRID.data.update.call(this, _row, _dindex);
                 // todo : mergeCells 옵션에 따라 예외처리
 
                 GRID.body.repaintRow.call(this, _dindex);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.updateChildRows
+             * @param {Number} _dindex
+             * @param {Object} _updateData
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * onDataChanged: function () {
+             *      this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked});
+             * }
+             * ```
+             */
+            this.updateChildRows = function (_dindex, _updateData) {
+                GRID.data.updateChild.call(this, _dindex, _updateData);
+                this.xvar.paintStartRowIndex = undefined;
+                this.xvar.paintStartColumnIndex = undefined;
+                GRID.body.repaint.call(this);
                 return this;
             };
 

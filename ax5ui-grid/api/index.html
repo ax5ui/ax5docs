@@ -148,6 +148,7 @@
 <li><a href="#ax5grid.appendToList">.appendToList(_list)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.removeRow">.removeRow([_dindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.updateRow">.updateRow(_row, _dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
+<li><a href="#ax5grid.updateChildRows">.updateChildRows(_dindex, _updateData)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.deleteRow">.deleteRow(_dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.setValue">.setValue(_dindex, _key, _value)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.addColumn">.addColumn(_column, [_cindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
@@ -381,7 +382,13 @@
 <td>[_config.page.display]</td>
 <td><code>Boolean</code></td>
 <td><code>true</code></td>
-<td></td>
+<td>grid page display</td>
+</tr>
+<tr>
+<td>[_config.page.statusDisplay]</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>grid status display</td>
 </tr>
 <tr>
 <td>[_config.page.navigationItemCount]</td>
@@ -451,6 +458,12 @@
 </tr>
 <tr>
 <td>_config.columns[].styleClass</td>
+<td><code>String</code> | <code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>_config.columns[].headerStyleClass</td>
 <td><code>String</code> | <code>function</code></td>
 <td></td>
 <td></td>
@@ -934,6 +947,35 @@ ax5Grid.removeRow(1);
 </tr>
 </tbody>
 </table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>firstGrid.updateRow({price: 100, amount: 100, cost: 10000}, 1);
+</code></pre>
+<p><a name="ax5grid.updateChildRows"></a></p>
+<h3>ax5grid.updateChildRows(_dindex, _updateData) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_dindex</td>
+<td><code>Number</code></td>
+</tr>
+<tr>
+<td>_updateData</td>
+<td><code>Object</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>onDataChanged: function () {
+     this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked});
+}
+</code></pre>
 <p><a name="ax5grid.deleteRow"></a></p>
 <h3>ax5grid.deleteRow(_dindex) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>

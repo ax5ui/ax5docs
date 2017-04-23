@@ -16,6 +16,7 @@
     * [.appendToList(_list)](#ax5grid.appendToList) ⇒ <code>[ax5grid](#ax5grid)</code>
     * [.removeRow([_dindex])](#ax5grid.removeRow) ⇒ <code>[ax5grid](#ax5grid)</code>
     * [.updateRow(_row, _dindex)](#ax5grid.updateRow) ⇒ <code>[ax5grid](#ax5grid)</code>
+    * [.updateChildRows(_dindex, _updateData)](#ax5grid.updateChildRows) ⇒ <code>[ax5grid](#ax5grid)</code>
     * [.deleteRow(_dindex)](#ax5grid.deleteRow) ⇒ <code>[ax5grid](#ax5grid)</code>
     * [.setValue(_dindex, _key, _value)](#ax5grid.setValue) ⇒ <code>[ax5grid](#ax5grid)</code>
     * [.addColumn(_column, [_cindex])](#ax5grid.addColumn) ⇒ <code>[ax5grid](#ax5grid)</code>
@@ -73,7 +74,8 @@ Preferences of grid UI
 | [_config.body.grouping.columns] | <code>Array</code> |  | list grouping columns |
 | [_config.page] | <code>Object</code> |  |  |
 | [_config.page.height] | <code>Number</code> | <code>25</code> |  |
-| [_config.page.display] | <code>Boolean</code> | <code>true</code> |  |
+| [_config.page.display] | <code>Boolean</code> | <code>true</code> | grid page display |
+| [_config.page.statusDisplay] | <code>Boolean</code> | <code>true</code> | grid status display |
 | [_config.page.navigationItemCount] | <code>Number</code> | <code>5</code> |  |
 | [_config.scroller] | <code>Object</code> |  |  |
 | [_config.scroller.size] | <code>Number</code> | <code>15</code> |  |
@@ -86,6 +88,7 @@ Preferences of grid UI
 | _config.columns[].label | <code>String</code> |  |  |
 | _config.columns[].width | <code>Number</code> |  |  |
 | _config.columns[].styleClass | <code>String</code> &#124; <code>function</code> |  |  |
+| _config.columns[].headerStyleClass | <code>String</code> &#124; <code>function</code> |  |  |
 | _config.columns[].enableFilter | <code>Boolean</code> |  |  |
 | _config.columns[].sortable | <code>Boolean</code> |  |  |
 | _config.columns[].align | <code>String</code> |  |  |
@@ -328,6 +331,26 @@ ax5Grid.removeRow(1);
 | _row | <code>Object</code> | 
 | _dindex | <code>Number</code> | 
 
+**Example**  
+```js
+firstGrid.updateRow({price: 100, amount: 100, cost: 10000}, 1);
+```
+<a name="ax5grid.updateChildRows"></a>
+
+### ax5grid.updateChildRows(_dindex, _updateData) ⇒ <code>[ax5grid](#ax5grid)</code>
+**Kind**: static method of <code>[ax5grid](#ax5grid)</code>  
+
+| Param | Type |
+| --- | --- |
+| _dindex | <code>Number</code> | 
+| _updateData | <code>Object</code> | 
+
+**Example**  
+```js
+onDataChanged: function () {
+     this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked});
+}
+```
 <a name="ax5grid.deleteRow"></a>
 
 ### ax5grid.deleteRow(_dindex) ⇒ <code>[ax5grid](#ax5grid)</code>
