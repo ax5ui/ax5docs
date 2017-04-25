@@ -152,7 +152,7 @@
 <li><a href="#ax5grid.deleteRow">.deleteRow(_dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.setValue">.setValue(_dindex, _key, _value)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.addColumn">.addColumn(_column, [_cindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
-<li><a href="#ax5grid.removeCloumn">.removeCloumn([_cindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
+<li><a href="#ax5grid.removeColumn">.removeColumn([_cindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.updateColumn">.updateColumn(_column, _cindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.setColumnWidth">.setColumnWidth(_width, _cindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.getColumnSortInfo">.getColumnSortInfo()</a> ⇒ <code>Object</code></li>
@@ -877,10 +877,19 @@ ax5Grid.getList(&quot;deleted&quot;);
 <td></td>
 <td>sortData</td>
 </tr>
+<tr>
+<td>[_options.focus]</td>
+<td><code>Number</code> | <code>String</code></td>
+<td></td>
+<td>HOME</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Example</strong></p>
 <pre class="prettyprint linenums lang-js"><code>ax5Grid.addRow($.extend({}, {...}), &quot;first&quot;);
+ax5Grid.addRow($.extend({}, {...}), &quot;last&quot;, {focus: &quot;END&quot;});
+ax5Grid.addRow($.extend({}, {...}), &quot;last&quot;, {focus: &quot;HOME&quot;});
+ax5Grid.addRow($.extend({}, {...}), &quot;last&quot;, {focus: 10});
 </code></pre>
 <p><a name="ax5grid.appendToList"></a></p>
 <h3>ax5grid.appendToList(_list) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
@@ -1047,8 +1056,8 @@ ax5Grid.deleteRow(&quot;selected&quot;);
 </tr>
 </tbody>
 </table>
-<p><a name="ax5grid.removeCloumn"></a></p>
-<h3>ax5grid.removeCloumn([_cindex]) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
+<p><a name="ax5grid.removeColumn"></a></p>
+<h3>ax5grid.removeColumn([_cindex]) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
 <table>
 <thead>

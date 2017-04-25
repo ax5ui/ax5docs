@@ -1185,17 +1185,24 @@
              * @param {Number|String} [_dindex=last]
              * @param {Object} [_options] - options of addRow
              * @param {Boolean} [_options.sort] - sortData
+             * @param {Number|String} [_options.focus] - HOME|END|[dindex]
              * @returns {ax5grid}
              * @example
              * ```js
              * ax5Grid.addRow($.extend({}, {...}), "first");
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: "END"});
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: "HOME"});
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: 10});
              * ```
              */
             this.addRow = function (_row, _dindex, _options) {
                 GRID.data.add.call(this, _row, _dindex, _options);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
-                GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
+                if(_options && _options.focus) {
+                    //GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
+                    GRID.body.moveFocus.call(this, _options.focus);
+                }
                 GRID.scroller.resize.call(this);
                 return this;
             };
@@ -1361,7 +1368,13 @@
                         if (!U.isNumber(_cindex)) {
                             throw 'invalid argument _cindex';
                         }
-                        this.config.columns.splice(_cindex, [].concat(_column))
+                        if (U.isArray(_column)) {
+                            for (let _i = 0, _l = _column.length; _i < _l; _i++) {
+                                this.config.columns.splice(_cindex + _i, 0, _column[_i]);
+                            }
+                        } else {
+                            this.config.columns.splice(_cindex, 0, _column);
+                        }
                     }
                     onResetColumns.call(this); // 컬럼이 변경되었을 때.
                     return this;
@@ -1369,7 +1382,7 @@
             })();
 
             /**
-             * @method ax5grid.removeCloumn
+             * @method ax5grid.removeColumn
              * @param {Number|String} [_cindex=last]
              * @returns {ax5grid}
              */

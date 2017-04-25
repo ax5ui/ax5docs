@@ -267,9 +267,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 var colGroupMap = {};
                 for (var r = 0, rl = this.headerTable.rows.length; r < rl; r++) {
-                    var _row2 = this.headerTable.rows[r];
-                    for (var c = 0, cl = _row2.cols.length; c < cl; c++) {
-                        colGroupMap[_row2.cols[c].colIndex] = jQuery.extend({}, _row2.cols[c]);
+                    var row = this.headerTable.rows[r];
+                    for (var c = 0, cl = row.cols.length; c < cl; c++) {
+                        colGroupMap[row.cols[c].colIndex] = jQuery.extend({}, row.cols[c]);
                     }
                 }
 
@@ -1173,17 +1173,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number|String} [_dindex=last]
              * @param {Object} [_options] - options of addRow
              * @param {Boolean} [_options.sort] - sortData
+             * @param {Number|String} [_options.focus] - HOME|END|[dindex]
              * @returns {ax5grid}
              * @example
              * ```js
              * ax5Grid.addRow($.extend({}, {...}), "first");
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: "END"});
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: "HOME"});
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: 10});
              * ```
              */
             this.addRow = function (_row, _dindex, _options) {
                 GRID.data.add.call(this, _row, _dindex, _options);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
-                GRID.body.moveFocus.call(this, this.config.body.grouping ? "START" : "END");
+                if (_options && _options.focus) {
+                    //GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
+                    GRID.body.moveFocus.call(this, _options.focus);
+                }
                 GRID.scroller.resize.call(this);
                 return this;
             };
@@ -1348,7 +1355,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         if (!U.isNumber(_cindex)) {
                             throw 'invalid argument _cindex';
                         }
-                        this.config.columns.splice(_cindex, [].concat(_column));
+                        if (U.isArray(_column)) {
+                            for (var _i = 0, _l = _column.length; _i < _l; _i++) {
+                                this.config.columns.splice(_cindex + _i, 0, _column[_i]);
+                            }
+                        } else {
+                            this.config.columns.splice(_cindex, 0, _column);
+                        }
                     }
                     onResetColumns.call(this); // 컬럼이 변경되었을 때.
                     return this;
@@ -1356,7 +1369,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }();
 
             /**
-             * @method ax5grid.removeCloumn
+             * @method ax5grid.removeColumn
              * @param {Number|String} [_cindex=last]
              * @returns {ax5grid}
              */
@@ -4568,7 +4581,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     throw 'invalid argument _dindex';
                 }
                 if (U.isArray(_row)) {
-                    for (var _i = 0, _l = row.length; _i < _l; _i++) {
+                    for (var _i = 0, _l = _row.length; _i < _l; _i++) {
                         list.splice(_dindex + _i, 0, _row[_i]);
                     }
                 } else {
@@ -6452,13 +6465,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             tempTable_r = { rows: [] };
 
         for (var r = 0, rl = _table.rows.length; r < rl; r++) {
-            var _row3 = _table.rows[r];
+            var row = _table.rows[r];
 
             tempTable_l.rows[r] = { cols: [] };
             tempTable_r.rows[r] = { cols: [] };
 
-            for (var c = 0, cl = _row3.cols.length; c < cl; c++) {
-                var col = jQuery.extend({}, _row3.cols[c]),
+            for (var c = 0, cl = row.cols.length; c < cl; c++) {
+                var col = jQuery.extend({}, row.cols[c]),
                     colStartIndex = col.colIndex,
                     colEndIndex = col.colIndex + col.colspan;
 
@@ -6489,7 +6502,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 colEndIndex = null;
             }
 
-            _row3 = null;
+            row = null;
         }
 
         return {
@@ -6502,11 +6515,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         var tempTable = { rows: [] };
         for (var r = 0, rl = _table.rows.length; r < rl; r++) {
-            var _row4 = _table.rows[r];
+            var row = _table.rows[r];
 
             tempTable.rows[r] = { cols: [] };
-            for (var c = 0, cl = _row4.cols.length; c < cl; c++) {
-                var col = jQuery.extend({}, _row4.cols[c]),
+            for (var c = 0, cl = row.cols.length; c < cl; c++) {
+                var col = jQuery.extend({}, row.cols[c]),
                     colStartIndex = col.colIndex,
                     colEndIndex = col.colIndex + col.colspan;
 
@@ -6712,15 +6725,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         (function (table) {
             // set rowspan
             for (var r = 0, rl = table.rows.length; r < rl; r++) {
-                var _row5 = table.rows[r];
-                for (var c = 0, cl = _row5.cols.length; c < cl; c++) {
-                    var col = _row5.cols[c];
+                var row = table.rows[r];
+                for (var c = 0, cl = row.cols.length; c < cl; c++) {
+                    var col = row.cols[c];
                     if (!('columns' in col)) {
                         col.rowspan = rl - r;
                     }
                     col = null;
                 }
-                _row5 = null;
+                row = null;
             }
         })(table);
 
