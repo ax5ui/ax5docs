@@ -56,6 +56,8 @@
                 multipleSelect: true,
                 virtualScrollY: true,
                 virtualScrollX: true,
+                virtualScrollYCountMargin: 0,
+                virtualScrollAccelerated: false,
                 height: 0,
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
@@ -125,7 +127,8 @@
             this.xvar = {
                 bodyTrHeight: 0, // 한줄의 높이
                 scrollContentWidth: 0, // 스크롤 될 내용물의 너비 (스크롤 될 내용물 : panel['body-scroll'] 안에 컬럼이 있는)
-                scrollContentHeight: 0 // 스크롤 된 내용물의 높이
+                scrollContentHeight: 0, // 스크롤 된 내용물의 높이
+                scrollTimer: null
             };
 
             // 그리드 데이터셋
@@ -1520,6 +1523,26 @@
                     GRID.data.select.call(this, dindex, _options && _options.selected);
                     GRID.body.updateRowState.call(this, ["selected"], dindex);
                 }
+                return this;
+            };
+
+            /**
+             * @method firstGrid.clickBody
+             * @param {Number} _dindex
+             * @returns {ax5grid}
+             */
+            this.clickBody = function (_dindex) {
+                GRID.body.click.call(this, _dindex);
+                return this;
+            };
+
+            /**
+             * @method firstGrid.DBLClickBody
+             * @param {Number} _dindex
+             * @returns {ax5grid}
+             */
+            this.DBLClickBody = function (_dindex) {
+                GRID.body.dblClick.call(this, _dindex);
                 return this;
             };
 
