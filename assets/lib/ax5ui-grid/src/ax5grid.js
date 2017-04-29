@@ -177,15 +177,6 @@
 
             cfg = this.config;
 
-            const onStateChanged = function (_opts, _that) {
-                if (_opts && _opts.onStateChanged) {
-                    _opts.onStateChanged.call(_that, _that);
-                }
-                else if (this.onStateChanged) {
-                    this.onStateChanged.call(_that, _that);
-                }
-                return true;
-            };
             const initGrid = function () {
                 // 그리드 템플릿에 전달하고자 하는 데이터를 정리합시다.
 
@@ -1014,7 +1005,10 @@
                         for (var columnKey in this.inlineEditing) {
                             activeEditLength++;
 
-                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey);
+                            if(!GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey)){
+                                return false;
+                                U.stopEvent(_e);
+                            }
                             // next focus
                             if (activeEditLength == 1) {
                                 if (GRID.body.moveFocus.call(this, (_e.shiftKey) ? "UP" : "DOWN")) {
@@ -1272,16 +1266,24 @@
              * @method ax5grid.updateChildRows
              * @param {Number} _dindex
              * @param {Object} _updateData
+             * @param {Object} [_options]
+             * @param {Function} [_options.filter]
              * @returns {ax5grid}
              * @example
              * ```js
              * onDataChanged: function () {
              *      this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked});
              * }
+             *
+             * onDataChanged: function () {
+             *      this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked}, {filter: function(){
+             *          return this.item.type == "A";
+             *      });
+             * }
              * ```
              */
-            this.updateChildRows = function (_dindex, _updateData) {
-                GRID.data.updateChild.call(this, _dindex, _updateData);
+            this.updateChildRows = function (_dindex, _updateData, _options) {
+                GRID.data.updateChild.call(this, _dindex, _updateData, _options);
                 this.xvar.paintStartRowIndex = undefined;
                 this.xvar.paintStartColumnIndex = undefined;
                 GRID.body.repaint.call(this);

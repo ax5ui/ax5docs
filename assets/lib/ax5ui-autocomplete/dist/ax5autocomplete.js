@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.4.27"
+        version: "1.4.31"
     }, function () {
         /**
          * @class ax5autocomplete

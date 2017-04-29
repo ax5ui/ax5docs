@@ -148,7 +148,7 @@
 <li><a href="#ax5grid.appendToList">.appendToList(_list)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.removeRow">.removeRow([_dindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.updateRow">.updateRow(_row, _dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
-<li><a href="#ax5grid.updateChildRows">.updateChildRows(_dindex, _updateData)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
+<li><a href="#ax5grid.updateChildRows">.updateChildRows(_dindex, _updateData, [_options])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.deleteRow">.deleteRow(_dindex)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.setValue">.setValue(_dindex, _key, _value)</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
 <li><a href="#ax5grid.addColumn">.addColumn(_column, [_cindex])</a> ⇒ <code><a href="#ax5grid">ax5grid</a></code></li>
@@ -960,7 +960,7 @@ ax5Grid.removeRow(1);
 <pre class="prettyprint linenums lang-js"><code>firstGrid.updateRow({price: 100, amount: 100, cost: 10000}, 1);
 </code></pre>
 <p><a name="ax5grid.updateChildRows"></a></p>
-<h3>ax5grid.updateChildRows(_dindex, _updateData) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
+<h3>ax5grid.updateChildRows(_dindex, _updateData, [_options]) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
 <table>
 <thead>
@@ -978,11 +978,25 @@ ax5Grid.removeRow(1);
 <td>_updateData</td>
 <td><code>Object</code></td>
 </tr>
+<tr>
+<td>[_options]</td>
+<td><code>Object</code></td>
+</tr>
+<tr>
+<td>[_options.filter]</td>
+<td><code>function</code></td>
+</tr>
 </tbody>
 </table>
 <p><strong>Example</strong></p>
 <pre class="prettyprint linenums lang-js"><code>onDataChanged: function () {
      this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked});
+}
+
+onDataChanged: function () {
+     this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked}, {filter: function(){
+         return this.item.type == &quot;A&quot;;
+     });
 }
 </code></pre>
 <p><a name="ax5grid.deleteRow"></a></p>

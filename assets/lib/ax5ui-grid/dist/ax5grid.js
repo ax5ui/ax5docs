@@ -181,14 +181,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             cfg = this.config;
 
-            var onStateChanged = function onStateChanged(_opts, _that) {
-                if (_opts && _opts.onStateChanged) {
-                    _opts.onStateChanged.call(_that, _that);
-                } else if (this.onStateChanged) {
-                    this.onStateChanged.call(_that, _that);
-                }
-                return true;
-            };
             var initGrid = function initGrid() {
                 // 그리드 템플릿에 전달하고자 하는 데이터를 정리합시다.
 
@@ -1000,7 +992,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         for (var columnKey in this.inlineEditing) {
                             activeEditLength++;
 
-                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey);
+                            if (!GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey)) {
+                                return false;
+                                U.stopEvent(_e);
+                            }
                             // next focus
                             if (activeEditLength == 1) {
                                 if (GRID.body.moveFocus.call(this, _e.shiftKey ? "UP" : "DOWN")) {
@@ -1260,16 +1255,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @method ax5grid.updateChildRows
              * @param {Number} _dindex
              * @param {Object} _updateData
+             * @param {Object} [_options]
+             * @param {Function} [_options.filter]
              * @returns {ax5grid}
              * @example
              * ```js
              * onDataChanged: function () {
              *      this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked});
              * }
+             *
+             * onDataChanged: function () {
+             *      this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked}, {filter: function(){
+             *          return this.item.type == "A";
+             *      });
+             * }
              * ```
              */
-            this.updateChildRows = function (_dindex, _updateData) {
-                GRID.data.updateChild.call(this, _dindex, _updateData);
+            this.updateChildRows = function (_dindex, _updateData, _options) {
+                GRID.data.updateChild.call(this, _dindex, _updateData, _options);
                 this.xvar.paintStartRowIndex = undefined;
                 this.xvar.paintStartColumnIndex = undefined;
                 GRID.body.repaint.call(this);
@@ -2692,7 +2695,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                     _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
                                 }
 
-                                return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                                return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;' + (col.multiLine ? '' : 'line-height: ' + lineHeight + 'px;') + '">';
                             }(cellHeight), isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
 
                             SS.push('</td>');
@@ -2798,7 +2801,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
                         }
 
-                        return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                        return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;' + (col.multiLine ? '' : 'line-height: ' + lineHeight + 'px;') + '">';
                     }(cellHeight), getSumFieldValue.call(this, _list, col), '</span>');
 
                     SS.push('</td>');
@@ -3150,7 +3153,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
                         }
 
-                        return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                        return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;' + (col.multiLine ? '' : 'line-height: ' + lineHeight + 'px;') + '">';
                     }(cellHeight), getSumFieldValue.call(this, _list, col), '</span>');
 
                     SS.push('</td>');
@@ -3228,7 +3231,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                     _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
                                 }
 
-                                return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                                return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;' + (col.multiLine ? '' : 'line-height: ' + lineHeight + 'px;') + '">';
                             }(cellHeight), getGroupingValue.call(this, _list[di], di, col), '</span>');
 
                             SS.push('</td>');
@@ -3513,14 +3516,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
                         }
 
-                        return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                        return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;' + (col.multiLine ? '' : 'line-height: ' + lineHeight + 'px;') + '">';
                     }(cellHeight), getFieldValue.call(this, _list, _list[di], di, col), '</span>');
                     SS.push('</td>');
                 }
                 SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
             }
-
-            console.log('tr[data-ax5grid-tr-data-index="' + di + '"]');
 
             _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
@@ -4142,9 +4143,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         if (this.inlineEditing[columnKey] && this.inlineEditing[columnKey].useReturnToSave) {
                             // todo : 네이밍 검증 할 필요있음.
                             inlineEdit.deActive.call(this, "RETURN", columnKey);
+                        } else {
+                            return false;
                         }
                     } else {
-
                         for (var k in this.focusedColumn) {
                             var _column = this.focusedColumn[k],
                                 column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
@@ -4188,6 +4190,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             }
                         }
                     }
+                    return true;
                 }
             };
 
@@ -4913,7 +4916,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
-    var updateChild = function updateChild(_dindex, _updateData) {
+    var updateChild = function updateChild(_dindex, _updateData, _options) {
         var keys = this.config.tree.columnKeys,
             selfHash = void 0,
             originIndex = void 0;
@@ -4923,8 +4926,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         if (this.list[originIndex][keys.children]) {
             this.proxyList = []; // 리셋 프록시
-            for (var _k in _updateData) {
-                this.list[originIndex][_k] = _updateData[_k];
+
+            if (_options && _options.filter) {
+                if (_options.filter.call({ item: this.list[originIndex], dindex: originIndex }, this.list[originIndex])) {
+                    for (var _k in _updateData) {
+                        this.list[originIndex][_k] = _updateData[_k];
+                    }
+                }
+            } else {
+                for (var _k2 in _updateData) {
+                    this.list[originIndex][_k2] = _updateData[_k2];
+                }
             }
 
             selfHash = this.list[originIndex][keys.selfHash];
@@ -4934,8 +4946,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             for (; i < l; i++) {
                 if (this.list[i]) {
                     if (this.list[i][keys.parentHash].substr(0, selfHash.length) === selfHash) {
-                        for (var _k2 in _updateData) {
-                            this.list[i][_k2] = _updateData[_k2];
+                        if (_options && _options.filter) {
+                            if (_options.filter.call({ item: this.list[i], dindex: i }, this.list[i])) {
+                                for (var _k3 in _updateData) {
+                                    this.list[i][_k3] = _updateData[_k3];
+                                }
+                            }
+                        } else {
+                            for (var _k4 in _updateData) {
+                                this.list[i][_k4] = _updateData[_k4];
+                            }
                         }
                     }
 
@@ -5911,13 +5931,86 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
+    var edit_textarea = {
+        useReturnToSave: false,
+        editMode: "popup",
+        _getHtml: function _getHtml(_root, _columnKey, _editor, _value) {
+            // init 에서 사용하게 될 HTML 태그를 만들어 줍니다.
+            return "<div data-ax5grid-editor=\"textarea\"></div>";
+        },
+        _bindUI: function _bindUI(_root, _columnKey, _$el, _editor, _$parent, _value) {
+            // 위치와 크기를 구합니다.
+            var offset = _$el.offset();
+            var box = {
+                width: _$el.width()
+            };
+            var editorHeight = 150;
+            var buttonHeight = 30;
+
+            // 새로운 엘리먼트 생성
+            var $newDiv = jQuery("<div data-ax5grid-popup=\"textarea\" style=\"z-index: 9999;\">\n    <textarea style=\"width:100%;height:" + (editorHeight - buttonHeight) + "px;\" class=\"form-control\">" + _value + "</textarea>\n    <div style=\"height:" + buttonHeight + "px;padding:5px;text-align: right;\">\n        <button class=\"btn btn-default\">OK</button>\n    </div>\n</div>");
+            var $newTextarea = $newDiv.find("textarea");
+            // 엘리먼트에 CSS 적용
+            $newDiv.css({
+                position: "absolute",
+                left: offset.left,
+                top: offset.top,
+                width: box.width,
+                height: editorHeight
+            });
+            $newDiv.find("textarea");
+
+            // 새로운 엘리먼트를 document.body에 append
+            jQuery(document.body).append($newDiv);
+            $newTextarea.focus().select();
+
+            $newTextarea.on("blur", function (e) {
+                GRID.body.inlineEdit.deActive.call(_root, "RETURN", _columnKey, this.value);
+                $newDiv.remove();
+                ax5.util.stopEvent(e.originalEvent);
+            });
+            $newTextarea.on("keydown", function (e) {
+                if (e.which == ax5.info.eventKeys.ESC) {
+                    GRID.body.inlineEdit.deActive.call(_root, "ESC", _columnKey);
+                    $newDiv.remove();
+                    ax5.util.stopEvent(e.originalEvent);
+                }
+            });
+
+            /// 값 변경
+            /// GRID.body.inlineEdit.deActive.call(_root, "RETURN", _columnKey, this.value[0][eConfig.columnKeys.optionValue]);
+            /// 에디팅 취소
+            /// GRID.body.inlineEdit.deActive.call(_root, "ESC", _columnKey);
+        },
+
+        init: function init(_root, _columnKey, _editor, _$parent, _value) {
+            // 인라인 에디팅 활성화 시작
+            /**
+             * _root : gridInstance
+             * _columnKey : di + "_" + col.colIndex + "_" + col.rowIndex
+             * _editor : col.editor
+             * _$parent : 셀
+             * _value : 값
+             */
+            var $el = void 0;
+            _$parent.append($el = jQuery(this._getHtml(_root, _columnKey, _editor, _value)));
+            // 셀에 HTML 컨텐츠 추가
+
+            this._bindUI(_root, _columnKey, $el, _editor, _$parent, _value);
+            // 이벤트 바인딩
+
+            return $el;
+        }
+    };
+
     GRID.inlineEditor = {
         "text": edit_text,
         "money": edit_money,
         "number": edit_number,
         "date": edit_date,
         "select": edit_select,
-        "checkbox": edit_checkbox
+        "checkbox": edit_checkbox,
+        "textarea": edit_textarea
     };
 })();
 // ax5.ui.grid.page
@@ -6106,10 +6199,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     horizontalScrollBarWidth: _var.horizontalScrollBarWidth
                 });
 
+                GRID.body.scrollTo.call(self, scrollPositon);
+
+                /*
                 if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
                 this.xvar.scrollTimer = setTimeout(function () {
                     GRID.body.scrollTo.call(self, scrollPositon);
                 });
+                */
             }
 
             return -top;
@@ -6135,11 +6232,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     horizontalScrollBarWidth: _var.horizontalScrollBarWidth
                 });
 
+                GRID.header.scrollTo.call(self, scrollPositon);
+                GRID.body.scrollTo.call(self, scrollPositon);
+
+                /*
                 if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
                 this.xvar.scrollTimer = setTimeout(function () {
-                    GRID.header.scrollTo.call(self, scrollPositon);
-                    GRID.body.scrollTo.call(self, scrollPositon);
-                });
+                 });
+                */
             }
 
             return -left;
@@ -6275,7 +6375,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 });
 
                 if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
-                GRID.body.scrollTo.call(self, scrollPositon);
+
+                if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
+                self.xvar.scrollTimer = setTimeout(function () {
+                    GRID.body.scrollTo.call(self, scrollPositon);
+                });
             }).bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                 scrollBarMover.off.call(self);
             }).bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
@@ -6285,7 +6389,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
         },
         "off": function off() {
-
             GRID.scroller.moveout_timer = new Date().getTime();
 
             jQuery(document.body).unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId).unbind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId).unbind("mouseleave.ax5grid-" + this.instanceId);
@@ -6339,8 +6442,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (delta.x == 0) _left_is_end = true;
             }
 
-            //self.$["panel"]["body-scroll"].css({left: newLeft, top: newTop});
-
             resize.call(this);
             GRID.header.scrollTo.call(self, { left: newLeft });
 
@@ -6390,8 +6491,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 };
             };
 
-            this.xvar.__x_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
-            this.xvar.__y_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
+            this.xvar.__x_da = 0; // 이동량 변수 초기화
+            this.xvar.__y_da = 0; // 계산이 잘못 될까바
             this.xvar.touchmoved = false;
 
             jQuery(document.body).on("touchmove" + ".ax5grid-" + this.instanceId, function (e) {

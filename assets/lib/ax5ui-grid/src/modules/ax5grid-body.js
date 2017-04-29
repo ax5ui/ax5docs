@@ -1046,7 +1046,7 @@
 
                                 return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                                     ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                                    '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                                    '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                             })(cellHeight), (isGroupingRow) ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
 
@@ -1163,7 +1163,7 @@
 
                         return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                             ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                            '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                            '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                     })(cellHeight), getSumFieldValue.call(this, _list, col), '</span>');
 
@@ -1521,7 +1521,7 @@
 
                         return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                             ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                            '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                            '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                     })(cellHeight), getSumFieldValue.call(this, _list, col), '</span>');
 
@@ -1612,7 +1612,7 @@
 
                                 return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                                     ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                                    '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                                    '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                             })(cellHeight), getGroupingValue.call(this, _list[di], di, col), '</span>');
 
@@ -1935,7 +1935,7 @@
 
                         return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                             ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                            '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                            '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                     })(cellHeight), getFieldValue.call(this, _list, _list[di], di, col), '</span>');
                     SS.push('</td>');
@@ -1949,8 +1949,6 @@
                     '></td>');
             }
 
-            console.log('tr[data-ax5grid-tr-data-index="' + di + '"]');
-
             _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 
@@ -1962,7 +1960,6 @@
             } else {
                 replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
             }
-
         }
 
         // body
@@ -1973,7 +1970,6 @@
             replaceTr.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
         }
 
-
         // body.grouping tr 다시 그리기..
         if (cfg.body.grouping) {
             // left
@@ -1981,7 +1977,8 @@
                 if (this.xvar.frozenRowIndex > _dindex) {
                     // 상단 행고정
                     replaceGroupTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
-                } else {
+                }
+                else {
                     replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
                 }
             }
@@ -1990,7 +1987,8 @@
             if (this.xvar.frozenRowIndex > _dindex) {
                 // 상단 행고정
                 replaceGroupTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
-            } else {
+            }
+            else {
                 replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
             }
         }
@@ -2584,9 +2582,10 @@
                     if (this.isInlineEditing) {
                         if (this.inlineEditing[columnKey] && this.inlineEditing[columnKey].useReturnToSave) { // todo : 네이밍 검증 할 필요있음.
                             inlineEdit.deActive.call(this, "RETURN", columnKey);
+                        }else{
+                            return false;
                         }
                     } else {
-
                         for (var k in this.focusedColumn) {
                             let _column = this.focusedColumn[k],
                                 column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
@@ -2632,6 +2631,7 @@
                             }
                         }
                     }
+                    return true;
                 }
             };
 
