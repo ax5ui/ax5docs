@@ -45,13 +45,8 @@
 
         <script type="text/html" data-ui-list="tmpl">
             {{#list}}
-            <div class="col-md-6">
-                <h2 class="media-heading">{{name}}</h2>
-                {{#youtube}}
-                <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="embed-responsive-item" type="text/html" width="640" height="390" src="{{youtube}}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-                </div>
-                {{/youtube}}
+            <div class="col-md-4">
+                <h3 class="media-heading">{{name}}</h3>
                 <p>
                     {{{desc}}}
                 </p>
@@ -63,7 +58,7 @@
                     <a href="{{githubUrl}}">{{githubUrl}}</a>
                 </p>
             </div>
-            {{#isSecond}}<div style="clear: both;"></div>{{/isSecond}}
+            {{#isThird}}<div style="clear: both;"></div>{{/isThird}}
             {{/list}}
         </script>
 
@@ -178,7 +173,7 @@
 
                 list.forEach(function (n, nidx) {
                     if(nidx > 0) {
-                        n.isSecond = nidx % 2;
+                        n.isThird = (nidx % 3 == 2);
                     }
                 });
 
