@@ -7,8 +7,7 @@
     var U = ax5.util;
 
     UI.addClass({
-        className: "binder",
-        version: "1.4.31"
+        className: "binder"
     }, function () {
 
         /**
@@ -54,7 +53,7 @@
          * myBinder.setModel(obj, $('#form-target'));
          * ```
          */
-        var ax5binder = function ax5binder() {
+        return function () {
 
             var self = this,
                 cfg;
@@ -957,6 +956,5 @@
                 }
             }.apply(this, arguments);
         };
-        return ax5binder;
     }());
 })();

@@ -1,12 +1,11 @@
 // ax5.ui.binder
 (function () {
 
-    var UI = ax5.ui;
-    var U = ax5.util;
+    const UI = ax5.ui;
+    const U = ax5.util;
 
     UI.addClass({
-        className: "binder",
-        version: "${VERSION}"
+        className: "binder"
     }, (function () {
 
         /**
@@ -52,7 +51,7 @@
          * myBinder.setModel(obj, $('#form-target'));
          * ```
          */
-        var ax5binder = function () {
+        return function() {
 
             var self = this,
                 cfg;
@@ -998,7 +997,6 @@
             }).apply(this, arguments);
 
         };
-        return ax5binder;
     })());
 
 })();

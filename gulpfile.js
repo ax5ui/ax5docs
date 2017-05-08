@@ -132,6 +132,12 @@ var PATHS = {
         root: KERNEL_PATH + "src/ax5ui-docker",
         doc_src: "_src_/ax5ui-docker",
         doc_dest: "ax5ui-docker"
+    },
+    "ax5ui-palette": {
+        isPlugin: true,
+        root: KERNEL_PATH + "src/ax5ui-palette",
+        doc_src: "_src_/ax5ui-palette",
+        doc_dest: "ax5ui-palette"
     }
 };
 

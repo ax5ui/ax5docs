@@ -8,8 +8,7 @@
     var CALENDAR = void 0;
 
     UI.addClass({
-        className: "calendar",
-        version: "${VERSION}"
+        className: "calendar"
     }, function () {
 
         /**

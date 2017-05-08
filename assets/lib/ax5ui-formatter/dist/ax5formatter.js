@@ -7,8 +7,7 @@
     var FORMATTER = void 0;
 
     UI.addClass({
-        className: "formatter",
-        version: "${VERSION}"
+        className: "formatter"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {

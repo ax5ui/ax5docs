@@ -1,0 +1,90 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="set-config" title="Custom Palette" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}" parentId="${data.metadata.parentId}" activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-dialog/dist/ax5dialog.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-dialog/dist/ax5dialog.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-palette/dist/ax5palette.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-palette/dist/ax5palette.min.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <section class="ax5docs-section">
+            <h1>Custom Palette</h1>
+
+            <ax5docs-html>
+                <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+                <script type="text/javascript" src="bower_components/ax5core/dist/ax5core.min.js"></script>
+                <link rel="stylesheet" type="text/css" href="bower_components/ax5ui-palette/dist/ax5palette.css"/>
+                <script type="text/javascript" src="bower_components/ax5ui-palette/dist/ax5palette.min.js"></script>
+            </ax5docs-html>
+
+            <ax5docs-html run="true">
+                <div style="border:1px solid #ccc;border-radius: 6px;padding: 20px;width: 290px;">
+                    <div data-ax5palette="01" style="width:250px;"></div>
+                </div>
+            </ax5docs-html>
+
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var dialog = new ax5.ui.dialog({
+                            title: "AX5UI"
+                        });
+                        var myPalette = new ax5.ui.palette({
+                            target: $('[data-ax5palette="01"]'),
+                            colors: {
+                                preview: {
+                                    width: 26,
+                                    height: 26,
+                                    cellWidth: 32
+                                },
+                                label: {
+                                    width: 70
+                                },
+                                slider: {
+                                    trackHeight: 8,
+                                    amount: 20,
+                                    handleWidth: 18,
+                                    handleHeight: 18
+                                },
+                                list: [
+                                    {label: "red", value: "#ff0000"},
+                                    {label: "orange", value: "#ff9802"},
+                                    {label: "yellow", value: "#ffff00"},
+                                    {label: "green", value: "#00ff36"},
+                                    {label: "blue", value: "#0000ff"},
+                                    {label: "purple", value: "#ba00ff"},
+                                    {label: "skyblue", value: "#84e4ff"},
+                                    {label: "pink", value: "#ff77c4"},
+                                    {label: "black", value: "#000000"},
+                                    {label: "white", value: "#ffffff"}
+                                ]
+                            }
+                        });
+
+                        myPalette.onClick = function (hexColor) {
+                            var bgColor = ax5.util.color(hexColor).isDark() ? "#fff" : "#000";
+                            dialog.alert('<span style="background:' + bgColor + ';color:#' + hexColor + '">selected color is "#' + hexColor + '"</span>');
+                        };
+                    });
+                </script>
+            </ax5docs-js>
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>

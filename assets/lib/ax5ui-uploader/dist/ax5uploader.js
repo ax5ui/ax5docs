@@ -8,8 +8,7 @@
     var UPLOADER = void 0;
 
     UI.addClass({
-        className: "uploader",
-        version: "${VERSION}"
+        className: "uploader"
     }, function () {
 
         var ax5uploader = function ax5uploader() {
