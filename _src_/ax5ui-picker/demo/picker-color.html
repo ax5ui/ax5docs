@@ -1,0 +1,89 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="10" id="picker-color" title="Picker Color" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}" parentId="${data.metadata.parentId}" activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-picker/dist/ax5picker.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-calendar/dist/ax5calendar.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-palette/dist/ax5palette.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-picker/dist/ax5picker.js"></script>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-formatter/dist/ax5formatter.min.js"></script>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-calendar/dist/ax5calendar.min.js"></script>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-palette/dist/ax5palette.min.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- doc-js Basic Alert -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # Picker Color
+
+                **Paste the following code into the `head` section of your site's HTML.**
+
+                ```html
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+                <link rel="stylesheet" href="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/dist/ax5calendar.css"/>
+                <link rel="stylesheet" href="https://cdn.rawgit.com/ax5ui/ax5ui-palette/dist/ax5palette.css"/>
+                <link rel="stylesheet" href="https://cdn.rawgit.com/ax5ui/ax5ui-picker/dist/ax5picker.css"/>
+
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/dist/ax5calendar.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-palette/dist/ax5palette.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.min.js"></script>
+                ```
+
+                Required file picker to use the plug-in is a "jQuery, ax5core, ax5 picker".
+                If you want to use UI such as the picker color will ax5ui-palette needs.
+            </ax5docs-md>
+
+            <ax5docs-html run="true">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Color</label>
+                        <div class="form-group" data-ax5picker="color" style="">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="" value="#AF0000"/>
+                                <span class="input-group-addon color-preview">
+                                    <span data-ax5picker-color="preview" style="background: #000;width: 20px;height:20px;margin:5px;border: 1px solid #000;border-radius: 3px;"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ax5docs-html>
+
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(document.body).ready(function () {
+                        $('[data-ax5picker="color"]').ax5picker({
+                            direction: "auto",
+                            content: {
+                                width: 250,
+                                margin: 10,
+                                type: 'color',
+                                config: {}
+                            }
+                        });
+                    });
+                </script>
+            </ax5docs-js>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+
+</layout-use>
