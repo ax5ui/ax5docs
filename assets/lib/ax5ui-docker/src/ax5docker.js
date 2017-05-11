@@ -231,7 +231,7 @@
                  * @param {Object} _panel
                  * @param {String} _control - "init","active","deactive","destroy"
                  */
-                const controlPanel = (_panel, _control) => {
+                const controlPanel = (_panel, _control, _callback) => {
                     let moduleState = jQuery.extend(_panel.moduleState, {
                             name: _panel.name
                         }),
@@ -305,8 +305,14 @@
 
                     if (processor[_control]) {
                         if (U.isFunction(cfg.control.before)) {
-                            cfg.control.before.call(that, that, function () {
-                                runProcessor();
+                            cfg.control.before.call(that, that, function (result) {
+                                if (typeof result === "undefined") result = true;
+                                if (result) runProcessor();
+
+                                if (U.isFunction(_callback)) {
+                                    _callback(result);
+                                }
+
                             });
                         }
                         else {
@@ -974,15 +980,14 @@
 
                     if (this.panels[0]) {
                         this.panels[0] = processor[this.panels[0].type](this.panels[0]);
+                        if (this.panels[0] && this.panels[0].type === "panel") {
+                            this.panels[0] = {
+                                type: "stack",
+                                panels: [this.panels[0]]
+                            };
+                        }
                     } else {
                         this.panels = [];
-                    }
-
-                    if(this.panels[0].type === "panel"){
-                        this.panels[0] = {
-                            type: "stack",
-                            panels: [this.panels[0]]
-                        };
                     }
 
                     repaintPanels();
@@ -1477,13 +1482,29 @@
                 /**
                  * 패널 삭제하기
                  * @method ax5docker.removePanel
-                 * @param clickedLabel
+                 * @param {String} panelPath
+                 * @param {Function} callback
                  * @returns {ax5docker}
+                 * @example
+                 * ```js
+                 * function removePanel() {
+                 *      var p = myDocker.searchPanel(function (panel) {
+                 *          return (panel.key == "A");
+                 *      });
+                 *
+                 *      if (p) {
+                 *          myDocker.removePanel(p.panelPath, function () {
+                 *              removePanel();
+                 *          });
+                 *      }
+                 * }
+                 * removePanel();
+                 * ```
                  */
-                this.removePanel = function (panelPath) {
+                this.removePanel = function (panelPath, callback) {
                     let panel = getPanel(panelPath);
 
-                    controlPanel(panel, "destroy");
+                    controlPanel(panel, "destroy", callback);
 
                     panel = null;
                     return this;
@@ -1597,16 +1618,18 @@
                         const findPanel = function (_panels) {
                             let i = 0, l = _panels.length, findResult;
                             for (; i < l; i++) {
-                                if (_panels[i].type === "panel") {
-                                    if (_condition.call({
-                                            config: self.config,
-                                            panel: _panels[i]
-                                        }, _panels[i])) {
-                                        return _panels[i];
-                                    }
-                                } else {
-                                    if (findResult = findPanel(_panels[i].panels)) {
-                                        return findResult;
+                                if(_panels[i]) {
+                                    if (_panels[i].type === "panel") {
+                                        if (_condition.call({
+                                                config: self.config,
+                                                panel: _panels[i]
+                                            }, _panels[i])) {
+                                            return _panels[i];
+                                        }
+                                    } else {
+                                        if (findResult = findPanel(_panels[i].panels)) {
+                                            return findResult;
+                                        }
                                     }
                                 }
                             }

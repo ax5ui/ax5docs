@@ -227,7 +227,7 @@
              * @param {Object} _panel
              * @param {String} _control - "init","active","deactive","destroy"
              */
-            var controlPanel = function controlPanel(_panel, _control) {
+            var controlPanel = function controlPanel(_panel, _control, _callback) {
                 var moduleState = jQuery.extend(_panel.moduleState, {
                     name: _panel.name
                 }),
@@ -301,8 +301,13 @@
 
                 if (processor[_control]) {
                     if (U.isFunction(cfg.control.before)) {
-                        cfg.control.before.call(that, that, function () {
-                            runProcessor();
+                        cfg.control.before.call(that, that, function (result) {
+                            if (typeof result === "undefined") result = true;
+                            if (result) runProcessor();
+
+                            if (U.isFunction(_callback)) {
+                                _callback(result);
+                            }
                         });
                     } else {
                         runProcessor();
@@ -931,15 +936,14 @@
 
                 if (_this.panels[0]) {
                     _this.panels[0] = processor[_this.panels[0].type](_this.panels[0]);
+                    if (_this.panels[0] && _this.panels[0].type === "panel") {
+                        _this.panels[0] = {
+                            type: "stack",
+                            panels: [_this.panels[0]]
+                        };
+                    }
                 } else {
                     _this.panels = [];
-                }
-
-                if (_this.panels[0].type === "panel") {
-                    _this.panels[0] = {
-                        type: "stack",
-                        panels: [_this.panels[0]]
-                    };
                 }
 
                 repaintPanels();
@@ -1432,13 +1436,29 @@
             /**
              * 패널 삭제하기
              * @method ax5docker.removePanel
-             * @param clickedLabel
+             * @param {String} panelPath
+             * @param {Function} callback
              * @returns {ax5docker}
+             * @example
+             * ```js
+             * function removePanel() {
+             *      var p = myDocker.searchPanel(function (panel) {
+             *          return (panel.key == "A");
+             *      });
+             *
+             *      if (p) {
+             *          myDocker.removePanel(p.panelPath, function () {
+             *              removePanel();
+             *          });
+             *      }
+             * }
+             * removePanel();
+             * ```
              */
-            this.removePanel = function (panelPath) {
+            this.removePanel = function (panelPath, callback) {
                 var panel = getPanel(panelPath);
 
-                controlPanel(panel, "destroy");
+                controlPanel(panel, "destroy", callback);
 
                 panel = null;
                 return this;
@@ -1554,16 +1574,18 @@
                             l = _panels.length,
                             findResult = void 0;
                         for (; i < l; i++) {
-                            if (_panels[i].type === "panel") {
-                                if (_condition.call({
-                                    config: self.config,
-                                    panel: _panels[i]
-                                }, _panels[i])) {
-                                    return _panels[i];
-                                }
-                            } else {
-                                if (findResult = findPanel(_panels[i].panels)) {
-                                    return findResult;
+                            if (_panels[i]) {
+                                if (_panels[i].type === "panel") {
+                                    if (_condition.call({
+                                        config: self.config,
+                                        panel: _panels[i]
+                                    }, _panels[i])) {
+                                        return _panels[i];
+                                    }
+                                } else {
+                                    if (findResult = findPanel(_panels[i].panels)) {
+                                        return findResult;
+                                    }
                                 }
                             }
                         }
