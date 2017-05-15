@@ -149,7 +149,7 @@
 <li><a href="#ax5docker.addModule">.addModule(modules)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
 <li><a href="#ax5docker.repaint">.repaint()</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
 <li><a href="#ax5docker.addPanel">.addPanel(_addPath, _addType, _panel, _panelIndex)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
-<li><a href="#ax5docker.removePanel">.removePanel(clickedLabel)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
+<li><a href="#ax5docker.removePanel">.removePanel(panelPath, callback)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
 <li><a href="#ax5docker.appendPanel">.appendPanel(_panel, _appendPath, _appendType)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
 <li><a href="#ax5docker.align">.align()</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
 <li><a href="#ax5docker.searchPanel">.searchPanel(_condition)</a> ⇒ <code>*</code></li>
@@ -418,21 +418,41 @@ myDocker.setConfig({
 
 </code></pre>
 <p><a name="ax5docker.removePanel"></a></p>
-<h3>ax5docker.removePanel(clickedLabel) ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<h3>ax5docker.removePanel(panelPath, callback) ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
 <p>패널 삭제하기</p>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>
 <table>
 <thead>
 <tr>
 <th>Param</th>
+<th>Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>clickedLabel</td>
+<td>panelPath</td>
+<td><code>String</code></td>
+</tr>
+<tr>
+<td>callback</td>
+<td><code>function</code></td>
 </tr>
 </tbody>
 </table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>function removePanel() {
+     var p = myDocker.searchPanel(function (panel) {
+         return (panel.key == &quot;A&quot;);
+     });
+
+     if (p) {
+         myDocker.removePanel(p.panelPath, function () {
+             removePanel();
+         });
+     }
+}
+removePanel();
+</code></pre>
 <p><a name="ax5docker.appendPanel"></a></p>
 <h3>ax5docker.appendPanel(_panel, _appendPath, _appendType) ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>

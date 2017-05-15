@@ -16,7 +16,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-menu : Menu bar</title>
+    <title>ax5ui / ax5ui-menu : Filterd Menu item</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -139,7 +139,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li ><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li><li ><a href="/ax5ui-menu/demo/context-menu-icon.html">with Icon</a></li><li ><a href="/ax5ui-menu/demo/context-menu-html.html">extend HTML</a></li><li ><a href="/ax5ui-menu/demo/context-menu-theme.html">Theme</a></li><li  class='active'><a href="/ax5ui-menu/demo/menu-bar.html">Menu bar</a></li><li ><a href="/ax5ui-menu/demo/context-menu-param.html">Use Param</a></li><li ><a href="/ax5ui-menu/demo/context-menu-filter.html">Filterd Menu item</a></li></ul>
+        <ul><li ><a href="/ax5ui-menu/demo/index.html">Context Menu</a></li><li ><a href="/ax5ui-menu/demo/context-menu-check.html">with checkbox</a></li><li ><a href="/ax5ui-menu/demo/context-menu-icon.html">with Icon</a></li><li ><a href="/ax5ui-menu/demo/context-menu-html.html">extend HTML</a></li><li ><a href="/ax5ui-menu/demo/context-menu-theme.html">Theme</a></li><li ><a href="/ax5ui-menu/demo/menu-bar.html">Menu bar</a></li><li ><a href="/ax5ui-menu/demo/context-menu-param.html">Use Param</a></li><li  class='active'><a href="/ax5ui-menu/demo/context-menu-filter.html">Filterd Menu item</a></li></ul>
     
                             </div>
                         </div>
@@ -150,7 +150,7 @@
 
         
         <section class="ax5docs-section">
-            <h1>Menu bar</h1>
+            <h1>Filterd Menu item</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js&quot;&gt;&lt;/script&gt;
@@ -159,183 +159,102 @@
 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;src/ax5ui-menu/dist/ax5menu.css&quot;&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;src/ax5ui-menu/dist/ax5menu.js&quot;&gt;&lt;/script&gt;
 </code></pre>
+<p>Recommand use font-icon, These days, you can download the font-icon in many service.</p>
 
 
             <h4>HTML</h4>
 
-            <pre class="prettyprint linenums lang-html">&lt;div id="attachedMenu-target" style="height:36px;background: #eee;border-bottom:1px solid #ccc;border-top:1px solid #ccc;padding: 0px 20px;">&lt;/div></pre><div id="attachedMenu-target" style="height:36px;background: #eee;border-bottom:1px solid #ccc;border-top:1px solid #ccc;padding: 0px 20px;"></div>
+            <pre class="prettyprint linenums lang-html">&lt;div style="height:200px;background: #9aa9c7;padding: 10px;" id="context-menu-target">
+    Right click on the mouse.
+&lt;/div></pre><div style="height:200px;background: #9aa9c7;padding: 10px;" id="context-menu-target">
+    Right click on the mouse.
+</div>
 
             <div class="DH20"></div>
 
             <h4>JS</h4>
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
-    var menu = new ax5.ui.menu({
-        theme: 'primary',
-        direction: "top",
-        offset: {left: 0, top: 1},
-        position: "absolute",
-        icons: {
-            'arrow': '&lt;i class="fa fa-caret-right">&lt;/i>'
-        },
-        items: [
-            {
-                icon: '&lt;i class="fa fa-archive">&lt;/i>',
-                label: "Menu Parent 0",
-                items: [
-                    {
-                        check: {
-                            type: 'checkbox',
-                            name: 'A',
-                            value: '0',
-                            checked: false
-                        },
-                        label: "Menu Z",
-                        data: {},
-                        role: "",
-                        accelerator: "CmdOrCtrl+Z"
-                    },
-                    {
-                        check: {
-                            type: 'checkbox',
-                            name: 'A',
-                            value: '1',
-                            checked: true
-                        },
-                        label: "Menu A",
-                        data: {},
-                        role: ""
-                        //accelerator: "CmdOrCtrl+A"
-                    }
-                ]
-            },
-            {
-                icon: '&lt;i class="fa fa-mixcloud">&lt;/i>',
-                label: "Menu Parent 1",
-                items: [
-                    {
-                        label: "Menu Z",
-                        data: {},
-                        role: "",
-                        //accelerator: "CmdOrCtrl+Z",
-                        items: [
-                            {
-                                label: "Menu Z",
-                                data: {},
-                                role: ""
-                                //accelerator: "CmdOrCtrl+Z"
-                            },
-                            {
-                                label: "Menu A",
-                                data: {},
-                                role: ""
-                                //accelerator: "CmdOrCtrl+A"
-                            }
-                        ]
-                    },
-                    {
-                        label: "Menu A",
-                        data: {},
-                        role: ""
-                        //accelerator: "CmdOrCtrl+A"
-                    }
-                ]
-            }
-        ]
-    });
-
-    menu.onStateChanged = function () {
-        console.log(this);
-    };
-    menu.onClick = function () {
-        console.log(this);
-    };
-
+    var menu;
     $(document.body).ready(function () {
-        menu.attach($("#attachedMenu-target"));
-    });
-&lt;/script></pre><script type="text/javascript">var menu = new ax5.ui.menu({
-        theme: 'primary',
-        direction: "top",
-        offset: {left: 0, top: 1},
-        position: "absolute",
-        icons: {
-            'arrow': '<i class="fa fa-caret-right"></i>'
-        },
-        items: [
-            {
-                icon: '<i class="fa fa-archive"></i>',
-                label: "Menu Parent 0",
-                items: [
-                    {
-                        check: {
-                            type: 'checkbox',
-                            name: 'A',
-                            value: '0',
-                            checked: false
-                        },
-                        label: "Menu Z",
-                        data: {},
-                        role: "",
-                        accelerator: "CmdOrCtrl+Z"
-                    },
-                    {
-                        check: {
-                            type: 'checkbox',
-                            name: 'A',
-                            value: '1',
-                            checked: true
-                        },
-                        label: "Menu A",
-                        data: {},
-                        role: ""
-                        //accelerator: "CmdOrCtrl+A"
-                    }
-                ]
+        menu = new ax5.ui.menu({
+            position: "absolute", // default position is "fixed"
+            icons: {
+                'arrow': '&rtrif;'
             },
-            {
-                icon: '<i class="fa fa-mixcloud"></i>',
-                label: "Menu Parent 1",
-                items: [
-                    {
-                        label: "Menu Z",
-                        data: {},
-                        role: "",
-                        //accelerator: "CmdOrCtrl+Z",
-                        items: [
-                            {
-                                label: "Menu Z",
-                                data: {},
-                                role: ""
-                                //accelerator: "CmdOrCtrl+Z"
-                            },
-                            {
-                                label: "Menu A",
-                                data: {},
-                                role: ""
-                                //accelerator: "CmdOrCtrl+A"
-                            }
-                        ]
-                    },
-                    {
-                        label: "Menu A",
-                        data: {},
-                        role: ""
-                        //accelerator: "CmdOrCtrl+A"
-                    }
-                ]
-            }
-        ]
+            items: [
+                {
+                    label: "Menu A",
+                    items: [
+                        {label: "Menu A-0"},
+                        {label: "Menu A-1"},
+                        {label: "Menu A-2"}
+                    ]
+                },
+                {
+                    type: 1,
+                    label: "Menu B",
+                    items: [
+                        {type: 1, label: "Menu B-0"},
+                        {type: 1, label: "Menu B-1"},
+                        {type: 1, label: "Menu B-2"}
+                    ]
+                }
+            ]
+        });
+        menu.onClick = function (item, param) {
+            console.log(item, param);
+            alert(JSON.stringify(param));
+        };
+        $("#context-menu-target").bind("contextmenu", function (e) {
+            menu.popup(e, {
+                filter: function () {
+                    return this.type == 1;
+                },
+                param:{a:1, b:2}
+            });
+            ax5.util.stopEvent(e.originalEvent);
+        });
     });
-
-    menu.onStateChanged = function () {
-        console.log(this);
-    };
-    menu.onClick = function () {
-        console.log(this);
-    };
-
+&lt;/script></pre><script type="text/javascript">var menu;
     $(document.body).ready(function () {
-        menu.attach($("#attachedMenu-target"));
+        menu = new ax5.ui.menu({
+            position: "absolute", // default position is "fixed"
+            icons: {
+                'arrow': '&rtrif;'
+            },
+            items: [
+                {
+                    label: "Menu A",
+                    items: [
+                        {label: "Menu A-0"},
+                        {label: "Menu A-1"},
+                        {label: "Menu A-2"}
+                    ]
+                },
+                {
+                    type: 1,
+                    label: "Menu B",
+                    items: [
+                        {type: 1, label: "Menu B-0"},
+                        {type: 1, label: "Menu B-1"},
+                        {type: 1, label: "Menu B-2"}
+                    ]
+                }
+            ]
+        });
+        menu.onClick = function (item, param) {
+            console.log(item, param);
+            alert(JSON.stringify(param));
+        };
+        $("#context-menu-target").bind("contextmenu", function (e) {
+            menu.popup(e, {
+                filter: function () {
+                    return this.type == 1;
+                },
+                param:{a:1, b:2}
+            });
+            ax5.util.stopEvent(e.originalEvent);
+        });
     });
 </script></script>
 
