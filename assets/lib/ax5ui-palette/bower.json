@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-palette",
-	"version": "1.4.64",
+	"version": "1.4.67",
 	"authors": [
 		"ThomasJ <tom@axisj.com>"
 	],
@@ -19,8 +19,7 @@
 	],
 	"dependencies": {
 		"jquery": "",
-		"ax5core": ">=1.4.41",
-		"bootstrap-sass": ""
+		"ax5core": ">=1.4.41"
 	},
 	"license": "MIT",
 	"homepage": "ax5.io"

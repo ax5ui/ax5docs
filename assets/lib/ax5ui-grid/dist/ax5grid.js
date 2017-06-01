@@ -59,8 +59,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 multipleSelect: true,
                 virtualScrollY: true,
                 virtualScrollX: true,
+
+                // 스크롤될 때 body 페인팅 딜레이를 주어 성능이 좋은 않은 브라우저에서 반응을 빠르게 할 때 사용하는 옵션들
                 virtualScrollYCountMargin: 0,
-                virtualScrollAccelerated: false,
+                virtualScrollAccelerated: true,
+                virtualScrollAcceleratedDelayTime: 30,
+
                 height: 0,
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
@@ -2620,13 +2624,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } else {
                     return true;
                 }
-            }();
+            }(),
+                stripeString = '#fff 0px, #fff ' + (cfg.body.columnHeight - cfg.body.columnBorderWidth) + 'px, #eee ' + (cfg.body.columnHeight - cfg.body.columnBorderWidth) + 'px, #eee ' + cfg.body.columnHeight + 'px';
 
             if (isScrolled) {
-                SS.push('<div style="font-size:0;line-height:0;height: ' + (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight + 'px;"></div>');
+                SS.push('<div style="background:repeating-linear-gradient(to top, ' + stripeString + ');' + 'font-size:0;' + 'line-height:0;height: ' + (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight + 'px;"></div>');
             }
 
-            // 가로 가상 스크롤 적용하지 않는 경우
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
             for (cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
@@ -2635,7 +2639,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             SS.push('<col  />');
             SS.push('</colgroup>');
 
-            for (di = _scrollConfig.paintStartRowIndex, dl = function () {
+            di = _scrollConfig.paintStartRowIndex;
+
+            for (dl = function () {
                 var len = void 0;
                 len = _list.length;
                 if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
@@ -2643,6 +2649,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
                 return len;
             }(); di < dl; di++) {
+
                 if (_list[di]) {
                     var isGroupingRow = false,
                         rowTable = void 0,
@@ -2709,19 +2716,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             SS.push('</table>');
 
             if (isScrolled && _list.length) {
-                SS.push('<div style="font-size:0;line-height:0;height: ' + (_list.length - di) * _scrollConfig.bodyTrHeight + 'px;"></div>');
+                SS.push('<div style="background:repeating-linear-gradient(to bottom, ' + stripeString + ');' + 'font-size:0;' + 'line-height:0;height: ' + (_list.length - di) * _scrollConfig.bodyTrHeight + 'px;"></div>');
             }
 
             _elTarget.empty();
             SS = SS.join('');
 
-            if (this.config.virtualScrollAccelerated && _elTargetKey !== "aside-body-scroll") {
-                setTimeout(function () {
-                    _elTarget.get(0).innerHTML = SS;
-                });
-            } else {
-                _elTarget.get(0).innerHTML = SS;
-            }
+            _elTarget.get(0).innerHTML = SS;
 
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
@@ -2815,13 +2816,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             _elTarget.empty();
             SS = SS.join('');
-            if (this.config.virtualScrollAccelerated) {
-                setTimeout(function () {
-                    _elTarget.get(0).innerHTML = SS;
-                });
-            } else {
-                _elTarget.get(0).innerHTML = SS;
-            }
+
+            _elTarget.get(0).innerHTML = SS;
 
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
@@ -2954,19 +2950,23 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             virtualScrollX: this.config.virtualScrollX,
             virtualScrollY: this.config.virtualScrollY
         };
+        var frozenScrollConfig = jQuery.extend({}, scrollConfig, {
+            paintStartRowIndex: 0,
+            paintRowCount: this.xvar.frozenRowIndex
+        });
 
         // aside
         if (cfg.asidePanelWidth > 0) {
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody.call(this, "top-aside-body", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                repaintBody.call(this, "top-aside-body", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
             }
 
             repaintBody.call(this, "aside-body-scroll", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list, scrollConfig);
 
             if (cfg.footSum) {
                 // 바닥 요약 (footSum에 대한 aside 사용안함)
-                //repaintSum.call(this, "bottom-aside-body", this.asideColGroup, asideBodyRowData, null, list);
+                repaintSum.call(this, "bottom-aside-body", this.asideColGroup, asideBodyRowData, null, list);
             }
         }
 
@@ -2974,10 +2974,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (this.xvar.frozenColumnIndex > 0) {
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), jQuery.extend({}, scrollConfig, {
-                    paintStartRowIndex: 0,
-                    paintRowCount: this.xvar.frozenRowIndex
-                }));
+                repaintBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
             }
 
             repaintBody.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list, scrollConfig);
@@ -2991,10 +2988,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // body
         if (this.xvar.frozenRowIndex > 0) {
             // 상단 행고정
-            repaintBody.call(this, "top-body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), jQuery.extend({}, scrollConfig, {
-                paintStartRowIndex: 0,
-                paintRowCount: this.xvar.frozenRowIndex
-            }));
+            repaintBody.call(this, "top-body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
         }
         repaintBody.call(this, "body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list, scrollConfig);
 
@@ -3579,8 +3573,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
-    var scrollTo = function scrollTo(css, noRepaint) {
-
+    var scrollTo = function scrollTo(css, opts) {
+        var self = this;
+        if (typeof opts === "undefined") opts = {};
         if (this.isInlineEditing) {
             for (var key in this.inlineEditing) {
                 //if(this.inlineEditing[key].editor.type === "select") {}
@@ -3605,10 +3600,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.$.panel["bottom-body-scroll"].css({ left: css.left });
         }
 
-        if (this.config.virtualScrollY && !noRepaint && "top" in css) {
-            repaint.call(this);
-        } else if (this.config.virtualScrollX && !noRepaint && "left" in css) {
-            repaint.call(this);
+        if (this.config.virtualScrollAccelerated) {
+
+            if (this.xvar.bodyScrollToTimer) clearTimeout(this.xvar.bodyScrollToTimer);
+            this.xvar.bodyScrollToTimer = setTimeout(function () {
+
+                if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                    repaint.call(self);
+                } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                    repaint.call(self);
+                }
+                if (opts.callback) {
+                    opts.callback();
+                }
+            }, this.config.virtualScrollAcceleratedDelayTime);
+        } else {
+
+            if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                repaint.call(self);
+            } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                repaint.call(self);
+            }
+            if (opts.callback) {
+                opts.callback();
+            }
         }
     };
 
@@ -3705,10 +3720,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 (function () {
                     if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
                         if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
-                            scrollTo.call(this, { top: -(focusedColumn.dindex - this.xvar.frozenRowIndex) * this.xvar.bodyTrHeight });
+                            var newTop = (focusedColumn.dindex - this.xvar.frozenRowIndex - 1) * this.xvar.bodyTrHeight;
+                            if (newTop < 0) newTop = 0;
+                            scrollTo.call(this, { top: -newTop });
                             GRID.scroller.resize.call(this);
                         } else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
-                            scrollTo.call(this, { top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.virtualPaintRowCount + 3) * this.xvar.bodyTrHeight });
+                            scrollTo.call(this, { top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.virtualPaintRowCount + 2) * this.xvar.bodyTrHeight });
                             GRID.scroller.resize.call(this);
                         }
                     }
@@ -6230,13 +6247,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 });
 
                 GRID.body.scrollTo.call(self, scrollPositon);
-
-                /*
-                if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-                this.xvar.scrollTimer = setTimeout(function () {
-                    GRID.body.scrollTo.call(self, scrollPositon);
-                });
-                */
             }
 
             return -top;
@@ -6264,12 +6274,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 GRID.header.scrollTo.call(self, scrollPositon);
                 GRID.body.scrollTo.call(self, scrollPositon);
-
-                /*
-                if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-                this.xvar.scrollTimer = setTimeout(function () {
-                  });
-                */
             }
 
             return -left;
@@ -6406,10 +6410,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
 
-                if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                self.xvar.scrollTimer = setTimeout(function () {
-                    GRID.body.scrollTo.call(self, scrollPositon);
-                });
+                GRID.body.scrollTo.call(self, scrollPositon);
             }).bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                 scrollBarMover.off.call(self);
             }).bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
@@ -6431,8 +6432,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         "wheel": function wheel(delta) {
             var self = this,
                 _body_scroll_position = self.$["panel"]["body-scroll"].position(),
-                _panel_height = self.$["panel"]["body"].height(),
-                _panel_width = self.$["panel"]["body"].width(),
+                _panel_height = self.xvar.body_panel_height,
+                _panel_width = self.xvar.body_panel_width,
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth;
 
@@ -6472,21 +6473,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (delta.x == 0) _left_is_end = true;
             }
 
-            resize.call(this);
             GRID.header.scrollTo.call(self, { left: newLeft });
-
-            if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-            this.xvar.scrollTimer = setTimeout(function () {
-                GRID.body.scrollTo.call(self, { left: newLeft, top: newTop });
-            }, 0);
+            GRID.body.scrollTo.call(self, { left: newLeft, top: newTop }, {
+                callback: function callback() {
+                    resize.call(self);
+                }
+            });
 
             return !_top_is_end || !_left_is_end;
         },
         "on": function on() {
             var self = this,
                 _body_scroll_position = self.$["panel"]["body-scroll"].position(),
-                _panel_height = self.$["panel"]["body"].height(),
-                _panel_width = self.$["panel"]["body"].width(),
+                _panel_height = self.xvar.body_panel_height,
+                _panel_width = self.xvar.body_panel_width,
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth,
                 getContentPosition = function getContentPosition(e) {
@@ -6529,11 +6529,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var css = getContentPosition(e);
 
                 resize.call(self);
-                if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                self.xvar.scrollTimer = setTimeout(function () {
-                    GRID.header.scrollTo.call(self, { left: css.left });
-                    GRID.body.scrollTo.call(self, css, "noRepaint");
-                }, 0);
+                //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
+                //self.xvar.scrollTimer = setTimeout(function () {
+                GRID.header.scrollTo.call(self, { left: css.left });
+                GRID.body.scrollTo.call(self, css, { noRepaint: "noRepaint" });
+                //}, 0);
                 U.stopEvent(e.originalEvent);
                 self.xvar.touchmoved = true;
             }).on("touchend" + ".ax5grid-" + this.instanceId, function (e) {
@@ -6541,11 +6541,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var css = getContentPosition(e);
 
                     resize.call(self);
-                    if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                    self.xvar.scrollTimer = setTimeout(function () {
-                        GRID.header.scrollTo.call(self, { left: css.left });
-                        GRID.body.scrollTo.call(self, css);
-                    }, 0);
+                    //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
+                    //self.xvar.scrollTimer = setTimeout(function () {
+                    GRID.header.scrollTo.call(self, { left: css.left });
+                    GRID.body.scrollTo.call(self, css);
+                    //}, 0);
 
                     U.stopEvent(e.originalEvent);
                     scrollContentMover.off.call(self);
@@ -6629,6 +6629,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 scrollContentMover.on.call(self);
             });
         }
+
+        this.xvar.body_panel_height = this.$["panel"]["body"].height();
+        this.xvar.body_panel_width = this.$["panel"]["body"].width();
     };
 
     var resize = function resize() {
@@ -6672,6 +6675,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             width: horizontalScrollBarWidth
         });
 
+        this.xvar.body_panel_height = _panel_height;
+        this.xvar.body_panel_width = _panel_width;
+
         _vertical_scroller_height = null;
         _horizontal_scroller_width = null;
         _panel_height = null;
@@ -6712,7 +6718,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         "page_status": page_status,
 
         get: function get(tmplName, data, columnKeys) {
-            return ax5.mustache.render(GRID.tmpl[tmplName].call(this, columnKeys), data);
+            var template = GRID.tmpl[tmplName].call(this, columnKeys);
+            ax5.mustache.parse(template);
+            return ax5.mustache.render(template, data);
         }
     };
 })();

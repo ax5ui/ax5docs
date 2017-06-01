@@ -910,7 +910,6 @@
             }
         }
 
-
         /*
         if (!this.config.virtualScrollX && document.addEventListener && ax5.info.supportTouch) {
             paintRowCount = paintRowCount * 2;
@@ -934,14 +933,16 @@
          */
         let repaintBody = function (_elTargetKey, _colGroup, _bodyRow, _groupRow, _list, _scrollConfig) {
             let _elTarget = this.$.panel[_elTargetKey];
-
+            
             if (!isFirstPaint && !_scrollConfig) {
                 this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
                 return false;
             }
 
             let SS = [],
-                cgi, cgl, di, dl, tri, trl, ci, cl, col, cellHeight, colAlign,
+                cgi, cgl, di, dl, tri, trl, ci, cl, col,
+                cellHeight,
+                colAlign,
                 isScrolled = (function () {
                     // 스크롤값이 변경되거나 처음 호출되었습니까?
                     if (typeof _scrollConfig === "undefined" || typeof _scrollConfig['paintStartRowIndex'] === "undefined") {
@@ -953,13 +954,15 @@
                     } else {
                         return true;
                     }
-                })();
+                })(),
+                stripeString = '#fff 0px, #fff ' + (cfg.body.columnHeight - cfg.body.columnBorderWidth) + 'px, #eee ' + (cfg.body.columnHeight - cfg.body.columnBorderWidth) + 'px, #eee ' + (cfg.body.columnHeight) + 'px';
 
             if (isScrolled) {
-                SS.push('<div style="font-size:0;line-height:0;height: ' + (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight + 'px;"></div>');
+                SS.push('<div style="background:repeating-linear-gradient(to top, ' + stripeString + ');' +
+                    'font-size:0;' +
+                    'line-height:0;height: ' + (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight + 'px;"></div>');
             }
 
-            // 가로 가상 스크롤 적용하지 않는 경우
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
             for (cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
@@ -967,9 +970,10 @@
             }
             SS.push('<col  />');
             SS.push('</colgroup>');
+            
+            di = _scrollConfig.paintStartRowIndex;
 
-
-            for (di = _scrollConfig.paintStartRowIndex, dl = (function () {
+            for (dl = (function () {
                 let len;
                 len = _list.length;
                 if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
@@ -977,6 +981,7 @@
                 }
                 return len;
             })(); di < dl; di++) {
+
                 if (_list[di]) {
                     let isGroupingRow = false, rowTable, odi = (typeof _list[di].__origin_index__ !== "undefined") ? _list[di].__origin_index__ : di;
                     if (_groupRow && "__isGrouping" in _list[di]) {
@@ -1067,19 +1072,16 @@
             SS.push('</table>');
 
             if (isScrolled && _list.length) {
-                SS.push('<div style="font-size:0;line-height:0;height: ' + (_list.length - di) * _scrollConfig.bodyTrHeight + 'px;"></div>');
+                SS.push('<div style="background:repeating-linear-gradient(to bottom, ' + stripeString + ');' +
+                    'font-size:0;' +
+                    'line-height:0;height: ' + (_list.length - di) * _scrollConfig.bodyTrHeight + 'px;"></div>');
             }
+
 
             _elTarget.empty();
             SS = SS.join('');
 
-            if (this.config.virtualScrollAccelerated && _elTargetKey !== "aside-body-scroll") {
-                setTimeout(function () {
-                    _elTarget.get(0).innerHTML = SS;
-                });
-            } else {
-                _elTarget.get(0).innerHTML = SS;
-            }
+            _elTarget.get(0).innerHTML = SS;
 
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
@@ -1183,13 +1185,8 @@
 
             _elTarget.empty();
             SS = SS.join('');
-            if (this.config.virtualScrollAccelerated) {
-                setTimeout(function () {
-                    _elTarget.get(0).innerHTML = SS;
-                });
-            } else {
-                _elTarget.get(0).innerHTML = SS;
-            }
+
+            _elTarget.get(0).innerHTML = SS;
 
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
@@ -1314,19 +1311,23 @@
             virtualScrollX: this.config.virtualScrollX,
             virtualScrollY: this.config.virtualScrollY,
         };
+        let frozenScrollConfig = jQuery.extend({}, scrollConfig, {
+            paintStartRowIndex: 0,
+            paintRowCount: this.xvar.frozenRowIndex
+        });
 
         // aside
         if (cfg.asidePanelWidth > 0) {
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody.call(this, "top-aside-body", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                repaintBody.call(this, "top-aside-body", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
             }
 
             repaintBody.call(this, "aside-body-scroll", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list, scrollConfig);
 
             if (cfg.footSum) {
                 // 바닥 요약 (footSum에 대한 aside 사용안함)
-                //repaintSum.call(this, "bottom-aside-body", this.asideColGroup, asideBodyRowData, null, list);
+                repaintSum.call(this, "bottom-aside-body", this.asideColGroup, asideBodyRowData, null, list);
             }
         }
 
@@ -1334,10 +1335,7 @@
         if (this.xvar.frozenColumnIndex > 0) {
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), jQuery.extend({}, scrollConfig, {
-                    paintStartRowIndex: 0,
-                    paintRowCount: this.xvar.frozenRowIndex
-                }));
+                repaintBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
             }
 
             repaintBody.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list, scrollConfig);
@@ -1351,10 +1349,7 @@
         // body
         if (this.xvar.frozenRowIndex > 0) {
             // 상단 행고정
-            repaintBody.call(this, "top-body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), jQuery.extend({}, scrollConfig, {
-                paintStartRowIndex: 0,
-                paintRowCount: this.xvar.frozenRowIndex
-            }));
+            repaintBody.call(this, "top-body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
         }
         repaintBody.call(this, "body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list, scrollConfig);
 
@@ -2007,8 +2002,9 @@
         }
     };
 
-    const scrollTo = function (css, noRepaint) {
-
+    const scrollTo = function (css, opts) {
+        let self = this;
+        if (typeof opts === "undefined") opts = {};
         if (this.isInlineEditing) {
             for (var key in this.inlineEditing) {
                 //if(this.inlineEditing[key].editor.type === "select") {}
@@ -2033,11 +2029,36 @@
             this.$.panel["bottom-body-scroll"].css({left: css.left});
         }
 
-        if (this.config.virtualScrollY && !noRepaint && "top" in css) {
-            repaint.call(this);
-        } else if (this.config.virtualScrollX && !noRepaint && "left" in css) {
-            repaint.call(this);
+        if (this.config.virtualScrollAccelerated) {
+
+            if (this.xvar.bodyScrollToTimer) clearTimeout(this.xvar.bodyScrollToTimer);
+            this.xvar.bodyScrollToTimer = setTimeout(function () {
+
+                if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                    repaint.call(self);
+                } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                    repaint.call(self);
+                }
+                if (opts.callback) {
+                    opts.callback();
+                }
+
+            }, this.config.virtualScrollAcceleratedDelayTime);
+
+        } else {
+
+            if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                repaint.call(self);
+            } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                repaint.call(self);
+            }
+            if (opts.callback) {
+                opts.callback();
+            }
+
         }
+
+
     };
 
     const blur = function () {
@@ -2134,11 +2155,13 @@
                 (function () {
                     if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
                         if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
-                            scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex) * this.xvar.bodyTrHeight});
+                            let newTop = (focusedColumn.dindex - this.xvar.frozenRowIndex - 1) * this.xvar.bodyTrHeight;
+                            if (newTop < 0) newTop = 0;
+                            scrollTo.call(this, {top: -newTop});
                             GRID.scroller.resize.call(this);
                         }
                         else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
-                            scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.virtualPaintRowCount + 3) * this.xvar.bodyTrHeight});
+                            scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.virtualPaintRowCount + 1) * this.xvar.bodyTrHeight});
                             GRID.scroller.resize.call(this);
                         }
                     }

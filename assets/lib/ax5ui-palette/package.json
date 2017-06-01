@@ -1,6 +1,6 @@
 {
   "name": "ax5ui-palette",
-  "version": "1.4.64",
+  "version": "1.4.67",
   "description": "A palette plugin that works with Bootstrap & jQuery",
   "license": "MIT",
   "repository": {
@@ -27,8 +27,7 @@
   },
   "dependencies": {
     "jquery": "",
-    "ax5core": ">=1.4.41",
-    "bootstrap-sass": ""
+    "ax5core": ">=1.4.41"
   },
   "devDependencies": {
     "karma": "^1.3.0",

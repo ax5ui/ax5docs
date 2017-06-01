@@ -400,9 +400,8 @@
 
 // body
 [data-ax5grid] {
-    * {
-        box-sizing: border-box;
-    }
+    box-sizing: border-box;
+    *,
     *:before,
     *:after {
         box-sizing: border-box;
@@ -536,6 +535,20 @@
             position: relative;
             overflow: hidden;
             @include gridPanel("body");
+
+            /*
+            @keyframes fadein {
+                from { opacity: 0; }
+                to   { opacity: 1; }
+            }
+
+            [data-ax5grid-panel-scroll="body"]{
+                table {
+                    @include animation(fadein 0.3s);
+                }
+            }
+            */
+
         }
 
         [data-ax5grid-container="page"] {
