@@ -153,6 +153,7 @@
 <li><a href="#ax5docker.appendPanel">.appendPanel(_panel, _appendPath, _appendType)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
 <li><a href="#ax5docker.align">.align()</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
 <li><a href="#ax5docker.searchPanel">.searchPanel(_condition)</a> ⇒ <code>*</code></li>
+<li><a href="#ax5docker.activePanel">.activePanel(_panelPath, callback)</a> ⇒ <code><a href="#ax5docker">ax5docker</a></code></li>
 </ul>
 </li>
 </ul>
@@ -496,6 +497,31 @@ removePanel();
 <pre class="prettyprint linenums lang-js"><code>var p = myDocker.searchPanel(function (panel) {
  return (panel.id == &quot;A&quot;);
 });
+</code></pre>
+<p><a name="ax5docker.activePanel"></a></p>
+<h3>ax5docker.activePanel(_panelPath, callback) ⇒ <code><a href="#ax5docker">ax5docker</a></code></h3>
+<p><strong>Kind</strong>: static method of <code><a href="#ax5docker">ax5docker</a></code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_panelPath</td>
+<td><code>String</code></td>
+</tr>
+<tr>
+<td>callback</td>
+<td><code>function</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre class="prettyprint linenums lang-js"><code>myDocker.activePanel(&quot;0.1&quot;);
+myDocker.activePanel(&quot;0.0.1&quot;);
 </code></pre>
 
     

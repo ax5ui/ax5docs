@@ -1,0 +1,182 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="2" id="stack-panel" title="Stack Panel" desc=""/>
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}"
+            page-title="${data.metadata.title}"
+            page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}"
+                              parentId="${data.metadata.parentId}"
+                              activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/font-awesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-docker/dist/ax5docker.css"/>
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-dialog/dist/ax5dialog.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-docker/dist/ax5docker.js"></script>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-dialog/dist/ax5dialog.js"></script>
+        <script src="https://cdn.rawgit.com/thomasJang/jquery-direct/master/dist/jquery-direct.min.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- docker -->
+        <section class="ax5docs-section">
+            <ax5docs-md>
+                # ${data.metadata.title}
+
+                **Paste the following code into the `head` section of your site's HTML.**
+                ```html
+                <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-docker/master/dist/ax5docker.css"/>
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+                <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-docker/master/dist/ax5docker.js"></script>
+                <script src="https://cdn.rawgit.com/thomasJang/jquery-direct/master/dist/jquery-direct.min.js"></script>
+                ```
+            </ax5docs-md>
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+            <div class="lang-kor">
+                <ax5docs-md>
+
+                </ax5docs-md>
+            </div>
+
+            HTML(code)
+            <ax5docs-html run="true">
+                <div data-ax5docker="docker1" style="height: 500px;background: #eee;padding: 5px;"></div>
+            </ax5docs-html>
+
+            <div class="DH30"></div>
+
+            JS(code)
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    $(function () {
+                        var myDocker = new ax5.ui.docker();
+
+                        myDocker.setConfig({
+                            target: $('[data-ax5docker="docker1"]'),
+                            icons: {
+                                close: '<i class="fa fa-times" aria-hidden="true"></i>',
+                                more: '<i class="fa fa-chevron-circle-down" aria-hidden="true"></i>'
+                            },
+                            panels: [
+                                {
+                                    type: "stack", // type : row, column, stack
+                                    panels: [
+                                        {
+                                            type: "panel",
+                                            name: "my name 1",
+                                            moduleName: "content",
+                                            moduleState: {
+                                                data1: "data1"
+                                            }
+                                        },
+                                        {
+                                            type: "panel",
+                                            name: "my name 2",
+                                            moduleName: "content",
+                                            moduleState: {
+                                                data1: "data2"
+                                            }
+                                        },
+                                        {
+                                            type: "panel",
+                                            name: "my name 3",
+                                            moduleName: "content",
+                                            moduleState: {
+                                                data1: "data3"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ],
+                            disableClosePanel: true,
+                            disableDragPanel: true,
+                            control: {
+                                before: function (that, callback) {
+                                    if (that.controlType === "destroy") {
+                                        if (confirm("Do you want to Delete?")) {
+                                            setTimeout(function () {
+                                                callback();
+                                            }, 300);
+
+                                            return;
+                                        }
+                                    } else {
+                                        callback();
+                                        return;
+                                    }
+                                }
+                            },
+                            menu: {
+                                theme: 'default',
+                                position: "absolute",
+                                icons: {
+                                    'arrow': '▸'
+                                }
+                            }
+                        });
+
+                        myDocker.onResize = function (e) {
+                            console.log(e);
+                        };
+
+                        myDocker.addModule({
+                            "content": {
+                                init: function (container, state) {
+                                    
+                                    console.log(state);
+                                    
+                                    var html = [];
+                                    html.push('<div style="padding: 10px;">');
+                                    html.push('<h3>' + state.name + '</h3>');
+                                    html.push('<button class="btn btn-default" data-panel-path="0.0">Active Panel1</button>');
+                                    html.push('<button class="btn btn-default" data-panel-path="0.1">Active Panel2</button>');
+                                    html.push('<button class="btn btn-default" data-panel-path="0.2">Active Panel3</button>');
+                                    html.push('</div>');
+
+                                    container["\$element"].html(html.join(''));
+                                },
+                                active: function (container, state) {
+                                    // console.log(state, "active");
+                                    container["\$element"].find('[data-panel-path]')
+                                        .off("click")
+                                        .on("click", function () {
+                                            myDocker.activePanel(this.getAttribute('data-panel-path'));
+                                        });
+                                },
+                                deactive: function (container, state) {
+                                    // console.log(state, "deactive");
+                                },
+                                destroy: function (container, state) {
+                                    // console.log(state, "destroy");
+                                }
+                            }
+                        });
+
+                        myDocker.repaint(); // play docker
+                    });
+                </script>
+            </ax5docs-js>
+
+
+            <ax5docs-md>
+
+            </ax5docs-md>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>

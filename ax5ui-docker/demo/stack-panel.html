@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-docker : Docker</title>
+    <title>ax5ui / ax5ui-docker : Stack Panel</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -139,7 +139,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li  class='active'><a href="/ax5ui-docker/demo/index.html">Docker</a></li><li ><a href="/ax5ui-docker/demo/stack-panel.html">Stack Panel</a></li></ul>
+        <ul><li ><a href="/ax5ui-docker/demo/index.html">Docker</a></li><li  class='active'><a href="/ax5ui-docker/demo/stack-panel.html">Stack Panel</a></li></ul>
     
                             </div>
                         </div>
@@ -149,7 +149,7 @@
 
         
         <section class="ax5docs-section">
-            <h1>Docker</h1>
+            <h1>Stack Panel</h1>
 <p><strong>Paste the following code into the <code>head</code> section of your site’s HTML.</strong></p>
 <pre class="prettyprint linenums lang-html"><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.rawgit.com/ax5ui/ax5ui-docker/master/dist/ax5docker.css&quot;&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-1.12.3.min.js&quot;&gt;&lt;/script&gt;
@@ -164,7 +164,6 @@
             <div class="lang-kor">
                 
             </div>
-
 
             HTML(code)
             <pre class="prettyprint linenums lang-html">&lt;div data-ax5docker="docker1" style="height: 500px;background: #eee;padding: 5px;">&lt;/div></pre><div data-ax5docker="docker1" style="height: 500px;background: #eee;padding: 5px;"></div>
@@ -184,47 +183,37 @@
             },
             panels: [
                 {
-                    type: "row", // type : row, column, stack
+                    type: "stack", // type : row, column, stack
                     panels: [
                         {
-                            type: "column",
-                            panels: [
-                                {
-                                    type: "panel",
-                                    name: "my name 1",
-                                    moduleName: "content",
-                                    moduleState: {
-                                        data1: "data1"
-                                    }
-                                },
-                                {
-                                    type: "panel",
-                                    name: "my name 2",
-                                    moduleName: "content",
-                                    moduleState: {
-                                        data1: "data2"
-                                    }
-                                }
-                            ]
+                            type: "panel",
+                            name: "my name 1",
+                            moduleName: "content",
+                            moduleState: {
+                                data1: "data1"
+                            }
                         },
                         {
-                            type: "stack",
-                            panels: [
-                                {
-                                    type: "panel",
-                                    name: "my name 3",
-                                    moduleName: "content",
-                                    moduleState: {
-                                        data1: "data3"
-                                    }
-                                }
-                            ]
+                            type: "panel",
+                            name: "my name 2",
+                            moduleName: "content",
+                            moduleState: {
+                                data1: "data2"
+                            }
+                        },
+                        {
+                            type: "panel",
+                            name: "my name 3",
+                            moduleName: "content",
+                            moduleState: {
+                                data1: "data3"
+                            }
                         }
                     ]
                 }
             ],
-            disableClosePanel: false,
-            disableDragPanel: false,
+            disableClosePanel: true,
+            disableDragPanel: true,
             control: {
                 before: function (that, callback) {
                     if (that.controlType === "destroy") {
@@ -257,10 +246,26 @@
         myDocker.addModule({
             "content": {
                 init: function (container, state) {
-                    container["$element"].html(JSON.stringify(state));
+                    
+                    console.log(state);
+                    
+                    var html = [];
+                    html.push('&lt;div style="padding: 10px;">');
+                    html.push('&lt;h3>' + state.name + '&lt;/h3>');
+                    html.push('&lt;button class="btn btn-default" data-panel-path="0.0">Active Panel1&lt;/button>');
+                    html.push('&lt;button class="btn btn-default" data-panel-path="0.1">Active Panel2&lt;/button>');
+                    html.push('&lt;button class="btn btn-default" data-panel-path="0.2">Active Panel3&lt;/button>');
+                    html.push('&lt;/div>');
+
+                    container["$element"].html(html.join(''));
                 },
                 active: function (container, state) {
                     // console.log(state, "active");
+                    container["$element"].find('[data-panel-path]')
+                        .off("click")
+                        .on("click", function () {
+                            myDocker.activePanel(this.getAttribute('data-panel-path'));
+                        });
                 },
                 deactive: function (container, state) {
                     // console.log(state, "deactive");
@@ -284,47 +289,37 @@
             },
             panels: [
                 {
-                    type: "row", // type : row, column, stack
+                    type: "stack", // type : row, column, stack
                     panels: [
                         {
-                            type: "column",
-                            panels: [
-                                {
-                                    type: "panel",
-                                    name: "my name 1",
-                                    moduleName: "content",
-                                    moduleState: {
-                                        data1: "data1"
-                                    }
-                                },
-                                {
-                                    type: "panel",
-                                    name: "my name 2",
-                                    moduleName: "content",
-                                    moduleState: {
-                                        data1: "data2"
-                                    }
-                                }
-                            ]
+                            type: "panel",
+                            name: "my name 1",
+                            moduleName: "content",
+                            moduleState: {
+                                data1: "data1"
+                            }
                         },
                         {
-                            type: "stack",
-                            panels: [
-                                {
-                                    type: "panel",
-                                    name: "my name 3",
-                                    moduleName: "content",
-                                    moduleState: {
-                                        data1: "data3"
-                                    }
-                                }
-                            ]
+                            type: "panel",
+                            name: "my name 2",
+                            moduleName: "content",
+                            moduleState: {
+                                data1: "data2"
+                            }
+                        },
+                        {
+                            type: "panel",
+                            name: "my name 3",
+                            moduleName: "content",
+                            moduleState: {
+                                data1: "data3"
+                            }
                         }
                     ]
                 }
             ],
-            disableClosePanel: false,
-            disableDragPanel: false,
+            disableClosePanel: true,
+            disableDragPanel: true,
             control: {
                 before: function (that, callback) {
                     if (that.controlType === "destroy") {
@@ -357,10 +352,26 @@
         myDocker.addModule({
             "content": {
                 init: function (container, state) {
-                    container["$element"].html(JSON.stringify(state));
+                    
+                    console.log(state);
+                    
+                    var html = [];
+                    html.push('<div style="padding: 10px;">');
+                    html.push('<h3>' + state.name + '</h3>');
+                    html.push('<button class="btn btn-default" data-panel-path="0.0">Active Panel1</button>');
+                    html.push('<button class="btn btn-default" data-panel-path="0.1">Active Panel2</button>');
+                    html.push('<button class="btn btn-default" data-panel-path="0.2">Active Panel3</button>');
+                    html.push('</div>');
+
+                    container["$element"].html(html.join(''));
                 },
                 active: function (container, state) {
                     // console.log(state, "active");
+                    container["$element"].find('[data-panel-path]')
+                        .off("click")
+                        .on("click", function () {
+                            myDocker.activePanel(this.getAttribute('data-panel-path'));
+                        });
                 },
                 deactive: function (container, state) {
                     // console.log(state, "deactive");
