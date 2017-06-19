@@ -95,7 +95,18 @@
                                     }
                                 ]
                                 },
-                                {key: "saleDt", label: "saleDt", align: "center", editor: {type: "date"}},
+                                {
+                                    key: "saleDt", label: "saleDt", align: "center", editor: {
+                                    type: "date",
+                                    config: {
+                                        content: {
+                                            config: {
+                                                mode: "year", selectMode: "day"
+                                            }
+                                        }
+                                    }
+                                }
+                                },
                                 {key: "customer", label: "customer", editor: {type: "text"}},
                                 {
                                     key: "userType", label: "userType", editor: {
