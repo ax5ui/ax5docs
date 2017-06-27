@@ -3625,7 +3625,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var scrollTo = function scrollTo(css, opts) {
         var self = this;
-        if (typeof opts === "undefined") opts = {};
+        if (typeof opts === "undefined") opts = { timeoutUnUse: false };
         if (this.isInlineEditing) {
             for (var key in this.inlineEditing) {
                 //if(this.inlineEditing[key].editor.type === "select") {}
@@ -3650,8 +3650,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.$.panel["bottom-body-scroll"].css({ left: css.left });
         }
 
-        if (this.config.virtualScrollAccelerated) {
-
+        if (this.config.virtualScrollAccelerated && !opts.timeoutUnUse) {
             if (this.xvar.bodyScrollToTimer) clearTimeout(this.xvar.bodyScrollToTimer);
             this.xvar.bodyScrollToTimer = setTimeout(function () {
 
@@ -3665,7 +3664,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }, this.config.virtualScrollAcceleratedDelayTime);
         } else {
-
             if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
                 repaint.call(self);
             } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
@@ -3706,6 +3704,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 columnSelect.clear.call(this);
 
                 if (_dy > 0) {
+                    // 아래로
                     if (focusedColumn.rowIndex + (originalColumn.rowspan - 1) + _dy > this.bodyRowTable.rows.length - 1) {
                         focusedColumn.dindex = focusedColumn.dindex + _dy;
                         focusedColumn.rowIndex = 0;
@@ -3717,6 +3716,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         focusedColumn.rowIndex = focusedColumn.rowIndex + _dy;
                     }
                 } else {
+                    // 위로
                     if (focusedColumn.rowIndex + _dy < 0) {
                         focusedColumn.dindex = focusedColumn.dindex + _dy;
                         focusedColumn.rowIndex = this.bodyRowTable.rows.length - 1;
@@ -3767,19 +3767,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 focusedColumn.panelName = nPanelInfo.panelName;
 
                 // 포커스 컬럼의 위치에 따라 스크롤 처리.ㅊㅇ
-                (function () {
-                    if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
-                        if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
-                            var newTop = (focusedColumn.dindex - this.xvar.frozenRowIndex - 1) * this.xvar.bodyTrHeight;
-                            if (newTop < 0) newTop = 0;
-                            scrollTo.call(this, { top: -newTop });
-                            GRID.scroller.resize.call(this);
-                        } else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
-                            scrollTo.call(this, { top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.virtualPaintRowCount + 1) * this.xvar.bodyTrHeight });
-                            GRID.scroller.resize.call(this);
-                        }
+
+                if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
+                    if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
+                        var newTop = (focusedColumn.dindex - this.xvar.frozenRowIndex - 1) * this.xvar.bodyTrHeight;
+                        if (newTop < 0) newTop = 0;
+
+                        scrollTo.call(this, { top: -newTop, timeoutUnUse: false });
+                        GRID.scroller.resize.call(this);
+                    } else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
+                        scrollTo.call(this, { top: (this.xvar.virtualPaintRowCount - 2 - focusedColumn.dindex) * this.xvar.bodyTrHeight, timeoutUnUse: false });
+                        GRID.scroller.resize.call(this);
                     }
-                }).call(this);
+                }
 
                 this.focusedColumn[focusedColumn.dindex + "_" + focusedColumn.colIndex + "_" + focusedColumn.rowIndex] = focusedColumn;
                 this.$.panel[focusedColumn.panelName].find('[data-ax5grid-tr-data-index="' + focusedColumn.dindex + '"]').find('[data-ax5grid-column-rowindex="' + focusedColumn.rowIndex + '"][data-ax5grid-column-colindex="' + focusedColumn.colIndex + '"]').attr('data-ax5grid-column-focused', "true");
@@ -4224,19 +4224,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             var _column = this.focusedColumn[k],
                                 column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
                                 _dindex3 = _column.dindex,
+                                doindex = _column.doindex,
                                 value = "",
                                 col = this.colGroup[_column.colIndex];
 
                             if (column) {
                                 if (!this.list[_dindex3].__isGrouping) {
-                                    value = GRID.data.getValue.call(this, _dindex3, column.key);
+                                    value = GRID.data.getValue.call(this, _dindex3, doindex, column.key);
                                 }
                             }
 
                             if (col.editor && GRID.inlineEditor[col.editor.type].editMode === "inline") {
                                 if (_options && _options.moveFocus) {} else {
                                     if (column.editor && column.editor.type == "checkbox") {
-                                        value = GRID.data.getValue.call(this, _dindex3, column.key);
+                                        value = GRID.data.getValue.call(this, _dindex3, doindex, column.key);
 
                                         var checked = void 0,
                                             newValue = void 0;
@@ -4250,7 +4251,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                             newValue = checked = value == false || value == "false" || value < "1" ? "true" : "false";
                                         }
 
-                                        GRID.data.setValue.call(this, _column.dindex, column.key, newValue);
+                                        GRID.data.setValue.call(this, _column.dindex, _column.doindex, column.key, newValue);
                                         updateRowState.call(this, ["cellChecked"], _dindex3, {
                                             key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
                                             editorConfig: column.editor.config, checked: checked
@@ -4288,7 +4289,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 trl = void 0,
                 ci = void 0,
                 cl = void 0,
-                col = void 0;
+                col = void 0,
+                val = void 0;
 
             //SS.push('<table border="1">');
             for (di = 0, dl = _list.length; di < dl; di++) {
@@ -4307,7 +4309,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                         col = rowTable.rows[tri].cols[ci];
 
-                        SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col, "text"), '&nbsp;</td>');
+                        SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col, val, "text"), '&nbsp;</td>');
                     }
                     SS.push('\n</tr>');
                 }
@@ -5483,7 +5485,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var U = ax5.util;
 
     var money = function money() {
-        return U.number(this.value, { "money": true });
+        if (typeof this.value !== "undefined") {
+            var val = ('' + this.value).replace(/[^0-9^\.^\-]/g, ""),
+                regExpPattern = new RegExp('([0-9])([0-9][0-9][0-9][,.])'),
+                arrNumber = val.split('.'),
+                returnValue = void 0;
+
+            arrNumber[0] += '.';
+
+            do {
+                arrNumber[0] = arrNumber[0].replace(regExpPattern, '$1,$2');
+            } while (regExpPattern.test(arrNumber[0]));
+
+            return arrNumber.length > 1 ? arrNumber[0] + U.left(arrNumber[1], 2) : arrNumber[0].split('.')[0];
+        } else {
+            return "";
+        }
     };
 
     GRID.formatter = {
@@ -5897,7 +5914,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function getHtml(_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" >';
+            if (typeof _editor.attributes !== "undefined") {
+                var attributesText = "";
+                for (var k in _editor.attributes) {
+                    attributesText += " " + k + "='" + _editor.attributes[k] + "'";
+                }
+            }
+            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ${attributesText}>';
         },
         init: function init(_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -5921,7 +5944,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function getHtml(_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" >';
+            if (typeof _editor.attributes !== "undefined") {
+                var attributesText = "";
+                for (var k in _editor.attributes) {
+                    attributesText += " " + k + "='" + _editor.attributes[k] + "'";
+                }
+            }
+            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ${attributesText}>';
         },
         init: function init(_root, _columnKey, _editor, _$parent, _value) {
             var $el;
