@@ -650,8 +650,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number} [_config.header.columnPadding=3]
              * @param {Number} [_config.header.columnBorderWidth=1]
              * @param {Object} [_config.body]
-             * @param {Function} [_config.onClick]
-             * @param {Function} [_config.onDBLClick]
+             * @param {Function} [_config.body.onClick]
+             * @param {Function} [_config.body.onDBLClick]
+             * @param {Function} [_config.body.onDataChanged]
              * @param {String|Array} [_config.body.mergeCells=false] -
              * @param {String} [_config.body.align]
              * @param {Number} [_config.body.columnHeight=25]
@@ -660,6 +661,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Object} [_config.body.grouping]
              * @param {Array} [_config.body.grouping.by] - list grouping keys
              * @param {Array} [_config.body.grouping.columns] - list grouping columns
+             * @param {(String|Function)} [_config.body.trStyleClass]
+             *
              * @param {Object} [_config.page]
              * @param {Number} [_config.page.height=25]
              * @param {Boolean} [_config.page.display=true] - grid page display
@@ -1226,6 +1229,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * ax5Grid.removeRow("first");
              * ax5Grid.removeRow("last");
              * ax5Grid.removeRow(1);
+             * ax5Grid.removeRow("selected");
              * ```
              */
             this.removeRow = function (_dindex) {
@@ -2714,7 +2718,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
 
-                        SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-tr-data-o-index="' + odi + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
+                        SS.push('<tr class="tr-' + di % 4 + '', cfg.body.trStyleClass ? U.isFunction(cfg.body.trStyleClass) ? ' ' + cfg.body.trStyleClass.call({
+                            item: _list[di],
+                            index: di
+                        }, _list[di], di) : ' ' + cfg.body.trStyleClass : '', '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-tr-data-o-index="' + odi + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
                         for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                             col = rowTable.rows[tri].cols[ci];
                             cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
@@ -4481,7 +4488,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var initData = function initData(_list) {
         this.selectedDataIndexs = [];
-        this.deletedList = [];
+        // this.deletedList = [];
+        // todo : deletedList 초기화 시점이 언제로 하는게 좋은가. set 메소드에서 초기화 하는 것으로 수정
 
         var i = 0,
             l = _list.length,
@@ -4511,49 +4519,49 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
                     this.deletedList.push(_list[i]);
-                }
+                } else {
+                    compareString = ""; // 그룹핑 구문검사용
+                    appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
 
-                compareString = ""; // 그룹핑 구문검사용
-                appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
-
-                // 그룹핑 구문검사
-                for (; gi < gl; gi++) {
-                    if (_list[i]) {
-                        compareString += "$|$" + _list[i][groupingKeys[gi].key];
-                    }
-
-                    if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
-                        var appendRowItem = { keys: [], labels: [], list: groupingKeys[gi].list };
-                        for (var ki = 0; ki < gi + 1; ki++) {
-                            appendRowItem.keys.push(groupingKeys[ki].key);
-                            appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                    // 그룹핑 구문검사
+                    for (; gi < gl; gi++) {
+                        if (_list[i]) {
+                            compareString += "$|$" + _list[i][groupingKeys[gi].key];
                         }
-                        appendRow.push(appendRowItem);
-                        groupingKeys[gi].list = [];
+
+                        if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
+                            var appendRowItem = { keys: [], labels: [], list: groupingKeys[gi].list };
+                            for (var ki = 0; ki < gi + 1; ki++) {
+                                appendRowItem.keys.push(groupingKeys[ki].key);
+                                appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                            }
+                            appendRow.push(appendRowItem);
+                            groupingKeys[gi].list = [];
+                        }
+
+                        groupingKeys[gi].list.push(_list[i]);
+                        groupingKeys[gi].compareString = compareString;
                     }
 
-                    groupingKeys[gi].list.push(_list[i]);
-                    groupingKeys[gi].compareString = compareString;
-                }
-
-                // 새로 추가해야할 그룹핑 row
-                ari = appendRow.length;
-                while (ari--) {
-                    returnList.push({ __isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: { keys: appendRow[ari].keys, labels: appendRow[ari].labels } });
-                }
-                //~ 그룹핑 구문 검사 완료
-
-                if (_list[i]) {
-                    if (_list[i][this.config.columnKeys.selected]) {
-                        this.selectedDataIndexs.push(i);
+                    // 새로 추가해야할 그룹핑 row
+                    ari = appendRow.length;
+                    while (ari--) {
+                        returnList.push({ __isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: { keys: appendRow[ari].keys, labels: appendRow[ari].labels } });
                     }
-                    // 그룹핑이 적용된 경우 오리지널 인덱스 의미 없음 : 정렬보다 그룹핑이 더 중요하므로.
-                    _list[i]["__original_index"] = _list[i]["__index"] = lineNumber;
-                    returnList.push(_list[i]);
+                    //~ 그룹핑 구문 검사 완료
 
-                    dataRealRowCount++;
-                    appendIndex++;
-                    lineNumber++;
+                    if (_list[i]) {
+                        if (_list[i][this.config.columnKeys.selected]) {
+                            this.selectedDataIndexs.push(i);
+                        }
+                        // 그룹핑이 적용된 경우 오리지널 인덱스 의미 없음 : 정렬보다 그룹핑이 더 중요하므로.
+                        _list[i]["__original_index"] = _list[i]["__index"] = lineNumber;
+                        returnList.push(_list[i]);
+
+                        dataRealRowCount++;
+                        appendIndex++;
+                        lineNumber++;
+                    }
                 }
             }
         } else {
@@ -4709,6 +4717,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.proxyList = null;
             this.list = initData.call(this, !this.config.remoteSort && Object.keys(this.sortInfo).length ? sort.call(this, this.sortInfo, list) : list);
         }
+        this.selectedDataIndexs = [];
         this.deletedList = [];
 
         this.needToPaintSum = true;
@@ -4838,6 +4847,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     processor.tree.call(this, _dindex);
                 } else {
                     list.splice(_dindex, 1);
+                }
+            },
+            "selected": function selected() {
+                if (this.config.tree.use) {
+                    processor.tree.call(this, "selected");
+                } else {
+                    var __list = [],
+                        i = void 0,
+                        l = void 0;
+
+                    for (i = 0, l = list.length; i < l; i++) {
+                        if (!list[i][this.config.columnKeys.selected]) {
+                            __list.push(list[i]);
+                        }
+                    }
+                    list = __list;
+                    __list = null;
+                    i = null;
                 }
             },
             "tree": function tree(_dindex) {
@@ -5921,16 +5948,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function getHtml(_root, _columnKey, _editor, _value) {
+            var attributesText = "";
             if (typeof _editor.attributes !== "undefined") {
-                var attributesText = "";
                 for (var k in _editor.attributes) {
                     attributesText += " " + k + "='" + _editor.attributes[k] + "'";
                 }
             }
-            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ${attributesText}>';
+            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ' + attributesText + '" />';
         },
         init: function init(_root, _columnKey, _editor, _$parent, _value) {
-            var $el;
+            var $el = void 0;
             _$parent.append($el = jQuery(this.getHtml(_root, _columnKey, _editor, _value)));
             this.bindUI(_root, _columnKey, $el, _editor, _$parent, _value);
             $el.on("blur", function () {
@@ -5951,13 +5978,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function getHtml(_root, _columnKey, _editor, _value) {
+            var attributesText = "";
             if (typeof _editor.attributes !== "undefined") {
-                var attributesText = "";
                 for (var k in _editor.attributes) {
                     attributesText += " " + k + "='" + _editor.attributes[k] + "'";
                 }
             }
-            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ${attributesText}>';
+            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ' + attributesText + '" />';
         },
         init: function init(_root, _columnKey, _editor, _$parent, _value) {
             var $el;

@@ -31,7 +31,7 @@
 
                 _formatter는 컬럼의 출력 될 값을 미리 정의된 함수명 또는 사용자가 직접 정의한 함수의 리턴값으로 대체하여 출력하는 컬럼의 속성을 말합니다.
                 `ax5.ui.grid.formatter` 오브젝트 안에 미리 정의된 함수들이 담겨 있습니다. 기본 정의된 formatter함수는 `money`입니다.
-                사용자가 `formatter`를 확장하고 싶다면, 그리드 실행전에. 다음의 코드를 추가 하시면 됩니다._
+                사용자가 `formatter`를 확장하고 싶다면, 그리드 실행전에. 다음의 코드를 추가 하시면 됩니다. formatter함수는 인라인으로도 사용가능합니다._
 
                 ```js
                 // capital formatter 추가
@@ -39,6 +39,16 @@
                     // console.log(this);
                     return this.value.toUpperCase();
                 }
+
+                // inline formatter
+                firstGrid.setConfig({
+                    target: $('[data-ax5grid="first-grid"]'),
+                    columns: [
+                        {key: "c", label: "label", formatter: function(){
+                           return this.item.a + this.value;
+                        }}
+                    ]
+                });
                 ```
                 ### formatter this
                 In the formatter function, this is: You can freely program because you use the last value returned.
@@ -79,7 +89,9 @@
                                 {key: "a", label: "field A"},
                                 {key: "b", label: "field B"},
                                 {key: "c", label: "<b>numbers C</b>", formatter: "money"},
-                                {key: "d", label: "field D"},
+                                {key: "d", label: "field D", formatter: function(){
+                                    return this.item.c + "/" + this.value;
+                                }},
                                 {key: "e", label: "field E"},
                                 {key: "f", label: "field F"},
                                 {key: "g", label: "field G"},

@@ -55,7 +55,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.4.86";
+        var version = "${VERSION}";
 
         /**
          * ax5 library path
@@ -1161,9 +1161,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function number(str, cond) {
             var result,
                 pair = ('' + str).split(reDot),
-                isMinus = Number(pair[0]) < 0 || pair[0] == "-0",
-                returnValue = 0.0;
+                isMinus,
+                returnValue;
+
+            isMinus = Number(pair[0].replace(/,/g, "")) < 0 || pair[0] == "-0";
+            returnValue = 0.0;
             pair[0] = pair[0].replace(reInt, "");
+
             if (pair[1]) {
                 pair[1] = pair[1].replace(reNotNum, "");
                 returnValue = Number(pair[0] + "." + pair[1]) || 0;

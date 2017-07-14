@@ -169,7 +169,8 @@
 </ul>
 <p><a name="ax5grid.setConfig"></a></p>
 <h3>ax5grid.setConfig(_config) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
-<p>Preferences of grid UI</p>
+<p>/**
+Preferences of grid UI</p>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5grid">ax5grid</a></code></p>
 <table>
 <thead>
@@ -308,13 +309,19 @@
 <td></td>
 </tr>
 <tr>
-<td>[_config.onClick]</td>
+<td>[_config.body.onClick]</td>
 <td><code>function</code></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>[_config.onDBLClick]</td>
+<td>[_config.body.onDBLClick]</td>
+<td><code>function</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[_config.body.onDataChanged]</td>
 <td><code>function</code></td>
 <td></td>
 <td></td>
@@ -366,6 +373,12 @@
 <td><code>Array</code></td>
 <td></td>
 <td>list grouping columns</td>
+</tr>
+<tr>
+<td>[_config.body.trStyleClass]</td>
+<td><code>String</code> | <code>function</code></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>[_config.page]</td>
@@ -935,6 +948,7 @@ ax5Grid.appendToList([{},{},{}]);
 ax5Grid.removeRow(&quot;first&quot;);
 ax5Grid.removeRow(&quot;last&quot;);
 ax5Grid.removeRow(1);
+ax5Grid.removeRow(&quot;selected&quot;);
 </code></pre>
 <p><a name="ax5grid.updateRow"></a></p>
 <h3>ax5grid.updateRow(_row, _dindex) ⇒ <code><a href="#ax5grid">ax5grid</a></code></h3>
