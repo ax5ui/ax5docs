@@ -1,0 +1,75 @@
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="6" id="close-open" title="Close & Open" desc="" />
+
+<layout-use template="${data.layoutPath}"
+            project-name="${data.projectName}"
+            parent-id="${data.metadata.parentId}" page-title="${data.metadata.title}" page-id="${data.metadata.id}"
+            body-style="sub-page" with-menu="true">
+    <layout-put into="docs-menu">
+        <ax5docs-get-sub-list projectName="${data.projectName}" parentId="${data.metadata.parentId}" activeId="${data.metadata.id}"></ax5docs-get-sub-list>
+    </layout-put>
+    <layout-put into="visual">
+        <include template="../_inc/include.html" id="demo-visual"/>
+    </layout-put>
+    <layout-put into="head-js">
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-modal/dist/ax5modal.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-modal/dist/ax5modal.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-toast/dist/ax5toast.css"/>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-toast/dist/ax5toast.js"></script>
+    </layout-put>
+    <layout-put into="body">
+
+        <!-- doc-js Basic Alert -->
+        <section class="ax5docs-section">
+            <h1>Close & Open</h1>
+
+            <ax5docs-md>
+                모달창을 닫을때 config.animateTime 만큼에 딜레이가 있게됩니다.
+                이 때문에 `modal.close` 후에 바로 `modal.open`을 하게 되면 제대로 작동하지 않는 문제가 있습니다.
+                이런 문제를 해결 하기 위해 `close` 메서드에 callback 전달 하는 방법을 사용합니다.
+            </ax5docs-md>
+
+            <button class="btn btn-default" type="button" id="modal-open">Modal Open</button>
+
+            <ax5docs-js run="true">
+                <script type="text/javascript">
+                    var modal = new ax5.ui.modal();
+
+                    $(document.body).ready(function () {
+
+                        $('#modal-open').click(function () {
+                            modal.open({}, function () {
+                                // check your browser console
+                                console.log(this);
+
+                                var btn1 = jQuery('<button class="btn btn-default" type="button" style="margin-top: 100px;">Close</button>');
+                                var btn2 = jQuery('<button class="btn btn-default" type="button" style="margin-top: 100px;">Close & Open</button>');
+
+                                btn1.click(function () {
+                                    modal.close();
+                                });
+                                btn2.click(function () {
+                                    modal.close({
+                                        callback: function () {
+                                            modal.open();
+                                        }
+                                    });
+                                });
+
+                                this.$["body-frame"]
+                                    .append(btn1)
+                                    .append(btn2);
+                            });
+                        });
+
+                    });
+                </script>
+            </ax5docs-js>
+
+        </section>
+
+    </layout-put>
+    <layout-put into="page-js">
+
+    </layout-put>
+</layout-use>

@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" href="../../assets/ax5favicon.ico" type="image/x-icon">
-    <title>ax5ui / ax5ui-modal : Modal Resize</title>
+    <title>ax5ui / ax5ui-modal : Close &amp; Open</title>
 
     
     <script src="../../assets/lib/jquery/jquery.min.js"></script>
@@ -39,9 +39,10 @@
     
     
         <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-modal/dist/ax5modal.css">
-        <script type="text/javascript" src="../../assets/lib/ax5ui-modal/dist/ax5modal.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-mask/dist/ax5mask.css">
-        <script type="text/javascript" src="../../assets/lib/ax5ui-mask/dist/ax5mask.min.js"></script>
+        <script type="text/javascript" src="../../assets/lib/ax5ui-modal/dist/ax5modal.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../../assets/lib/ax5ui-toast/dist/ax5toast.css">
+        <script type="text/javascript" src="../../assets/lib/ax5ui-toast/dist/ax5toast.js"></script>
     
 </head>
 <body>
@@ -137,7 +138,7 @@
                         <div class="docs-menu" id="docs-menu">
                             <div class="docs-menu-scroll">
                             
-        <ul><li ><a href="/ax5ui-modal/demo/index.html">Basic Modal</a></li><li  class='active'><a href="/ax5ui-modal/demo/modal-resize.html">Modal Resize</a></li><li ><a href="/ax5ui-modal/demo/modal-align.html">Modal Align</a></li><li ><a href="/ax5ui-modal/demo/modal-iframe.html">Modal Iframe</a></li><li ><a href="/ax5ui-modal/demo/modal-iframe-fullscreen.html">Modal Iframe Fullscreen</a></li><li ><a href="/ax5ui-modal/demo/modal-drag.html">Modal Drag & minimize</a></li><li ><a href="/ax5ui-modal/demo/modal-close-open.html">Close & Open</a></li><li ><a href="/ax5ui-modal/demo/modal-config.html">Config</a></li></ul>
+        <ul><li ><a href="/ax5ui-modal/demo/index.html">Basic Modal</a></li><li ><a href="/ax5ui-modal/demo/modal-resize.html">Modal Resize</a></li><li ><a href="/ax5ui-modal/demo/modal-align.html">Modal Align</a></li><li ><a href="/ax5ui-modal/demo/modal-iframe.html">Modal Iframe</a></li><li ><a href="/ax5ui-modal/demo/modal-iframe-fullscreen.html">Modal Iframe Fullscreen</a></li><li ><a href="/ax5ui-modal/demo/modal-drag.html">Modal Drag & minimize</a></li><li  class='active'><a href="/ax5ui-modal/demo/modal-close-open.html">Close & Open</a></li><li ><a href="/ax5ui-modal/demo/modal-config.html">Config</a></li></ul>
     
                             </div>
                         </div>
@@ -147,119 +148,72 @@
 
         
         <section class="ax5docs-section">
-            <h1>Modal Resize</h1>
+            <h1>Close &amp; Open</h1>
 
-            <p>
-                Please add ax5mask plug-in html document.
-                You can use the ax5mask If you add a plug-in to the page.
-            </p>
+            <p>모달창을 닫을때 config.animateTime 만큼에 딜레이가 있게됩니다.
+이 때문에 <code>modal.close</code> 후에 바로 <code>modal.open</code>을 하게 되면 제대로 작동하지 않는 문제가 있습니다.
+이런 문제를 해결 하기 위해 <code>close</code> 메서드에 callback 전달 하는 방법을 사용합니다.</p>
 
-            <pre class="prettyprint linenums lang-html">&lt;link rel="stylesheet" type="text/css" href="bower_components/ax5ui-mask/dist/ax5mask.css">
-&lt;script type="text/javascript" src="bower_components/ax5ui-mask/dist/ax5mask.min.js">&lt;/script></pre>
 
             <button class="btn btn-default" type="button" id="modal-open">Modal Open</button>
 
             <pre class="prettyprint linenums lang-js">&lt;script type="text/javascript">
+    var modal = new ax5.ui.modal();
+
     $(document.body).ready(function () {
-        var mask = new ax5.ui.mask();
-        var modal = new ax5.ui.modal();
-        modal.setConfig({
-            onStateChanged: function () {
-                // mask
-                if (this.state === "open") {
-                    mask.open();
-                }
-                else if (this.state === "close") {
-                    mask.close();
-                }
-            }
-        });
 
         $('#modal-open').click(function () {
             modal.open({}, function () {
+                // check your browser console
+                console.log(this);
 
-                var btn = jQuery(
-                    '&lt;button class="btn btn-primary" type="button">' +
-                    'Modal Close&lt;/button>')
-                    .click(function () {
-                        modal.close();
-                    });
+                var btn1 = jQuery('&lt;button class="btn btn-default" type="button" style="margin-top: 100px;">Close&lt;/button>');
+                var btn2 = jQuery('&lt;button class="btn btn-default" type="button" style="margin-top: 100px;">Close & Open&lt;/button>');
 
-                var btnResize = jQuery(
-                    '&lt;button class="btn btn-default" type="button">' +
-                    'Resize&lt;/button>')
-                    .click(function () {
-                        modal.css({width:500, height: 500});
-                        modal.align();
+                btn1.click(function () {
+                    modal.close();
+                });
+                btn2.click(function () {
+                    modal.close({
+                        callback: function () {
+                            modal.open();
+                        }
                     });
-
-                var btnRestore = jQuery(
-                    '&lt;button class="btn btn-default" type="button">' +
-                    'Restore&lt;/button>')
-                    .click(function () {
-                        modal.css({width:300, height: 400});
-                        modal.align();
-                    });
+                });
 
                 this.$["body-frame"]
-                    .css({padding: 50})
-                    .append(btn)
-                    .append('&lt;hr/>')
-                    .append(btnResize)
-                    .append(btnRestore);
-
+                    .append(btn1)
+                    .append(btn2);
             });
         });
 
     });
-&lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
-        var mask = new ax5.ui.mask();
-        var modal = new ax5.ui.modal();
-        modal.setConfig({
-            onStateChanged: function () {
-                // mask
-                if (this.state === "open") {
-                    mask.open();
-                }
-                else if (this.state === "close") {
-                    mask.close();
-                }
-            }
-        });
+&lt;/script></pre><script type="text/javascript">var modal = new ax5.ui.modal();
+
+    $(document.body).ready(function () {
 
         $('#modal-open').click(function () {
             modal.open({}, function () {
+                // check your browser console
+                console.log(this);
 
-                var btn = jQuery(
-                    '<button class="btn btn-primary" type="button">' +
-                    'Modal Close</button>')
-                    .click(function () {
-                        modal.close();
-                    });
+                var btn1 = jQuery('<button class="btn btn-default" type="button" style="margin-top: 100px;">Close</button>');
+                var btn2 = jQuery('<button class="btn btn-default" type="button" style="margin-top: 100px;">Close & Open</button>');
 
-                var btnResize = jQuery(
-                    '<button class="btn btn-default" type="button">' +
-                    'Resize</button>')
-                    .click(function () {
-                        modal.css({width:500, height: 500});
-                        modal.align();
+                btn1.click(function () {
+                    modal.close();
+                });
+                btn2.click(function () {
+                    modal.close({
+                        callback: function () {
+                            modal.open();
+                        }
                     });
-
-                var btnRestore = jQuery(
-                    '<button class="btn btn-default" type="button">' +
-                    'Restore</button>')
-                    .click(function () {
-                        modal.css({width:300, height: 400});
-                        modal.align();
-                    });
+                });
 
                 this.$["body-frame"]
-                    .css({padding: 50})
-                    .append(btn)
-                    .append('<hr/>')
-                    .append(btnResize)
-                    .append(btnRestore);
-
+                    .append(btn1)
+                    .append(btn2);
             });
         });
 
@@ -267,7 +221,6 @@
 </script></script>
 
         </section>
-
 
     
                     </div>
