@@ -52,6 +52,10 @@
             JS
             <ax5docs-js run="true">
                 <script type="text/javascript">
+                    ax5.ui.grid.tmpl.page_status = function(){
+                        return '<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{dataRowCount}} {{#dataRealRowCount}}&nbsp; 현재페이지 {{.}}{{/dataRealRowCount}} {{#totalElements}}&nbsp; 전체갯수 {{.}}{{/totalElements}}</span>';
+                    };
+
                     var sampleData = [
                         {a: "A", b: "A01", price: 1000, amount: 12, saleDt: "2016-08-29", customer: "장기영", userType: "M"},
                         {a: "A", b: "A02", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", userType: "D"},
@@ -221,7 +225,6 @@
                     };
 
                     $(document.body).ready(function () {
-
                         gridView
                                 .initView()
                                 .setData();
