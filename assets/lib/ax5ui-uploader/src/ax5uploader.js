@@ -574,7 +574,8 @@
 
             let bound_uploaded = (function (res) {
                 if (cfg.debug) console.log(res);
-                this.uploadedFiles.push(res);
+                //this.uploadedFiles.push(res);
+                this.uploadedFiles = this.uploadedFiles.concat(res);
                 bound_repaintUploadedBox(); // 업로드된 파일 출력
 
                 if (U.isFunction(cfg.onuploaded)) {
@@ -805,7 +806,7 @@
             this.send = (function () {
                 return function () {
                     // 업로드 시작
-                    if (U.isFunction(cfg.validateSelectedFiles)) {
+                    if (this.selectedFiles.length && U.isFunction(cfg.validateSelectedFiles)) {
                         let that = {
                             self: this,
                             uploadedFiles: this.uploadedFiles,
