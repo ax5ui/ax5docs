@@ -177,7 +177,7 @@
             promptDialog.prompt({
                 title: "Confirm Title",
                 msg: 'Confirm message'
-            }, function(){
+            }, function () {
                 console.log(this);
                 // {key: "ok", value: [User Input Data]}
             });
@@ -194,7 +194,7 @@
             promptDialog.prompt({
                 title: "Confirm Title",
                 msg: 'Confirm message'
-            }, function(){
+            }, function () {
                 console.log(this);
                 // {key: "ok", value: [User Input Data]}
             });
@@ -222,10 +222,11 @@
         $('#prompt-open-input-custom').click(function () {
             promptDialog.prompt({
                 input: {
-                    name: {label:"1. Name", placeholder: "Input your name"},
-                    age: {label:"2. Age", type:"number", value: "22"}
+                    name: {label: "1. Name", placeholder: "Input your name"},
+                    age: {label: "2. Age", type: "number", value: "22", required: true}
                 }
-            }, function(){
+            }, function () {
+                console.log(this.input);
                 console.log(this);
                 // this.name, this.age
             });
@@ -241,10 +242,11 @@
         $('#prompt-open-input-custom').click(function () {
             promptDialog.prompt({
                 input: {
-                    name: {label:"1. Name", placeholder: "Input your name"},
-                    age: {label:"2. Age", type:"number", value: "22"}
+                    name: {label: "1. Name", placeholder: "Input your name"},
+                    age: {label: "2. Age", type: "number", value: "22", required: true}
                 }
-            }, function(){
+            }, function () {
+                console.log(this.input);
                 console.log(this);
                 // this.name, this.age
             });

@@ -1,4 +1,4 @@
-<tmpl-metadata parentId="demo" parentTitle="Demo" sort="4" id="prompt" title="Prompt" desc="" />
+<tmpl-metadata parentId="demo" parentTitle="Demo" sort="4" id="prompt" title="Prompt" desc=""/>
 
 <layout-use template="${data.layoutPath}"
             project-name="${data.projectName}"
@@ -51,7 +51,7 @@
                             promptDialog.prompt({
                                 title: "Confirm Title",
                                 msg: 'Confirm message'
-                            }, function(){
+                            }, function () {
                                 console.log(this);
                                 // {key: "ok", value: [User Input Data]}
                             });
@@ -81,10 +81,11 @@
                         $('#prompt-open-input-custom').click(function () {
                             promptDialog.prompt({
                                 input: {
-                                    name: {label:"1. Name", placeholder: "Input your name"},
-                                    age: {label:"2. Age", type:"number", value: "22"}
+                                    name: {label: "1. Name", placeholder: "Input your name"},
+                                    age: {label: "2. Age", type: "number", value: "22", required: true}
                                 }
-                            }, function(){
+                            }, function () {
+                                console.log(this.input);
                                 console.log(this);
                                 // this.name, this.age
                             });
