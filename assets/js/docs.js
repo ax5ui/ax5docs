@@ -1,3 +1,24 @@
+var gridList = [
+    {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "M"},
+    {companyJson: {"대표자명": "----"}, a: true, b: true, price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "M"},
+    {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "D"},
+    {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "W"},
+    {companyJson: {"대표자명": "9999"}, a: "B", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "M"},
+    {companyJson: {"대표자명": "abcd"}, a: "B", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "S"},
+    {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "M"},
+    {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "D"},
+    {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "W"},
+    {companyJson: {"대표자명": "위세라"}, a: "B", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "M"},
+    {companyJson: {"대표자명": "abcd"}, a: "B", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "S"},
+    {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "M"},
+    {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "D"},
+    {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "W"},
+    {companyJson: {"대표자명": "위세라"}, a: "B", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "M"},
+    {companyJson: {"대표자명": "abcd"}, a: "B", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "S"},
+    {companyJson: {"대표자명": "abcd"}, a: "B", b: "A01", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "W"},
+    {companyJson: {"대표자명": "abcd"}, a: "B", b: "A01", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "황현진", saleType: "A", c:"C", d:"D", e:"E", f:"F", g:"G", userType: "S"}
+];
+
 var fn_docs = (function () {
     return {
         _data: {},

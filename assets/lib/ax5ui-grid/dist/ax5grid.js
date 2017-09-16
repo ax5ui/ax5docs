@@ -59,6 +59,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 multipleSelect: true,
                 virtualScrollY: true,
                 virtualScrollX: true,
+                headerSelect: true,
 
                 // 스크롤될 때 body 페인팅 딜레이를 주어 성능이 좋은 않은 브라우저에서 반응을 빠르게 할 때 사용하는 옵션들
                 virtualScrollYCountMargin: 0,
@@ -77,7 +78,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     align: false,
                     columnHeight: 26,
                     columnPadding: 3,
-                    columnBorderWidth: 1
+                    columnBorderWidth: 1,
+                    selector: true
                 },
                 body: {
                     align: false,
@@ -256,6 +258,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var initColumns = function initColumns(_columns) {
                 if (!U.isArray(_columns)) _columns = [];
                 this.columns = U.deepCopy(_columns);
+
                 this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
                 this.xvar.frozenColumnIndex = cfg.frozenColumnIndex || 0;
 
@@ -647,6 +650,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Boolean} [_config.virtualScrollY=true] - 세로축 가상스크롤 처리여부
              * @param {Boolean} [_config.virtualScrollX=true] - 가로축 가상스크롤 처리여부
              * @param {Object} [_config.header]
+             * @param {Object} [_config.header.selector=true] - 헤더 checkbox 표시여부
              * @param {String} [_config.header.align]
              * @param {Number} [_config.header.columnHeight=25]
              * @param {Number} [_config.header.columnPadding=3]
@@ -805,6 +809,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 // 그리드의 이벤트 정의 구간
                 this.onStateChanged = cfg.onStateChanged;
                 this.onClick = cfg.onClick;
+                //this.onDblClick = cfg.onDblClick;
                 this.onLoad = cfg.onLoad;
                 this.onDataChanged = cfg.body.onDataChanged;
                 // todo event에 대한 추가 정의 필요
@@ -1128,7 +1133,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 GRID.body.repaint.call(this);
                 if (!isFirstPaint) GRID.body.scrollTo.call(this, { top: 0 });
 
+                // 가로/세로 스크롤바 show/hide 처리
                 alignGrid.call(this);
+                // 가로세로 스크롤바의 크기 재 계산.
                 GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
 
@@ -5505,8 +5512,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 // If the [download] attribute is supported, try to use it
                 if ("download" in anchor) {
                     anchor.download = fileName;
-                    //anchor.href = URL.createObjectURL( blob );
-                    anchor.href = uri + base64(output);
+                    anchor.href = URL.createObjectURL(new Blob([output], { type: 'text/csv' }));
                     anchor.click();
                     document.body.removeChild(anchor);
                 }
@@ -5621,7 +5627,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             //rowIndex = this.getAttribute("data-ax5grid-column-rowindex"),
             col = self.colGroup[colIndex];
 
-            if (key === "__checkbox_header__") {
+            if (key === "__checkbox_header__" && self.config.header.selector) {
                 var selected = this.getAttribute("data-ax5grid-selected");
                 selected = U.isNothing(selected) ? true : selected !== "true";
 
@@ -5711,7 +5717,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var getFieldValue = function getFieldValue(_col) {
-        return _col.key === "__checkbox_header__" ? "<div class=\"checkBox\" style=\"max-height: " + (_col.width - 10) + "px;min-height: " + (_col.width - 10) + "px;\"></div>" : _col.label || "&nbsp;";
+        return _col.key === "__checkbox_header__" ? this.config.header.selector ? "<div class=\"checkBox\" style=\"max-height: " + (_col.width - 10) + "px;min-height: " + (_col.width - 10) + "px;\"></div>" : "&nbsp;" : _col.label || "&nbsp;";
     };
 
     var repaint = function repaint(_reset) {
@@ -5822,6 +5828,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (cfg.frozenColumnIndex > 0) {
             repaintHeader.call(this, this.$.panel["left-header"], this.leftHeaderColGroup, leftHeaderData);
         }
+
         this.xvar.scrollContentWidth = repaintHeader.call(this, this.$.panel["header-scroll"], this.headerColGroup, headerData);
 
         if (cfg.rightSum) {}
@@ -6083,6 +6090,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var self = _root;
             _$el.data("binded-ax5ui", "ax5select");
             _$el.ax5select($.extend(true, {
+                tabIndex: 1,
                 direction: "auto",
                 columnKeys: eConfig.columnKeys,
                 options: eConfig.options,
@@ -6990,7 +6998,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var makeHeaderTable = function makeHeaderTable(_columns) {
-        var columns = U.deepCopy(_columns),
+        var columns = _columns,
             cfg = this.config,
             table = {
             rows: []
@@ -7000,10 +7008,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var row = { cols: [] };
             var i = 0,
                 l = _columns.length;
+            var colspan = 1;
 
             for (; i < l; i++) {
-                var field = _columns[i];
-                var colspan = 1;
+                var field = jQuery.extend({}, _columns[i]);
+                colspan = 1;
 
                 if (!field.hidden) {
                     field.colspan = 1;
@@ -7019,7 +7028,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }();
 
-                    row.cols.push(field);
+                    row.cols.push(field); // 복제된 필드 삽입
 
                     if ('columns' in field) {
                         colspan = maekRows(field.columns, depth + 1, field);
@@ -7056,7 +7065,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var makeBodyRowTable = function makeBodyRowTable(_columns) {
-        var columns = U.deepCopy(_columns),
+        var columns = _columns,
             table = {
             rows: []
         },
@@ -7071,7 +7080,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var i = 0,
                     l = __columns.length;
                 for (; i < l; i++) {
-                    var field = __columns[i],
+                    var field = jQuery.extend({}, __columns[i]),
                         _colspan = 1;
 
                     if (!field.hidden) {
@@ -7105,7 +7114,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
 
             for (; i < l; i++) {
-                var field = _columns[i];
+                var field = jQuery.extend({}, _columns[i]);
                 colspan = 1;
 
                 if (!field.hidden) {

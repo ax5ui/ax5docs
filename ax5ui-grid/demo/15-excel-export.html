@@ -257,8 +257,10 @@ Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창�
                     }
                 ]]
         });
+        firstGrid.setData(gridList);
 
         // 그리드 데이터 가져오기
+        /*
         $.ajax({
             method: "GET",
             url: API_SERVER + "/api/v1/ax5grid/order",
@@ -266,6 +268,7 @@ Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창�
                 firstGrid.setData(res);
             }
         });
+        */
 
         // grid control button
         $('[data-grid-control]').click(function () {
@@ -349,8 +352,10 @@ Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창�
                     }
                 ]]
         });
+        firstGrid.setData(gridList);
 
         // 그리드 데이터 가져오기
+        /*
         $.ajax({
             method: "GET",
             url: API_SERVER + "/api/v1/ax5grid/order",
@@ -358,6 +363,7 @@ Safari 브라우저에서는 파일 다운로드 제어가 되지 않아 새창�
                 firstGrid.setData(res);
             }
         });
+        */
 
         // grid control button
         $('[data-grid-control]').click(function () {

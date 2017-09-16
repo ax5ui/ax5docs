@@ -67,8 +67,9 @@
                                 {key: "h", label: "field H"}
                             ]
                         });
-
+                        firstGrid.setData(gridList);
                         // 그리드 데이터 가져오기
+                        /*
                         $.ajax({
                             method: "GET",
                             url: API_SERVER + "/api/v1/ax5grid",
@@ -76,6 +77,7 @@
                                 firstGrid.setData(res);
                             }
                         });
+                        */
                     });
                 </script>
             </ax5docs-js>

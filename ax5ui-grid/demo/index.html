@@ -185,7 +185,11 @@ You can use the <code>data-ax5grid-config</code> attribute to determine the prop
             ]
         });
 
+        // {a: "A", b: "A01", c:"C", d:"D", e:"E", f:"F", g:"G"}
+        // 값이 없는 h 는 표현안됨
+        firstGrid.setData(gridList);
         // 그리드 데이터 가져오기
+        /*
         $.ajax({
             method: "GET",
             url: API_SERVER + "/api/v1/ax5grid",
@@ -193,6 +197,7 @@ You can use the <code>data-ax5grid-config</code> attribute to determine the prop
                 firstGrid.setData(res);
             }
         });
+        */
     });
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
         var API_SERVER = "http://api-demo.ax5.io";
@@ -212,7 +217,11 @@ You can use the <code>data-ax5grid-config</code> attribute to determine the prop
             ]
         });
 
+        // {a: "A", b: "A01", c:"C", d:"D", e:"E", f:"F", g:"G"}
+        // 값이 없는 h 는 표현안됨
+        firstGrid.setData(gridList);
         // 그리드 데이터 가져오기
+        /*
         $.ajax({
             method: "GET",
             url: API_SERVER + "/api/v1/ax5grid",
@@ -220,6 +229,7 @@ You can use the <code>data-ax5grid-config</code> attribute to determine the prop
                 firstGrid.setData(res);
             }
         });
+        */
     });
 </script></script>
 
@@ -255,7 +265,9 @@ ax5grid는 태그에 <code>data-ax5grid-config</code> 속성의 값을 setConfig
             target: $('[data-ax5grid="second-grid"]')
         });
 
+        secondGrid.setData(gridList);
         // 그리드 데이터 가져오기
+        /*
         $.ajax({
             method: "GET",
             url: API_SERVER + "/api/v1/ax5grid",
@@ -263,6 +275,7 @@ ax5grid는 태그에 <code>data-ax5grid-config</code> 속성의 값을 setConfig
                 secondGrid.setData(res);
             }
         });
+        */
     });
 &lt;/script></pre><script type="text/javascript">$(document.body).ready(function () {
         var API_SERVER = "http://api-demo.ax5.io";
@@ -270,7 +283,9 @@ ax5grid는 태그에 <code>data-ax5grid-config</code> 속성의 값을 setConfig
             target: $('[data-ax5grid="second-grid"]')
         });
 
+        secondGrid.setData(gridList);
         // 그리드 데이터 가져오기
+        /*
         $.ajax({
             method: "GET",
             url: API_SERVER + "/api/v1/ax5grid",
@@ -278,6 +293,7 @@ ax5grid는 태그에 <code>data-ax5grid-config</code> 속성의 값을 setConfig
                 secondGrid.setData(res);
             }
         });
+        */
     });
 </script></script>
 

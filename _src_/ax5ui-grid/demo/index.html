@@ -71,7 +71,11 @@
                             ]
                         });
 
+                        // {a: "A", b: "A01", c:"C", d:"D", e:"E", f:"F", g:"G"}
+                        // 값이 없는 h 는 표현안됨
+                        firstGrid.setData(gridList);
                         // 그리드 데이터 가져오기
+                        /*
                         $.ajax({
                             method: "GET",
                             url: API_SERVER + "/api/v1/ax5grid",
@@ -79,6 +83,7 @@
                                 firstGrid.setData(res);
                             }
                         });
+                        */
                     });
                 </script>
             </ax5docs-js>
@@ -132,7 +137,9 @@
                             target: $('[data-ax5grid="second-grid"]')
                         });
 
+                        secondGrid.setData(gridList);
                         // 그리드 데이터 가져오기
+                        /*
                         $.ajax({
                             method: "GET",
                             url: API_SERVER + "/api/v1/ax5grid",
@@ -140,6 +147,7 @@
                                 secondGrid.setData(res);
                             }
                         });
+                        */
                     });
                 </script>
             </ax5docs-js>
