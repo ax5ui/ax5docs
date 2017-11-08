@@ -1060,6 +1060,7 @@
                             ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"',
                             ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"',
                             '>');
+
                         for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                             col = rowTable.rows[tri].cols[ci];
                             cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
@@ -2625,16 +2626,19 @@
                 },
                 "__clear"() {
                     this.isInlineEditing = false;
-                    let bindedAx5ui = this.inlineEditing[_key].$inlineEditor.data("binded-ax5ui");
-                    if (bindedAx5ui == "ax5picker") {
-                        this.inlineEditing[_key].$inlineEditor.ax5picker("close");
-                    } else if (bindedAx5ui == "ax5select") {
-                        this.inlineEditing[_key].$inlineEditor.ax5select("close");
+
+                    if (this.inlineEditing[_key] && this.inlineEditing[_key].$inlineEditor) {
+                        let bindedAx5ui = this.inlineEditing[_key].$inlineEditor.data("binded-ax5ui");
+                        if (bindedAx5ui == "ax5picker") {
+                            this.inlineEditing[_key].$inlineEditor.ax5picker("close");
+                        } else if (bindedAx5ui == "ax5select") {
+                            this.inlineEditing[_key].$inlineEditor.ax5select("close");
+                        }
+                        this.inlineEditing[_key].$inlineEditor.remove();
+                        this.inlineEditing[_key].$inlineEditor = null;
+                        this.inlineEditing[_key].$inlineEditorCell = null;
                     }
 
-                    this.inlineEditing[_key].$inlineEditor.remove();
-                    this.inlineEditing[_key].$inlineEditor = null;
-                    this.inlineEditing[_key].$inlineEditorCell = null;
                     this.inlineEditing[_key] = undefined;
                     delete this.inlineEditing[_key]; // delete 지원안하는 브라우저 테스트..
                 }

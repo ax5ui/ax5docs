@@ -948,6 +948,33 @@
                                     //self.keyDown("RETURN", e.originalEvent);
                                     U.stopEvent(e);
                                 } else if (Object.keys(self.focusedColumn).length) {
+                                    /*
+                                    self.keyDown("INLINE_EDIT", e.originalEvent);
+                                    */
+                                }
+                            }
+                        }
+                    }
+                });
+
+                jQuery(window).on("keyup.ax5grid-" + this.instanceId, function (e) {
+                    if (self.focused) {
+                        if (self.isInlineEditing) {
+
+                        }
+                        else {
+                            if (e.metaKey || e.ctrlKey) {
+
+                            } else {
+                                if (ctrlKeys[e.which]) {
+
+                                } else if (e.which == ax5.info.eventKeys.ESC) {
+
+                                } else if (e.which == ax5.info.eventKeys.RETURN || e.which == ax5.info.eventKeys.SPACE) {
+
+                                } else if (e.which == ax5.info.eventKeys.TAB) {
+
+                                } else if (Object.keys(self.focusedColumn).length) {
                                     self.keyDown("INLINE_EDIT", e.originalEvent);
                                 }
                             }
@@ -976,6 +1003,18 @@
                     GRID.body.repaint.call(this);
                     GRID.scroller.resize.call(this);
                 }
+                return this;
+            };
+
+            /**
+             *
+             * @method ax5grid.repaint
+             * @return {ax5grid}
+             */
+            this.repaint = function () {
+                GRID.header.repaint.call(this);
+                GRID.body.repaint.call(this, true); // 강제로 다시 그리기
+                GRID.scroller.resize.call(this);
                 return this;
             };
 
@@ -1663,7 +1702,7 @@
                         this.select(0);
                     } else {
                         let selectedIndex = this.selectedDataIndexs[0];
-                        
+
                         let processor = {
                             "UP": function () {
                                 if (selectedIndex > 0) {

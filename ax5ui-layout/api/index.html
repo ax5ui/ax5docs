@@ -205,7 +205,18 @@
 </tbody>
 </table>
 <p><strong>Example</strong></p>
-<pre class="prettyprint linenums lang-js"><code></code></pre>
+<pre class="prettyprint linenums lang-js"><code>jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout({
+    onResize: function () {
+    }
+});
+
+jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout(&quot;resize&quot;, {
+    top: {height: 100},
+    bottom: 100,
+    left: 100,
+    right: 100
+});
+</code></pre>
 <p><a name="ax5layout.bind"></a></p>
 <h3>ax5layout.bind(item) ⇒ <code><a href="#ax5layout">ax5layout</a></code></h3>
 <p><strong>Kind</strong>: static method of <code><a href="#ax5layout">ax5layout</a></code></p>
@@ -368,7 +379,12 @@
 </tbody>
 </table>
 <p><strong>Example</strong></p>
-<pre class="prettyprint linenums lang-js"><code>jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout();
+<pre class="prettyprint linenums lang-js"><code>jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout(&quot;align&quot;);
+jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout(&quot;resize&quot;);
+jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout(&quot;reset&quot;);
+jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout(&quot;hide&quot;);
+jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout(&quot;onResize&quot;);
+jQuery('[data-ax5layout=&quot;ax1&quot;]').ax5layout(&quot;tabOpen&quot;, 1);
 </code></pre>
 
     
