@@ -2051,7 +2051,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         value: self.list[_column.dindex][column.key]
                     };
 
-                    if (column.editor && column.editor.type == "checkbox") {
+                    if (column.editor && column.editor.type === "checkbox") {
                         // todo : GRID.inlineEditor에서 처리 할수 있도록 구문 변경 필요.
                         var value = GRID.data.getValue.call(self, _column.dindex, _column.doindex, column.key),
                             checked = void 0,
@@ -2073,10 +2073,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
                             editorConfig: column.editor.config, checked: checked
                         });
-                    } else {
-                        if (self.config.body.onClick) {
-                            self.config.body.onClick.call(that);
-                        }
+                    }
+
+                    if (self.config.body.onClick) {
+                        self.config.body.onClick.call(that, that, e);
                     }
                 },
                 "rowSelector": function rowSelector(_column) {
@@ -2388,6 +2388,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }.call(this, this.bodyGroupingTable);
             this.leftBodyGroupingData = dividedBodyGroupingObj.leftData;
             this.bodyGroupingData = dividedBodyGroupingObj.rightData;
+
             this.bodyGroupingMap = GRID.util.makeBodyRowMap.call(this, this.bodyGroupingTable);
         }
 
@@ -4451,7 +4452,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         moveFocus.call(this, _dindex);
         if (this.config.body.onClick) {
-            this.config.body.onClick.call(that);
+            this.config.body.onClick.call(that, that);
         }
 
         that = null;
@@ -7304,7 +7305,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         table.rows[r] = { cols: [] };
         for (var _c2 = 0, cl = _bodyGroupingColumns.length; _c2 < cl; _c2++) {
-            if (addC > this.columns.length) break;
+            if (addC > this.colGroup.length) break;
+
             var colspan = _bodyGroupingColumns[_c2].colspan || 1;
             if (_bodyGroupingColumns[_c2].label || _bodyGroupingColumns[_c2].key) {
                 table.rows[r].cols.push({
